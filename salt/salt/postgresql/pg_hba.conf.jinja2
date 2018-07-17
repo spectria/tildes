@@ -1,0 +1,6 @@
+{% for line in accumulator['pg_hba_lines'] -%}
+{{ line }}
+{% endfor %}
+
+# Required: allow the database superuser to connect via socket
+local   all             postgres    peer

@@ -1,0 +1,198 @@
+{% extends 'base.jinja2' %}
+
+{% from 'macros/groups.jinja2' import render_group_subscription_box with context %}
+{% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
+
+{% block title %}Topics in ~{{ group.path }}{% endblock %}
+
+{% block header_context_link %}
+  {# Split the link out for each "segment" of the group path #}
+  <a class="site-header-context" href="/~{{ group.path[0:1] }}">~{{ group.path[0:1] }}</a>
+  {% for i in range(1, group.path|length) %}
+    .<a class="site-header-context" href="/~{{ group.path[0:i+1] }}">{{ group.path[i:i+1] }}</a>
+  {% endfor %}
+{% endblock %}
+
+{% block content %}
+
+{% if request.context is group %}
+  {% set is_single_group = True %}
+{% else %}
+  {% set is_single_group = False %}
+{% endif %}
+
+<div class="listing-options">
+  <menu class="tab tab-listing-order">
+    {% for option in order_options %}
+      {% if option == order %}
+        <li class="tab-item active">
+      {% else %}
+        <li class="tab-item">
+      {% endif %}
+
+      {% if period %}
+        {% set period_string = period.as_short_form() %}
+      {% else %}
+        {% set period_string = 'all' %}
+      {% endif %}
+
+      <a href="{{ request.current_listing_base_url({'order': option.name.lower()}) }}">
+        {{ option.descending_description.capitalize() }}
+      </a>
+
+      </li>
+    {% endfor %}
+  </menu>
+
+  <form class="form-listing-options" method="get">
+    <input type="hidden" name="order" value="{{ order.name.lower() }}">
+    {% if tag %}
+      <input type="hidden" name="tag" value="{{ tag }}">
+    {% endif %}
+    <div class="form-group">
+      <label for="period">from</label>
+      <select id="period" name="period" class="form-select" data-js-time-period-select>
+        {% for option in period_options %}
+          <option value="{{ option.as_short_form() }}"
+
+          {% if option == period %}
+            selected
+          {% endif %}
+
+          >last {{ option }}</option>
+        {% endfor %}
+        <option value="all"{{ ' selected' if not period else '' }}>all time</option>
+        <option value="other">other period</option>
+      </select>
+    </div>
+
+    {# add a submit button for people with js disabled so this is still usable #}
+    <noscript>
+      <button type="submit" class="btn btn-primary btn-sm">OK</button>
+    </noscript>
+  </form>
+
+  {% if not is_default_view %}
+    <form
+      {% if is_single_group %}
+        data-ic-patch-to="{{ request.route_url(
+          'ic_group_user_settings',
+          group_path=request.context.path,
+        ) }}"
+      {% else %}
+        data-ic-put-to="{{ request.route_url(
+          'ic_user_default_listing_options',
+          username=request.user.username,
+        ) }}"
+      {% endif %}
+      data-js-remove-on-success
+    >
+      <input type="hidden" name="order" value="{{ order.name.lower() }}">
+      {% if period %}
+        <input type="hidden" name="period" value="{{ period.as_short_form() }}">
+      {% endif %}
+      <button class="btn btn-link">Set as default</button>
+    </form>
+  {% endif %}
+</div>
+
+<div class="topic-listing-filter">
+{% if tag %}
+  Showing only topics with the tag "{{ tag|replace('_', ' ') }}".
+  <a href="{{ request.current_listing_normal_url() }}">Back to normal view</a>
+{% elif unfiltered %}
+  Showing unfiltered topic list.
+  <a href="{{ request.current_listing_normal_url() }}">Back to normal view</a>
+{% elif request.user.filtered_topic_tags %}
+  Topic tag filters active (see sidebar).
+  <a href="{{ request.current_listing_normal_url({'unfiltered': 'true'}) }}">View unfiltered list</a>
+{% endif %}
+</div>
+
+{% if not topics %}
+  <div class="empty">
+    <h2 class="empty-title">No topics in the selected time period</h2>
+    {% if is_single_group and request.has_permission('post_topic', group) %}
+      <p class="empty-subtitle">Choose a longer time period, or break the silence by posting one yourself.</p>
+      <div class="empty-action">
+        <a href="/~{{ group.path }}/new_topic" class="btn btn-primary">Post a new topic</a>
+      </div>
+    {% else %}
+      <p class="empty-subtitle">Choose a longer time period to find some.</p>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% if topics %}
+  <ol class="topic-listing"
+  {% if rank_start is not none %}
+    start="{{ rank_start }}"
+  {% endif %}
+  >
+
+  {% for topic in topics: %}
+    <li>
+
+    {# only display the rank on topics if the rank_start variable is set #}
+    {% if rank_start is not none %}
+      {{ render_topic_for_listing(
+          topic,
+          show_group=topic.group != request.context,
+          rank=rank_start + loop.index0,
+      ) }}
+    {% else %}
+      {{ render_topic_for_listing(topic, show_group=topic.group != request.context) }}
+    {% endif %}
+
+    </li>
+  {% endfor %}
+
+  </ol>
+{% endif %}
+
+{% if topics.has_prev_page or topics.has_next_page %}
+  <div class="pagination">
+    {% if topics.has_prev_page %}
+      <a class="page-item btn" id="prev-page"
+        href="{{ request.current_listing_base_url({'before': topics[0].topic_id36}) }}"
+      >Prev</a>
+    {% endif %}
+
+    {% if topics.has_next_page %}
+      <a class="page-item btn" id="next-page"
+        href="{{ request.current_listing_base_url({'after': topics[-1].topic_id36}) }}"
+      >Next</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}
+
+{% block sidebar %}
+  <h3>~{{ group.path }}</h3>
+
+  {% if group.short_description %}
+    <div class="group-short-description">{{ group.short_description }}</div>
+  {% endif %}
+
+  {{ render_group_subscription_box(group) }}
+
+  {% if request.has_permission('post_topic', group) %}
+    <a href="/~{{ group.path }}/new_topic" class="btn btn-primary">Post a new topic</a>
+  {% endif %}
+
+  {% if request.user and not (tag or unfiltered) %}
+    <hr>
+    <details>
+      <summary>Filtered topic tags ({{ request.user.filtered_topic_tags|length }})</summary>
+      <ul class="topic-tags">
+        {% for tag in request.user.filtered_topic_tags %}
+          <li class="label label-topic-tag">{{ tag }}</li>
+        {% else %}
+          <li class="label label-topic-tag">No filtered tags</li>
+        {% endfor %}
+      </ul>
+      <a class="btn btn-link" href="/settings/filters">Edit filtered tags</a>
+    </details>
+  {% endif %}
+{% endblock %}

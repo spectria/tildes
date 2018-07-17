@@ -1,0 +1,16 @@
+{% macro time_ago(datetime) -%}
+<time datetime="{{ datetime.strftime('%Y-%m-%dT%H:%M:%SZ') }}" title="{{ datetime.strftime('%Y-%m-%d %H:%M:%S UTC') }}">{{ datetime|ago }}</time>
+{%- endmacro %}
+
+{% macro time_ago_abbreviated(datetime) -%}
+<time datetime="{{ datetime.strftime('%Y-%m-%dT%H:%M:%SZ') }}" title="{{ datetime.strftime('%Y-%m-%d %H:%M:%S UTC') }}">{{ datetime|ago(abbreviate=True) }}</time>
+{%- endmacro %}
+
+{% macro time_ago_responsive(datetime) -%}
+<time
+  class="time-responsive"
+  datetime="{{ datetime.strftime('%Y-%m-%dT%H:%M:%SZ') }}"
+  title="{{ datetime.strftime('%Y-%m-%d %H:%M:%S UTC') }}"
+  data-abbreviated="{{ datetime|ago(abbreviate=True) }}"
+><span class="time-responsive-full">{{ datetime|ago(abbreviate=False) }}</span></time>
+{%- endmacro %}

@@ -1,0 +1,35 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% from 'macros/forms.jinja2' import markdown_textarea %}
+{% from 'macros/messages.jinja2' import render_message with context %}
+
+{% block title %}Message: {{ conversation.subject }}{% endblock %}
+
+{% block main_heading %}{{ conversation.subject }}{% endblock %}
+
+{% block content %}
+  {{ render_message(conversation) }}
+
+  {% for reply in conversation.replies %}
+    {{ render_message(reply) }}
+  {% endfor %}
+
+  <section>
+    <h2>Add a new reply to this conversation</h2>
+    <form
+      method="post"
+      data-ic-post-to="{{ request.route_url('ic_message_conversation_replies', conversation_id36=conversation.conversation_id36) }}"
+      data-ic-replace-target="true"
+      autocomplete="off"
+      data-js-prevent-double-submit
+      data-js-confirm-leave-page-unsaved
+    >
+      <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
+
+      {{ markdown_textarea() }}
+      <div class="form-buttons">
+        <button class="btn btn-primary" type="submit">Send message</button>
+      </div>
+    </form>
+  </section>
+{% endblock %}

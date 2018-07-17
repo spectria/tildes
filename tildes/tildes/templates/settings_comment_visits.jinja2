@@ -1,0 +1,43 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% block title %}Toggle marking new comments{% endblock %}
+
+{% block main_heading %}Toggle marking new comments{% endblock %}
+
+{% block content %}
+<figure>
+  <figcaption>How new comments are displayed</figcaption>
+  <img src="/images/mark-new-comments.png" alt="Examples of how new comments are displayed">
+</figure>
+
+<p>Tildes can mark which comments were posted since your previous visit to a topic's comments (and which topics have any new ones), but doing so requires keeping track of when that previous visit happened. This has a privacy implication, so the feature is opt-in.</p>
+
+<p>While this feature is enabled, we will record and store data about your most recent visit to each topic's comments. We store only the single most recent visit&mdash;any previous visit data for that topic is replaced if you visit the same one again later.</p>
+
+<p>This data is retained for 30 days. After not visiting a particular topic for 30 days, the data about your last visit to it will be deleted.</p>
+
+<p>Disabling the feature will stop marking comments but will not delete any existing data, only prevent new data from being stored. The previously-stored data will be deleted after 30 days, as usual.</p>
+
+<div class="divider"></div>
+
+<form
+  name="comment-visits"
+  autocomplete="off"
+  data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+  data-ic-target="closest main"
+>
+  <div class="form-group">
+    <label class="form-checkbox">
+      <input
+        type="checkbox"
+        id="track_comment_visits"
+        name="track_comment_visits"
+        {% if request.user.track_comment_visits %}checked{% endif %}
+      >
+      <i class="form-icon"></i> Track my last visit to each topic's comments and mark new comments
+    </label>
+  </div>
+
+  <button class="btn btn-primary" type="submit">Save setting</button>
+</form>
+{% endblock %}

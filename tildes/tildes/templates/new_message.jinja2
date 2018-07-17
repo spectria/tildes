@@ -1,0 +1,37 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% from 'macros/forms.jinja2' import markdown_textarea %}
+
+{% block title %}New private message conversation{% endblock %}
+
+{% block header_context_link %}
+<a class="site-header-context" href="/user/{{ user.username }}">{{ user.username }}</a>
+{% endblock %}
+
+{% block main_heading %}
+  Send a private message to {{ user.username }}
+{% endblock %}
+
+{% block content %}
+  <form
+    method="post"
+    autocomplete="off"
+    action="/user/{{ user.username }}/messages"
+    data-ic-post-to="/user/{{ user.username }}/messages"
+    data-js-prevent-double-submit
+    data-js-confirm-leave-page-unsaved
+  >
+    <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
+
+    <div class="form-group">
+      <label class="form-label" for="subject">Subject</label>
+      <input class="form-input" id="subject" name="subject" type="text" placeholder="Subject" required>
+    </div>
+
+    {{ markdown_textarea() }}
+
+    <div class="form-buttons">
+      <button type="submit" class="btn btn-primary">Send message</button>
+    </div>
+  </form>
+{% endblock %}

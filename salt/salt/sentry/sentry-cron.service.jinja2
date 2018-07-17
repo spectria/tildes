@@ -1,0 +1,15 @@
+{% from 'sentry/common.jinja2' import sentry_bin_dir, sentry_cfg_dir, sentry_venv_dir -%}
+[Unit]
+Description=Sentry Beat Service
+After=network.target
+
+[Service]
+Type=simple
+User=sentry
+Group=sentry
+WorkingDirectory={{ sentry_venv_dir }}
+Environment=SENTRY_CONF={{ sentry_cfg_dir }}
+ExecStart={{ sentry_bin_dir }}/sentry run cron
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,35 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% block title %}
+  {% if not request.user %}
+  Invite-only alpha
+  {% else %}
+  Error 403 (Forbidden)
+  {% endif %}
+{% endblock %}
+
+{% block main_heading %}
+  {% if request.user %}
+    Error 403 (Forbidden)
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if not request.user %}
+  <div class="empty">
+    <h2 class="empty-title">Tildes is currently in invite-only alpha</h2>
+
+    <p class="empty-subtitle">To learn more about Tildes, <a href="https://blog.tildes.net/announcing-tildes">read the announcement post</a>.</p>
+    <p class="empty-subtitle">There are also some pages available on <a href="https://docs.tildes.net">the docs site</a>.</p>
+
+    <div class="empty-action">
+      <a href="/login" class="btn btn-primary">Log in</a>
+      <a href="/register" class="btn btn-primary">Register</a>
+    </div>
+  </div>
+{% else %}
+  <p>You don't have access to this page.</p>
+{% endif %}
+
+{% endblock %}

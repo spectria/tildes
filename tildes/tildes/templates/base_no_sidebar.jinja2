@@ -1,0 +1,9 @@
+{% extends 'base.jinja2' %}
+
+{% block body_tag %}
+  {% if request.cookies.get('theme', '') %}
+  <body class="l-no-sidebar theme-{{ request.cookies.get('theme', '') }}">
+  {% else %}
+  <body class="l-no-sidebar">
+  {% endif %}
+{% endblock %}

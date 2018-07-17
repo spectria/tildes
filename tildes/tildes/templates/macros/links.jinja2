@@ -1,0 +1,7 @@
+{% macro username_linked(username) %}
+  <a href="/user/{{ username }}" class="link-user">{{ username }}</a>
+{% endmacro %}
+
+{% macro group_linked(group_path) %}
+  <a href="/~{{ group_path }}" class="link-group">~{{ group_path }}</a>
+{% endmacro %}

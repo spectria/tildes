@@ -1,0 +1,33 @@
+{% macro render_group_subscription_box(group) %}
+  <div class="group-subscription">
+    <span class="group-subscription-count">
+    {% trans num_subscriptions=group.num_subscriptions %}
+    {{ num_subscriptions }} subscriber
+    {% pluralize %}
+    {{ num_subscriptions }} subscribers
+    {% endtrans %}
+    </span>
+
+    {% if request.has_permission('subscribe', group) %}
+      {% if group.user_subscribed %}
+        <button class="btn btn-sm btn-used"
+          data-ic-delete-from="{{ request.route_url(
+            'ic_group_subscribe',
+            group_path=group.path,
+          ) }}"
+          data-ic-target="closest .group-subscription"
+          data-ic-replace-target="true"
+        >Unsubscribe</button>
+      {% else %}
+        <button class="btn btn-sm"
+          data-ic-put-to="{{ request.route_url(
+            'ic_group_subscribe',
+            group_path=group.path,
+          ) }}"
+          data-ic-target="closest .group-subscription"
+          data-ic-replace-target="true"
+        >Subscribe</button>
+      {% endif %}
+    {% endif %}
+  </div>
+{% endmacro %}

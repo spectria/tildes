@@ -1,0 +1,11 @@
+[Unit]
+Description=Disable transparent hugepage for redis
+Before=redis.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'echo never > /sys/kernel/mm/transparent_hugepage/enabled'
+ExecStart=/bin/bash -c 'echo never > /sys/kernel/mm/transparent_hugepage/defrag'
+
+[Install]
+RequiredBy=redis.service

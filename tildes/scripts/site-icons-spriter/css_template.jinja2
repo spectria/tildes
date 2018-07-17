@@ -1,0 +1,22 @@
+{% for r, ratio in ratios.items() %}
+{% if ratio.ratio == 1.0 %}
+.topic-icon {
+  background-image: url('/images/{{ ratio.sprite_path }}?{{ hash }}');
+  background-size: 0 0;
+}
+{% else %}
+@media screen and (min-device-pixel-ratio: {{ ratio.ratio }}), screen and (min-resolution: {{ ratio.ratio }}dppx) {
+  .topic-icon {
+    background-image: url('/images/{{ ratio.sprite_path }}?{{ hash }}');
+  }
+}
+{% endif %}
+{% endfor %}
+
+{% for image in images %}
+.topic-icon-{{ image.label }} {
+  background-position: {{ image.x ~ ('px' if image.x) }} {{ image.y ~ ('px' if image.y) }};
+  background-size: {{ width }}px {{ height }}px;
+  border: 0;
+}
+{% endfor %}

@@ -1,0 +1,15 @@
+[Unit]
+Description=Prometheus Postgres Exporter
+After=syslog.target network.target
+
+[Service]
+Type=simple
+RemainAfterExit=no
+WorkingDirectory=/opt/prometheus_postgres_exporter
+User=postgres
+Group=postgres
+Environment="DATA_SOURCE_NAME=user=postgres host=/run/postgresql/ sslmode=disable"
+ExecStart=/opt/prometheus_postgres_exporter/postgres_exporter
+
+[Install]
+WantedBy=multi-user.target

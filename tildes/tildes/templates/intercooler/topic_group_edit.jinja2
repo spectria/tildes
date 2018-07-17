@@ -1,0 +1,15 @@
+<form method="post" name="topic-move"
+    autocomplete="off"
+    data-ic-patch-to="{{ request.route_url(
+      'ic_topic',
+      topic_id36=topic.topic_id36,
+    ) }}"
+    data-js-remove-on-success
+>
+  <label class="form-label" for="group_path">Group:</label>
+  <input class="form-input" type="text" name="group_path" id="group_path" value="{{ topic.group }}" data-js-auto-focus>
+  <div class="form-buttons">
+    <button class="btn btn-primary" type="submit">Move topic</button>
+    <button type="button" class="btn btn-link" data-js-cancel-button>Cancel</button>
+  </div>
+</form>

@@ -1,0 +1,19 @@
+# look for files on the minion, not the master
+file_client: local
+
+# set a specific minion ID for use in top file / pillars
+# options:
+#   - "dev" for the vagrant setup
+#   - "prod" for (single-server) production
+#   - "monitoring" for the monitoring server
+id: dev
+
+# base path for SSL certificates
+ca.cert_base_path: '/etc/pki'
+
+state_verbose: False
+
+# enable new module.run state syntax
+# https://docs.saltstack.com/en/develop/topics/releases/2017.7.0.html#state-module-changes
+use_superseded:
+  - module.run

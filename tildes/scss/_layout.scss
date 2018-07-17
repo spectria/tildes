@@ -1,0 +1,88 @@
+body {
+  @supports (display: grid) {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+
+    grid-template-columns: 1fr minmax(auto, $main-max-width) 1fr;
+    grid-template-areas:
+      ". header ."
+      ". main   ."
+      ". footer .";
+    grid-row-gap: 0.2rem;
+
+    @media (min-width: $show-sidebar-width) {
+      grid-template-columns: 1fr minmax(auto, $main-max-width) auto 1fr;
+      grid-template-areas:
+        ". header header  ."
+        ". main   sidebar ."
+        ". footer footer  .";
+      grid-gap: 0.4rem;
+    }
+  }
+}
+
+.l-no-sidebar {
+  grid-template-columns: 1fr minmax(auto, calc(#{$main-max-width} + #{$sidebar-width} + 0.4rem)) 1fr;
+  grid-template-areas:
+    ". header ."
+    ". main   ."
+    ". footer .";
+
+  #sidebar {
+    display: none;
+  }
+
+  @media (min-width: $show-sidebar-width) {
+    main {
+      max-width: calc(100vw - 0.4rem);
+    }
+  }
+
+  // hide the sidebar button and show user info
+  .site-header-sidebar-button {
+    display: none;
+  }
+
+  #site-header .logged-in-user-info {
+    display: block;
+  }
+}
+
+#site-header {
+  grid-area: header;
+
+  display: flex;
+  align-items: center;
+
+  max-width: 100vw;
+
+  padding: 0.2rem;
+  padding-bottom: 0;
+
+  @media (min-width: $size-md) {
+    padding: 0.4rem;
+    padding-bottom: 0;
+  }
+}
+
+#site-footer {
+  grid-area: footer;
+}
+
+#sidebar {
+  /* hidden by default, show on wider screens */
+  display: none;
+  @media (min-width: $show-sidebar-width) {
+    display: block;
+    grid-area: sidebar;
+  }
+
+  width: $sidebar-width;
+  min-width: $sidebar-width;
+
+  padding: 0.4rem;
+}
+
+body > main {
+  grid-area: main;
+}

@@ -1,0 +1,5 @@
+{% from 'common.jinja2' import app_dir -%}
+{% from 'site-icons-spriter.sls' import site_icons_venv_dir, site_icons_data_dir -%}
+#!/bin/bash
+{{ site_icons_venv_dir }}/bin/glue --sprite-namespace= --namespace= --retina --css-template={{ app_dir }}/scripts/site-icons-spriter/css_template.jinja2 {{ site_icons_data_dir }}/site-icons {{ site_icons_data_dir }}/output
+cp {{ site_icons_data_dir }}/output/*.png {{ app_dir }}/static/images

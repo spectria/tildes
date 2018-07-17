@@ -1,0 +1,86 @@
+{% extends 'base.jinja2' %}
+
+{% from 'macros/comments.jinja2' import render_single_comment with context %}
+{% from 'macros/links.jinja2' import group_linked, username_linked %}
+{% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
+
+{% block title %}User: {{ user.username }}{% endblock %}
+
+{% block header_context_link %}
+<a class="site-header-context" href="/user/{{ user.username }}">{{ user.username }}</a>
+{% endblock %}
+
+{% block main_heading %}{{ user.username }}'s recent activity{% endblock %}
+
+{% block content %}
+
+{% if merged_posts %}
+  <ol class="post-listing">
+  {% for post in merged_posts if request.has_permission('view', post) %}
+    <li>
+    {% if post is topic %}
+      {{ render_topic_for_listing(post, show_group=True) }}
+    {% elif post is comment %}
+      <h2>Comment on <a href="{{ post.topic.permalink }}">{{ post.topic.title }}</a> in {{ group_linked(post.topic.group.path) }}</h2>
+      {{ render_single_comment(post) }}
+    {% endif %}
+    </li>
+  {% endfor %}
+  </ol>
+{% else %}
+  <div class="empty">
+    <h2 class="empty-title">This user hasn't made any posts</h2>
+  </div>
+{% endif %}
+
+{% endblock %}
+
+{% block sidebar %}
+{% if user == request.user %}
+  <h2>User menu</h2>
+  <ul class="nav">
+    <li>Notifications</li>
+    <ul class="nav">
+      {% if request.user.num_unread_notifications > 0 %}
+        <li class="nav-item"><strong><a href="/notifications/unread">
+          Unread ({{ request.user.num_unread_notifications }})
+        </a></strong></li>
+      {% endif %}
+      <li class="nav-item"><a href="/notifications">Previously read</a></li>
+    </ul>
+
+    <li>Messages</li>
+    <ul class="nav">
+      {% if request.user.num_unread_messages > 0 %}
+        <li class="nav-item"><strong><a href="/messages/unread">
+          Unread ({{ request.user.num_unread_messages }})
+        </a></strong></li>
+      {% endif %}
+      <li class="nav-item"><a href="/messages">Inbox</a></li>
+      <li class="nav-item"><a href="/messages/sent">Sent messages</a></li>
+    </ul>
+
+    <li>Misc</li>
+    <ul class="nav">
+      {% if request.user.invite_codes_remaining or num_active_invite_codes %}
+        <li class="nav-item"><strong><a href="/invite">
+          Invite someone ({{ request.user.invite_codes_remaining + num_active_invite_codes }})
+        </a></strong></li>
+      {% endif %}
+      <li class="nav-item"><a href="/settings">Settings</a></li>
+      <li class="nav-item"><a href="/logout">Log out</a></li>
+    </ul>
+  </ul>
+<hr>
+{% endif %}
+
+<h2>User info</h2>
+<dl>
+  <dt>Registered</dt>
+  <dd>{{ user.created_time.strftime('%B %-d, %Y') }}</dd>
+</dl>
+
+{% if request.has_permission('message', user) %}
+  <a href="/user/{{ user.username }}/new_message" class="btn btn-primary">Send a private message</a>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,20 @@
+// This file should be imported at the top of Spectre's _variables.scss
+// Since Spectre uses !default declarations, these values won't be overwritten
+
+@import 'variables';
+
+$primary-color: $blue;
+
+$success-color: $green;
+$warning-color: $orange;
+$error-color: $red;
+
+$border-radius: 0;
+
+// Responsive breakpoints
+$size-xs: 480px;
+$size-sm: 600px;
+$size-md: $show-sidebar-width;
+$size-lg: 960px;
+$size-xl: 1080px;
+$size-2x: 1200px;

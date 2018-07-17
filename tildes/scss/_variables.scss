@@ -1,0 +1,53 @@
+// Color palette is Ethan Schoonover's "Solarized"
+// (http://ethanschoonover.com/solarized)
+
+// "Official" color names from Solarized
+$base03: #002b36;
+$base02: #073642;
+$base01: #586e75;
+$base00: #657b83;
+$base0: #839496;
+$base1: #93a1a1;
+$base2: #eee8d5;
+$base3: #fdf6e3;
+
+$blue: #268bd2;
+$cyan: #2aa198;
+$green: #859900;
+$magenta: #d33682;
+$orange: #cb4b16;
+$red: #dc322f;
+$violet: #6c71c4;
+$yellow: #b58900;
+
+// More usable color names for monotone colors
+$bg-darkest: $base03;
+$bg-dark: $base02;
+$bg-light: $base2;
+$bg-lightest: $base3;
+
+$fg-darkest: $base01;
+$fg-dark: $base00;
+$fg-light: $base0;
+$fg-lightest: $base1;
+
+// Colors for comment tags
+$comment-tag-joke-color: $cyan;
+$comment-tag-noise-color: $yellow;
+$comment-tag-offtopic-color: $orange;
+$comment-tag-troll-color: $green;
+$comment-tag-flame-color: $red;
+
+$sidebar-width: 300px;
+
+// Viewport width that the sidebar is shown by default
+$show-sidebar-width: 840px;
+
+// Minimum size of buttons on small screens
+$min-touch-size: 26px;
+
+// Maximum width of the <main> element
+$main-max-width: 70rem;
+
+// Maximum width to allow on "paragraph-like" text
+$paragraph-max-width: 40rem;

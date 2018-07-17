@@ -1,0 +1,39 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% block title %}Invite someone{% endblock %}
+
+{% block main_heading %}
+  Invite someone to be able to register
+{% endblock %}
+
+{% block content %}
+
+<p>This page allows you to generate invite codes you can give to others so that they can register an account on Tildes. A couple of things to keep in mind:</p>
+
+<ul>
+  <li>A record of which users you invite will be kept internally (but won't be visible to any users, including you). Please invite people that you think will be good community members&mdash;if you repeatedly invite users that cause issues, you may lose inviting privileges.</li>
+  <li>The active invite codes will stay visible on this page until they're used. You don't need to worry about losing them if you leave the page.</li>
+</ul>
+
+<div class="divider"></div>
+
+{% if codes %}
+  <p>You have the following invite codes active that have not been used yet:</p>
+  {% for code in codes %}
+    <input class="form-input input-lg input-invite-code" type="text" value="{{ code }}" readonly data-js-autoselect-input>
+  {% endfor %}
+{% endif %}
+
+{% if request.user.invite_codes_remaining > 0 %}
+  <button
+    class="btn btn-primary"
+    data-ic-get-from="{{ request.route_url(
+      'ic_user_invite_code',
+      username=request.user.username,
+    ) }}"
+    data-ic-replace-target="true"
+  >Generate new code ({{ request.user.invite_codes_remaining }} left)</button>
+{% else %}
+  <p>You don't currently have any invite codes available.</p>
+{% endif %}
+{% endblock %}

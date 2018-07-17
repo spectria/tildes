@@ -1,0 +1,28 @@
+directory: static
+url: /
+manifest: json
+
+bundles:
+  javascript:
+    contents:
+      # keep scripts.js at the top so it can define things needed in other ones
+      - js/scripts.js
+      - js/behaviors/*.js
+    output: js/tildes.js
+  javascript-third-party:
+    contents:
+      # jquery needs to be at the top since others depend on it
+      - js/third_party/jquery-*.js
+      - js/third_party/*.js
+    output: js/third_party.js
+  css:
+    contents:
+      # keep styles.css at the bottom so it can override Spectre
+      - css/spectre-0.5.1/spectre.css
+      - css/styles.css
+    output: css/tildes.css
+  site-icons-css:
+    merge: false
+    contents:
+      - /var/lib/site-icons-spriter/output/site-icons.css
+    output: css/site-icons.css

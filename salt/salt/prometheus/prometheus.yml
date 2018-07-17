@@ -1,0 +1,23 @@
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+
+scrape_configs:
+  - job_name: "node"
+    static_configs:
+      - targets: ['localhost:9100']
+
+  - job_name: "redis"
+    static_configs:
+      - targets: ['localhost:9121']
+
+  - job_name: "postgres"
+    static_configs:
+      - targets: ['localhost:9187']
+
+  - job_name: "tildes"
+    scheme: https
+    static_configs:
+      - targets: ['localhost:443']
+    tls_config:
+      insecure_skip_verify: true

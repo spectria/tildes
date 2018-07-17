@@ -1,0 +1,31 @@
+{% macro markdown_textarea(caption='Text (Markdown)', id='markdown', text=None, auto_focus=False) %}
+  <label class="form-label" for="{{ id }}">
+    <span>{{ caption }}</span>
+    <a href="https://docs.tildes.net/text-formatting" target="_blank" tabindex="-1">Formatting help</a>
+  </label>
+  <textarea
+    class="form-input"
+    id="{{ id }}"
+    name="markdown"
+    placeholder="Text (markdown)"
+    data-js-ctrl-enter-submit-form
+    {% if auto_focus %}data-js-auto-focus{% endif %}
+  >{% if text %}{{ text }}{% endif %}</textarea>
+{% endmacro %}
+
+{% macro topic_tagging(value=None, auto_focus=False) %}
+  <div class="form-group">
+    <label class="form-label" for="tags">
+      <span>Tags (optional, comma-separated)</span>
+      <a href="https://docs.tildes.net/topic-tagging" target="_blank" tabindex="-1">Tagging help</a>
+    </label>
+    <input
+      class="form-input"
+      id="tags"
+      name="tags"
+      placeholder='Tags (like "music, soundtrack, full album")'
+      {% if value %} value="{{ value }}"{% endif %}
+      {% if auto_focus %}data-js-auto-focus{% endif %}
+    >
+  </div>
+{% endmacro %}

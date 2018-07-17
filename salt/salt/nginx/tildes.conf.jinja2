@@ -1,0 +1,97 @@
+{% from 'common.jinja2' import app_dir -%}
+upstream app_server {
+    server unix:/run/gunicorn/socket fail_timeout=0;
+}
+
+# define map to set Expires+Cache-Control headers for files based on type
+map $sent_http_content_type $expires_type_map {
+    default off;
+    text/css max;
+    application/javascript max;
+    image/x-icon 1d;
+    ~image/ max;
+}
+
+# redirect www. to base domain
+server {
+    listen 80;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    server_name www.tildes.net;
+    return 301 https://tildes.net$request_uri;
+}
+
+server {
+    # remove trailing slash from addresses, the $port thing is a hack for
+    # development in Vagrant, so the port forwarding from the host is kept
+    set $port '';
+    if ($http_host ~ :(\d+)$) {
+        set $port :$1;
+    }
+    rewrite ^/(.*)/$ https://$host$port/$1 permanent;
+
+    # redirect /u/username to /user/username
+    rewrite ^/u/(.*)$ https://$host$port/user/$1;
+
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    {% if grains['id'] != 'dev' %}
+      add_header Strict-Transport-Security "max-age={{ pillar['hsts_max_age'] }}; includeSubDomains; preload" always;
+    {% endif %}
+
+    # Content Security Policy:
+    #   - "img-src data:" is needed for Spectre.css icons
+    set $csp_value "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'";
+
+    {% if grains['id'] == 'dev' %}
+      add_header Content-Security-Policy-Report-Only $csp_value always;
+    {% else %}
+      add_header Content-Security-Policy $csp_value always;
+    {% endif %}
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Xss-Protection "1; mode=block" always;
+    add_header Referrer-Policy "same-origin" always;
+
+    server_name tildes.net localhost;
+
+    keepalive_timeout 5;
+
+    root {{ app_dir }}/static;
+
+    # Block access to /metrics except from localhost (for Prometheus)
+    location /metrics {
+        allow 127.0.0.1;
+        deny all;
+
+        # try_files is unnecessary here, but I don't know the "proper" way
+        try_files $uri @proxy_to_app;
+    }
+
+    # add Expires+Cache-Control headers from the mime-type map defined above
+    expires $expires_type_map;
+
+    location / {
+        # checks for static file, if not found proxy to app
+        try_files $uri @proxy_to_app;
+        gzip_static on;
+    }
+
+    location @proxy_to_app {
+        # Cornice adds the X-Content-Type-Options header, so it will end up
+        # being duplicated since nginx is also configured to send it (above).
+        # It's better to drop the header coming from Gunicorn here than to
+        # stop sending it in nginx, since if I ever stop using Cornice I would
+        # lose that header (and probably not realize).
+        proxy_hide_header X-Content-Type-Options;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_redirect off;
+        proxy_pass http://app_server;
+    }
+}

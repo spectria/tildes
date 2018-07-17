@@ -1,0 +1,18 @@
+{% from 'macros/datetime.jinja2' import time_ago %}
+{% from 'macros/links.jinja2' import username_linked %}
+
+{% macro render_message(message) %}
+  {% if message.sender == request.user %}
+    <article class="message is-message-mine">
+  {% else %}
+    <article class="message">
+  {% endif %}
+
+    <header>
+      {{ username_linked(message.sender.username) }}
+      {{ time_ago(message.created_time) }}
+    </header>
+
+    <div class="message-text">{{ message.rendered_html|safe }}</div>
+  </article>
+{% endmacro %}

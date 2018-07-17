@@ -1,0 +1,18 @@
+// shrinks a font size by 0.1rem on mobile screen sizes
+@mixin font-shrink-on-mobile($base-size) {
+  font-size: $base-size - 0.1rem;
+  @media (min-width: $size-md) {
+    font-size: $base-size;
+  }
+}
+
+
+// makes sure the element is the "minimum touch size" on mobile
+@mixin min-touch-size() {
+  min-width: $min-touch-size;
+  min-height: $min-touch-size;
+  @media (min-width: $size-md) {
+    min-width: 0;
+    min-height: 0;
+  }
+}

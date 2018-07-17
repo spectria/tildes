@@ -1,0 +1,37 @@
+[DEFAULT]
+
+[app:main]
+use = egg:tildes
+
+redis.unix_socket_path = /run/redis/socket
+
+redis.sessions.secret = SomeReallyLongSecret
+redis.sessions.unix_socket_path = %(redis.unix_socket_path)s
+redis.sessions.prefix = session:
+redis.sessions.cookie_secure = true
+redis.sessions.cookie_max_age = 31536000
+
+# disable the python timeout management in pyramid-session-redis
+redis.sessions.python_expires = false
+redis.sessions.timeout_trigger = 0
+
+# set session timeout to 1 hour by default, we'll extend it when people log in
+redis.sessions.timeout = 3600
+
+sqlalchemy.url = postgresql+psycopg2://tildes:@:6432/tildes
+
+stripe_api_key = sk_live_ActualKeyShouldGoHere
+
+tildes.welcome_message_sender = Deimos
+
+webassets.auto_build = false
+webassets.base_dir = %(here)s/static
+webassets.base_url = /
+webassets.cache = false
+webassets.manifest = json
+
+[server:main]
+use = egg:gunicorn#main
+bind = unix:/run/gunicorn/socket
+workers = 8
+pidfile = /run/gunicorn/pid

@@ -1,0 +1,50 @@
+{% extends 'topic_listing.jinja2' %}
+
+{% block title_full %}Tildes{% endblock %}
+
+{% block header_context_link %}{% endblock %}
+
+{% block content %}
+  {% if request.user and request.user.subscriptions %}
+    {{ super() }}
+  {% else %}
+    <div class="empty">
+      <h2 class="empty-title">You aren't subscribed to any groups yet</h2>
+      <p class="empty-subtitle">This page will show a combined listing of topics from groups that you're subscribed to.</p>
+      <div class="empty-action"><a href="/groups" class="btn btn-primary">Browse the list of groups</a></div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+  <h2>Home</h2>
+  <p>The home page shows topics from groups that you're subscribed to.</p>
+  {% if request.user %}
+    {% if request.user.subscriptions %}
+      <ul class="nav">
+        <li>Subscriptions</li>
+        <ul class="nav">
+        {% for subscription in request.user.subscriptions|sort(attribute='group') %}
+          <li class="nav-item"><a href="/~{{ subscription.group.path }}">~{{ subscription.group.path }}</a></li>
+        {% endfor %}
+        </ul>
+      </ul>
+      <a href="/groups" class="btn btn-primary">Browse the list of groups</a>
+    {% endif %}
+
+    {% if not (tag or unfiltered) %}
+      <hr>
+      <details>
+        <summary>Filtered topic tags ({{ request.user.filtered_topic_tags|length }})</summary>
+        <ul class="topic-tags">
+          {% for tag in request.user.filtered_topic_tags %}
+            <li class="label label-topic-tag">{{ tag }}</li>
+          {% else %}
+            <li class="label label-topic-tag">No filtered tags</li>
+          {% endfor %}
+        </ul>
+        <a class="btn btn-link" href="/settings/filters">Edit filtered tags</a>
+      </details>
+    {% endif %}
+  {% endif %}
+{% endblock %}

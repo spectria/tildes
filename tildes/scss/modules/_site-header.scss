@@ -1,0 +1,44 @@
+#site-header {
+  .logged-in-user-info {
+    // hidden on small screens
+    display: none;
+    @media (min-width: $show-sidebar-width) {
+      display: block;
+    }
+
+    margin-left: auto;
+    text-align: right;
+  }
+}
+
+.site-header-context {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.site-header-logo {
+  background-image: url(/favicon-32x32.png);
+  background-repeat: no-repeat;
+  padding-left: 40px;
+  padding-right: 8px;
+  line-height: 32px;
+
+  font-size: 1.2rem;
+  font-weight: bold;
+
+  &:hover, &:active, &:focus {
+    text-decoration: none;
+  }
+
+  @media (min-width: $size-xs) {
+    margin-right: 1rem;
+  }
+}
+
+.site-header-sidebar-button {
+  @media (min-width: $show-sidebar-width) {
+    display: none;
+  }
+
+  margin-left: auto;
+}

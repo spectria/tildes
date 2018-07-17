@@ -1,0 +1,14 @@
+[Unit]
+Description=redis daemon
+After=network.target
+
+[Service]
+PIDFile=/run/redis/pid
+User=redis
+Group=redis
+RuntimeDirectory=redis
+ExecStart=/usr/local/bin/redis-server /etc/redis.conf
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

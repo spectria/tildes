@@ -1,0 +1,137 @@
+{% from 'macros/datetime.jinja2' import time_ago_responsive %}
+{% from 'macros/links.jinja2' import group_linked, username_linked %}
+
+{% macro render_topic_for_listing(topic, show_group=False, rank=None) %}
+  <article id="topic-{{ topic.topic_id36 }}" class="{{ topic_classes(topic)|trim }}">
+    <header>
+      {% if topic.is_link_type %}
+        <div class="topic-icon topic-icon-{{ topic.link_domain.replace('.', '_') }}"></div>
+      {% endif %}
+
+      <div>
+        <h1 class="topic-title">
+          {% if topic.is_text_type %}
+            <a href="{{ topic.permalink }}">{{ topic.title }}</a>
+          {% elif topic.is_link_type %}
+            <a href="{{ topic.link }}">{{ topic.title }}</a>
+          {% endif %}
+        </h1>
+        <span class="topic-content-metadata">({{ topic.content_metadata_for_display }})</span>
+      </div>
+    </header>
+
+    <div class="topic-metadata">
+      {% if show_group %}
+        <span class="topic-group">{{ group_linked(topic.group.path) }}</span>
+      {% endif %}
+
+      {% if topic.tags %}
+        <ul class="topic-tags">
+          {% for tag in topic.tags %}
+            <li class="label label-topic-tag">
+              {% if request.matched_route.name in ('home', 'group') %}
+                <a href="{{ request.current_listing_normal_url({'tag': tag.replace(' ', '_')}) }}">{{ tag }}</a>
+              {% else %}
+                {{ tag }}
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    {% if topic.is_text_type and topic.get_content_metadata('excerpt') %}
+      {# if the "excerpt" is the full text, don't wrap in <details> #}
+      {% if not topic.get_content_metadata('excerpt').endswith('...') %}
+        <p class="topic-text-excerpt">{{ topic.get_content_metadata('excerpt') }}</p>
+      {% else %}
+        <details class="topic-text-excerpt">
+          <summary>
+            <span>{{ topic.get_content_metadata('excerpt') }}</span>
+          </summary>
+          {{ topic.rendered_html|safe }}
+        </details>
+      {% endif %}
+    {% endif %}
+
+    <footer class="topic-info">
+      <div class="topic-info-comments">
+        <a href="{{ topic.permalink }}">
+          {% trans num_comments=topic.num_comments %}
+          {{ num_comments }} comment
+          {% pluralize %}
+          {{ num_comments }} comments
+          {% endtrans %}
+
+          {% if topic.comments_since_last_visit is defined and topic.comments_since_last_visit %}
+            <span class="topic-info-comments-new" title="Last visit {{ topic.last_visit_time|ago }}">
+              ({{ topic.comments_since_last_visit }} new)
+            </span>
+          {% endif %}
+        </a>
+      </div>
+
+      <div aria-label="Posted by">{{ username_linked(topic.user.username) }}</div>
+
+      <div aria-label="Post time">{{ time_ago_responsive(topic.created_time) }}</div>
+    </footer>
+
+    {{ topic_voting(topic) }}
+
+  </article>
+{% endmacro %}
+
+{% macro topic_voting(topic) %}
+  {% if request.has_permission('vote', topic) %}
+    {% if topic.user_voted %}
+      <button class="btn topic-voting btn-used"
+        data-ic-delete-from="{{ request.route_url(
+          'ic_topic_vote',
+          topic_id36=topic.topic_id36,
+        ) }}"
+        data-ic-replace-target="true"
+      >
+    {% else %}
+      <button class="btn topic-voting"
+        data-ic-put-to="{{ request.route_url(
+          'ic_topic_vote',
+          topic_id36=topic.topic_id36,
+        ) }}"
+        data-ic-replace-target="true"
+      >
+    {% endif %}
+  {% else %}
+    <div class="topic-voting">
+  {% endif %}
+
+  {# Hide voting from the topic's author if it has zero votes #}
+  {% if request.user != topic.user or topic.num_votes > 0 %}
+    <span class="topic-voting-votes">{{ topic.num_votes }}</span>
+    <span class="topic-voting-label">
+    {% trans num_votes=topic.num_votes %}
+    vote
+    {% pluralize %}
+    votes
+    {% endtrans %}
+  {% endif %}
+
+  {% if request.has_permission('vote', topic) %}
+    </button>
+  {% else %}
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro topic_classes(topic) %}
+  {% set classes = ['topic'] %}
+
+  {% if request.user == topic.user %}
+    {% do classes.append('is-topic-mine') %}
+  {% endif %}
+
+  {% if topic.is_official %}
+    {% do classes.append('is-topic-official') %}
+  {% endif %}
+
+  {{ classes|join(' ') }}
+{% endmacro %}

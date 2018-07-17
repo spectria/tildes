@@ -1,0 +1,75 @@
+.form-narrow {
+  max-width: 20rem;
+}
+
+select.form-select:not([multiple]) {
+  // would be better to implement autoprefixer to do this
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+.form-listing-options {
+  .form-group {
+    margin-top: 0.2rem;
+    margin-left: 0.4rem;
+  }
+
+  label, select {
+    font-size: 0.6rem;
+  }
+
+  select {
+    width: auto;
+    height: 1.4rem;
+    padding: 0 0 0 0.2rem;
+  }
+}
+
+.form-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+
+  margin: 0.2rem 0;
+  max-width: 40rem;
+
+  button {
+    margin-left: 0.4rem;
+  }
+}
+
+textarea.form-input {
+  height: 8rem;
+  line-height: 1.5;
+  max-width: none;
+  transition: none;
+}
+
+.form-status {
+  margin: auto 0;
+  font-size: 0.6rem;
+}
+
+.form-status-error {
+  color: $red;
+}
+
+.form-input {
+  max-width: 40rem;
+}
+
+.form-input-note {
+  font-size: 0.6rem;
+  line-height: 0.9rem;
+  margin: 0.2rem;
+}
+
+.form-label {
+  display: flex;
+  justify-content: space-between;
+  max-width: 40rem;
+
+  a {
+    font-size: 0.6rem;
+  }
+}

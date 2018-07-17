@@ -1,0 +1,42 @@
+.group-list {
+  .link-group {
+    font-weight: bold;
+  }
+
+  .group-subscription {
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .group-subscription-count {
+    margin-bottom: 0.2rem;
+  }
+}
+
+.group-list-description {
+  font-style: italic;
+  margin-left: 1rem;
+  font-size: 0.6rem;
+  line-height: 0.8rem;
+}
+
+.group-subscription {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+
+  .group-subscription-count, button {
+    flex: 1; // makes the two elements equal width
+  }
+
+  .btn-used {
+    border: 0;
+  }
+}
+
+.group-subscription-count {
+  white-space: nowrap;
+  font-size: 0.6rem;
+  text-align: center;
+  margin-right: 0.2rem;
+}

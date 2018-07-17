@@ -1,0 +1,16 @@
+<form method="post" name="topic-title-edit"
+    autocomplete="off"
+    data-ic-patch-to="{{ request.route_url(
+      'ic_topic',
+      topic_id36=topic.topic_id36,
+    ) }}"
+    data-ic-target=".topic-full h1:first"
+    data-js-remove-on-success
+>
+  <label class="form-label" for="title">Title:</label>
+  <input class="form-input" type="text" name="title" id="title" value="{{ topic.title }}" data-js-auto-focus>
+  <div class="form-buttons">
+    <button class="btn btn-primary" type="submit">Update title</button>
+    <button type="button" class="btn btn-link" data-js-cancel-button>Cancel</button>
+  </div>
+</form>

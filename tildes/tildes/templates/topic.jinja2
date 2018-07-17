@@ -1,0 +1,265 @@
+{% extends 'base.jinja2' %}
+
+{% from 'macros/comments.jinja2' import comment_tag_options_template, render_comment_tree with context %}
+{% from 'macros/datetime.jinja2' import time_ago, time_ago_abbreviated, time_ago_responsive %}
+{% from 'macros/forms.jinja2' import markdown_textarea %}
+{% from 'macros/links.jinja2' import group_linked, username_linked %}
+{% from 'macros/topics.jinja2' import topic_voting with context %}
+
+{% block title %}{{ topic.title }} - ~{{ topic.group.path }}{% endblock %}
+
+{% block header_context_link %}
+<a class="site-header-context" href="/~{{ topic.group.path }}">~{{ topic.group.path }}</a>
+{% endblock %}
+
+{% block content %}
+<article class="topic-full">
+<header>
+  {{ topic_voting(topic) }}
+  <h1>{{ topic.title }}</h1>
+  <div class="topic-full-byline">Posted {{ time_ago_responsive(topic.created_time) }} by
+    {% if request.has_permission('view_author', topic) %}
+      {{ username_linked(topic.user.username) }}
+    {% else %}
+      unknown user
+    {% endif %}
+
+    {% if topic.last_edited_time %}
+      <span class="text-italic">
+        (edited {{ time_ago_responsive(topic.last_edited_time) }})
+      </span>
+    {% endif %}
+  </div>
+</header>
+
+{% if topic.is_deleted %}
+  <div class="text-error">Topic deleted by author</div>
+{% elif topic.is_removed %}
+  <div class="text-error">Topic removed by site admin</div>
+{% endif %}
+
+{% if request.has_permission('view_content', topic) %}
+  {% if topic.is_text_type %}
+    <div class="topic-full-text">{{ topic.rendered_html|safe }}</div>
+  {% elif topic.is_link_type %}
+    <div class="topic-full-link">
+      <div class="topic-icon topic-icon-{{ topic.link_domain.replace('.', '_') }}"></div>
+      <a href="{{ topic.link }}">{{ topic.link }}</a>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% if request.has_any_permission(('edit', 'delete', 'tag', 'lock', 'move', 'edit_title'), topic) %}
+  <menu class="post-buttons">
+    {% if request.has_permission('edit', topic) %}
+      <li><a class="post-button" name="edit"
+        data-ic-get-from="{{ request.route_url(
+          'ic_topic',
+          topic_id36=topic.topic_id36,
+        ) }}"
+        data-ic-target=".topic-full .topic-full-text"
+        data-ic-scroll-to-target="true"
+      >Edit</a></li>
+    {% endif %}
+
+    {% if request.has_permission('tag', topic) %}
+      <li><a class="post-button" name="tag"
+        data-ic-get-from="{{ request.route_url(
+          'ic_topic_tags',
+          topic_id36=topic.topic_id36,
+        ) }}"
+        data-ic-swap-style="append"
+        data-ic-target=".topic-full .post-buttons:first"
+      >Tag</a>
+    {% endif %}
+
+    {% if request.has_permission('delete', topic) %}
+      <li><a class="post-button" name="delete"
+        data-ic-delete-from="{{ request.route_url(
+          'ic_topic',
+          topic_id36=topic.topic_id36,
+        ) }}"
+        data-ic-confirm="Delete this topic? This cannot be undone."
+      >Delete</a></li>
+    {% endif %}
+
+    {% if request.has_permission('move', topic) %}
+      <li><a class="post-button" name="move"
+        data-ic-get-from="{{ request.route_url(
+          'ic_topic_group',
+          topic_id36=topic.topic_id36,
+        ) }}"
+        data-ic-swap-style="append"
+        data-ic-target=".topic-full .post-buttons:first"
+      >Move</a>
+    {% endif %}
+
+    {% if request.has_permission('edit_title', topic) %}
+      <li><a class="post-button" name="edit-title"
+        data-ic-get-from="{{ request.route_url(
+          'ic_topic_title',
+          topic_id36=topic.topic_id36,
+        ) }}"
+        data-ic-swap-style="append"
+        data-ic-target=".topic-full .post-buttons:first"
+      >Edit title</a>
+    {% endif %}
+
+    {% if request.has_permission('lock', topic) %}
+      <li>
+      {% if not topic.is_locked %}
+        <a class="post-button"
+          data-ic-put-to="{{ request.route_url(
+            'ic_topic_lock',
+            topic_id36=topic.topic_id36,
+          ) }}"
+          data-ic-replace-target="true"
+          data-ic-confirm="Lock this topic?"
+        >Lock</a>
+      {% else %}
+        <a class="post-button"
+          data-ic-delete-from="{{ request.route_url(
+            'ic_topic_lock',
+            topic_id36=topic.topic_id36,
+          ) }}"
+          data-ic-replace-target="true"
+          data-ic-confirm="Unlock this topic?"
+        >Unlock</a>
+      {% endif %}
+      </li>
+    {% endif %}
+  </menu>
+{% endif %}
+
+{% if topic.is_locked %}
+  <div class="toast toast-warning">This topic is locked. New comments can not be posted.</div>
+{% endif %}
+
+{% if topic.num_comments > 0 %}
+  <section class="topic-comments">
+    <header>
+      <h2>
+      {% trans num_comments=topic.num_comments %}
+      {{ num_comments }} comment
+      {% pluralize %}
+      {{ num_comments }} comments
+      {% endtrans %}
+      </h2>
+
+      <form class="form-listing-options" method="get">
+        <div class="form-group">
+          <label for="comment_order">Comments sorted by</label>
+          <select id="comment_order" name="comment_order" class="form-select" data-js-autosubmit-on-change>
+            {% for option in comment_order_options %}
+              <option value="{{ option.name.lower() }}"
+
+              {% if option == comment_order %}
+                selected
+              {% endif %}
+              >{{ option.description }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        {# add a submit button for people with js disabled so this is still usable #}
+        <noscript>
+          <button type="submit" class="btn btn-primary btn-sm">OK</button>
+        </noscript>
+      </form>
+    </header>
+
+    {{ render_comment_tree(comments, mark_newer_than=topic.last_visit_time) }}
+  </section>
+{% endif %}
+
+{% if request.has_permission('comment', topic) %}
+  <section>
+    <h2>Post a comment</h2>
+    <form
+      method="post"
+      data-ic-post-to="{{ request.route_url('ic_topic_comments', topic_id36=topic.topic_id36) }}"
+      data-ic-replace-target="true"
+      autocomplete="off"
+      data-js-prevent-double-submit
+      data-js-confirm-leave-page-unsaved
+    >
+      <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
+
+      {{ markdown_textarea('New top-level comment') }}
+
+      <div class="form-buttons">
+        <button class="btn btn-primary" type="submit">Post comment</button>
+      </div>
+    </form>
+  </section>
+{% endif %}
+
+</article>
+
+{{ comment_tag_options_template(comment_tag_options) }}
+{% endblock content %}
+
+{% block sidebar %}
+<h2>Topic info</h2>
+<dl>
+  <dt>Tags</dt>
+  <dd>
+    <ul class="topic-tags">
+      {% for tag in topic.tags %}
+        <li class="label label-topic-tag">
+          <a href="/~{{ topic.group.path }}?tag={{ tag.replace(' ', '_') }}">{{ tag }}</a>
+        </li>
+      {% else %}
+        <li class="label label-topic-tag">No tags</li>
+      {% endfor %}
+    </ul>
+  </dd>
+
+  <dt>Comments</dt>
+  {% if topic.num_comments > 0 %}
+    <dd>
+    {% trans num_comments=topic.num_comments %}
+    {{ num_comments }} comment
+    {% pluralize %}
+    {{ num_comments }} comments
+    {% endtrans %}
+
+    {% trans num_top_level=comments.num_top_level %}
+    ({{ num_top_level }} thread)
+    {% pluralize %}
+    ({{ num_top_level }} threads)
+    {% endtrans %}
+    </dd>
+
+    <dt>Last comment posted</dt>
+    <dd>
+      <a href="{{ comments.most_recent_comment.permalink }}">
+        {{ time_ago(topic.last_activity_time) }}
+      </a>
+    </dd>
+  {% else %}
+    <dd>No comments yet</dd>
+  {% endif %}
+
+  {% if log %}
+    <details class="topic-log">
+      <summary><dt>Topic log ({{ log|length }})</dt></summary>
+      <dd>
+        <ol class="topic-log-listing">
+        {% for entry in log %}
+          <li class="topic-log-entry">
+            {% if entry.user == topic.user and not request.has_permission('view_author', topic) %}
+              Unknown user
+            {% else %}
+              {{ username_linked(entry.user) }}
+            {% endif %}
+            {{ entry }}
+            <span class="topic-log-entry-time">({{ time_ago_abbreviated(entry.event_time) }})</span>
+          </li>
+        {% endfor %}
+        </ol>
+      </dd>
+    </details>
+  {% endif %}
+</dl>
+{% endblock %}

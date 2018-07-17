@@ -1,0 +1,21 @@
+[databases]
+{% for line in accumulator['pgbouncer_db_lines'] -%}
+{{ line }}
+{% endfor %}
+
+[pgbouncer]
+logfile = /var/log/postgresql/pgbouncer.log
+log_connections = 0
+log_disconnections = 0
+
+pidfile = /var/run/postgresql/pgbouncer.pid
+
+listen_port = 6432
+
+unix_socket_dir = /var/run/postgresql
+
+auth_type = hba
+auth_file = /etc/pgbouncer/userlist.txt
+auth_hba_file = /etc/postgresql/{{ pillar['postgresql_version'] }}/main/pg_hba.conf
+
+pool_mode = transaction

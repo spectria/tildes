@@ -1,0 +1,38 @@
+.message {
+  margin-bottom: 0.4rem;
+  border: 1px solid;
+
+  header {
+    display: flex;
+    align-items: center;
+    padding: 0.2rem;
+    font-size: 0.7rem;
+    line-height: 0.9rem;
+
+    .link-user {
+      margin-right: 0.2rem;
+    }
+
+    time {
+      margin-left: 0.4rem;
+      font-size: 0.6rem;
+    }
+  }
+}
+
+.message-text {
+  margin-left: 0.2rem;
+  overflow: auto;
+  padding: 0.2rem;
+}
+
+.message-list-unread {
+  .message-list-subject {
+    font-weight: bold;
+  }
+}
+
+.is-message-mine {
+  margin-left: -2px;
+  border-left: 3px solid $violet !important;
+}

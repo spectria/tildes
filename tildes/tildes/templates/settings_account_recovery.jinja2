@@ -1,0 +1,60 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% block title %}Set up account recovery{% endblock %}
+
+{% block main_heading %}Set up account recovery{% endblock %}
+
+{% block content %}
+<p>In order to support account recovery while maximizing user privacy, Tildes's recovery process is a bit unusual.</p>
+
+<p>The email address you enter below will be cryptographically hashed (using <a href="https://en.wikipedia.org/wiki/Argon2">Argon2</a>) and only the hash stored. <strong>Your actual address is not stored</strong>, so it is impossible for anyone to see what it is or use it to send you email, and your address can't be leaked (due to a data breach, account compromise, etc.).</p>
+
+<p>Because of this, the account recovery process has to be initiated differently from most sites:</p>
+
+<ol>
+  <li>If you lose access to your account, you send an email from the associated address, requesting a password reset for that specific username.</li>
+  <li>The sending email address is hashed, and if the result matches the stored hash for that user, a message is sent back (to the same address) that includes a password reset link.</li>
+  <li>You receive the email, reset your password, and are able to log into the account again.</li>
+</ol>
+
+<p>This means that <strong>you must be able to both send and receive email with the address</strong>, so make sure to use an address where you can do both.</p>
+
+<p>Finally, since even you won't be able to see which email address is attached to the account in the future, there is a space for you to leave a short description of the address in case you forget which one it is. <strong>Please don't include the actual address in the description</strong>, or use a description that makes it obvious what the address is. I don't want to know your email address. Seriously.</p>
+
+<div class="divider"></div>
+
+{% if request.user.email_address_hash %}
+  {% if request.user.email_address_note %}
+    <p class="text-warning">You already have an email address hash associated with your account, with the following description:</p>
+    <blockquote class="text-warning">{{ request.user.email_address_note }}</blockquote>
+  {% else %}
+    <p class="text-warning">You already have an email address hash associated with your account.</p>
+  {% endif %}
+
+  <p class="text-warning">Submitting the form below will replace the currently stored hash and description. The previous hash and description will be retained for 30 days (in case of account compromise).</p>
+{% endif %}
+
+<form
+  name="account-recovery-email"
+  autocomplete="off"
+  data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+  {% if request.user.email_address_hash %}
+  data-ic-confirm="Replace the currently stored email hash and description?"
+  {% endif %}
+  data-ic-target="closest main"
+>
+  <div class="form-group">
+    <label class="form-label" for="email_address">Email address</label>
+    <input class="form-input" id="email_address" name="email_address" type="email" placeholder="Email address">
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="email_address_note">Description (don't include address)</label>
+    <input class="form-input" id="email_address_note" name="email_address_note" placeholder="Description" maxlength="{{ note_max_length }}">
+  </div>
+
+  <div class="form-buttons">
+    <button class="btn btn-primary" type="submit">Save email address</button>
+  </div>
+</form>
+{% endblock %}

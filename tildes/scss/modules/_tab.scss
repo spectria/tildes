@@ -1,0 +1,26 @@
+.tab-listing-order {
+  flex-wrap: nowrap;
+  padding-left: 0;
+  margin-top: 0;
+
+  justify-content: space-around;
+
+  font-size: 0.6rem;
+
+  // have the tabs span the full width at small sizes
+  width: 100%;
+  @media (min-width: $size-md) {
+    width: auto;
+  }
+
+  .tab-item {
+    white-space: nowrap;
+
+    a {
+      margin-right: 0;
+      @media (min-width: $size-md) {
+        margin-right: 0.4rem;
+      }
+    }
+  }
+}

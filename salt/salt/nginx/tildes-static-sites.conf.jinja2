@@ -1,0 +1,35 @@
+{% from 'common.jinja2' import static_sites_dir -%}
+
+{% for subdomain in ('blog', 'docs') %}
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    add_header Strict-Transport-Security "max-age={{ pillar['hsts_max_age'] }}; includeSubDomains; preload" always;
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Xss-Protection "1; mode=block" always;
+    add_header Referrer-Policy "same-origin" always;
+
+    server_name {{ subdomain }}.tildes.net;
+
+    keepalive_timeout 5;
+    gzip_static on;
+
+    location /favicon.ico {
+        root /opt/tildes-static-sites/theme/images;
+        try_files $uri =404;
+    }
+
+    location /theme {
+        root {{ static_sites_dir }};
+        try_files $uri =404;
+    }
+
+    location / {
+        root {{ static_sites_dir }}/{{ subdomain }};
+        try_files $uri $uri.html $uri/index.html =404;
+    }
+}
+{% endfor %}

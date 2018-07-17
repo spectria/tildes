@@ -1,0 +1,36 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% from 'macros/datetime.jinja2' import time_ago_responsive %}
+{% from 'macros/links.jinja2' import username_linked %}
+
+{% block title %}Message Inbox{% endblock %}
+
+{% block main_heading %}Message Inbox{% endblock %}
+
+{% block content %}
+  <table class="table message-list">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>User</th>
+        <th class="text-right">Last message</th>
+        <th class="text-right">Messages</th>
+      </tr>
+    </thead>
+
+  {% for conversation in conversations %}
+    {% if conversation.is_unread_by_user(request.user) %}
+      <tr class="message-list-unread">
+    {% else %}
+      <tr>
+    {% endif %}
+      <td class="message-list-subject">
+        <a href="{{ request.route_url('message_conversation', conversation_id36=conversation.conversation_id36) }}">{{ conversation.subject }}</a>
+      </td>
+      <td>{{ username_linked(conversation.other_user(request.user).username) }}</td>
+      <td class="text-right">{{ time_ago_responsive(conversation.last_activity_time) }}</td>
+      <td class="text-right">{{ conversation.num_replies + 1 }}</td>
+    </tr>
+  {% endfor %}
+  </table>
+{% endblock %}

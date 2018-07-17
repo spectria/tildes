@@ -1,0 +1,25 @@
+{% from 'macros/forms.jinja2' import markdown_textarea %}
+
+<form method="post"
+    class="topic-edit"
+    autocomplete="off"
+    data-ic-patch-to="{{ request.route_url(
+      'ic_topic',
+      topic_id36=topic.topic_id36,
+    ) }}"
+    data-ic-target=".topic-full .topic-full-text"
+    data-js-confirm-leave-page-unsaved
+>
+  {{ markdown_textarea('Edit your topic', id="topic-markdown", text=topic.markdown, auto_focus=True) }}
+  <div class="form-buttons">
+    <button class="btn btn-primary" type="submit">Save edits</button>
+    <button
+      class="btn btn-link"
+      data-ic-get-from="{{ request.route_url(
+        'ic_topic',
+        topic_id36=topic.topic_id36,
+      ) }}"
+      data-ic-target=".topic-full .topic-full-text"
+    >Cancel</button>
+  </div>
+</form>

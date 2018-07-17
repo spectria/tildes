@@ -1,0 +1,17 @@
+// abbreviated timestamp - only displays on small screens
+.time-responsive::after {
+  content: attr(data-abbreviated);
+
+  @media (min-width: $size-lg) {
+    display: none;
+  }
+}
+
+// full timestamp - hidden on small screens
+.time-responsive-full {
+  display: none;
+
+  @media (min-width: $size-lg) {
+    display: inline;
+  }
+}

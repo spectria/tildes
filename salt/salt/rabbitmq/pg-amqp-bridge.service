@@ -1,0 +1,14 @@
+[Unit]
+Description=pg-amqp-bridge - send pgsql NOTIFY to rabbitmq
+Requires=rabbitmq-server.service
+After=rabbitmq-server.service
+PartOf=rabbitmq-server.service
+
+[Service]
+Environment="POSTGRESQL_URI=postgres://tildes@%2Frun%2Fpostgresql/tildes" "AMQP_URI=amqp://localhost//" "BRIDGE_CHANNELS=pgsql_events:pgsql_events" "DELIVERY_MODE=PERSISTENT"
+ExecStart=/usr/local/bin/pg-amqp-bridge
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

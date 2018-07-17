@@ -1,0 +1,121 @@
+.btn {
+  @include min-touch-size;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 0.6rem;
+  font-weight: bold;
+
+  background-color: inherit;
+
+  &:hover {
+    background-color: rgba($blue, 0.2);
+  }
+}
+
+.btn.btn-sm {
+  font-size: 0.6rem;
+}
+
+.btn-link-minimal {
+  display: inline;
+  height: auto;
+  width: auto;
+  padding: 0;
+  border: 0;
+  font-weight: normal;
+
+  @media (min-width: $size-md) {
+    min-height: 0;
+  }
+}
+
+.btn-used {
+  border-color: darken($violet, 3%);
+  color: $violet;
+
+  &:hover {
+    background-color: darken($violet, 3%);
+    border-color: darken($violet, 8%);
+    color: #fff;
+  }
+}
+
+.btn-comment-collapse {
+  @include min-touch-size;
+
+  height: 100%;
+  line-height: 100%;
+  padding: 0;
+
+  font-weight: normal;
+
+  border-left-width: 0;
+  margin-right: 0.4rem;
+  @media (min-width: $size-md) {
+    border-left-width: 1px;
+    margin-right: 0.2rem;
+    min-width: 0.8rem;
+  }
+
+  &:hover {
+    color: $blue;
+  }
+}
+
+.btn-comment-tag {
+  display: inline-flex;
+  align-items: center;
+  margin: 0.4rem;
+
+  font-size: 0.6rem;
+  font-weight: bold;
+  text-transform: capitalize;
+
+  cursor: pointer;
+
+  &.btn {
+    height: 1rem;
+    text-transform: capitalize;
+  }
+
+  &.btn-used {
+    border: 1px solid;
+  }
+}
+
+@mixin tagbutton($color) {
+  color: $color;
+  border-color: $color;
+
+  &:hover {
+    color: $color;
+  }
+
+  &.btn-used:hover {
+    background-color: $color;
+    color: #fff;
+  }
+}
+
+.btn-comment-tag-joke {
+  @include tagbutton($comment-tag-joke-color);
+}
+
+.btn-comment-tag-noise {
+  @include tagbutton($comment-tag-noise-color);
+}
+
+.btn-comment-tag-offtopic {
+  @include tagbutton($comment-tag-offtopic-color);
+}
+
+.btn-comment-tag-troll {
+  @include tagbutton($comment-tag-troll-color);
+}
+
+.btn-comment-tag-flame {
+  @include tagbutton($comment-tag-flame-color);
+}

@@ -1,0 +1,43 @@
+.post-listing {
+  list-style-type: none;
+  margin-left: 0;
+
+  h2 {
+    font-size: 0.6rem;
+  }
+
+  // override the normal nested list behaviors
+  .comment-text ol, .topic-text-excerpt ol {
+    list-style-type: decimal;
+    margin: 0 0 1rem 2rem;
+  }
+
+  .comment-text ul, .topic-text-excerpt ul {
+    margin: 0.4rem 0 0.4rem 1rem;
+  }
+
+  & > li {
+    margin-bottom: 1rem;
+    max-width: none;
+  }
+
+  .is-topic-mine, .is-topic-official {
+    margin-left: -1px;
+  }
+}
+
+.post-listing-notifications {
+  h2 {
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+    margin-bottom: 0;
+  }
+
+  h2 + article {
+    margin-top: 0.4rem;
+  }
+
+  .btn-link-minimal {
+    margin-left: 0.4rem;
+  }
+}

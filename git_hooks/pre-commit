@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# Pre-commit hook script that ensures mypy checks and tests pass
+
+vagrant ssh -c ". activate \
+    && echo 'Checking mypy type annotations...' && mypy . \
+    && echo -n 'Running tests: ' && pytest -q"

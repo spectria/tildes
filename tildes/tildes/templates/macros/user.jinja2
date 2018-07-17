@@ -1,0 +1,27 @@
+{% macro logged_in_user_info() %}
+  {% if request.user %}
+  <div class="logged-in-user-info">
+    <a class="logged-in-user-username" href="/user/{{ request.user }}">{{ request.user }}</a>
+
+    {% if request.user.num_unread_messages > 0 %}
+      <a class="logged-in-user-alert" href="/messages/unread">
+        {% trans num_messages=request.user.num_unread_messages %}
+        {{ num_messages }} new message
+        {% pluralize %}
+        {{ num_messages }} new messages
+        {% endtrans %}
+      </a>
+    {% endif %}
+
+    {% if request.user.num_unread_notifications > 0 %}
+      <a class="logged-in-user-alert" href="/notifications/unread">
+        {% trans num_notifications=request.user.num_unread_notifications %}
+        {{ num_notifications }} new reply
+        {% pluralize %}
+        {{ num_notifications }} new replies
+        {% endtrans %}
+      </a>
+    {% endif %}
+  </div>
+  {% endif %}
+{% endmacro %}

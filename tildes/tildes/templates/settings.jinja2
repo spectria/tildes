@@ -1,0 +1,53 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% block title %}User settings{% endblock %}
+
+{% block main_heading %}User settings{% endblock %}
+
+{% block content %}
+  <ul class="settings-list">
+    <li>
+      <label for="theme">Choose a display theme:</label>
+      <select class="form-select" name="theme" id="theme" data-js-theme-selector>
+        {% for theme, description in theme_options.items() %}
+          <option
+            value="{{ theme }}"
+            {{ 'selected' if theme == current_theme else ''}}
+          >{{ description }}</option>
+        {% endfor %}
+      </select>
+    </li>
+    <li>
+      <form
+        name="auto-mark-notifications-read"
+        autocomplete="off"
+        data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+      >
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input
+              type="checkbox"
+              id="auto_mark_notifications_read"
+              name="auto_mark_notifications_read"
+              data-js-autosubmit-on-change
+              {% if request.user.auto_mark_notifications_read %}checked{% endif %}
+            >
+            <i class="form-icon"></i> Automatically mark all notifications read when you view the Unread Notifications page
+          </label>
+        </div>
+      </form>
+    </li>
+    <li><a href="/settings/password_change">Change your password</a></li>
+    <li>
+      <a href="/settings/account_recovery">Set up account recovery</a>
+      <div class="text-small text-secondary">To be able to regain access in case of lost password, compromise, etc.</div>
+    </li>
+    <li>
+      <a href="/settings/comment_visits">Toggle marking new comments (currently {{ 'enabled' if request.user.track_comment_visits else 'disabled' }})</a>
+      <div class="text-small text-secondary">Marks new comments in topics since your last visit, and which topics have any</div>
+    </li>
+    <li>
+      <a href="/settings/filters">Define topic tag filters</a>
+      <div class="text-small text-secondary">Define a list of topic tags to filter out of listings by default</div>
+  </ul>
+{% endblock %}

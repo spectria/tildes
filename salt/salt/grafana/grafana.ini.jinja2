@@ -1,0 +1,17 @@
+[server]
+domain = {{ pillar['grafana_server_name'] }}
+root_url = https://{{ pillar['grafana_server_name'] }}
+
+[analytics]
+reporting_enabled = false
+
+[security]
+admin_password = """{{ pillar['grafana_admin_password'] }}"""
+disable_gravatar = true
+
+[snapshots]
+external_enabled = false
+
+[users]
+allow_sign_up = false
+allow_org_create = false

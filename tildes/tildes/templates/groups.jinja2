@@ -1,0 +1,34 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% from 'macros/groups.jinja2' import render_group_subscription_box with context %}
+{% from 'macros/links.jinja2' import group_linked %}
+
+{% block title %}Browse groups{% endblock %}
+
+{% block main_heading %}
+  <h1>Browse groups</h1>
+{% endblock %}
+
+{% block content %}
+  <table class="table group-list">
+    <thead>
+      <tr>
+        <th>Group</th>
+        <th class="text-center">Subscribe</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for group in groups %}
+        <tr>
+          <td>
+            {{ group_linked(group.path) }}
+            {% if group.short_description %}
+              <p class="group-list-description">{{ group.short_description }}</p>
+            {% endif %}
+          </td>
+          <td>{{ render_group_subscription_box(group) }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

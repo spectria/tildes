@@ -1,0 +1,13 @@
+{% set python_version = '3.6.5' %}
+
+{% set app_dir = '/opt/tildes' %}
+{% set static_sites_dir = '/opt/tildes-static-sites' %}
+
+{% set venv_dir = '/opt/venvs/tildes' %}
+{% set bin_dir = venv_dir + '/bin' %}
+
+{% if grains['id'] == 'dev' %}
+  {% set app_username = 'vagrant' %}
+{% else %}
+  {% set app_username = 'tildes' %}
+{% endif %}

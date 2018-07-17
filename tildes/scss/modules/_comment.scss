@@ -1,0 +1,131 @@
+.comment {
+  border-left: 1px solid;
+  margin-bottom: 0.4rem;
+
+  header {
+    display: flex;
+    align-items: baseline;
+    font-size: 0.7rem;
+    line-height: 0.7rem;
+
+    // no padding on mobile - the collapse button will do the job
+    padding: 0 0.2rem 0 0;
+    @media (min-width: $size-md) {
+      padding: 0.2rem;
+    }
+
+    & > time {
+      margin-left: 0.4rem;
+      font-size: 0.6rem;
+    }
+  }
+}
+
+.comment[data-comment-depth="0"] {
+  border-bottom: 1px solid;
+}
+
+.comment-user-info {
+  margin-left: 0.2rem;
+}
+
+.comment-edited-time {
+  font-size: 0.6rem;
+  font-style: italic;
+  margin-left: 0.4rem;
+}
+
+.comment-nav-link {
+  font-size: 0.6rem;
+  margin-left: 0.4rem;
+}
+
+.comment-replies {
+  margin-left: 0.4rem;
+  padding-top: 0.4rem;
+
+  @media (min-width: $size-md) {
+    margin-left: 1rem;
+  }
+}
+
+.comment-tags {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 0 0.4rem;
+  list-style-type: none;
+
+  li {
+    margin-top: 0;
+  }
+}
+
+.comment-tag-buttons {
+  display: flex;
+  margin: 0;
+  padding: 0 1rem;
+  justify-content: space-between;
+  align-items: center;
+
+  @media (min-width: $size-md) {
+    justify-content: left;
+  }
+}
+
+.comment-tag-count {
+  font-weight: bold;
+  font-size: 0.5rem;
+  margin-right: 0.4rem;
+}
+
+.comment-text {
+  padding: 0.2rem;
+  padding-left: 0.4rem;
+  overflow: auto;
+}
+
+.comment-votes {
+  font-size: 0.6rem;
+  font-weight: bold;
+  margin: 0 0.4rem;
+}
+
+.is-comment-by-op {
+  & > .comment-itself {
+    margin-left: -2px;
+    border-left: 3px solid !important;
+
+    .comment-user-info {
+      font-weight: bold;
+    }
+  }
+}
+
+.is-comment-collapsed {
+  &[data-comment-depth="0"] {
+    border-bottom: 0;
+  }
+
+  .comment-text, .post-buttons, .comment-replies, .comment-votes, .comment-tags {
+    display: none;
+  }
+}
+
+.is-comment-deleted, .is-comment-removed {
+  font-size: 0.7rem;
+  font-style: italic;
+}
+
+.is-comment-mine {
+  & > .comment-itself {
+    margin-left: -2px;
+    border-left: 3px solid $violet !important;
+  }
+}
+
+.is-comment-new {
+  & > .comment-itself {
+    margin-left: -2px;
+    border-left: 3px solid $orange !important;
+  }
+}

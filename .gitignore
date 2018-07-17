@@ -1,0 +1,23 @@
+.vagrant
+Customfile
+
+__pycache__
+*.py[co]
+
+*.egg-info/
+
+.cache/
+.mypy_cache/
+.webassets-cache/
+.webassets-manifest
+
+*.gz
+*.log
+
+# don't track the built versions of CSS and JS
+tildes/static/css/*
+tildes/static/js/third_party.js
+tildes/static/js/tildes.js
+
+# don't track the site-icons spritesheet(s)
+tildes/static/images/site-icons*

@@ -1,0 +1,12 @@
+.listing-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 0.4rem;
+
+  // right-align the period dropdown at small sizes, left-align at larger
+  justify-content: flex-end;
+  @media (min-width: $size-md) {
+    justify-content: flex-start;
+  }
+}

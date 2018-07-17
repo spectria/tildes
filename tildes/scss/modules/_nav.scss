@@ -1,0 +1,25 @@
+.nav {
+  li {
+    font-size: 0.6rem;
+    font-weight: bold;
+  }
+
+  .nav {
+    margin-left: 0;
+
+    li {
+      font-size: 0.8rem;
+      font-weight: normal;
+      border-bottom: 0;
+    }
+  }
+
+  .nav-item a {
+    color: $blue;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

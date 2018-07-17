@@ -1,0 +1,280 @@
+// This file should only contain rules that need to differ between the
+// different themes, defined inside the `theme-dependent` mixin below.
+// Note that all rules inside the mixin will be included in the compiled CSS
+// once for each theme, so they should be kept as minimal as possible.
+
+@mixin commenttag($color, $is-light) {
+  @if $is-light {
+    background-color: $color;
+  }
+  @else {
+    background-color: transparent;
+    color: $color;
+    border: 1px solid $color;
+  }
+}
+
+@mixin theme-dependent($background-color, $background-alt-color, $text-color, $text-highlight-color, $text-secondary-color, $border-color) {
+  // set $is-light as a bool for whether $background-color seems light or dark
+  $is-light: lightness($background-color) > 50;
+
+  $text-mid-color: mix($text-color, $text-secondary-color);
+  $text-extreme-color: if($is-light, #000, #fff);
+
+  // if $background-color is light, make the input background even lighter,
+  // but if it's dark, make input background even darker
+  $input-background-color: if($is-light, lighten($background-color, 3%), darken($background-color, 3%));
+
+  background-color: $background-alt-color;
+  color: $text-color;
+
+  blockquote {
+    background-color: $background-alt-color;
+    border-color: $text-highlight-color;
+  }
+
+  code, pre {
+    background-color: $background-alt-color;
+    color: $text-highlight-color;
+  }
+
+  fieldset {
+    border-color: $border-color;
+  }
+
+  figure {
+    border-color: $border-color;
+  }
+
+  main {
+    background-color: $background-color;
+  }
+
+  section {
+    border-color: $border-color;
+  }
+
+  .tab-listing-order {
+    border-color: $border-color;
+  }
+
+  .logged-in-user-username {
+    color: $text-color;
+  }
+
+  .sidebar-controls {
+    background-color: $background-alt-color;
+  }
+
+  .site-header-context, .site-header-username {
+    color: $text-color;
+  }
+
+  .site-header-logo {
+    color: $text-highlight-color;
+  }
+
+  #sidebar {
+    background-color: $background-color;
+  }
+
+  .btn-comment-collapse {
+    color: $text-secondary-color;
+    border-color: $border-color;
+  }
+
+  .comment {
+    border-color: $border-color;
+
+    header {
+      background-color: $background-alt-color;
+      color: $text-highlight-color;
+    }
+  }
+
+  .comment[data-comment-depth="0"] {
+    border-color: $border-color;
+  }
+
+  .comment-nav-link {
+    color: $text-secondary-color;
+  }
+
+  .comment-tags {
+    .label-comment-tag-joke { @include commenttag($comment-tag-joke-color, $is-light); }
+    .label-comment-tag-noise { @include commenttag($comment-tag-noise-color, $is-light); }
+    .label-comment-tag-offtopic { @include commenttag($comment-tag-offtopic-color, $is-light); }
+    .label-comment-tag-troll { @include commenttag($comment-tag-troll-color, $is-light); }
+    .label-comment-tag-flame { @include commenttag($comment-tag-flame-color, $is-light); }
+  }
+
+  .is-comment-collapsed {
+    header {
+      background-color: $background-color;
+      color: $text-secondary-color;
+
+      .link-user {
+        color: $text-secondary-color;
+      }
+    }
+  }
+
+  .is-comment-deleted, .is-comment-removed {
+    color: $text-secondary-color;
+  }
+
+  .is-comment-new {
+    .comment-text {
+      color: $text-highlight-color;
+    }
+  }
+
+  .divider {
+    border-color: $border-color;
+  }
+
+  .divider[data-content]::after {
+    color: $text-color;
+    background-color: $background-color;
+  }
+
+  .empty-subtitle {
+    color: $text-secondary-color;
+  }
+
+  .form-input {
+    background-color: $input-background-color;
+    color: $text-color;
+  }
+
+  .form-input:not(:focus) {
+    border-color: $border-color;
+  }
+
+  .form-select {
+    border-color: $border-color;
+  }
+
+  .form-select:not([multiple]):not([size]) {
+    background-color: $input-background-color;
+  }
+
+  .message {
+    border-color: $border-color;
+
+    header {
+      background-color: $background-alt-color;
+      color: $text-highlight-color;
+    }
+  }
+
+  .label-topic-tag {
+    color: $text-mid-color;
+
+    a {
+      color: $text-mid-color;
+    }
+  }
+
+  .post-button {
+    color: $text-secondary-color;
+
+    &:hover {
+      color: $text-extreme-color;
+    }
+  }
+
+  .post-button-used {
+    color: $violet;
+  }
+
+  td {
+    border-color: $border-color;
+  }
+
+  th {
+    border-color: $text-highlight-color;
+  }
+
+  tbody tr:nth-of-type(2n+1) {
+    background-color: $background-alt-color;
+  }
+
+  .text-secondary {
+    color: $text-secondary-color;
+  }
+
+  .toast {
+    background-color: $background-alt-color;
+    border-color: $border-color;
+    color: $text-highlight-color;
+  }
+
+  // Toasts should have colored border + text for dark themes, instead of a
+  // brightly colored background
+  @if ($is-light == false) {
+    .toast-warning {
+      border-color: $orange;
+      color: $orange;
+      background-color: transparent;
+    }
+  }
+
+  .topic-listing {
+    & > li:nth-of-type(2n) {
+      background-color: mix($background-color, $background-alt-color);
+      color: mix($text-color, $text-highlight-color);
+    }
+  }
+
+  .topic {
+    border-color: $border-color;
+  }
+
+  .topic-content-metadata {
+    color: $text-secondary-color;
+  }
+
+  .topic-full-byline {
+    color: $text-secondary-color;
+  }
+
+  .topic-info {
+    color: $text-mid-color;
+  }
+
+  .topic-log-entry-time {
+    color: $text-secondary-color;
+  }
+
+  .topic-text-excerpt {
+    color: $text-secondary-color;
+
+    summary::after {
+      color: $text-secondary-color;
+    }
+
+    &[open] {
+      color: $text-color;
+    }
+  }
+}
+
+body {
+  @include theme-dependent($background-color: #fff, $background-alt-color: #eee, $text-color: #333, $text-highlight-color: #222, $text-secondary-color: #999, $border-color: #ccc);
+}
+
+body.theme-light {
+  @include theme-dependent($background-color: $bg-lightest, $background-alt-color: $bg-light, $text-color: $fg-dark, $text-highlight-color: $fg-darkest, $text-secondary-color: $fg-lightest, $border-color: #cbc5b6);
+}
+
+body.theme-dark {
+  @include theme-dependent($background-color: $bg-darkest, $background-alt-color: $bg-dark, $text-color: $fg-light, $text-highlight-color: $fg-lightest, $text-secondary-color: $fg-darkest, $border-color: #33555e);
+}
+
+body.theme-black {
+  @include theme-dependent($background-color: #000, $background-alt-color: #222, $text-color: #ccc, $text-highlight-color: #ddd, $text-secondary-color: #888, $border-color: #444);
+}
+
+// Note: if you add a new theme, you may also want to add a new theme-color
+// meta tag inside the base.jinja2 template, so mobile browsers can match

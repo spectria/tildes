@@ -1,0 +1,17 @@
+{% from 'macros/forms.jinja2' import topic_tagging %}
+
+<form method="post"
+    autocomplete="off"
+    data-ic-put-to="{{ request.route_url(
+      'ic_topic_tags',
+      topic_id36=topic.topic_id36,
+    ) }}"
+    data-ic-target="#sidebar .topic-tags"
+    data-js-remove-on-success
+>
+  {{ topic_tagging(value=topic.tags|join(', '), auto_focus=True) }}
+  <div class="form-buttons">
+    <button class="btn btn-primary" type="submit">Save tags</button>
+    <button type="button" class="btn btn-link" data-js-cancel-button>Cancel</button>
+  </div>
+</form>

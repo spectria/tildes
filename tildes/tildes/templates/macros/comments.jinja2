@@ -1,0 +1,183 @@
+{% from 'datetime.jinja2' import time_ago_responsive %}
+{% from 'links.jinja2' import username_linked %}
+
+{% macro render_single_comment(comment) %}
+  {{ render_comment_tree([comment], is_individual_comment=True) }}
+{% endmacro %}
+
+{% macro render_comment_tree(comments, mark_newer_than=None, is_individual_comment=False) %}
+  {% for comment in comments recursive %}
+    <article id="comment-{{ comment.comment_id36 }}"
+      class="{{ comment_classes(comment, mark_newer_than)|trim }}"
+      data-comment-id36="{{ comment.comment_id36 }}"
+
+      {# only add depth attr if we're rendering multiple comments at once #}
+      {% if not is_individual_comment %}
+        data-comment-depth="{{ loop.depth0 }}"
+      {% endif %}
+
+      {% if request.has_permission('view', comment) %}
+        data-comment-user-tags="{{ comment.tags_by_user(request.user)|join(' ') }}"
+      {% endif %}
+    >
+      {{ render_comment_contents(comment, is_individual_comment) }}
+
+      {% if comment.replies is defined and comment.replies %}
+        <div class="comment-replies">
+          {# Recursively display reply comments #}
+          {{ loop(comment.replies) }}
+        </div>
+      {% endif %}
+    </article>
+  {% endfor %}
+{% endmacro %}
+
+{% macro render_comment_contents(comment, is_individual_comment=False) %}
+  <div class="comment-itself">
+    <header>
+      <button class="btn btn-comment-collapse" data-js-comment-collapse-button>&minus;</button>
+
+      {% if request.has_permission('view', comment) %}
+        {{ username_linked(comment.user.username) }}
+
+        {% if request.has_permission('view_author', comment.topic) and comment.topic.user == comment.user %}
+          <span class="comment-user-info">
+            (<abbr title="Original Poster (of the topic)">OP</abbr>)
+          </span>
+        {% endif %}
+
+        {{ time_ago_responsive(comment.created_time) }}
+
+        {% if comment.last_edited_time %}
+          <span class="comment-edited-time">
+            (edited {{ time_ago_responsive(comment.last_edited_time) }})
+          </span>
+        {% endif %}
+      {% else %}
+        {% if comment.is_deleted %}
+          <div class="is-comment-deleted">Comment deleted by author</div>
+        {% elif comment.is_removed %}
+          <div class="is-comment-removed">Comment removed by site admin</div>
+        {% endif %}
+      {% endif %}
+
+      <a class="comment-nav-link" href="{{ comment.permalink }}">Link</a>
+      {% if comment.parent_comment_id %}
+        <a class="comment-nav-link"
+          href="{{ comment.parent_comment_permalink }}"
+          {# don't add the JS behavior (creating a back button) for individual renders #}
+          {% if not is_individual_comment %}data-js-comment-parent-button{% endif %}
+        >Parent</a>
+      {% endif %}
+    </header>
+
+    {% if request.has_permission('view', comment) %}
+      {# Show votes at the top only if it's your own comment #}
+      {% if request.user == comment.user and comment.num_votes > 0 %}
+        <span class="comment-votes">{{ comment.num_votes }} votes</span>
+      {% endif %}
+
+      {% if comment.tag_counts %}
+        <ul class="comment-tags">
+          {% for tag, count in comment.tag_counts.most_common() %}
+            <li>
+              <span class="label label-comment-tag label-comment-tag-{{ tag|lower }}">{{ tag }}</span>
+              <span class="comment-tag-count">x{{ count }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <div class="comment-text">
+        {% if comment.is_removed and 'admin' in request.effective_principals %}
+          <p class="text-warning">Comment removed</p>
+        {% endif %}
+
+        {{ comment.rendered_html|safe }}
+      </div>
+
+      <menu class="post-buttons">
+        {% if request.has_permission('vote', comment) %}
+          {% if comment.user_voted is defined and comment.user_voted %}
+            <li><a class="post-button post-button-used" name="unvote"
+              data-ic-delete-from="{{ request.route_url(
+                'ic_comment_vote',
+                comment_id36=comment.comment_id36,
+              ) }}"
+              data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+              >Voted
+          {% else %}
+            <li><a class="post-button" name="vote"
+              data-ic-put-to="{{ request.route_url(
+                'ic_comment_vote',
+                comment_id36=comment.comment_id36,
+              ) }}"
+              data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+              >Vote
+          {% endif %}
+          {% if comment.num_votes > 0 %}
+            ({{ comment.num_votes }})
+          {% endif %}
+          </a></li>
+        {% endif %}
+
+        {% if request.has_permission('tag', comment) %}
+          <li><a class="post-button" name="tag" data-js-comment-tag-button>Tag</a></li>
+        {% endif %}
+
+        {% if request.has_permission('edit', comment) %}
+          <li><a class="post-button" name="edit"
+            data-ic-get-from="{{ request.route_url(
+              'ic_comment',
+              comment_id36=comment.comment_id36,
+            ) }}"
+            data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first .comment-text"
+            data-ic-scroll-to-target="true"
+          >Edit</a></li>
+        {% endif %}
+
+        {% if request.has_permission('delete', comment) %}
+          <li><a class="post-button"
+            data-ic-delete-from="{{ request.route_url(
+              'ic_comment',
+              comment_id36=comment.comment_id36,
+            ) }}"
+            data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+            data-ic-confirm="Delete this comment? This cannot be undone."
+          >Delete</a></li>
+        {% endif %}
+
+        {% if request.has_permission('reply', comment) %}
+          <li><a class="post-button" name="reply" data-js-comment-reply-button>Reply</a></li>
+        {% endif %}
+      </menu>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro comment_classes(comment, mark_newer_than=None) %}
+  {% set classes = ['comment'] %}
+
+  {% if not comment.is_deleted %}
+    {% if request.user == comment.user %}
+      {% do classes.append('is-comment-mine') %}
+    {# done as an elif so we never mark a user's own comments as "new" #}
+    {% elif mark_newer_than and comment.created_time > mark_newer_than %}
+      {% do classes.append('is-comment-new') %}
+    {% elif request.has_permission('view_author', comment.topic) and comment.user == comment.topic.user %}
+      {% do classes.append('is-comment-by-op') %}
+    {% endif %}
+  {% endif %}
+
+  {{ classes|join(' ') }}
+{% endmacro %}
+
+{% macro comment_tag_options_template(options) %}
+  <template id="comment-tag-options">
+    <menu class="comment-tag-buttons">
+      {% for tag in options %}
+        <li><a class="btn-comment-tag btn-comment-tag-{{ tag.name|lower }}">{{ tag.name|lower }}</a></li>
+      {% endfor %}
+    </ul>
+  </template>
+{% endmacro %}

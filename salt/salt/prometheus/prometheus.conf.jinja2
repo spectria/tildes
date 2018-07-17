@@ -1,0 +1,21 @@
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    {% for ip in pillar['developer_ips'] %}
+    allow {{ ip }};
+    {% endfor %}
+    deny all;
+
+    add_header Strict-Transport-Security "max-age={{ pillar['hsts_max_age'] }}; includeSubDomains; preload" always;
+
+    server_name {{ pillar['prometheus_server_name'] }};
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_redirect off;
+        proxy_pass http://localhost:9090;
+    }
+}

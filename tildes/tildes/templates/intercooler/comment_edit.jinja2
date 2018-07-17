@@ -1,0 +1,30 @@
+{% from 'macros/forms.jinja2' import markdown_textarea %}
+
+<form method="post"
+    class="comment"
+    autocomplete="off"
+    data-ic-patch-to="{{ request.route_url(
+      'ic_comment',
+      comment_id36=comment.comment_id36,
+    ) }}"
+    data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+    data-js-confirm-leave-page-unsaved
+>
+  {{ markdown_textarea(
+       'Edit your comment',
+       id='markdown-edit-%s' % comment.comment_id36,
+       text=comment.markdown,
+       auto_focus=True,
+  ) }}
+  <div class="form-buttons">
+    <button class="btn btn-primary" type="submit">Save edits</button>
+    <button
+      class="btn btn-link"
+      data-ic-get-from="{{ request.route_url(
+        'ic_comment',
+        comment_id36=comment.comment_id36,
+      ) }}"
+      data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+    >Cancel</button>
+  </div>
+</form>

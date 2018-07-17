@@ -1,0 +1,27 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% block title %}Define topic tag filters{% endblock %}
+
+{% block main_heading %}Define topic tag filters{% endblock %}
+
+{% block content %}
+<p>You can configure a list of filtered topic tags below. If a topic has <em>any</em> of these tags, it will be filtered out (not shown) by default, but you can toggle the filtering off to see a full list.</p>
+
+<p>These filters are <em>global</em> and will apply both to your home page as well as inside specific groups.</p>
+
+<hr>
+
+<form method="post"
+    autocomplete="off"
+    data-ic-put-to="{{ request.route_url(
+      'ic_user_filtered_topic_tags',
+      username=request.user.username,
+    ) }}"
+>
+  <label class="form-label" for="tags">Tags (comma-separated):</label>
+  <input type="text" class="form-input" name="tags" id="tags" value="{{ request.user.filtered_topic_tags|join(', ') }}">
+  <div class="form-buttons">
+    <button class="btn btn-primary" type="submit">Save filtered tags</button>
+  </div>
+</form>
+{% endblock %}

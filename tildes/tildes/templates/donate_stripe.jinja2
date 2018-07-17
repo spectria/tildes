@@ -1,0 +1,19 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% block title %}Stripe donation{% endblock %}
+
+{% block main_heading %}
+  {% if payment_successful %}
+    Thanks for donating to Tildes!
+  {% else %}
+    Donation failed
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if payment_successful %}
+    <p>You should receive an email receipt. If you have any questions, please feel free to contact <a href="mailto:donate@tildes.net">donate@tildes.net</a></p>
+  {% else %}
+    <p>The Stripe payment failed for some reason (your credit card has not been charged). Please go back to <a href="https://docs.tildes.net/donate-stripe">the donation page</a> and try again. If the payment fails again, please <a href="mailto:donate@tildes.net">send an email</a> so it can be looked into.</p>
+  {% endif %}
+{% endblock %}

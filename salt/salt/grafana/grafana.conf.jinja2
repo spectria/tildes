@@ -1,0 +1,19 @@
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    {% for ip in pillar['developer_ips'] %}
+    allow {{ ip }};
+    {% endfor %}
+    deny all;
+
+    add_header Strict-Transport-Security "max-age={{ pillar['hsts_max_age'] }}; includeSubDomains; preload" always;
+
+    server_name {{ pillar['grafana_server_name'] }};
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_redirect off;
+        proxy_pass http://localhost:3000;
+    }
+}

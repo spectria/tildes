@@ -1,0 +1,22 @@
+{% from 'common.jinja2' import app_dir, bin_dir -%}
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+PIDFile=/run/gunicorn/pid
+User=gunicorn
+Group=gunicorn
+RuntimeDirectory=gunicorn
+WorkingDirectory={{ app_dir }}
+ExecStart={{ bin_dir }}/gunicorn --paste {{ pillar['ini_file'] }} --config {{ app_dir }}/gunicorn_config.py
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+PrivateTmp=true
+Environment=prometheus_multiproc_dir=/tmp
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+{% from 'common.jinja2' import app_dir, bin_dir -%}
+[Unit]
+Description=Webassets - auto-compile JS files on change
+
+[Service]
+WorkingDirectory={{ app_dir }}
+ExecStart={{ bin_dir }}/webassets -c webassets.yaml watch
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
