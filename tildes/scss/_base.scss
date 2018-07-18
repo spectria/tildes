@@ -59,6 +59,10 @@ code {
   line-height: 1rem;
 }
 
+details * {
+  box-sizing: border-box;
+}
+
 fieldset {
   margin: 1rem;
   margin-right: 0;
