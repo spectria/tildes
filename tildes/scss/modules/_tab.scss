@@ -22,5 +22,9 @@
         margin-right: 0.4rem;
       }
     }
+
+    &:last-child a {
+      margin-right: 0;
+    }
   }
 }
