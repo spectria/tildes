@@ -33,12 +33,13 @@
 }
 
 .btn-used {
-  border-color: darken($violet, 3%);
-  color: $violet;
+  background-color: darken($violet, 3%);
+  border-color: darken($violet, 8%);
+  color: #fff;
 
   &:hover {
-    background-color: darken($violet, 3%);
-    border-color: darken($violet, 8%);
+    background-color: darken($blue, 3%);
+    border-color: darken($blue, 8%);
     color: #fff;
   }
 }
