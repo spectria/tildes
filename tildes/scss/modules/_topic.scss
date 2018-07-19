@@ -139,7 +139,15 @@
   }
 
   &.btn-used {
+    background-color: darken($violet, 3%);
+    border-color: darken($violet, 8%);
     border-style: solid;
+    color: #fff;
+
+    &:hover {
+      background-color: darken($blue, 3%);
+      border-color: darken($blue, 8%);
+    }
   }
 }
 
