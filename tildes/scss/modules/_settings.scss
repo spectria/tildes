@@ -4,4 +4,9 @@
   li {
     margin-bottom: 1rem;
   }
+
+  // Nested settings list
+  ul li {
+    margin-bottom: unset;
+  }
 }

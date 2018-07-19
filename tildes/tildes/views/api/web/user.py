@@ -107,6 +107,24 @@ def change_auto_mark_notifications(request: Request) -> Response:
 @ic_view_config(
     route_name='user',
     request_method='PATCH',
+    request_param='ic-trigger-name=open-links-new-tab',
+    permission='change_open_links_new_tab_setting',
+)
+def change_open_links_new_tab(request: Request) -> Response:
+    """Change the user's "open links in new tabs" setting."""
+    user = request.context
+
+    external = bool(request.params.get('open_new_tab_external'))
+    internal = bool(request.params.get('open_new_tab_internal'))
+    user.open_new_tab_external = external
+    user.open_new_tab_internal = internal
+
+    return IC_NOOP
+
+
+@ic_view_config(
+    route_name='user',
+    request_method='PATCH',
     request_param='ic-trigger-name=comment-visits',
     permission='change_comment_visits_setting',
 )

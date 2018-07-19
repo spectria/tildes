@@ -11,9 +11,15 @@
       <div>
         <h1 class="topic-title">
           {% if topic.is_text_type %}
-            <a href="{{ topic.permalink }}">{{ topic.title }}</a>
+            <a
+              href="{{ topic.permalink }}"
+              {% if request.user.open_new_tab_internal %}target="_blank"{% endif %}
+            >{{ topic.title }}</a>
           {% elif topic.is_link_type %}
-            <a href="{{ topic.link }}">{{ topic.title }}</a>
+            <a
+              href="{{ topic.link }}"
+              {% if request.user.open_new_tab_external %}target="_blank"{% endif %}
+            >{{ topic.title }}</a>
           {% endif %}
         </h1>
         <span class="topic-content-metadata">({{ topic.content_metadata_for_display }})</span>
@@ -56,7 +62,10 @@
 
     <footer class="topic-info">
       <div class="topic-info-comments">
-        <a href="{{ topic.permalink }}">
+        <a
+          href="{{ topic.permalink }}"
+          {% if request.user.open_new_tab_internal %}target="_blank"{% endif %}
+        >
           {% trans num_comments=topic.num_comments %}
           {{ num_comments }} comment
           {% pluralize %}

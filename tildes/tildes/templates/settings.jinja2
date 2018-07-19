@@ -37,6 +37,45 @@
         </div>
       </form>
     </li>
+    <li>
+      <h4>Open links in new tabs</h4>
+      <form
+        name="open-links-new-tab"
+        autocomplete="off"
+        data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+      >
+        <ul class="settings-list">
+          <li>
+            <div class="form-group">
+              <label class="form-checkbox">
+                <input
+                  type="checkbox"
+                  id="open_new_tab_external"
+                  name="open_new_tab_external"
+                  data-js-autosubmit-on-change
+                  {% if request.user.open_new_tab_external %}checked{% endif %}
+                >
+                <i class="form-icon"></i> Topic links to other websites
+              </label>
+            </div>
+          </li>
+          <li>
+            <div class="form-group">
+              <label class="form-checkbox">
+                <input
+                  type="checkbox"
+                  id="open_new_tab_internal"
+                  name="open_new_tab_internal"
+                  data-js-autosubmit-on-change
+                  {% if request.user.open_new_tab_internal %}checked{% endif %}
+                >
+                <i class="form-icon"></i> Links to text topics and comments
+              </label>
+            </div>
+          </li>
+        </ul>
+      </form>
+    </li>
     <li><a href="/settings/password_change">Change your password</a></li>
     <li>
       <a href="/settings/account_recovery">Set up account recovery</a>

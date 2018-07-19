@@ -44,7 +44,10 @@
   {% elif topic.is_link_type %}
     <div class="topic-full-link">
       <div class="topic-icon topic-icon-{{ topic.link_domain.replace('.', '_') }}"></div>
-      <a href="{{ topic.link }}">{{ topic.link }}</a>
+      <a
+        href="{{ topic.link }}"
+        {% if request.user.open_new_tab_external %}target="_blank"{% endif %}
+      >{{ topic.link }}</a>
     </div>
   {% endif %}
 {% endif %}
