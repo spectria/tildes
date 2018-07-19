@@ -134,10 +134,6 @@
   height: auto;
   min-width: 3rem;
 
-  &.btn {
-    border-style: dashed;
-  }
-
   &.btn-used {
     background-color: darken($violet, 3%);
     border-color: darken($violet, 8%);
