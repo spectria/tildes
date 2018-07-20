@@ -41,4 +41,15 @@
   }
 
   margin-left: auto;
+
+  &.badge {
+    margin-right: 0.6rem;
+
+    &[data-badge]::after {
+      background-color: $orange;
+      font-size: 0.5rem;
+      height: 0.7rem;
+      transform: translate(50%, -40%);
+    }
+  }
 }

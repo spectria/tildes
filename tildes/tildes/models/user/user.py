@@ -179,3 +179,8 @@ class User(DatabaseModel):
         # convert the address to lowercase to avoid potential casing issues
         value = value.lower()
         self.email_address_hash = hash_string(value)
+
+    @property
+    def num_unread_total(self) -> int:
+        """Return total number of unread items (notifications + messages)."""
+        return self.num_unread_messages + self.num_unread_notifications

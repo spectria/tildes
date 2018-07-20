@@ -49,7 +49,18 @@
 
   {{ logged_in_user_info() }}
 
-  <button class="btn btn-sm btn-link site-header-sidebar-button" data-js-sidebar-toggle>Sidebar</button>
+  <button
+    class="btn btn-sm btn-link site-header-sidebar-button
+    {% if request.user and request.user.num_unread_total > 0 %}
+      badge
+    {% endif %}
+    "
+    data-js-sidebar-toggle
+    {% if request.user and request.user.num_unread_total > 0 %}
+      data-badge="{{ request.user.num_unread_total }}"
+    {% endif %}
+  >Sidebar</button>
+
 </header>
 
 <main data-js-hide-sidebar-if-open>
