@@ -46,6 +46,7 @@
     margin-right: 0.6rem;
 
     &[data-badge]::after {
+      box-shadow: none;
       background-color: $orange;
       font-size: 0.5rem;
       height: 0.7rem;
