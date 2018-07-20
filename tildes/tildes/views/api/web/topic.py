@@ -14,7 +14,7 @@ from tildes.models.log import LogTopic
 from tildes.models.topic import Topic, TopicVote
 from tildes.schemas.group import GroupSchema
 from tildes.schemas.topic import TopicSchema
-from tildes.views import IC_EMPTY, IC_NOOP
+from tildes.views import IC_NOOP
 from tildes.views.decorators import ic_view_config
 
 
@@ -160,27 +160,22 @@ def tag_topic(request: Request, tags: str) -> dict:
     """Apply tags to a topic with Intercooler."""
     topic = request.context
 
-    if not tags:
-        request.db_session.add(
-            LogTopic(
-                LogEventType.TOPIC_TAG,
-                request,
-                topic,
-                info={'old': topic.tags, 'new': []},
-            ),
-        )
-        topic.tags = []
-        return IC_EMPTY
-
-    # split the tag string on commas
-    split_tags = tags.split(',')
+    if tags:
+        # split the tag string on commas
+        new_tags = tags.split(',')
+    else:
+        new_tags = []
 
     old_tags = topic.tags
 
     try:
-        topic.tags = split_tags
+        topic.tags = new_tags
     except ValidationError:
         raise ValidationError({'tags': ['Invalid tags']})
+
+    # if tags weren't changed, don't add a log entry or update page
+    if set(topic.tags) == set(old_tags):
+        return IC_NOOP
 
     request.db_session.add(
         LogTopic(
