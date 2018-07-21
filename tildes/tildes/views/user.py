@@ -54,22 +54,9 @@ def get_user(request: Request) -> dict:
     )
     merged_posts = merged_posts[:page_size]
 
-    # if the user is on their own page, check if they have active invite codes
-    num_active_invite_codes = None
-    if user == request.user:
-        num_active_invite_codes = (
-            request.query(UserInviteCode)
-            .filter(
-                UserInviteCode.user_id == request.user.user_id,
-                UserInviteCode.invitee_id == None,  # noqa
-            )
-            .count()
-        )
-
     return {
         'user': user,
         'merged_posts': merged_posts,
-        'num_active_invite_codes': num_active_invite_codes,
     }
 
 

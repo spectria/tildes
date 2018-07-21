@@ -11,6 +11,11 @@
       font-size: 0.8rem;
       font-weight: normal;
       border-bottom: 0;
+
+      &.active a {
+        color: $blue;
+        text-decoration: underline;
+      }
     }
   }
 

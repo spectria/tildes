@@ -1,4 +1,4 @@
-{% extends 'base.jinja2' %}
+{% extends 'base_user_menu.jinja2' %}
 
 {% from 'macros/comments.jinja2' import render_single_comment with context %}
 {% from 'macros/links.jinja2' import group_linked, username_linked %}
@@ -37,40 +37,7 @@
 
 {% block sidebar %}
 {% if user == request.user %}
-  <h2>User menu</h2>
-  <ul class="nav">
-    <li>Notifications</li>
-    <ul class="nav">
-      {% if request.user.num_unread_notifications > 0 %}
-        <li class="nav-item"><strong><a href="/notifications/unread">
-          Unread ({{ request.user.num_unread_notifications }})
-        </a></strong></li>
-      {% endif %}
-      <li class="nav-item"><a href="/notifications">Previously read</a></li>
-    </ul>
-
-    <li>Messages</li>
-    <ul class="nav">
-      {% if request.user.num_unread_messages > 0 %}
-        <li class="nav-item"><strong><a href="/messages/unread">
-          Unread ({{ request.user.num_unread_messages }})
-        </a></strong></li>
-      {% endif %}
-      <li class="nav-item"><a href="/messages">Inbox</a></li>
-      <li class="nav-item"><a href="/messages/sent">Sent messages</a></li>
-    </ul>
-
-    <li>Misc</li>
-    <ul class="nav">
-      {% if request.user.invite_codes_remaining or num_active_invite_codes %}
-        <li class="nav-item"><strong><a href="/invite">
-          Invite someone ({{ request.user.invite_codes_remaining + num_active_invite_codes }})
-        </a></strong></li>
-      {% endif %}
-      <li class="nav-item"><a href="/settings">Settings</a></li>
-      <li class="nav-item"><a href="/logout">Log out</a></li>
-    </ul>
-  </ul>
+  {{ super() }}
 <hr>
 {% endif %}
 

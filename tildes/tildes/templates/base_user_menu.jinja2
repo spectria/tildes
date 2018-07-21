@@ -1,0 +1,7 @@
+{% extends 'base.jinja2' %}
+
+{% from 'macros/user_menu.jinja2' import render_user_menu with context %}
+
+{% block sidebar %}
+  {{ render_user_menu() }}
+{% endblock %}

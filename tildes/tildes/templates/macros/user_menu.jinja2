@@ -1,0 +1,69 @@
+{% macro render_user_menu() %}
+  {% set route = request.matched_route.name %}
+
+  <h2>User menu</h2>
+  <ul class="nav">
+    <li>Profile</li>
+    <ul class="nav">
+      <li class="nav-item {{ 'active' if route == 'user' else ''}}">
+        <a href="/user/{{ request.user }}">
+          Recent activity
+        </a>
+      </li>
+    </ul>
+
+    <li>Notifications</li>
+    <ul class="nav">
+      {% if request.user.num_unread_notifications > 0 %}
+        <li class="nav-item {{ 'active' if route == 'notifications_unread' else '' }}">
+          <strong><a href="/notifications/unread">
+            Unread ({{ request.user.num_unread_notifications }})
+          </a></strong>
+        </li>
+      {% endif %}
+      <li class="nav-item {{ 'active' if route == 'notifications' else '' }}">
+        <a href="/notifications">
+          Previously read
+        </a>
+      </li>
+    </ul>
+
+    <li>Messages</li>
+    <ul class="nav">
+      {% if request.user.num_unread_messages > 0 %}
+        <li class="nav-item {{ 'active' if route == 'messages_unread' else '' }}">
+          <strong><a href="/messages/unread">
+          Unread ({{ request.user.num_unread_messages }})
+          </a></strong>
+        </li>
+      {% endif %}
+      <li class="nav-item {{ 'active' if route == 'messages' else '' }}">
+        <a href="/messages">
+          Inbox
+        </a>
+      </li>
+      <li class="nav-item {{ 'active' if route == 'messages_sent' else '' }}">
+        <a href="/messages/sent">
+          Sent messages
+        </a>
+      </li>
+    </ul>
+
+    <li>Misc</li>
+    <ul class="nav">
+        <li class="nav-item {{ 'active' if route == 'invite' else '' }}">
+          {% if request.user.invite_codes_remaining %}<strong>{% endif %}
+          <a href="/invite">
+            Invite someone {% if request.user.invite_codes_remaining %}({{ request.user.invite_codes_remaining }}){% endif %}
+          </a>
+          {% if request.user.invite_codes_remaining %}</strong>{% endif %}
+        </li>
+      <li class="nav-item {{ 'active' if route == 'settings' else '' }}">
+        <a href="/settings">
+          Settings
+        </a>
+      </li>
+      <li class="nav-item"><a href="/logout">Log out</a></li>
+    </ul>
+  </ul>
+{% endmacro %}
