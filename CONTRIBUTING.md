@@ -10,6 +10,8 @@ Outside of actual code changes, there are several other ways to contribute to Ti
 
 Please take note that Tildes uses [the AGPLv3 license](https://www.gnu.org/licenses/why-affero-gpl.html). This means that if you use the Tildes code to run your own instance of the site, you *must* also open-source the code for your site, including any changes that you've made. If you are not able to open-source the code for your instance, you can not use the Tildes code to run it.
 
+All code contributions must be made under the same license as the project's main license (i.e. *AGPL-3.0-or-later* for [Tildes code](https://gitlab.com/tildes/tildes) and *MIT* for code handling [Tildes documentation](https://gitlab.com/tildes/tildes-static-sites)) and all documentation contributions under the same license as the main license of the documentation (i.e. *CC-BY-SA-4.0*).
+
 ## Setting up a development version
 
 Please see this page on the Tildes Docs for instructions to set up a development version: https://docs.tildes.net/development-setup
