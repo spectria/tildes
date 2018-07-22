@@ -3,14 +3,22 @@
 // Note that all rules inside the mixin will be included in the compiled CSS
 // once for each theme, so they should be kept as minimal as possible.
 
-@mixin commenttag($color, $is-light) {
+@mixin specialtag($color, $is-light) {
   @if $is-light {
     background-color: $color;
+
+    a {
+      color: white;
+    }
   }
   @else {
     background-color: transparent;
     color: $color;
     border: 1px solid $color;
+
+    a {
+      color: $color;
+    }
   }
 }
 
@@ -101,11 +109,11 @@
   }
 
   .comment-tags {
-    .label-comment-tag-joke { @include commenttag($comment-tag-joke-color, $is-light); }
-    .label-comment-tag-noise { @include commenttag($comment-tag-noise-color, $is-light); }
-    .label-comment-tag-offtopic { @include commenttag($comment-tag-offtopic-color, $is-light); }
-    .label-comment-tag-troll { @include commenttag($comment-tag-troll-color, $is-light); }
-    .label-comment-tag-flame { @include commenttag($comment-tag-flame-color, $is-light); }
+    .label-comment-tag-joke { @include specialtag($comment-tag-joke-color, $is-light); }
+    .label-comment-tag-noise { @include specialtag($comment-tag-noise-color, $is-light); }
+    .label-comment-tag-offtopic { @include specialtag($comment-tag-offtopic-color, $is-light); }
+    .label-comment-tag-troll { @include specialtag($comment-tag-troll-color, $is-light); }
+    .label-comment-tag-flame { @include specialtag($comment-tag-flame-color, $is-light); }
   }
 
   .is-comment-collapsed {
@@ -174,6 +182,14 @@
     a {
       color: $text-mid-color;
     }
+  }
+
+  .label-topic-tag-nsfw {
+    @include specialtag($topic-tag-nsfw-color, $is-light);
+  }
+
+  .label-topic-tag-spoiler {
+    @include specialtag($topic-tag-spoiler-color, $is-light);
   }
 
   .post-button {

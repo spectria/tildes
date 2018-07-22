@@ -40,6 +40,9 @@ from tildes.schemas.topic import (
 # edits inside this period after creation will not mark the topic as edited
 EDIT_GRACE_PERIOD = timedelta(minutes=5)
 
+# special tags to put at the front of the tag list
+SPECIAL_TAGS = ['nsfw', 'spoiler']
+
 
 class Topic(DatabaseModel):
     """Model for a topic on the site.
@@ -153,7 +156,16 @@ class Topic(DatabaseModel):
     @hybrid_property
     def tags(self) -> List[str]:
         """Return the topic's tags."""
-        return [str(tag).replace('_', ' ') for tag in self._tags]
+        sorted_tags = [str(tag).replace('_', ' ') for tag in self._tags]
+
+        # move special tags in front
+        # reverse so that tags at the start of the list appear first
+        for tag in reversed(SPECIAL_TAGS):
+            if tag in sorted_tags:
+                sorted_tags.insert(
+                    0, sorted_tags.pop(sorted_tags.index(tag)))
+
+        return sorted_tags
 
     @tags.setter  # type: ignore
     def tags(self, new_tags: List[str]) -> None:
