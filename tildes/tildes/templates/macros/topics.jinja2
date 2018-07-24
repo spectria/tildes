@@ -51,7 +51,11 @@
       {% if not topic.get_content_metadata('excerpt').endswith('...') %}
         <p class="topic-text-excerpt">{{ topic.get_content_metadata('excerpt') }}</p>
       {% else %}
-        <details class="topic-text-excerpt">
+        <details class="topic-text-excerpt"
+          {% if request.user and request.user.open_new_tab_text %}
+          data-js-external-links-new-tabs
+          {% endif %}
+        >
           <summary>
             <span>{{ topic.get_content_metadata('excerpt') }}</span>
           </summary>

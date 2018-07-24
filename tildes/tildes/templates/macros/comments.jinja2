@@ -94,7 +94,11 @@
         </ul>
       {% endif %}
 
-      <div class="comment-text">
+      <div class="comment-text"
+        {% if request.user and request.user.open_new_tab_text %}
+        data-js-external-links-new-tabs
+        {% endif %}
+      >
         {% if comment.is_removed and 'admin' in request.effective_principals %}
           <p class="text-warning">Comment removed</p>
         {% endif %}

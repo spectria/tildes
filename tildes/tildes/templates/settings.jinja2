@@ -73,6 +73,20 @@
               </label>
             </div>
           </li>
+          <li>
+            <div class="form-group">
+              <label class="form-checkbox">
+                <input
+                  type="checkbox"
+                  id="open_new_tab_text"
+                  name="open_new_tab_text"
+                  data-js-autosubmit-on-change
+                  {% if request.user.open_new_tab_text %}checked{% endif %}
+                >
+                <i class="form-icon"></i> External links in topic, comment, and message text
+              </label>
+            </div>
+          </li>
         </ul>
       </form>
     </li>

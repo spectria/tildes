@@ -13,6 +13,10 @@
       {{ time_ago(message.created_time) }}
     </header>
 
-    <div class="message-text">{{ message.rendered_html|safe }}</div>
+    <div class="message-text"
+      {% if request.user and request.user.open_new_tab_text %}
+      data-js-external-links-new-tabs
+      {% endif %}
+    >{{ message.rendered_html|safe }}</div>
   </article>
 {% endmacro %}

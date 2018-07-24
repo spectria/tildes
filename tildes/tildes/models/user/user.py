@@ -86,6 +86,8 @@ class User(DatabaseModel):
         Boolean, nullable=False, server_default='false')
     open_new_tab_internal: bool = Column(
         Boolean, nullable=False, server_default='false')
+    open_new_tab_text: bool = Column(
+        Boolean, nullable=False, server_default='false')
     is_banned: bool = Column(Boolean, nullable=False, server_default='false')
     is_admin: bool = Column(Boolean, nullable=False, server_default='false')
     home_default_order: Optional[TopicSortOption] = Column(

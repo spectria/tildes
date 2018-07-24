@@ -116,8 +116,10 @@ def change_open_links_new_tab(request: Request) -> Response:
 
     external = bool(request.params.get('open_new_tab_external'))
     internal = bool(request.params.get('open_new_tab_internal'))
+    text = bool(request.params.get('open_new_tab_text'))
     user.open_new_tab_external = external
     user.open_new_tab_internal = internal
+    user.open_new_tab_text = text
 
     return IC_NOOP
 
