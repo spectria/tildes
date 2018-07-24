@@ -70,6 +70,7 @@ def get_invite(request: Request) -> dict:
             UserInviteCode.user_id == request.user.user_id,
             UserInviteCode.invitee_id == None,  # noqa
         )
+        .order_by(desc(UserInviteCode.created_time))
         .all()
     )
 
