@@ -17,19 +17,30 @@
 {% endmacro %}
 
 {% macro topic_tagging(value=None, auto_focus=False) %}
-  <div class="form-group">
+  <div class="form-autocomplete form-group" data-js-autocomplete-container>
     <label class="form-label" for="tags">
       <span>Tags (optional, comma-separated)</span>
       <a href="https://docs.tildes.net/topic-tagging" target="_blank" tabindex="-1">Tagging help</a>
     </label>
-    <input
-      class="form-input"
-      id="tags"
-      name="tags"
-      placeholder='Tags (like "music, soundtrack, full album")'
-      {% if value %} value="{{ value }}"{% endif %}
-      {% if auto_focus %}data-js-auto-focus{% endif %}
-    >
+    <div class="form-autocomplete-input form-input">
+      <div class="chips" data-js-autocomplete-chips></div>
+      <input
+        class="form-input"
+        id="tags"
+        type="text"
+        autocorrect="off"
+        autocomplete="off"
+        autocapitalize="none"
+        spellcheck="false"
+        name="query"
+        placeholder='Tags (like "music, soundtrack, full album")'
+        data-js-autocomplete-input=""
+        {% if value %} value="{{ value }}"{% endif %}
+        {% if auto_focus %}data-js-auto-focus{% endif %}
+      >
+    </div>
+    <div class="autocomplete" data-js-autocomplete-suggestions></div>
+    <input name="tags" type="hidden" value="" data-js-autocomplete-hidden-input>
   </div>
 {% endmacro %}
 

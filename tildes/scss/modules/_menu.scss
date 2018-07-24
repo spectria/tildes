@@ -1,0 +1,10 @@
+// Copyright (c) 2019 Tildes contributors <code@tildes.net>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+.menu {
+  .menu-item {
+    & > a:hover, & > a:focus {
+      background-color: transparent;
+    }
+  }
+}

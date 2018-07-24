@@ -101,6 +101,12 @@
     border-color: map-get($theme, "foreground-highlight");
   }
 
+  .form-autocomplete {
+    .menu {
+      background-color: map-get($theme, "background-secondary");
+    }
+  }
+
   .btn {
     color: map-get($theme, "button");
     background-color: transparent;
@@ -195,6 +201,27 @@
     @include labelbutton(map-get($theme, "comment-label-malice"));
   }
 
+  .chip {
+    background-color: map-get($theme, "background-secondary");
+    color: map-get($theme, "foreground-highlight");
+
+    &.active {
+      background-color: map-get($theme, "button");
+
+      $active-color: #fff;
+      $is-active-bg-light: lightness(map-get($theme, "button")) > 50;
+      @if ($is-active-bg-light) {
+        $active-color: #000;
+      }
+
+      color: $active-color;
+
+      .btn {
+        color: $active-color;
+      }
+    }
+  }
+
   .comment-branch-counter {
     color: map-get($theme, "foreground-secondary");
   }
@@ -279,6 +306,10 @@
 
   .foreground-secondary {
     color: map-get($theme, "foreground-secondary");
+  }
+
+  .form-autocomplete .form-autocomplete-input .form-input {
+    border-color: transparent;
   }
 
   .form-input {
