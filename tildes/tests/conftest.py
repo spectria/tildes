@@ -112,7 +112,6 @@ def overall_redis_session():
     # list of redis modules that need to be loaded (would be much nicer to do
     # this automatically somehow, maybe reading from the real redis.conf?)
     redis_modules = [
-        '/opt/rebloom/rebloom.so',
         '/opt/redis-cell/libredis_cell.so',
     ]
 
