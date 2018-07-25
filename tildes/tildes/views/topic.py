@@ -262,6 +262,7 @@ def post_comment_on_topic(request: Request, markdown: str) -> HTTPFound:
 
 def _get_default_settings(request: Request, order: Any) -> DefaultSettings:
     if isinstance(request.context, Group):
+        is_home_page = False
         user_settings = (
             request.query(UserGroupSettings)
             .filter(
@@ -271,6 +272,7 @@ def _get_default_settings(request: Request, order: Any) -> DefaultSettings:
             .one_or_none()
         )
     else:
+        is_home_page = True
         user_settings = None
 
     if user_settings and user_settings.default_order:
@@ -292,9 +294,15 @@ def _get_default_settings(request: Request, order: Any) -> DefaultSettings:
         user_default = request.user.home_default_period
         default_period = ShortTimePeriod().deserialize(user_default)
     else:
-        # default to "all time" if sorting by new, 3d if activity, otherwise
-        # last 24h
+        # Overall default periods, if the user doesn't have either a
+        # group-specific or a home default set up:
+        #   * "all time" if sorting by new
+        #   * "all time" if sorting by activity and inside a group
+        #   * "3 days" if sorting by activity and on home page
+        #   * "1 day" otherwise (sorting by most votes or most comments)
         if order == TopicSortOption.NEW:
+            default_period = None
+        elif order == TopicSortOption.ACTIVITY and not is_home_page:
             default_period = None
         elif order == TopicSortOption.ACTIVITY:
             default_period = SimpleHoursPeriod(72)
