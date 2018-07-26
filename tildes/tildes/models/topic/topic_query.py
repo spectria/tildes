@@ -1,6 +1,6 @@
 """Contains the TopicQuery class."""
 
-from typing import Any, Optional, Sequence
+from typing import Any, Sequence
 
 from pyramid.request import Request
 from sqlalchemy.sql.expression import and_, null
@@ -119,21 +119,12 @@ class TopicQuery(PaginatedQuery):
         return self.filter(
             Topic.group_id.in_(subgroup_subquery))  # type: ignore
 
-    def inside_time_period(
-            self,
-            period: Optional[SimpleHoursPeriod],
-    ) -> 'TopicQuery':
+    def inside_time_period(self, period: SimpleHoursPeriod) -> 'TopicQuery':
         """Restrict the topics to inside a time period (generative)."""
-        if not period:
-            return self
-
         return self.filter(Topic.created_time > utc_now() - period.timedelta)
 
     def has_tag(self, tag: Ltree) -> 'TopicQuery':
         """Restrict the topics to ones with a specific tag (generative)."""
-        if not tag:
-            return self
-
         # casting tag to string really shouldn't be necessary, but some kind of
         # strange interaction seems to be happening with the ArrayOfLtree
         # class, this will need some investigation

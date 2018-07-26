@@ -122,16 +122,28 @@ def get_group_topics(
     if period is missing:
         period = default_settings.period
 
+    # set up the basic query for topics
     query = (
         request.query(Topic)
         .join_all_relationships()
         .inside_groups(groups)
-        .inside_time_period(period)
-        .has_tag(tag)
         .apply_sort_option(order)
-        .after_id36(after)
-        .before_id36(before)
     )
+
+    # restrict the time period, if not set to "all time"
+    if period:
+        query = query.inside_time_period(period)
+
+    # restrict to a specific tag, if we're viewing a single one
+    if tag:
+        query = query.has_tag(tag)
+
+    # apply before/after pagination restrictions if relevant
+    if before:
+        query = query.before_id36(before)
+
+    if after:
+        query = query.after_id36(after)
 
     # apply topic tag filters unless they're disabled or viewing a single tag
     if not (tag or unfiltered):

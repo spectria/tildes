@@ -74,11 +74,8 @@ class PaginatedQuery(ModelQuery):
         """
         return bool(self.before_id)
 
-    def after_id36(self, id36: Optional[str]) -> 'PaginatedQuery':
+    def after_id36(self, id36: str) -> 'PaginatedQuery':
         """Restrict the query to results after an id36 (generative)."""
-        if not id36:
-            return self
-
         if self.before_id:
             raise ValueError("Can't set both before and after restrictions")
 
@@ -86,11 +83,8 @@ class PaginatedQuery(ModelQuery):
 
         return self
 
-    def before_id36(self, id36: Optional[str]) -> 'PaginatedQuery':
+    def before_id36(self, id36: str) -> 'PaginatedQuery':
         """Restrict the query to results before an id36 (generative)."""
-        if not id36:
-            return self
-
         if self.after_id:
             raise ValueError("Can't set both before and after restrictions")
 
