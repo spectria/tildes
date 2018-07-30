@@ -20,6 +20,7 @@ def includeme(config: Configurator) -> None:
     config.add_route("groups", "/groups")
 
     config.add_route("login", "/login")
+    config.add_route("login_two_factor", "/login_two_factor")
     config.add_route("logout", "/logout", factory=LoggedInFactory)
 
     config.add_route("register", "/register")
@@ -59,6 +60,14 @@ def includeme(config: Configurator) -> None:
     config.add_route(
         "settings_account_recovery",
         "/settings/account_recovery",
+        factory=LoggedInFactory,
+    )
+    config.add_route(
+        "settings_two_factor", "/settings/two_factor", factory=LoggedInFactory
+    )
+    config.add_route(
+        "settings_two_factor_qr_code",
+        "/settings/two_factor/qr_code",
         factory=LoggedInFactory,
     )
     config.add_route(

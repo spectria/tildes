@@ -1,10 +1,17 @@
 """Web API endpoints related to users."""
 
+import random
+import string
 from typing import Optional
 
 from marshmallow import ValidationError
 from marshmallow.fields import String
-from pyramid.httpexceptions import HTTPForbidden, HTTPUnprocessableEntity
+import pyotp
+from pyramid.httpexceptions import (
+    HTTPForbidden,
+    HTTPUnauthorized,
+    HTTPUnprocessableEntity,
+)
 from pyramid.request import Request
 from pyramid.response import Response
 from sqlalchemy.exc import IntegrityError
@@ -82,6 +89,63 @@ def patch_change_email_address(
     user.email_address_note = email_address_note
 
     return Response("Your email address has been updated")
+
+
+def generate_backup_code() -> str:
+    """Generate a user-friendly (easy to read) backup code for 2FA."""
+    parts = []
+    # Generate 4 four-length random strings.
+    for _ in range(4):
+        parts.append("".join(random.choices(string.ascii_lowercase, k=4)))
+
+    # Combine parts to make one, e.g. xxxx xxxx xxxx xxxx
+    return " ".join(parts)
+
+
+@ic_view_config(
+    route_name="user",
+    request_method="POST",
+    request_param="ic-trigger-name=enable-two-factor",
+    renderer="two_factor_enabled.jinja2",
+    permission="change_two_factor",
+)
+def post_enable_two_factor(request: Request) -> dict:
+    """Enable two-factor authentication for the user."""
+    user = request.context
+    totp = pyotp.TOTP(user.two_factor_secret)
+    code = str(request.params.get("code"))
+
+    if not totp.verify(code):
+        raise HTTPUnprocessableEntity("Invalid code, please try again.")
+
+    # Generate 10 backup codes.
+    backup_codes = [generate_backup_code() for _ in range(10)]
+
+    request.user.two_factor_enabled = True
+    request.user.two_factor_backup_codes = backup_codes
+
+    return {"backup_codes": backup_codes}
+
+
+@ic_view_config(
+    route_name="user",
+    request_method="POST",
+    request_param="ic-trigger-name=disable-two-factor",
+    renderer="two_factor_disabled.jinja2",
+    permission="change_two_factor",
+)
+def post_disable_two_factor(request: Request) -> Response:
+    """Disable two-factor authentication for the user."""
+    code = str(request.params.get("code"))
+
+    if not request.user.is_correct_two_factor_code(code):
+        raise HTTPUnauthorized(body="Invalid code")
+
+    request.user.two_factor_enabled = False
+    request.user.two_factor_secret = None
+    request.user.two_factor_backup_codes = None
+
+    return {}
 
 
 @ic_view_config(

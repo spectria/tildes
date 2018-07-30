@@ -1,9 +1,12 @@
 """Views related to user settings."""
 
-from pyramid.httpexceptions import HTTPUnprocessableEntity
+from io import BytesIO
+import pyotp
+from pyramid.httpexceptions import HTTPForbidden, HTTPUnprocessableEntity
 from pyramid.request import Request
 from pyramid.response import Response
 from pyramid.view import view_config
+import qrcode
 from webargs.pyramidparser import use_kwargs
 
 from tildes.schemas.user import EMAIL_ADDRESS_NOTE_MAX_LENGTH, UserSchema
@@ -35,6 +38,13 @@ def get_settings_account_recovery(request: Request) -> dict:
     return {"note_max_length": EMAIL_ADDRESS_NOTE_MAX_LENGTH}
 
 
+@view_config(route_name="settings_two_factor", renderer="settings_two_factor.jinja2")
+def get_settings_two_factor(request: Request) -> dict:
+    """Generate the two-factor authentication page."""
+    # pylint: disable=unused-argument
+    return {}
+
+
 @view_config(
     route_name="settings_comment_visits", renderer="settings_comment_visits.jinja2"
 )
@@ -58,6 +68,27 @@ def get_settings_password_change(request: Request) -> dict:
     """Generate the password change page."""
     # pylint: disable=unused-argument
     return {}
+
+
+@view_config(route_name="settings_two_factor_qr_code")
+def get_settings_two_factor_qr_code(request: Request) -> Response:
+    """Generate the 2FA QR code."""
+    # If 2FA is already enabled, don't expose the secret.
+    if request.user.two_factor_enabled:
+        raise HTTPForbidden("Already enabled")
+
+    # Generate a new secret key if the user doesn't have one.
+    if request.user.two_factor_secret is None:
+        request.user.two_factor_secret = pyotp.random_base32()
+
+    totp = pyotp.totp.TOTP(request.user.two_factor_secret)
+    otp_uri = totp.provisioning_uri(request.user.username, issuer_name="Tildes")
+    byte_io = BytesIO()
+    img = qrcode.make(otp_uri, border=2, box_size=4)
+
+    img.save(byte_io, "PNG")
+
+    return Response(byte_io.getvalue(), cache_control="private, no-cache")
 
 
 @view_config(route_name="settings_password_change", request_method="POST")

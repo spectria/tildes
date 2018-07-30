@@ -1,0 +1,10 @@
+<p>Congratulations! Two-factor authentication has been enabled.</p>
+
+<p>These are your backup codes. <strong class="text-warning">Make sure to write them down and store them in a safe place.</strong>
+In the event that you lose access to your authenticator device, you will need these to regain access to your account. Each code can only be used once.</p>
+
+<code>
+{% for code in backup_codes %}
+	- {{ code }}<br />
+{% endfor %}
+</code>

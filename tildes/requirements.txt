@@ -38,6 +38,7 @@ parso==0.3.1
 PasteDeploy==1.5.2
 pexpect==4.6.0
 pickleshare==0.7.4
+Pillow==5.2.0
 plaster==1.0
 plaster-pastedeploy==0.6
 pluggy==0.7.1
@@ -55,6 +56,7 @@ Pygments==2.2.0
 pylama==7.4.3
 pylama-pylint==3.0.1
 pylint==1.7.5
+pyotp==2.2.6
 pyramid==1.9.2
 pyramid-debugtoolbar==4.4
 pyramid-ipython==0.2
@@ -68,6 +70,7 @@ pytest-mock==1.10.0
 python-dateutil==2.7.3
 python-editor==1.0.3
 PyYAML==3.13
+qrcode==6.0
 redis==2.10.6
 repoze.lru==0.7
 requests==2.19.1

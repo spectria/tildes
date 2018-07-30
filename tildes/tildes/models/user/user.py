@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Any, List, Optional, Sequence, Tuple
 
 from mypy_extensions import NoReturn
+import pyotp
 from pyramid.security import (
     ALL_PERMISSIONS,
     Allow,
@@ -21,7 +22,7 @@ from sqlalchemy import (
     Text,
     TIMESTAMP,
 )
-from sqlalchemy.dialects.postgresql import ENUM
+from sqlalchemy.dialects.postgresql import ARRAY, ENUM
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import text
@@ -62,6 +63,9 @@ class User(DatabaseModel):
             ),
         )
     )
+    two_factor_enabled: bool = Column(Boolean, nullable=False, server_default="false")
+    two_factor_secret: Optional[str] = deferred(Column(Text))
+    two_factor_backup_codes: List[str] = deferred(Column(ARRAY(Text)))
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
@@ -160,6 +164,24 @@ class User(DatabaseModel):
 
         # disable mypy on this line because it doesn't handle setters correctly
         self.password = new_password  # type: ignore
+
+    def is_correct_two_factor_code(self, code: str) -> bool:
+        """Verify that a TOTP/backup code is correct."""
+        totp = pyotp.TOTP(self.two_factor_secret)
+        code = code.strip()
+
+        if totp.verify(code.replace(" ", "")):
+            return True
+        elif code in self.two_factor_backup_codes:
+            # Need to set the attribute so SQLAlchemy knows it changed
+            self.two_factor_backup_codes = [
+                backup_code
+                for backup_code in self.two_factor_backup_codes
+                if backup_code != code
+            ]
+            return True
+
+        return False
 
     @property
     def email_address(self) -> NoReturn:

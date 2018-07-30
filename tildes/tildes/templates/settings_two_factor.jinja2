@@ -1,0 +1,53 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% block title %}Set up two-factor authentication{% endblock %}
+
+{% block main_heading %}Set up two-factor authentication{% endblock %}
+
+{% block content %}
+{% if request.user.two_factor_enabled %}
+<p>You already have two-factor authentication enabled. To disable it, enter a code from your authenticator device below and click the button. If you do not have access to your authenticator device, enter a backup code.</p>
+
+<form
+  name="disable-two-factor"
+  autocomplete="off"
+  data-ic-post-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+  data-ic-target="closest main"
+>
+  <div class="form-group">
+    <label class="form-label" for="code">TOTP or backup code</label>
+    <input class="form-input" id="code" name="code" type="text" placeholder="Code" required>
+  </div>
+
+  <div class="form-buttons">
+    <button class="btn btn-error" type="submit">Disable two-factor authentication</button>
+  </div>
+</form>
+{% else %}
+<p>To get started, you'll need to install an app such as <a href="https://support.google.com/accounts/answer/1066447">Google Authenticator</a>, <a href="https://authy.com/download">Authy</a>, <a href="https://freeotp.github.io">FreeOTP</a>, or any app that supports TOTP.</p>
+
+<p>Next, scan the below QR code with the app of your choice.</p>
+
+<img src="/settings/two_factor/qr_code" alt="" />
+
+<p>Lastly, enter the 6-digit code displayed in the app.</p>
+
+<div class="divider"></div>
+
+<form
+  name="enable-two-factor"
+  autocomplete="off"
+  data-ic-post-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+  data-ic-target="closest main"
+>
+  <div class="form-group">
+    <label class="form-label" for="code">Code</label>
+    <input class="form-input" id="code" name="code" type="text" placeholder="Code" maxlength="6" pattern="[0-9]{6}">
+  </div>
+
+  <div class="form-buttons">
+    <button class="btn btn-primary" type="submit">Enable two-factor authentication</button>
+  </div>
+</form>
+{% endif %}
+{% endblock %}

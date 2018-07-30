@@ -279,6 +279,7 @@ class RateLimitedAction:
 # each action must have a unique name to prevent key collisions
 _RATE_LIMITED_ACTIONS = (
     RateLimitedAction("login", timedelta(hours=1), 20),
+    RateLimitedAction("login_two_factor", timedelta(hours=1), 20),
     RateLimitedAction("register", timedelta(hours=1), 50),
 )
 

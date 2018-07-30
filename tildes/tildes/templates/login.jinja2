@@ -5,7 +5,7 @@
 {% block main_heading %}Log in{% endblock %}
 
 {% block content %}
-  <form class="form-narrow" method="post" data-ic-post-to="/login">
+  <form class="form-narrow" method="post" data-ic-post-to="/login" data-ic-target="closest main">
     <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
 
     <div class="form-group">

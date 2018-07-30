@@ -13,6 +13,7 @@ html5lib
 ipython
 mypy
 mypy-extensions
+Pillow
 prometheus-client
 psycopg2
 publicsuffix2
@@ -20,6 +21,7 @@ pydocstyle
 pylama
 pylama-pylint
 pylint==1.7.5  # pylama has issues with 1.8.1
+pyotp
 pyramid
 pyramid-debugtoolbar
 pyramid-ipython
@@ -30,6 +32,7 @@ pyramid-webassets
 pytest
 pytest-mock
 PyYAML  # needs to be installed separately for webassets
+qrcode
 SQLAlchemy
 SQLAlchemy-Utils
 stripe
