@@ -48,7 +48,7 @@ def get_user(request: Request) -> dict:
     topics = query.all()
 
     merged_posts = sorted(
-        topics + comments,
+        comments + topics,  # this order so topic comes first when times match
         key=lambda post: post.created_time,
         reverse=True,
     )
