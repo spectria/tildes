@@ -38,7 +38,7 @@ from tildes.schemas.topic import (
 
 
 # edits inside this period after creation will not mark the topic as edited
-EDIT_GRACE_PERIOD = timedelta(minutes=2)
+EDIT_GRACE_PERIOD = timedelta(minutes=5)
 
 
 class Topic(DatabaseModel):

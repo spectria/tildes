@@ -28,7 +28,7 @@ from tildes.schemas.comment import CommentSchema
 
 
 # edits inside this period after creation will not mark the comment as edited
-EDIT_GRACE_PERIOD = timedelta(minutes=2)
+EDIT_GRACE_PERIOD = timedelta(minutes=5)
 
 
 class Comment(DatabaseModel):
