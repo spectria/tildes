@@ -47,20 +47,30 @@
     </div>
 
     {% if topic.is_text_type and topic.get_content_metadata('excerpt') %}
-      {# if the "excerpt" is the full text, don't wrap in <details> #}
-      {% if not topic.get_content_metadata('excerpt').endswith('...') %}
-        <p class="topic-text-excerpt">{{ topic.get_content_metadata('excerpt') }}</p>
-      {% else %}
-        <details class="topic-text-excerpt"
-          {% if request.user and request.user.open_new_tab_text %}
-          data-js-external-links-new-tabs
-          {% endif %}
-        >
+      {# warn about spoilers #}
+      {% if 'spoiler' in topic.tags %}
+        <details class="topic-text-excerpt">
           <summary>
-            <span>{{ topic.get_content_metadata('excerpt') }}</span>
+            <span>Warning: this post may contain spoilers.</span>
           </summary>
           {{ topic.rendered_html|safe }}
         </details>
+      {% else %}
+        {# if the "excerpt" is the full text, don't wrap in <details> #}
+        {% if not topic.get_content_metadata('excerpt').endswith('...') %}
+          <p class="topic-text-excerpt">{{ topic.get_content_metadata('excerpt') }}</p>
+        {% else %}
+          <details class="topic-text-excerpt"
+            {% if request.user and request.user.open_new_tab_text %}
+            data-js-external-links-new-tabs
+            {% endif %}
+          >
+            <summary>
+              <span>{{ topic.get_content_metadata('excerpt') }}</span>
+            </summary>
+            {{ topic.rendered_html|safe }}
+          </details>
+        {% endif %}
       {% endif %}
     {% endif %}
 
