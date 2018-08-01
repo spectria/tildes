@@ -42,7 +42,7 @@ $.onmount('[data-js-comment-reply-button]', function() {
         textarea.setAttribute('id', markdownID);
         textarea.setAttribute('name', 'markdown');
         textarea.setAttribute('class', 'form-input');
-        textarea.setAttribute('placeholder', 'Comment text (markdown)');
+        textarea.setAttribute('placeholder', 'Comment text (Markdown)');
         textarea.setAttribute('data-js-ctrl-enter-submit-form', '');
         textarea.setAttribute('data-js-auto-focus', '');
 
