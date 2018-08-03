@@ -154,13 +154,13 @@
   <div class="pagination">
     {% if topics.has_prev_page %}
       <a class="page-item btn" id="prev-page"
-        href="{{ request.current_listing_base_url({'before': topics[0].topic_id36}) }}"
+        href="{{ request.current_listing_base_url({'before': topics.prev_page_before_id}) }}"
       >Prev</a>
     {% endif %}
 
     {% if topics.has_next_page %}
       <a class="page-item btn" id="next-page"
-        href="{{ request.current_listing_base_url({'after': topics[-1].topic_id36}) }}"
+        href="{{ request.current_listing_base_url({'after': topics.next_page_after_id}) }}"
       >Next</a>
     {% endif %}
   </div>
