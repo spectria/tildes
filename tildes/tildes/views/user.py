@@ -1,19 +1,24 @@
 """Views related to a specific user."""
 
+from typing import List, Union
+
+from marshmallow.fields import String
+from marshmallow.validate import OneOf
 from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.sql.expression import desc
+from webargs.pyramidparser import use_kwargs
 
 from tildes.models.comment import Comment
 from tildes.models.topic import Topic
-from tildes.models.user import UserInviteCode
+from tildes.models.user import User, UserInviteCode
+from tildes.schemas.topic_listing import TopicListingSchema
 
 
-@view_config(route_name='user', renderer='user.jinja2')
-def get_user(request: Request) -> dict:
-    """Generate the main user info page."""
-    user = request.context
-
+def _get_user_recent_activity(
+        request: Request,
+        user: User,
+) -> List[Union[Comment, Topic]]:
     page_size = 20
 
     # Since we don't know how many comments or topics will be needed to make
@@ -54,9 +59,56 @@ def get_user(request: Request) -> dict:
     )
     merged_posts = merged_posts[:page_size]
 
+    return merged_posts
+
+
+@view_config(route_name='user', renderer='user.jinja2')
+@use_kwargs(TopicListingSchema(only=('after', 'before', 'per_page')))
+@use_kwargs({
+    'post_type': String(
+        load_from='type',
+        validate=OneOf(('topic', 'comment')),
+    ),
+})
+def get_user(
+        request: Request,
+        after: str,
+        before: str,
+        per_page: int,
+        post_type: str = None,
+) -> dict:
+    """Generate the main user history page."""
+    user = request.context
+
+    if not request.has_permission('view_types', user):
+        post_type = None
+
+    if post_type:
+        if post_type == 'topic':
+            query = request.query(Topic).filter(Topic.user == user)
+        elif post_type == 'comment':
+            query = request.query(Comment).filter(Comment.user == user)
+
+        if before:
+            query = query.before_id36(before)
+
+        if after:
+            query = query.after_id36(after)
+
+        query = query.join_all_relationships()
+
+        # include removed posts if the user's looking at their own page
+        if user == request.user:
+            query = query.include_removed()
+
+        posts = query.get_page(per_page)
+    else:
+        posts = _get_user_recent_activity(request, user)
+
     return {
         'user': user,
-        'merged_posts': merged_posts,
+        'posts': posts,
+        'post_type': post_type,
     }
 
 

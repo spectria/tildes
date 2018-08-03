@@ -137,10 +137,11 @@ def current_listing_base_url(
 
     The `query` argument allows adding query variables to the generated url.
     """
-    if request.matched_route.name not in ('home', 'group'):
+    if request.matched_route.name not in ('home', 'group', 'user'):
         raise AttributeError('Current route is not supported.')
 
-    base_view_vars = ('order', 'period', 'per_page', 'tag', 'unfiltered')
+    base_view_vars = (
+        'order', 'period', 'per_page', 'tag', 'type', 'unfiltered')
     query_vars = {
         key: val for key, val in request.GET.copy().items()
         if key in base_view_vars
@@ -165,7 +166,7 @@ def current_listing_normal_url(
 
     The `query` argument allows adding query variables to the generated url.
     """
-    if request.matched_route.name not in ('home', 'group'):
+    if request.matched_route.name not in ('home', 'group', 'user'):
         raise AttributeError('Current route is not supported.')
 
     normal_view_vars = ('order', 'period', 'per_page')

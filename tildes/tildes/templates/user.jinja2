@@ -10,13 +10,33 @@
 <a class="site-header-context" href="/user/{{ user.username }}">{{ user.username }}</a>
 {% endblock %}
 
-{% block main_heading %}{{ user.username }}'s recent activity{% endblock %}
+{# Only show the heading if they can't see the type tabs #}
+{% block main_heading %}
+  {% if not request.has_permission('view_types', user) %}
+    {{ user.username }}'s recent activity
+  {% endif %}
+{% endblock %}
 
 {% block content %}
+{% if request.has_permission('view_types', user) %}
+  <div class="listing-options">
+    <menu class="tab tab-listing-order">
+      <li class="tab-item{{' active' if not post_type else ''}}">
+        <a href="{{ request.current_listing_normal_url() }}">Recent activity</a>
+      </li>
+      <li class="tab-item{{' active' if post_type == 'topic' else ''}}">
+        <a href="{{ request.current_listing_normal_url({'type': 'topic'}) }}">Topics</a>
+      </li>
+      <li class="tab-item{{ ' active' if post_type == 'comment' else ''}}">
+        <a href="{{ request.current_listing_normal_url({'type': 'comment'}) }}">Comments</a>
+      </li>
+    </menu>
+  </div>
+{% endif %}
 
-{% if merged_posts %}
+{% if posts %}
   <ol class="post-listing">
-  {% for post in merged_posts if request.has_permission('view', post) %}
+  {% for post in posts if request.has_permission('view', post) %}
     <li>
     {% if post is topic %}
       {{ render_topic_for_listing(post, show_group=True) }}
@@ -27,6 +47,22 @@
     </li>
   {% endfor %}
   </ol>
+
+  {% if post_type and (posts.has_prev_page or posts.has_next_page) %}
+    <div class="pagination">
+      {% if posts.has_prev_page %}
+        <a class="page-item btn" id="prev-page"
+          href="{{ request.current_listing_base_url({'before': posts.prev_page_before_id}) }}"
+        >Prev</a>
+      {% endif %}
+
+      {% if posts.has_next_page %}
+        <a class="page-item btn" id="next-page"
+          href="{{ request.current_listing_base_url({'after': posts.next_page_after_id}) }}"
+        >Next</a>
+      {% endif %}
+    </div>
+  {% endif %}
 {% else %}
   <div class="empty">
     <h2 class="empty-title">This user hasn't made any posts</h2>

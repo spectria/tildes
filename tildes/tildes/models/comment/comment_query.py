@@ -4,12 +4,12 @@ from typing import Any
 
 from pyramid.request import Request
 
-from tildes.models import ModelQuery
+from tildes.models.pagination import PaginatedQuery
 from .comment import Comment
 from .comment_vote import CommentVote
 
 
-class CommentQuery(ModelQuery):
+class CommentQuery(PaginatedQuery):
     """Specialized ModelQuery for Comments."""
 
     def __init__(self, request: Request) -> None:
