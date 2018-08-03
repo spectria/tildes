@@ -5,7 +5,7 @@ from typing import Any, Iterator, List, Optional, TypeVar
 from pyramid.request import Request
 from sqlalchemy import Column, func, inspect
 
-from tildes.lib.id import id36_to_id
+from tildes.lib.id import id_to_id36, id36_to_id
 from .model_query import ModelQuery
 
 
@@ -206,17 +206,19 @@ class PaginatedResults:
         return len(self.results)
 
     @property
-    def next_page_after_id(self) -> int:
-        """Return "after" ID that should be used to fetch the next page."""
+    def next_page_after_id36(self) -> str:
+        """Return "after" ID36 that should be used to fetch the next page."""
         if not self.has_next_page:
             raise AttributeError
 
-        return inspect(self.results[-1]).identity[0]
+        next_id = inspect(self.results[-1]).identity[0]
+        return id_to_id36(next_id)
 
     @property
-    def prev_page_before_id(self) -> int:
-        """Return "before" ID that should be used to fetch the prev page."""
+    def prev_page_before_id36(self) -> str:
+        """Return "before" ID36 that should be used to fetch the prev page."""
         if not self.has_prev_page:
             raise AttributeError
 
-        return inspect(self.results[0]).identity[0]
+        prev_id = inspect(self.results[0]).identity[0]
+        return id_to_id36(prev_id)
