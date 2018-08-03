@@ -22,7 +22,8 @@ class PaginatedQuery(ModelQuery):
 
         super().__init__(model_cls, request)
 
-        self._sort_column: Optional[Column] = None
+        # default to sorting by created_time descending (newest first)
+        self._sort_column = model_cls.created_time
         self.sort_desc = True
 
         self.after_id: Optional[int] = None
@@ -135,17 +136,16 @@ class PaginatedQuery(ModelQuery):
         """Finalize the query before execution."""
         query = super()._finalize()
 
-        if self._sort_column:
-            # if the query is reversed, we need to sort in the opposite dir
-            # (basically self.sort_desc XOR self.is_reversed)
-            desc = self.sort_desc
-            if self.is_reversed:
-                desc = not desc
+        # if the query is reversed, we need to sort in the opposite dir
+        # (basically self.sort_desc XOR self.is_reversed)
+        desc = self.sort_desc
+        if self.is_reversed:
+            desc = not desc
 
-            if desc:
-                query = query.order_by(*self.sorting_columns_desc)
-            else:
-                query = query.order_by(*self.sorting_columns)
+        if desc:
+            query = query.order_by(*self.sorting_columns_desc)
+        else:
+            query = query.order_by(*self.sorting_columns)
 
         # pylint: disable=protected-access
         query = query._apply_before_or_after()
