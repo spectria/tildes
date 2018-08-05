@@ -310,6 +310,11 @@ class Topic(DatabaseModel):
         return (self.get_content_metadata('domain')
                 or get_domain_from_url(self.link))
 
+    @property
+    def is_spoiler(self) -> bool:
+        """Return whether the topic is marked as a spoiler."""
+        return 'spoiler' in self.tags
+
     def get_content_metadata(self, key: str) -> Any:
         """Get a piece of content metadata "safely".
 
