@@ -16,9 +16,9 @@
     {% if request.user.num_unread_notifications > 0 %}
       <a class="logged-in-user-alert" href="/notifications/unread">
         {% trans num_notifications=request.user.num_unread_notifications %}
-        {{ num_notifications }} new reply
+        {{ num_notifications }} new comment
         {% pluralize %}
-        {{ num_notifications }} new replies
+        {{ num_notifications }} new comments
         {% endtrans %}
       </a>
     {% endif %}
