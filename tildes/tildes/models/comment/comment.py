@@ -97,7 +97,8 @@ class Comment(DatabaseModel):
 
     user: User = relationship('User', lazy=False, innerjoin=True)
     topic: Topic = relationship('Topic', innerjoin=True)
-    parent_comment: 'Comment' = relationship('Comment', innerjoin=True)
+    parent_comment: Optional['Comment'] = relationship(
+        'Comment', uselist=False, remote_side=[comment_id])
 
     @hybrid_property
     def markdown(self) -> str:
