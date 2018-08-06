@@ -1,7 +1,7 @@
 {% extends 'base_user_menu.jinja2' %}
 
 {% from 'macros/comments.jinja2' import comment_tag_options_template, render_single_comment with context %}
-{% from 'macros/links.jinja2' import group_linked %}
+{% from 'macros/links.jinja2' import group_linked, username_linked %}
 
 {% block title %}Unread notifications{% endblock %}
 
@@ -16,6 +16,10 @@
         <h2>Reply to your comment on <a href="{{ notification.comment.topic.permalink }}">{{ notification.comment.topic.title }}</a> in {{ group_linked(notification.comment.topic.group.path) }}</h2>
       {% elif notification.is_topic_reply %}
         <h2>Reply to your topic <a href="{{ notification.comment.topic.permalink }}">{{ notification.comment.topic.title }}</a> in {{ group_linked(notification.comment.topic.group.path) }}</h2>
+      {% elif notification.is_mention %}
+        <h2>
+            You were mentioned in a comment on <a href="{{ notification.comment.topic.permalink }}">{{ notification.comment.topic.title }}</a> in {{ group_linked(notification.comment.topic.group.path) }}
+        </h2>
       {% endif %}
 
       {% if notification.is_unread and not request.user.auto_mark_notifications_read %}

@@ -50,6 +50,8 @@ class Comment(DatabaseModel):
         - Setting is_deleted to true will decrement num_comments on all
           topic_visit rows for the relevant topic, where the visit_time was
           after the time the comment was originally posted.
+        - Inserting a row or updating markdown will send a rabbitmq message
+          for "comment.created" or "comment.edited" respectively.
       Internal:
         - deleted_time will be set when is_deleted is set to true
     """
@@ -95,6 +97,7 @@ class Comment(DatabaseModel):
 
     user: User = relationship('User', lazy=False, innerjoin=True)
     topic: Topic = relationship('Topic', innerjoin=True)
+    parent_comment: 'Comment' = relationship('Comment', innerjoin=True)
 
     @hybrid_property
     def markdown(self) -> str:

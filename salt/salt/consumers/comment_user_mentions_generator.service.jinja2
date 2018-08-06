@@ -1,0 +1,16 @@
+{% from 'common.jinja2' import app_dir, bin_dir -%}
+[Unit]
+Description=Comment User Mention Generator (Queue Consumer)
+Requires=rabbitmq-server.service
+After=rabbitmq-server.service
+PartOf=rabbitmq-server.service
+
+[Service]
+WorkingDirectory={{ app_dir }}/consumers
+Environment="INI_FILE={{ app_dir }}/{{ pillar['ini_file'] }}"
+ExecStart={{ bin_dir }}/python comment_user_mentions_generator.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

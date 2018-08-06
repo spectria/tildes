@@ -8,6 +8,7 @@ class CommentNotificationType(enum.Enum):
 
     COMMENT_REPLY = enum.auto()
     TOPIC_REPLY = enum.auto()
+    USER_MENTION = enum.auto()
 
 
 class CommentSortOption(enum.Enum):
