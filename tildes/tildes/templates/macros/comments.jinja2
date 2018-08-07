@@ -115,6 +115,7 @@
                 comment_id36=comment.comment_id36,
               ) }}"
               data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+              data-ic-replace-target="true"
               >Voted
           {% else %}
             <li><a class="post-button" name="vote"
@@ -123,6 +124,7 @@
                 comment_id36=comment.comment_id36,
               ) }}"
               data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+              data-ic-replace-target="true"
               >Vote
           {% endif %}
           {% if comment.num_votes > 0 %}
@@ -153,6 +155,7 @@
               comment_id36=comment.comment_id36,
             ) }}"
             data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+            data-ic-replace-target="true"
             data-ic-confirm="Delete this comment? This cannot be undone."
           >Delete</a></li>
         {% endif %}

@@ -8,6 +8,7 @@
       comment_id36=comment.comment_id36,
     ) }}"
     data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+    data-ic-replace-target="true"
     data-js-confirm-leave-page-unsaved
 >
   {{ markdown_textarea(
@@ -25,6 +26,7 @@
         comment_id36=comment.comment_id36,
       ) }}"
       data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+      data-ic-replace-target="true"
     >Cancel</button>
   </div>
 </form>
