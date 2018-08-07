@@ -18,7 +18,11 @@ class SimpleHoursPeriod:
             raise ValueError('Period must be at least 1 hour.')
 
         self.hours = hours
-        self.timedelta = timedelta(hours=hours)
+
+        try:
+            self.timedelta = timedelta(hours=hours)
+        except OverflowError:
+            raise ValueError('Time period is too large')
 
     @classmethod
     def from_short_form(cls, short_form: str) -> 'SimpleHoursPeriod':

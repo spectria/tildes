@@ -121,7 +121,15 @@ class TopicQuery(PaginatedQuery):
 
     def inside_time_period(self, period: SimpleHoursPeriod) -> 'TopicQuery':
         """Restrict the topics to inside a time period (generative)."""
-        return self.filter(Topic.created_time > utc_now() - period.timedelta)
+        # if the time period is too long, this will crash by creating a
+        # datetime outside the valid range - catch that and just don't filter
+        # by time period at all if the range is that large
+        try:
+            start_time = utc_now() - period.timedelta
+        except OverflowError:
+            return self
+
+        return self.filter(Topic.created_time > start_time)
 
     def has_tag(self, tag: Ltree) -> 'TopicQuery':
         """Restrict the topics to ones with a specific tag (generative)."""
