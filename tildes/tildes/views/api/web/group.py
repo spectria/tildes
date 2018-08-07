@@ -22,7 +22,7 @@ from tildes.views.decorators import ic_view_config
     permission='subscribe',
     renderer='group_subscription_box.jinja2',
 )
-def subscribe_group(request: Request) -> dict:
+def put_subscribe_group(request: Request) -> dict:
     """Subscribe to a group with Intercooler."""
     group = request.context
 
@@ -57,7 +57,7 @@ def subscribe_group(request: Request) -> dict:
     permission='subscribe',
     renderer='group_subscription_box.jinja2',
 )
-def unsubscribe_group(request: Request) -> dict:
+def delete_subscribe_group(request: Request) -> dict:
     """Remove the user's subscription from a group with Intercooler."""
     group = request.context
 

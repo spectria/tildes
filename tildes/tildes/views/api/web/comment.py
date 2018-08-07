@@ -196,7 +196,7 @@ def delete_comment(request: Request) -> dict:
     permission='vote',
     renderer='comment_contents.jinja2',
 )
-def vote_comment(request: Request) -> dict:
+def put_vote_comment(request: Request) -> dict:
     """Vote on a comment with Intercooler."""
     comment = request.context
 
@@ -231,7 +231,7 @@ def vote_comment(request: Request) -> dict:
     permission='vote',
     renderer='comment_contents.jinja2',
 )
-def unvote_comment(request: Request) -> dict:
+def delete_vote_comment(request: Request) -> dict:
     """Remove the user's vote from a comment with Intercooler."""
     comment = request.context
 
@@ -261,7 +261,7 @@ def unvote_comment(request: Request) -> dict:
     renderer='comment_contents.jinja2',
 )
 @use_kwargs(CommentTagSchema(only=('name',)), locations=('matchdict',))
-def tag_comment(request: Request, name: CommentTagOption) -> Response:
+def put_tag_comment(request: Request, name: CommentTagOption) -> Response:
     """Add a tag to a comment."""
     comment = request.context
 
@@ -296,7 +296,7 @@ def tag_comment(request: Request, name: CommentTagOption) -> Response:
     renderer='comment_contents.jinja2',
 )
 @use_kwargs(CommentTagSchema(only=('name',)), locations=('matchdict',))
-def untag_comment(request: Request, name: CommentTagOption) -> Response:
+def delete_tag_comment(request: Request, name: CommentTagOption) -> Response:
     """Remove a tag (that the user previously added) from a comment."""
     comment = request.context
 

@@ -34,7 +34,7 @@ PASSWORD_FIELD = UserSchema(only=('password',)).fields['password']
     'new_password': PASSWORD_FIELD,
     'new_password_confirm': PASSWORD_FIELD,
 })
-def change_password(
+def patch_change_password(
         request: Request,
         old_password: str,
         new_password: str,
@@ -62,7 +62,7 @@ def change_password(
     permission='change_email_address',
 )
 @use_kwargs(UserSchema(only=('email_address', 'email_address_note')))
-def change_email_address(
+def patch_change_email_address(
         request: Request,
         email_address: str,
         email_address_note: str
@@ -94,7 +94,7 @@ def change_email_address(
     request_param='ic-trigger-name=auto-mark-notifications-read',
     permission='change_auto_mark_notifications_read_setting',
 )
-def change_auto_mark_notifications(request: Request) -> Response:
+def patch_change_auto_mark_notifications(request: Request) -> Response:
     """Change the user's "automatically mark notifications read" setting."""
     user = request.context
 
@@ -110,7 +110,7 @@ def change_auto_mark_notifications(request: Request) -> Response:
     request_param='ic-trigger-name=open-links-new-tab',
     permission='change_open_links_new_tab_setting',
 )
-def change_open_links_new_tab(request: Request) -> Response:
+def patch_change_open_links_new_tab(request: Request) -> Response:
     """Change the user's "open links in new tabs" setting."""
     user = request.context
 
@@ -130,7 +130,7 @@ def change_open_links_new_tab(request: Request) -> Response:
     request_param='ic-trigger-name=comment-visits',
     permission='change_comment_visits_setting',
 )
-def change_track_comment_visits(request: Request) -> Response:
+def patch_change_track_comment_visits(request: Request) -> Response:
     """Change the user's "track comment visits" setting."""
     user = request.context
 

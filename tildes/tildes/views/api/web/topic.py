@@ -80,7 +80,7 @@ def delete_topic(request: Request) -> Response:
     renderer='topic_voting.jinja2',
     permission='vote',
 )
-def vote_topic(request: Request) -> Response:
+def put_topic_vote(request: Request) -> Response:
     """Vote on a topic with Intercooler."""
     topic = request.context
 
@@ -115,7 +115,7 @@ def vote_topic(request: Request) -> Response:
     renderer='topic_voting.jinja2',
     permission='vote',
 )
-def unvote_topic(request: Request) -> Response:
+def delete_topic_vote(request: Request) -> Response:
     """Remove the user's vote from a topic with Intercooler."""
     topic = request.context
 
@@ -156,7 +156,7 @@ def get_topic_tags(request: Request) -> dict:
     permission='tag',
 )
 @use_kwargs({'tags': String()})
-def tag_topic(request: Request, tags: str) -> dict:
+def put_tag_topic(request: Request, tags: str) -> dict:
     """Apply tags to a topic with Intercooler."""
     topic = request.context
 
@@ -207,7 +207,7 @@ def get_topic_group(request: Request) -> dict:
     permission='move',
 )
 @use_kwargs(GroupSchema(only=('path',)))
-def move_topic(request: Request, path: str) -> dict:
+def patch_move_topic(request: Request, path: str) -> dict:
     """Move a topic to a different group with Intercooler."""
     topic = request.context
 
@@ -243,7 +243,7 @@ def move_topic(request: Request, path: str) -> dict:
     request_method='PUT',
     permission='lock',
 )
-def lock_topic(request: Request) -> Response:
+def put_topic_lock(request: Request) -> Response:
     """Lock a topic with Intercooler."""
     topic = request.context
 
@@ -258,7 +258,7 @@ def lock_topic(request: Request) -> Response:
     request_method='DELETE',
     permission='lock',
 )
-def unlock_topic(request: Request) -> Response:
+def delete_topic_lock(request: Request) -> Response:
     """Unlock a topic with Intercooler."""
     topic = request.context
 
@@ -286,7 +286,7 @@ def get_topic_title(request: Request) -> dict:
     permission='edit_title',
 )
 @use_kwargs(TopicSchema(only=('title',)))
-def edit_topic_title(request: Request, title: str) -> dict:
+def patch_topic_title(request: Request, title: str) -> dict:
     """Edit a topic's title with Intercooler."""
     topic = request.context
 

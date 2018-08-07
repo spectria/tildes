@@ -11,7 +11,7 @@ from pyramid.view import view_config
     renderer='string',
     permission=NO_PERMISSION_REQUIRED,
 )
-def metrics(request: Request) -> str:
+def get_metrics(request: Request) -> str:
     """Merge together the metrics from all workers and output them."""
     registry = CollectorRegistry()
     multiprocess.MultiProcessCollector(registry)
