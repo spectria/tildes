@@ -1,6 +1,6 @@
 <ul class="topic-tags">
   {% for tag in topic.tags %}
-    <li class="label label-topic-tag label-topic-tag-{{ tag }}">
+    <li class="label label-topic-tag label-topic-tag-{{ tag.replace(' ', '_') }}">
       <a href="/~{{ topic.group.path }}?tag={{ tag.replace(' ', '_') }}">{{ tag }}</a>
     </li>
   {% else %}

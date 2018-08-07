@@ -34,7 +34,7 @@
       {% if topic.tags %}
         <ul class="topic-tags">
           {% for tag in topic.tags %}
-            <li class="label label-topic-tag label-topic-tag-{{ tag }}">
+            <li class="label label-topic-tag label-topic-tag-{{ tag.replace(' ', '_') }}">
               {% if request.matched_route.name in ('home', 'group') %}
                 <a href="{{ request.current_listing_normal_url({'tag': tag.replace(' ', '_')}) }}">{{ tag }}</a>
               {% else %}
