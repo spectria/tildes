@@ -18,14 +18,12 @@
       border-bottom: 0;
 
       &.active a {
-        color: $blue;
         text-decoration: underline;
       }
     }
   }
 
   .nav-item a {
-    color: $blue;
     cursor: pointer;
 
     &:hover {

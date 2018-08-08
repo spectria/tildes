@@ -10,12 +10,6 @@
 
   font-size: 0.6rem;
   font-weight: bold;
-
-  background-color: inherit;
-
-  &:hover {
-    background-color: rgba($blue, 0.2);
-  }
 }
 
 .btn.btn-sm {
@@ -35,17 +29,6 @@
   }
 }
 
-.btn-used {
-  border-color: darken($violet, 3%);
-  color: $violet;
-
-  &:hover {
-    background-color: darken($violet, 3%);
-    border-color: darken($violet, 8%);
-    color: #fff;
-  }
-}
-
 .btn-comment-collapse {
   @include min-touch-size;
 
@@ -59,10 +42,6 @@
   @media (min-width: $size-md) {
     margin-right: 0.2rem;
     min-width: 0.8rem;
-  }
-
-  &:hover {
-    color: $blue;
   }
 }
 

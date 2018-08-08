@@ -2,130 +2,229 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 // This file should only contain rules that need to differ between the
-// different themes, defined inside the `theme-dependent` mixin below.
+// different themes, defined inside the `use-theme` mixin below.
 // Note that all rules inside the mixin will be included in the compiled CSS
 // once for each theme, so they should be kept as minimal as possible.
 
-@mixin specialtag($color, $is-light) {
-  @if $is-light {
-    background-color: $color;
+// Each theme is defined by a SCSS map and a `body.theme-<abc>` selector.
+// The `use-theme` mixin is called inside the body.theme and takes the theme's
+// map as its only argument, applying each defined color available in the map.
+// If a color variable is left undefined in a map, it will use the default's
+// `$theme-base` for it instead.
 
-    a {
-      color: white;
-    }
-  }
-  @else {
-    background-color: transparent;
-    color: $color;
-    border: 1px solid $color;
+$theme-base: (
+  'foreground-primary': #333,
+  'foreground-secondary': #999,
+  'foreground-highlight': #222,
+  'foreground-middle': #666,
+  'foreground-extreme': #000,
+  'background-primary': #fff,
+  'background-secondary': #eee,
+  'background-input': #f7f7f7,
+  'border-primary': #ccc,
+  'anchor-normal': $blue,
+  'anchor-normal-hover': darken($blue, 5%),
+  'anchor-normal-visited': $violet,
+);
 
-    a {
-      color: $color;
-    }
-  }
-}
+$theme-white: $theme-base;
 
-@mixin theme-dependent($background-color, $background-alt-color, $text-color, $text-highlight-color, $text-secondary-color, $border-color) {
+$theme-light: map-merge($theme-base, (
+  'foreground-primary': $fg-dark,
+  'foreground-secondary': $fg-lightest,
+  'foreground-highlight': $fg-darkest,
+  'foreground-middle': #7c8e92,
+  'background-primary': $bg-lightest,
+  'background-secondary': $bg-light,
+  'background-input': #fefbf1,
+  'border-primary': #cbc5b6,
+));
+
+$theme-dark: map-merge($theme-base, (
+  'foreground-primary': $fg-light,
+  'foreground-secondary': $fg-darkest,
+  'foreground-highlight': $fg-lightest,
+  'foreground-middle': #6e8186,
+  'foreground-extreme': #fff,
+  'background-primary': $bg-darkest,
+  'background-secondary': $bg-dark,
+  'background-input': #001f27,
+  'border-primary': #33555e,
+));
+
+$theme-black: map-merge($theme-base, (
+  'foreground-primary': #ccc,
+  'foreground-secondary': #888,
+  'foreground-highlight': #ddd,
+  'foreground-middle': #aaa,
+  'foreground-extreme': #fff,
+  'background-primary': #000,
+  'background-secondary': #222,
+  'background-input': #000,
+  'border-primary': #444,
+));
+
+@mixin use-theme($theme) {
+  $foreground-primary: map-get($theme, 'foreground-primary');
+  $foreground-secondary: map-get($theme, 'foreground-secondary');
+  $foreground-highlight: map-get($theme, 'foreground-highlight');
+  $foreground-middle: map-get($theme, 'foreground-middle');
+  $foreground-extreme: map-get($theme, 'foreground-extreme');
+  $background-primary: map-get($theme, 'background-primary');
+  $background-secondary: map-get($theme, 'background-secondary');
+  $background-input: map-get($theme, 'background-input');
+  $border-primary: map-get($theme, 'border-primary');
+  $anchor-normal: map-get($theme, 'anchor-normal');
+  $anchor-normal-hover: map-get($theme, 'anchor-normal-hover');
+  $anchor-normal-visited: map-get($theme, 'anchor-normal-visited');
+
+  color: $foreground-primary;
+  background-color: $background-secondary;
+
   // set $is-light as a bool for whether $background-color seems light or dark
-  $is-light: lightness($background-color) > 50;
+  $is-light: lightness($background-primary) > 50;
 
-  $text-mid-color: mix($text-color, $text-secondary-color);
-  $text-extreme-color: if($is-light, #000, #fff);
+  a {
+    color: $anchor-normal;
 
-  // if $background-color is light, make the input background even lighter,
-  // but if it's dark, make input background even darker
-  $input-background-color: if($is-light, lighten($background-color, 3%), darken($background-color, 3%));
+    &:hover {
+      color: $anchor-normal-hover;
+    }
 
-  background-color: $background-alt-color;
-  color: $text-color;
+    &:visited {
+      color: $anchor-normal-visited;
+    }
+  }
+
+  a.link-user,
+  a.link-group {
+    &:visited {
+      color: $anchor-normal;
+    }
+  }
+
+  a.logged-in-user-alert {
+    color: $orange;
+
+    &:visited {
+      color: $orange;
+    }
+  }
+
+  a.logged-in-user-username:visited,
+  a.site-header-context:visited,
+  a.site-header-logo:visited {
+    color: unset;
+  }
 
   @include syntax-highlighting($is-light);
 
   blockquote {
-    background-color: $background-alt-color;
-    border-color: $text-highlight-color;
+    border-color: $foreground-highlight;
+    background-color: $background-secondary;
   }
 
   code, pre {
-    background-color: $background-alt-color;
-    color: $text-highlight-color;
+    color: $foreground-highlight;
+    background-color: $background-secondary;
   }
 
   fieldset {
-    border-color: $border-color;
+    border-color: $border-primary;
   }
 
   figure {
-    border-color: $border-color;
+    border-color: $border-primary;
   }
 
   main {
-    background-color: $background-color;
+    background-color: $background-primary;
   }
 
   section {
-    border-color: $border-color;
+    border-color: $border-primary;
   }
 
-  .tab-listing-order {
-    border-color: $border-color;
+  tbody tr:nth-of-type(2n+1) {
+    background-color: $background-secondary;
   }
 
-  .logged-in-user-username {
-    color: $text-color;
+  td {
+    border-color: $border-primary;
   }
 
-  .sidebar-controls {
-    background-color: $background-alt-color;
+  th {
+    border-color: $foreground-highlight;
   }
 
-  .site-header-context, .site-header-username {
-    color: $text-color;
-  }
+  .btn {
+    color: $blue;
+    background-color: transparent;
+    border-color: $blue;
 
-  .site-header-logo {
-    color: $text-highlight-color;
-  }
-
-  #sidebar {
-    background-color: $background-color;
-  }
-
-  .btn-comment-collapse {
-    color: $text-secondary-color;
-    border-color: $border-color;
-  }
-
-  .comment {
-    border-color: $border-color;
-
-    header {
-      background-color: $background-alt-color;
-      color: $text-highlight-color;
+    &:hover {
+      background-color: rgba($blue, 0.2);
     }
   }
 
-  .comment[data-comment-depth="0"] {
-    border-color: $border-color;
+  .btn-comment-collapse {
+    color: $foreground-secondary;
+    border-color: $border-primary;
+
+    &:hover {
+      color: $anchor-normal;
+    }
+  }
+
+  .btn-link {
+    color: $blue;
+    background-color: transparent;
+    border-color: transparent;
+  }
+
+  .btn-primary {
+    color: #fff;
+    background-color: $blue;
+    border-color: $blue;
+
+    &:hover {
+      background-color: darken($blue, 10%);
+      border-color: darken($blue, 10%);
+    }
+
+    &:visited {
+      color: #fff;
+    }
+  }
+
+  .btn-used {
+    color: $violet;
+    border-color: darken($violet, 3%);
+
+    &:hover {
+      background-color: darken($violet, 3%);
+      border-color: darken($violet, 8%);
+      color: #fff;
+    }
   }
 
   .comment-branch-counter {
-    color: $text-secondary-color;
+    color: $foreground-secondary;
   }
 
-  .comment-nav-link {
-    color: $text-secondary-color;
+  .comment-nav-link, .comment-nav-link:visited {
+    color: $foreground-secondary;
   }
 
-  .label-comment-exemplary { @include specialtag($comment-label-exemplary-color, $is-light); }
-  .label-comment-joke { @include specialtag($comment-label-joke-color, $is-light); }
-  .label-comment-noise { @include specialtag($comment-label-noise-color, $is-light); }
-  .label-comment-offtopic { @include specialtag($comment-label-offtopic-color, $is-light); }
-  .label-comment-malice { @include specialtag($comment-label-malice-color, $is-light); }
+  .label-comment-exemplary { @include theme-special-label($comment-label-exemplary-color, $is-light); }
+  .label-comment-joke { @include theme-special-label($comment-label-joke-color, $is-light); }
+  .label-comment-noise { @include theme-special-label($comment-label-noise-color, $is-light); }
+  .label-comment-offtopic { @include theme-special-label($comment-label-offtopic-color, $is-light); }
+  .label-comment-malice { @include theme-special-label($comment-label-malice-color, $is-light); }
 
   %collapsed-theme {
     header {
-      background-color: $background-color;
+      background-color: $background-primary;
     }
   }
 
@@ -137,78 +236,134 @@
     & > .comment-itself {
       @extend %collapsed-theme;
     }
-  }
 
-  .is-comment-deleted, .is-comment-removed {
-    color: $text-secondary-color;
-  }
-
-  .is-comment-new {
-    .comment-text {
-      color: $text-highlight-color;
+    &:hover {
+      color: #fff;
+      background-color: $blue;
+      border-color: $blue;
     }
   }
 
-  .divider {
-    border-color: $border-color;
+  .comment {
+    border-color: $border-primary;
+
+    header {
+      color: $foreground-highlight;
+      background-color: $background-secondary;
+    }
+
+    &[data-comment-depth="0"] {
+      border-color: $border-primary;
+    }
   }
 
-  .divider[data-content]::after {
-    color: $text-color;
-    background-color: $background-color;
+  .comment:target > .comment-itself {
+    border-left-color: $yellow;
+  }
+
+  .comment-nav-link {
+    color: $foreground-secondary;
+  }
+
+  .divider {
+    border-color: $border-primary;
+
+    &[data-content]::after {
+      color: $foreground-primary;
+      background-color: $background-primary;
+    }
   }
 
   .empty-subtitle {
-    color: $text-secondary-color;
+    color: $foreground-secondary;
+  }
+
+  .foreground-secondary {
+    color: $foreground-secondary;
   }
 
   .form-input {
-    background-color: $input-background-color;
-    color: $text-color;
+    color: $foreground-primary;
+    background-color: $background-input;
   }
 
   .form-input:not(:focus) {
-    border-color: $border-color;
+    border-color: $border-primary;
   }
 
   .form-select {
-    border-color: $border-color;
+    border-color: $border-primary;
+
+    &:not([multiple]):not([size]) {
+      background-color: $background-input;
+    }
   }
 
-  .form-select:not([multiple]):not([size]) {
-    background-color: $input-background-color;
+  .form-status-error {
+    color: $red;
   }
 
-  .message {
-    border-color: $border-color;
-
+  .is-comment-collapsed {
     header {
-      background-color: $background-alt-color;
-      color: $text-highlight-color;
+      color: $foreground-secondary;
+      background-color: $background-primary;
+
+      .link-user {
+        color: $foreground-secondary;
+      }
     }
   }
 
   .label-topic-tag {
-    color: $text-mid-color;
+    color: $foreground-middle;
 
-    a {
-      color: $text-mid-color;
+    a,
+    a:hover,
+    a:visited {
+      color: $foreground-middle;
     }
   }
 
   .label-topic-tag-nsfw {
-    @include specialtag($topic-tag-nsfw-color, $is-light);
+    @include theme-special-label($topic-tag-nsfw-color, $is-light);
   }
 
   .label-topic-tag-spoiler {
-    @include specialtag($topic-tag-spoiler-color, $is-light);
+    @include theme-special-label($topic-tag-spoiler-color, $is-light);
+  }
+
+  .logged-in-user-username {
+    color: $foreground-primary;
+  }
+
+  .message {
+    border-color: $border-primary;
+
+    header {
+      color: $foreground-highlight;
+      background-color: $background-secondary;
+    }
+  }
+
+  .nav .nav-item {
+    a {
+      color: $anchor-normal;
+
+      &:hover {
+        color: $anchor-normal-hover;
+      }
+    }
+
+    &.active a {
+      color: $anchor-normal;
+    }
   }
 
   .post-button {
-    color: $text-secondary-color;
+    color: $foreground-secondary;
 
     &:hover {
-      color: $text-extreme-color;
+      color: $foreground-extreme;
     }
   }
 
@@ -216,26 +371,49 @@
     color: $violet;
   }
 
-  td {
-    border-color: $border-color;
+  .sidebar-controls {
+    background-color: $background-secondary;
   }
 
-  th {
-    border-color: $text-highlight-color;
+  #sidebar {
+    background-color: $background-primary;
   }
 
-  tbody tr:nth-of-type(2n+1) {
-    background-color: $background-alt-color;
+  .site-header-context,
+  .site-header-username {
+    color: $foreground-primary;
+  }
+
+  .site-header-logo {
+    color: $foreground-highlight;
+  }
+
+  .site-header-sidebar-button.badge[data-badge]::after {
+    background-color: $orange;
+  }
+
+  .tab-listing-order {
+    border-color: $border-primary;
+  }
+
+  .tab .tab-item {
+    a {
+      color: $foreground-primary;
+    }
+
+    &.active a {
+      color: $anchor-normal;
+    }
   }
 
   .text-secondary {
-    color: $text-secondary-color;
+    color: $foreground-secondary;
   }
 
   .toast {
-    background-color: $background-alt-color;
-    border-color: $border-color;
-    color: $text-highlight-color;
+    color: $foreground-highlight;
+    border-color: $border-primary;
+    background-color: $background-secondary;
   }
 
   // Toasts should have colored border + text for dark themes, instead of a
@@ -248,42 +426,113 @@
     }
   }
 
-  .topic-listing {
-    & > li:nth-of-type(2n) {
-      background-color: mix($background-color, $background-alt-color);
-      color: mix($text-color, $text-highlight-color);
-    }
+  .topic {
+    border-color: $border-primary;
   }
 
-  .topic {
-    border-color: $border-color;
+  .topic-listing {
+    & > li:nth-of-type(2n) {
+      color: mix($foreground-primary, $foreground-highlight);
+      background-color: mix($background-primary, $background-secondary);
+    }
   }
 
   .topic-content-metadata {
-    color: $text-secondary-color;
+    color: $foreground-secondary;
   }
 
   .topic-full-byline {
-    color: $text-secondary-color;
+    color: $foreground-secondary;
   }
 
   .topic-info {
-    color: $text-mid-color;
+    color: $foreground-middle;
+  }
+
+  .topic-info-comments-new {
+    color: $orange;
   }
 
   .topic-log-entry-time {
-    color: $text-secondary-color;
+    color: $foreground-secondary;
   }
 
   .topic-text-excerpt {
-    color: $text-secondary-color;
+    color: $foreground-secondary;
 
     summary::after {
-      color: $text-secondary-color;
+      color: $foreground-secondary;
     }
 
     &[open] {
-      color: $text-color;
+      color: $foreground-primary;
+    }
+  }
+
+  .topic-voting.btn-used {
+    border-color: transparent;
+
+    &:hover {
+      background-color: darken($blue, 3%);
+      border-color: darken($blue, 8%);
+    }
+  }
+
+  .is-comment-deleted, .is-comment-removed {
+    color: $foreground-secondary;
+  }
+
+  .is-comment-mine > .comment-itself {
+    border-left-color: $violet;
+  }
+
+  .is-comment-new {
+    & > .comment-itself {
+      border-left-color: $orange;
+    }
+
+    .comment-text {
+      color: $foreground-highlight;
+    }
+  }
+
+  .is-comment-exemplary {
+    & > .comment-itself {
+      border-left-color: $comment-label-exemplary-color;
+    }
+  }
+
+  .is-message-mine,
+  .is-topic-mine {
+    border-left-color: $violet;
+  }
+
+  .is-topic-official {
+    border-left-color: $orange;
+
+    h1 {
+      a, a:visited {
+        color: $orange;
+      }
+    }
+  }
+}
+
+@mixin theme-special-label($color, $is-light) {
+  @if $is-light {
+    background-color: $color;
+
+    a {
+      color: #fff;
+    }
+  }
+  @else {
+    background-color: transparent;
+    color: $color;
+    border: 1px solid $color;
+
+    a {
+      color: $color;
     }
   }
 }
@@ -435,19 +684,19 @@
 }
 
 body {
-  @include theme-dependent($background-color: #fff, $background-alt-color: #eee, $text-color: #333, $text-highlight-color: #222, $text-secondary-color: #999, $border-color: #ccc);
+  @include use-theme($theme-white);
 }
 
 body.theme-light {
-  @include theme-dependent($background-color: $bg-lightest, $background-alt-color: $bg-light, $text-color: $fg-dark, $text-highlight-color: $fg-darkest, $text-secondary-color: $fg-lightest, $border-color: #cbc5b6);
+  @include use-theme($theme-light);
 }
 
 body.theme-dark {
-  @include theme-dependent($background-color: $bg-darkest, $background-alt-color: $bg-dark, $text-color: $fg-light, $text-highlight-color: $fg-lightest, $text-secondary-color: $fg-darkest, $border-color: #33555e);
+  @include use-theme($theme-dark);
 }
 
 body.theme-black {
-  @include theme-dependent($background-color: #000, $background-alt-color: #222, $text-color: #ccc, $text-highlight-color: #ddd, $text-secondary-color: #888, $border-color: #444);
+  @include use-theme($theme-black);
 }
 
 // Note: if you add a new theme, you may also want to add a new theme-color

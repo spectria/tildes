@@ -19,7 +19,7 @@
   }
 
   &:target > .comment-itself {
-    border-left: 3px solid $yellow !important;
+    border-left: 3px solid;
   }
 }
 
@@ -148,7 +148,7 @@
 .is-comment-by-op {
   & > .comment-itself {
     margin-left: -2px;
-    border-left: 3px solid !important;
+    border-left: 3px solid;
 
     .comment-user-info {
       font-weight: bold;
@@ -212,14 +212,21 @@
 .is-comment-mine {
   & > .comment-itself {
     margin-left: -2px;
-    border-left: 3px solid $violet !important;
+    border-left: 3px solid;
   }
 }
 
 .is-comment-new {
   & > .comment-itself {
     margin-left: -2px;
-    border-left: 3px solid $orange !important;
+    border-left: 3px solid;
+  }
+}
+
+.is-comment-exemplary {
+  & > .comment-itself {
+    margin-left: -2px;
+    border-left: 3px solid;
   }
 }
 

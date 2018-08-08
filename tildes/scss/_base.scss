@@ -9,12 +9,7 @@ html {
 }
 
 a {
-  color: $blue;
   text-decoration: none;
-
-  &:visited {
-    color: $violet;
-  }
 }
 
 // this is probably unnecessary, but I'm running into specificity conflicts

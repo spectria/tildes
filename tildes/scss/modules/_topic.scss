@@ -214,7 +214,6 @@
 
 .topic-info-comments-new {
   white-space: nowrap;
-  color: $orange;
 }
 
 .topic-full {
@@ -262,17 +261,11 @@
 }
 
 .is-topic-mine {
-  border-left: 3px solid $violet !important;
+  border-left: 3px solid;
   margin-left: -3px;
 }
 
 .is-topic-official {
-  border-left: 3px solid $orange !important;
+  border-left: 3px solid;
   margin-left: -3px;
-
-  h1 {
-    a, a:visited {
-      color: $orange;
-    }
-  }
 }
