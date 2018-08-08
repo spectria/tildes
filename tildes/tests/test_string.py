@@ -76,6 +76,13 @@ def test_url_slug_with_punctuation():
     assert convert_to_url_slug(original) == expected
 
 
+def test_url_slug_with_apostrophes():
+    """Ensure url slugs don't replace apostrophes with underscores."""
+    original = "Here's what we don’t want as underscores"
+    expected = "heres_what_we_dont_want_as_underscores"
+    assert convert_to_url_slug(original) == expected
+
+
 def test_url_slug_truncation():
     """Ensure a simple url slug truncates as expected."""
     original = "Here's another string to truncate."
@@ -116,6 +123,12 @@ def test_simple_word_count():
 def test_word_count_with_apostrophes():
     """Ensure apostrophes don't mess up the word count."""
     string = "It's not always false that apostrophes aren't counted properly."
+    assert word_count(string) == 9
+
+
+def test_word_count_with_curly_apostrophes():
+    """Ensure curly apostrophes don't mess up the word count."""
+    string = "It’s not always false that apostrophes aren’t counted properly."
     assert word_count(string) == 9
 
 

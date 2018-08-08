@@ -7,7 +7,7 @@ from urllib.parse import quote
 
 
 # regex for matching an entire word, handles words that include an apostrophe
-WORD_REGEX = re.compile(r"\w[\w']*")
+WORD_REGEX = re.compile(r"\w[\w'’]*")
 
 
 def word_count(string: str) -> int:
@@ -20,7 +20,7 @@ def convert_to_url_slug(original: str, max_length: int = 100) -> str:
     slug = original.lower()
 
     # remove apostrophes so contractions don't get broken up by underscores
-    slug = slug.replace("'", '')
+    slug = re.sub("['’]", '', slug)
 
     # replace all remaining non-word characters with underscores
     slug = re.sub(r'\W+', '_', slug)
