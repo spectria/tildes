@@ -170,7 +170,8 @@ class Comment(DatabaseModel):
             acl.append((Allow, 'admin', 'view'))
 
             acl.append((Allow, self.user_id, 'view'))
-            acl.append((Allow, self.user_id, 'reply'))
+            if not self.topic.is_locked:
+                acl.append((Allow, self.user_id, 'reply'))
             acl.append((Allow, self.user_id, 'edit'))
             acl.append((Allow, self.user_id, 'delete'))
 
