@@ -16,6 +16,11 @@ class CommentUserMentionGenerator(PgsqlQueueConsumer):
             .filter_by(comment_id=msg.body['comment_id'])
             .one()
         )
+
+        # don't generate mentions for deleted/removed comments
+        if comment.is_deleted or comment.is_removed:
+            return
+
         new_mentions = CommentNotification.get_mentions_for_comment(
             self.db_session, comment)
 
