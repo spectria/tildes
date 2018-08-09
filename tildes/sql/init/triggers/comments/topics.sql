@@ -1,23 +1,30 @@
 CREATE OR REPLACE FUNCTION update_topics_num_comments() RETURNS TRIGGER AS $$
 BEGIN
-    IF (TG_OP = 'INSERT' AND NEW.is_deleted = FALSE) THEN
+    IF (TG_OP = 'INSERT') THEN
         UPDATE topics
             SET num_comments = num_comments + 1
             WHERE topic_id = NEW.topic_id;
-    ELSIF (TG_OP = 'DELETE' AND OLD.is_deleted = FALSE) THEN
+    ELSIF (TG_OP = 'DELETE'
+            AND OLD.is_deleted = FALSE
+            AND OLD.is_removed = FALSE) THEN
         UPDATE topics
             SET num_comments = num_comments - 1
             WHERE topic_id = OLD.topic_id;
     ELSIF (TG_OP = 'UPDATE') THEN
-        IF (OLD.is_deleted = FALSE AND NEW.is_deleted = TRUE) THEN
-            UPDATE topics
-                SET num_comments = num_comments - 1
-                WHERE topic_id = NEW.topic_id;
-        ELSIF (OLD.is_deleted = TRUE AND NEW.is_deleted = FALSE) THEN
-            UPDATE topics
-                SET num_comments = num_comments + 1
-                WHERE topic_id = NEW.topic_id;
-        END IF;
+        DECLARE
+            old_visible BOOLEAN := NOT (OLD.is_deleted OR OLD.is_removed);
+            new_visible BOOLEAN := NOT (NEW.is_deleted OR NEW.is_removed);
+        BEGIN
+            IF (old_visible AND NOT new_visible) THEN
+                UPDATE topics
+                    SET num_comments = num_comments - 1
+                    WHERE topic_id = NEW.topic_id;
+            ELSIF (NOT old_visible AND new_visible) THEN
+                UPDATE topics
+                    SET num_comments = num_comments + 1
+                    WHERE topic_id = NEW.topic_id;
+            END IF;
+        END;
     END IF;
 
     RETURN NULL;
@@ -32,20 +39,21 @@ CREATE TRIGGER update_topics_num_comments_insert_delete
     EXECUTE PROCEDURE update_topics_num_comments();
 
 
--- update trigger only needs to execute if is_deleted was changed
+-- update trigger only needs to execute if is_deleted or is_removed was changed
 CREATE TRIGGER update_topics_num_comments_update
     AFTER UPDATE ON comments
     FOR EACH ROW
-    WHEN (OLD.is_deleted IS DISTINCT FROM NEW.is_deleted)
+    WHEN ((OLD.is_deleted IS DISTINCT FROM NEW.is_deleted)
+        OR (OLD.is_removed IS DISTINCT FROM NEW.is_removed))
     EXECUTE PROCEDURE update_topics_num_comments();
 
 
--- update a topic's last activity time when a comment is posted or deleted
+-- update a topic's last activity time when a comment is posted, deleted, or removed
 CREATE OR REPLACE FUNCTION update_topics_last_activity_time() RETURNS TRIGGER AS $$
 DECLARE
     most_recent_comment RECORD;
 BEGIN
-    IF (TG_OP = 'INSERT' AND NEW.is_deleted = FALSE) THEN
+    IF (TG_OP = 'INSERT') THEN
         UPDATE topics
             SET last_activity_time = NOW()
             WHERE topic_id = NEW.topic_id;
@@ -53,8 +61,9 @@ BEGIN
         SELECT MAX(created_time) AS max_created_time
         INTO most_recent_comment
         FROM comments
-        WHERE topic_id = NEW.topic_id AND
-            is_deleted = FALSE;
+        WHERE topic_id = NEW.topic_id
+            AND is_deleted = FALSE
+            AND is_removed = FALSE;
 
         IF most_recent_comment.max_created_time IS NOT NULL THEN
             UPDATE topics
@@ -79,5 +88,6 @@ CREATE TRIGGER update_topics_last_activity_time_insert
 CREATE TRIGGER update_topics_last_activity_time_update
     AFTER UPDATE ON comments
     FOR EACH ROW
-    WHEN (OLD.is_deleted IS DISTINCT FROM NEW.is_deleted)
+    WHEN ((OLD.is_deleted IS DISTINCT FROM NEW.is_deleted)
+        OR (OLD.is_removed IS DISTINCT FROM NEW.is_removed))
     EXECUTE PROCEDURE update_topics_last_activity_time();
