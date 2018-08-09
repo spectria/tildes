@@ -15,7 +15,10 @@ from tildes.schemas.comment import CommentSchema
 )
 def comment_by_id36(request: Request, comment_id36: str) -> Comment:
     """Get a comment specified by {comment_id36} in the route (or 404)."""
-    comment_id = id36_to_id(comment_id36)
-    query = request.query(Comment).filter_by(comment_id=comment_id)
+    query = (
+        request.query(Comment)
+        .include_removed()
+        .filter_by(comment_id=id36_to_id(comment_id36))
+    )
 
     return get_resource(request, query)
