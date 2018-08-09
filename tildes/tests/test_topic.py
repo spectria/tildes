@@ -2,11 +2,6 @@ from datetime import timedelta
 
 from freezegun import freeze_time
 from marshmallow.fields import URL
-from pyramid.security import (
-    Authenticated,
-    Everyone,
-    principals_allowed_by_permission,
-)
 from pytest import raises
 
 from tildes.lib.datetime import utc_now
@@ -101,67 +96,6 @@ def test_edit_markdown_on_text_topic(text_topic):
     original_html = text_topic.rendered_html
     text_topic.markdown = 'Some new markdown'
     assert text_topic.rendered_html != original_html
-
-
-def test_topic_viewing_permission(text_topic):
-    """Ensure that anyone can view a topic by default."""
-    principals = principals_allowed_by_permission(text_topic, 'view')
-    assert Everyone in principals
-
-
-def test_text_topic_editing_permission(text_topic):
-    """Ensure a text topic's owner (and nobody else) is able to edit it."""
-    principals = principals_allowed_by_permission(text_topic, 'edit')
-    assert principals == {text_topic.user.user_id}
-
-
-def test_deleted_topic_editing_permission(text_topic):
-    """Ensure a deleted topic can't be edited."""
-    text_topic.is_deleted = True
-    principals = principals_allowed_by_permission(text_topic, 'edit')
-    assert not principals
-
-
-def test_link_topic_editing_permission(link_topic):
-    """Ensure that nobody has edit permission on a link topic."""
-    principals = principals_allowed_by_permission(link_topic, 'edit')
-    assert not principals
-
-
-def test_topic_deleting_permission(text_topic):
-    """Ensure that the topic's owner (and nobody else) is able to delete it."""
-    principals = principals_allowed_by_permission(text_topic, 'delete')
-    assert principals == {text_topic.user.user_id}
-
-
-def test_deleted_topic_deleting_permission(text_topic):
-    """Ensure a deleted topic can't be deleted (again)."""
-    text_topic.is_deleted = True
-    assert not principals_allowed_by_permission(text_topic, 'delete')
-
-
-def test_topic_view_author_permission(text_topic):
-    """Ensure anyone can view a topic's author normally."""
-    principals = principals_allowed_by_permission(text_topic, 'view_author')
-    assert Everyone in principals
-
-
-def test_deleted_topic_view_author_forbidden(text_topic):
-    """Ensure nobody can view the author of a deleted topic."""
-    text_topic.is_deleted = True
-    principals = principals_allowed_by_permission(text_topic, 'view_author')
-    assert not principals
-
-
-def test_topic_comment_permission(text_topic):
-    """Ensure authed users have comment perms before deletion, not after."""
-    principals = principals_allowed_by_permission(text_topic, 'comment')
-    assert Authenticated in principals
-
-    text_topic.is_deleted = True
-
-    principals = principals_allowed_by_permission(text_topic, 'comment')
-    assert Authenticated not in principals
 
 
 def test_edit_grace_period(text_topic):

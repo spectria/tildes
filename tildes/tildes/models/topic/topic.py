@@ -226,39 +226,78 @@ class Topic(DatabaseModel):
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""
-        acl = [
-            (Allow, Everyone, 'view'),
-            (Allow, 'admin', 'lock'),
-            (Allow, 'admin', 'move'),
-            (Allow, 'admin', 'edit_title'),
-            (Allow, 'admin', 'tag'),
-        ]
+        acl = []
 
-        if not (self.is_locked or self.is_deleted or self.is_removed):
-            acl.append((Allow, Authenticated, 'comment'))
-        else:
-            acl.append((Allow, 'admin', 'comment'))
+        # deleted topics allow "general" viewing, but nothing else
+        if self.is_deleted:
+            acl.append((Allow, Everyone, 'view'))
+            acl.append(DENY_ALL)
 
-        if not (self.is_deleted or self.is_removed):
-            acl.append((Allow, Everyone, 'view_content'))
-            acl.append((Allow, Everyone, 'view_author'))
+        # view:
+        #  - everyone gets "general" viewing permission for all topics
+        acl.append((Allow, Everyone, 'view'))
 
-            # everyone except the topic's author can vote on it
-            acl.append((Deny, self.user_id, 'vote'))
-            acl.append((Allow, Authenticated, 'vote'))
-
-            acl.append((Allow, self.user_id, 'tag'))
-
-        if not self.is_deleted:
-            acl.append((Allow, 'admin', 'view'))
-
-            acl.append((Allow, self.user_id, 'view'))
+        # view_author:
+        #  - removed topics' author is only visible to the author and admins
+        #  - otherwise, everyone can view the author
+        if self.is_removed:
+            acl.append((Allow, 'admin', 'view_author'))
             acl.append((Allow, self.user_id, 'view_author'))
-            acl.append((Allow, self.user_id, 'view_content'))
+            acl.append((Deny, Everyone, 'view_author'))
 
-            if self.is_text_type:
-                acl.append((Allow, self.user_id, 'edit'))
-            acl.append((Allow, self.user_id, 'delete'))
+        acl.append((Allow, Everyone, 'view_author'))
+
+        # view_content:
+        #  - removed topics' content is only visible to the author and admins
+        #  - otherwise, everyone can view the content
+        if self.is_removed:
+            acl.append((Allow, 'admin', 'view_content'))
+            acl.append((Allow, self.user_id, 'view_content'))
+            acl.append((Deny, Everyone, 'view_content'))
+
+        acl.append((Allow, Everyone, 'view_content'))
+
+        # vote:
+        #  - removed topics can't be voted on by anyone
+        #  - otherwise, logged-in users except the author can vote
+        if self.is_removed:
+            acl.append((Deny, Everyone, 'vote'))
+
+        acl.append((Deny, self.user_id, 'vote'))
+        acl.append((Allow, Authenticated, 'vote'))
+
+        # comment:
+        #  - removed topics can only be commented on by admins
+        #  - locked topics can only be commented on by admins
+        #  - otherwise, logged-in users can comment
+        if self.is_removed:
+            acl.append((Allow, 'admin', 'comment'))
+            acl.append((Deny, Everyone, 'comment'))
+
+        if self.is_locked:
+            acl.append((Allow, 'admin', 'comment'))
+            acl.append((Deny, Everyone, 'comment'))
+
+        acl.append((Allow, Authenticated, 'comment'))
+
+        # edit:
+        #  - only text topics can be edited, only by the author
+        if self.is_text_type:
+            acl.append((Allow, self.user_id, 'edit'))
+
+        # delete:
+        #  - only the author can delete
+        acl.append((Allow, self.user_id, 'delete'))
+
+        # tag:
+        #  - only the author and admins can tag topics
+        acl.append((Allow, self.user_id, 'tag'))
+        acl.append((Allow, 'admin', 'tag'))
+
+        # admin tools
+        acl.append((Allow, 'admin', 'lock'))
+        acl.append((Allow, 'admin', 'move'))
+        acl.append((Allow, 'admin', 'edit_title'))
 
         acl.append(DENY_ALL)
 
