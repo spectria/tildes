@@ -148,34 +148,57 @@ class Comment(DatabaseModel):
         """Pyramid security ACL."""
         acl = []
 
-        if not (self.is_deleted or self.is_removed):
-            acl.append((Allow, Everyone, 'view'))
+        # nobody has any permissions on deleted comments
+        if self.is_deleted:
+            acl.append(DENY_ALL)
 
-            if not self.topic.is_locked:
-                acl.append((Allow, Authenticated, 'reply'))
-            else:
-                acl.append((Allow, 'admin', 'reply'))
-
-            acl.append((Allow, Authenticated, 'mark_read'))
-
-            acl.append((Allow, self.user_id, 'edit'))
-            acl.append((Allow, self.user_id, 'delete'))
-
-            # everyone except the comment's author can vote on it
-            acl.append((Deny, self.user_id, 'vote'))
-            acl.append((Allow, Authenticated, 'vote'))
-
-            # temporary - nobody can tag comments
-            acl.append((Deny, Everyone, 'tag'))
-
-        if not self.is_deleted:
+        # view:
+        #  - removed comments can only be viewed by admins and the author
+        #  - otherwise, everyone can view
+        if self.is_removed:
             acl.append((Allow, 'admin', 'view'))
-
             acl.append((Allow, self.user_id, 'view'))
-            if not self.topic.is_locked:
-                acl.append((Allow, self.user_id, 'reply'))
-            acl.append((Allow, self.user_id, 'edit'))
-            acl.append((Allow, self.user_id, 'delete'))
+            acl.append((Deny, Everyone, 'view'))
+
+        acl.append((Allow, Everyone, 'view'))
+
+        # vote:
+        #  - removed comments can't be voted on by anyone
+        #  - otherwise, logged-in users except the author can vote
+        if self.is_removed:
+            acl.append((Deny, Everyone, 'vote'))
+
+        acl.append((Deny, self.user_id, 'vote'))
+        acl.append((Allow, Authenticated, 'vote'))
+
+        # tag:
+        #  - temporary: nobody can tag comments
+        acl.append((Deny, Everyone, 'tag'))
+
+        # reply:
+        #  - removed comments can't be replied to by anyone
+        #  - if the topic is locked, only admins can reply
+        #  - otherwise, logged-in users can reply
+        if self.is_removed:
+            acl.append((Deny, Everyone, 'reply'))
+
+        if self.topic.is_locked:
+            acl.append((Allow, 'admin', 'reply'))
+            acl.append((Deny, Everyone, 'reply'))
+
+        acl.append((Allow, Authenticated, 'reply'))
+
+        # edit:
+        #  - only the author can edit
+        acl.append((Allow, self.user_id, 'edit'))
+
+        # delete:
+        #  - only the author can delete
+        acl.append((Allow, self.user_id, 'delete'))
+
+        # mark_read:
+        #  - logged-in users can mark comments read
+        acl.append((Allow, Authenticated, 'mark_read'))
 
         acl.append(DENY_ALL)
 
