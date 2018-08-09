@@ -1,22 +1,3 @@
-from pytest import fixture
-
-from tildes.models.topic import Topic
-
-
-@fixture
-def text_topic(db, session_group, session_user):
-    """Create a text topic in the db and delete it as teardown."""
-    new_topic = Topic.create_text_topic(
-        session_group, session_user, 'A Text Topic', 'the text')
-    db.add(new_topic)
-    db.commit()
-
-    yield new_topic
-
-    db.delete(new_topic)
-    db.commit()
-
-
 def test_tags_whitespace_stripped(text_topic):
     """Ensure excess whitespace around tags gets stripped."""
     text_topic.tags = ['  one', 'two   ', '  three ']

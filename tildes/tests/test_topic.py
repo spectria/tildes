@@ -7,40 +7,12 @@ from pyramid.security import (
     Everyone,
     principals_allowed_by_permission,
 )
-from pytest import fixture, raises
+from pytest import raises
 
 from tildes.lib.datetime import utc_now
 from tildes.models.topic import EDIT_GRACE_PERIOD, Topic
 from tildes.schemas.fields import Markdown, SimpleString
 from tildes.schemas.topic import TopicSchema
-
-
-@fixture
-def text_topic(db, session_group, session_user):
-    """Create a text topic in the db and delete it as teardown."""
-    new_topic = Topic.create_text_topic(
-        session_group, session_user, 'A Text Topic', 'the text')
-    db.add(new_topic)
-    db.commit()
-
-    yield new_topic
-
-    db.delete(new_topic)
-    db.commit()
-
-
-@fixture
-def link_topic(db, session_group, session_user):
-    """Create a link topic in the db and delete it as teardown."""
-    new_topic = Topic.create_link_topic(
-        session_group, session_user, 'A Link Topic', 'http://example.com')
-    db.add(new_topic)
-    db.commit()
-
-    yield new_topic
-
-    db.delete(new_topic)
-    db.commit()
 
 
 def test_text_creation_validations(mocker, session_user, session_group):

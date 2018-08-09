@@ -12,27 +12,6 @@ from tildes.models.user import User
 
 
 @fixture
-def topic(db, session_group, session_user):
-    """Create a topic in the db, delete it as teardown (including comments)."""
-    new_topic = Topic.create_text_topic(
-        session_group, session_user, 'Some title', 'some text')
-    db.add(new_topic)
-    db.commit()
-
-    yield new_topic
-
-    db.query(Comment).filter_by(topic_id=new_topic.topic_id).delete()
-    db.delete(new_topic)
-    db.commit()
-
-
-@fixture
-def comment(topic, session_user):
-    """Return an unsaved comment."""
-    return Comment(topic, session_user, 'Comment content.')
-
-
-@fixture
 def user_list(db):
     """Create several users."""
     users = []

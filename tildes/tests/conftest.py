@@ -17,6 +17,10 @@ from tildes.models.group import Group
 from tildes.models.user import User
 
 
+# include the fixtures defined in fixtures.py
+pytest_plugins = ['tests.fixtures']
+
+
 class NestedSessionWrapper(Session):
     """Wrapper that starts a new nested transaction on commit/rollback."""
 

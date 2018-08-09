@@ -6,7 +6,6 @@ from pyramid.security import (
     Everyone,
     principals_allowed_by_permission,
 )
-from pytest import fixture
 
 from tildes.enums import CommentSortOption
 from tildes.lib.datetime import utc_now
@@ -15,37 +14,8 @@ from tildes.models.comment import (
     CommentTree,
     EDIT_GRACE_PERIOD,
 )
-from tildes.models.topic import Topic
 from tildes.schemas.comment import CommentSchema
 from tildes.schemas.fields import Markdown
-
-
-@fixture
-def topic(db, session_group, session_user):
-    """Create a topic in the db, delete it as teardown (including comments)."""
-    new_topic = Topic.create_text_topic(
-        session_group, session_user, 'Some title', 'some text')
-    db.add(new_topic)
-    db.commit()
-
-    yield new_topic
-
-    db.query(Comment).filter_by(topic_id=new_topic.topic_id).delete()
-    db.delete(new_topic)
-    db.commit()
-
-
-@fixture
-def comment(db, session_user, topic):
-    """Create a comment in the database, delete it as teardown."""
-    new_comment = Comment(topic, session_user, 'A comment')
-    db.add(new_comment)
-    db.commit()
-
-    yield new_comment
-
-    db.delete(new_comment)
-    db.commit()
 
 
 def test_comment_creation_validates_schema(mocker, session_user, topic):
