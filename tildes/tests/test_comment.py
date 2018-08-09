@@ -72,11 +72,26 @@ def test_comment_replying_permission(comment):
     assert Authenticated in principals_allowed_by_permission(comment, 'reply')
 
 
+def test_comment_reply_locked_thread_permission(comment):
+    """Ensure that only admins can reply in locked threads."""
+    comment.topic.is_locked = True
+    assert principals_allowed_by_permission(comment, 'reply') == {'admin'}
+
+
 def test_deleted_comment_permissions_removed(comment):
     """Ensure that deleted comments lose all of the permissions."""
     comment.is_deleted = True
-    for permission in ('view', 'edit', 'delete', 'reply'):
+
+    all_permissions = [perm for (_, _, perm) in comment.__acl__()]
+    for permission in all_permissions:
         assert not principals_allowed_by_permission(comment, permission)
+
+
+def test_removed_comment_view_permission(comment):
+    """Ensure a removed comment can only be viewed by its author and admins."""
+    comment.is_removed = True
+    principals = principals_allowed_by_permission(comment, 'view')
+    assert principals == {'admin', comment.user_id}
 
 
 def test_edit_grace_period(comment):
