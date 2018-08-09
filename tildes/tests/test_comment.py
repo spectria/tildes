@@ -43,40 +43,6 @@ def test_comment_edit_uses_markdown_field(mocker, comment):
     assert Markdown._validate.called
 
 
-def test_comments_affect_topic_num_comments(session_user, topic, db):
-    """Ensure adding/deleting comments affects the topic's comment count."""
-    assert topic.num_comments == 0
-
-    # Insert some comments, ensure each one increments the count
-    comments = []
-    for num in range(0, 5):
-        new_comment = Comment(topic, session_user, 'comment')
-        comments.append(new_comment)
-        db.add(new_comment)
-        db.commit()
-        db.refresh(topic)
-        assert topic.num_comments == len(comments)
-
-    # Delete all the comments, ensure each one decrements the count
-    for num, comment in enumerate(comments, start=1):
-        comment.is_deleted = True
-        db.commit()
-        db.refresh(topic)
-        assert topic.num_comments == len(comments) - num
-
-
-def test_delete_sets_deleted_time(db, comment):
-    """Ensure a deleted comment gets its deleted_time set."""
-    assert not comment.is_deleted
-    assert not comment.deleted_time
-
-    comment.is_deleted = True
-    db.commit()
-    db.refresh(comment)
-
-    assert comment.deleted_time
-
-
 def test_edit_markdown_updates_html(comment):
     """Ensure editing a comment works and the markdown and HTML update."""
     comment.markdown = 'Updated comment'
