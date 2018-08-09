@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Any, Optional, Sequence, Tuple
 
-from pyramid.security import Allow, Authenticated, DENY_ALL, Everyone
+from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
@@ -79,15 +79,24 @@ class Group(DatabaseModel):
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""
-        acl = [
-            (Allow, Everyone, 'view'),
-            (Allow, Authenticated, 'subscribe'),
-        ]
+        acl = []
 
+        # view:
+        #  - all groups can be viewed by everyone
+        acl.append((Allow, Everyone, 'view'))
+
+        # subscribe:
+        #  - all groups can be subscribed to by logged-in users
+        acl.append((Allow, Authenticated, 'subscribe'))
+
+        # post_topic:
+        #  - only admins can post in admin-posting-only groups
+        #  - otherwise, all logged-in users can post
         if self.is_admin_posting_only:
             acl.append((Allow, 'admin', 'post_topic'))
-        else:
-            acl.append((Allow, Authenticated, 'post_topic'))
+            acl.append((Deny, Everyone, 'post_topic'))
+
+        acl.append((Allow, Authenticated, 'post_topic'))
 
         acl.append(DENY_ALL)
 

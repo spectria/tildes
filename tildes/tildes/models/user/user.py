@@ -127,11 +127,14 @@ class User(DatabaseModel):
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""
-        acl = [
-            (Allow, Everyone, 'view'),
-        ]
+        acl = []
 
-        # anyone can message a user except themself
+        # view:
+        #  - everyone can view all users
+        acl.append((Allow, Everyone, 'view'))
+
+        # message:
+        #  - anyone can message a user except themself
         acl.append((Deny, self.user_id, 'message'))
         acl.append((Allow, Authenticated, 'message'))
 
