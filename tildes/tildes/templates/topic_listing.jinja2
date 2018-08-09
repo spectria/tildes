@@ -64,12 +64,11 @@
         <option value="all"{{ ' selected' if not period else '' }}>all time</option>
         <option value="other">other period</option>
       </select>
+      {# add a submit button for people with js disabled so this is still usable #}
+      <noscript>
+        <button type="submit" class="btn btn-primary btn-sm">OK</button>
+      </noscript>
     </div>
-
-    {# add a submit button for people with js disabled so this is still usable #}
-    <noscript>
-      <button type="submit" class="btn btn-primary btn-sm">OK</button>
-    </noscript>
   </form>
 
   {% if not is_default_view %}
