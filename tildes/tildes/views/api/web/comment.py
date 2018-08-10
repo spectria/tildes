@@ -348,6 +348,11 @@ def put_mark_comments_read(
             .all()
         )
 
+        # sort the notifications by created_time of their comment so that the
+        # INSERT ... ON CONFLICT DO UPDATE statements work as expected
+        prev_notifications = sorted(
+            prev_notifications, key=lambda c: c.comment.created_time)
+
         for comment_notification in prev_notifications:
             comment_notification.is_unread = False
             _increment_topic_comments_seen(
