@@ -28,6 +28,32 @@ def test_basic_markdown_unescaped():
     assert '&lt;' not in sanitized
 
 
+def test_strikethrough():
+    """Ensure strikethrough works and doesn't turn into a group link."""
+    markdown = "This ~should not~ should work"
+    processed = convert_markdown_to_safe_html(markdown)
+
+    assert '<del>' in processed
+    assert '<a' not in processed
+
+
+def test_table():
+    """Ensure table markdown works."""
+    markdown = (
+        '|Header 1|Header 2|Header 3|\n'
+        '|--------|-------:|:------:|\n'
+        '|1 - 1   |1 - 2   |1 - 3   |\n'
+        '|2 - 1|2 - 2|2 - 3|\n'
+    )
+    processed = convert_markdown_to_safe_html(markdown)
+
+    assert '<table>' in processed
+    assert processed.count('<tr') == 3
+    assert processed.count('<td') == 6
+    assert 'align="right"' in processed
+    assert 'align="center"' in processed
+
+
 def test_deliberate_ordered_list():
     """Ensure a "deliberate" ordered list works."""
     markdown = (
@@ -210,14 +236,6 @@ def test_invalid_group_reference_not_linkified():
 def test_approximately_tilde_not_linkified():
     """Ensure a tilde in front of a number doesn't linkify."""
     markdown = 'Mix in ~2 cups of flour and ~1.5 tbsp of sugar.'
-    processed = convert_markdown_to_safe_html(markdown)
-
-    assert '<a' not in processed
-
-
-def test_strikethrough_attempt_not_linkified():
-    """Ensure someone trying to do strikethrough doesn't get a link."""
-    markdown = "This ~should~ shouldn't work"
     processed = convert_markdown_to_safe_html(markdown)
 
     assert '<a' not in processed

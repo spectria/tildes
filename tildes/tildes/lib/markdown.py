@@ -1,6 +1,5 @@
 """Functions/constants related to markdown handling."""
 
-from ctypes import CDLL, c_char_p, c_long
 import re
 from typing import (
     Callable,
@@ -25,13 +24,19 @@ from html5lib.treewalkers.base import NonRecursiveTreeWalker
 from tildes.metrics import histogram_timer
 from tildes.schemas.group import is_valid_group_path
 from tildes.schemas.user import is_valid_username
-
-
-# set up the commonmark function to call into libcmark-gfm
-CMARK_DLL = CDLL('/usr/local/lib/libcmark-gfm.so')
-commonmark = CMARK_DLL.cmark_markdown_to_html  # pylint: disable=invalid-name
-commonmark.restype = c_char_p
-commonmark.argtypes = [c_char_p, c_long, c_long]
+from .cmark import (
+    CMARK_EXTENSIONS,
+    CMARK_OPTS,
+    cmark_find_syntax_extension,
+    cmark_node_free,
+    cmark_parser_attach_syntax_extension,
+    cmark_parser_feed,
+    cmark_parser_finish,
+    cmark_parser_free,
+    cmark_parser_get_syntax_extensions,
+    cmark_parser_new,
+    cmark_render_html,
+)
 
 
 HTML_TAG_WHITELIST = (
@@ -62,12 +67,15 @@ HTML_TAG_WHITELIST = (
     'tbody',
     'td',
     'th',
+    'thead',
     'tr',
     'ul',
 )
 HTML_ATTRIBUTE_WHITELIST = {
     'a': ['href', 'title'],
     'ol': ['start'],
+    'td': ['align'],
+    'th': ['align'],
 }
 PROTOCOL_WHITELIST = ('http', 'https')
 
@@ -112,11 +120,19 @@ def convert_markdown_to_safe_html(markdown: str) -> str:
 
     markdown_bytes = markdown.encode('utf8')
 
-    # enables the --hardbreaks option
-    # (can I import this? it's defined in cmark.h as CMARK_OPT_HARDBREAKS)
-    cmark_options = 4
+    parser = cmark_parser_new(CMARK_OPTS)
+    for name in CMARK_EXTENSIONS:
+        ext = cmark_find_syntax_extension(name)
+        cmark_parser_attach_syntax_extension(parser, ext)
+    exts = cmark_parser_get_syntax_extensions(parser)
 
-    html_bytes = commonmark(markdown_bytes, len(markdown_bytes), cmark_options)
+    cmark_parser_feed(parser, markdown_bytes, len(markdown_bytes))
+    doc = cmark_parser_finish(parser)
+
+    html_bytes = cmark_render_html(doc, CMARK_OPTS, exts)
+
+    cmark_parser_free(parser)
+    cmark_node_free(doc)
 
     html = html_bytes.decode('utf8')
 
