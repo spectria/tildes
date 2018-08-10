@@ -9,7 +9,7 @@ from typing import Iterator, List, Optional, Sequence, Tuple
 from prometheus_client import Histogram
 from wrapt import ObjectProxy
 
-from tildes.enums import CommentSortOption
+from tildes.enums import CommentTreeSortOption
 from tildes.metrics import get_histogram
 from tildes.models.user import User
 from .comment import Comment
@@ -21,7 +21,7 @@ class CommentTree:
     def __init__(
         self,
         comments: Sequence[Comment],
-        sort: CommentSortOption,
+        sort: CommentTreeSortOption,
         viewer: Optional[User] = None,
     ):
         """Create a sorted CommentTree from a flat list of Comments."""
@@ -44,7 +44,7 @@ class CommentTree:
         # no need to sort again if that's the desired sorting. Note also that because
         # _sort_tree() uses sorted() which is a stable sort, this means that the
         # "secondary sort" will always be by posting time as well.
-        if self.tree and sort != CommentSortOption.POSTED:
+        if self.tree and sort != CommentTreeSortOption.POSTED:
             with self._sorting_histogram().time():
                 self.tree = self._sort_tree(self.tree, self.sort)
 
@@ -85,20 +85,20 @@ class CommentTree:
                 self.tree.append(comment)
 
     @staticmethod
-    def _sort_tree(tree: List[Comment], sort: CommentSortOption) -> List[Comment]:
+    def _sort_tree(tree: List[Comment], sort: CommentTreeSortOption) -> List[Comment]:
         """Sort the tree by the desired ordering (recursively).
 
         Because Python's sorted() function is stable, the ordering of any comments that
         compare equal on the sorting method will be the same as the order that they were
         originally in when passed to this function.
         """
-        if sort == CommentSortOption.NEWEST:
+        if sort == CommentTreeSortOption.NEWEST:
             tree = sorted(tree, key=lambda c: c.created_time, reverse=True)
-        elif sort == CommentSortOption.POSTED:
+        elif sort == CommentTreeSortOption.POSTED:
             tree = sorted(tree, key=lambda c: c.created_time)
-        elif sort == CommentSortOption.VOTES:
+        elif sort == CommentTreeSortOption.VOTES:
             tree = sorted(tree, key=lambda c: c.num_votes, reverse=True)
-        elif sort == CommentSortOption.RELEVANCE:
+        elif sort == CommentTreeSortOption.RELEVANCE:
             tree = sorted(tree, key=lambda c: c.relevance_sorting_value, reverse=True)
 
         for comment in tree:

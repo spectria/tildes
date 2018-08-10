@@ -6,7 +6,7 @@ from datetime import timedelta
 from freezegun import freeze_time
 from pyramid.security import Authenticated, Everyone, principals_allowed_by_permission
 
-from tildes.enums import CommentSortOption
+from tildes.enums import CommentTreeSortOption
 from tildes.lib.datetime import utc_now
 from tildes.models.comment import Comment, CommentTree, EDIT_GRACE_PERIOD
 from tildes.schemas.comment import CommentSchema
@@ -134,7 +134,7 @@ def test_comment_tree(db, topic, session_user):
     """Ensure that building and pruning a comment tree works."""
     all_comments = []
 
-    sort = CommentSortOption.POSTED
+    sort = CommentTreeSortOption.POSTED
 
     # add two root comments
     root = Comment(topic, session_user, "root")

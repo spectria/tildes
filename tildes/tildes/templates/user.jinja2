@@ -45,6 +45,30 @@
           <a href="{{ request.current_listing_normal_url({'type': 'comment'}) }}">Comments</a>
         </li>
       </menu>
+
+      {% if order_options %}
+        <form class="form-listing-options" method="get">
+          <input type="hidden" name="type" value="{{ post_type }}">
+          <div class="form-group">
+            <label for="order">sorted by</label>
+            <select id="order" name="order" class="form-select" data-js-autosubmit-on-change>
+              {% for option in order_options %}
+                <option value="{{ option.name.lower() }}"
+
+                {% if option == order %}
+                  selected
+                {% endif %}
+                >{{ option.descending_description }}</option>
+              {% endfor %}
+            </select>
+            {# add a submit button for people with js disabled so this is still usable #}
+            <noscript>
+              <button type="submit" class="btn btn-primary btn-sm">OK</button>
+            </noscript>
+          </div>
+        </form>
+      {% endif %}
+
     </div>
   {% endif %}
 

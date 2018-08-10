@@ -8,6 +8,7 @@ from typing import Any
 from pyramid.request import Request
 from sqlalchemy.sql.expression import and_
 
+from tildes.enums import CommentSortOption
 from tildes.models.pagination import PaginatedQuery
 from .comment import Comment
 from .comment_bookmark import CommentBookmark
@@ -77,6 +78,19 @@ class CommentQuery(PaginatedQuery):
             comment.bookmark_created_time = result.created_time
 
         return comment
+
+    def apply_sort_option(
+        self, sort: CommentSortOption, desc: bool = True
+    ) -> "CommentQuery":
+        """Apply a CommentSortOption sorting method (generative)."""
+        if sort == CommentSortOption.VOTES:
+            self._sort_column = Comment.num_votes
+        elif sort == CommentSortOption.NEW:
+            self._sort_column = Comment.created_time
+
+        self.sort_desc = desc
+
+        return self
 
     def only_bookmarked(self) -> "CommentQuery":
         """Restrict the comments to ones that the user has bookmarked (generative)."""

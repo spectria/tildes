@@ -17,7 +17,27 @@ class CommentNotificationType(enum.Enum):
 
 
 class CommentSortOption(enum.Enum):
-    """Enum for the different methods comments can be sorted by."""
+    """Enum for the different methods out-of-context comments can be sorted by."""
+
+    VOTES = enum.auto()
+    NEW = enum.auto()
+
+    @property
+    def descending_description(self) -> str:
+        """Describe this sort option when used in a "descending" order.
+
+        For example, the "votes" sort has a description of "most votes", since using
+        that sort in descending order means that topics with the most votes will be
+        listed first.
+        """
+        if self.name == "NEW":
+            return "newest"
+
+        return "most {}".format(self.name.lower())
+
+
+class CommentTreeSortOption(enum.Enum):
+    """Enum for the different methods comment trees can be sorted by."""
 
     VOTES = enum.auto()
     NEWEST = enum.auto()

@@ -20,7 +20,7 @@ from zope.sqlalchemy import mark_changed
 from tildes.enums import (
     CommentLabelOption,
     CommentNotificationType,
-    CommentSortOption,
+    CommentTreeSortOption,
     LogEventType,
     TopicSortOption,
 )
@@ -255,8 +255,8 @@ def get_new_topic_form(request: Request) -> dict:
 
 
 @view_config(route_name="topic", renderer="topic.jinja2")
-@use_kwargs({"comment_order": Enum(CommentSortOption, missing="relevance")})
-def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
+@use_kwargs({"comment_order": Enum(CommentTreeSortOption, missing="relevance")})
+def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
     """View a single topic."""
     topic = request.context
 
@@ -310,7 +310,7 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
         "log": log,
         "comments": tree,
         "comment_order": comment_order,
-        "comment_order_options": CommentSortOption,
+        "comment_order_options": CommentTreeSortOption,
         "comment_label_options": CommentLabelOption,
     }
 

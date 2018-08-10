@@ -5,12 +5,13 @@
 
 from typing import List, Optional, Type, Union
 
+from marshmallow.fields import String
 from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.sql.expression import desc
 from webargs.pyramidparser import use_kwargs
 
-from tildes.enums import CommentLabelOption
+from tildes.enums import CommentLabelOption, CommentSortOption, TopicSortOption
 from tildes.models.comment import Comment
 from tildes.models.pagination import MixedPaginatedResults
 from tildes.models.topic import Topic
@@ -19,15 +20,21 @@ from tildes.schemas.fields import PostType
 from tildes.schemas.listing import MixedListingSchema
 
 
-@view_config(route_name="user", renderer="user.jinja2")
+@view_config(route_name="user", renderer="user.jinja2")  # noqa
 @use_kwargs(MixedListingSchema())
-@use_kwargs({"post_type": PostType(load_from="type")})
+@use_kwargs(
+    {
+        "post_type": PostType(load_from="type"),
+        "order_name": String(load_from="order", missing="new"),
+    }  # noqa
+)
 def get_user(
     request: Request,
     after: Optional[str],
     before: Optional[str],
     per_page: int,
     anchor_type: Optional[str],
+    order_name: str,
     post_type: Optional[str] = None,
 ) -> dict:
     # pylint: disable=too-many-arguments
@@ -44,14 +51,27 @@ def get_user(
         per_page = 20
 
     types_to_query: List[Union[Type[Topic], Type[Comment]]]
+    order_options: Optional[Union[Type[TopicSortOption], Type[CommentSortOption]]]
+
     if post_type == "topic":
         types_to_query = [Topic]
+        order_options = TopicSortOption
     elif post_type == "comment":
         types_to_query = [Comment]
+        order_options = CommentSortOption
     else:
         # the order here is important so items are in the right order when the results
         # are merged at the end (we want topics to come first when times match)
         types_to_query = [Comment, Topic]
+        order_options = None
+
+    order = None
+    if order_options:
+        # try to get the specified order, but fall back to "newest"
+        try:
+            order = order_options[order_name.upper()]
+        except KeyError:
+            order = order_options["NEW"]
 
     result_sets = []
     for type_to_query in types_to_query:
@@ -65,6 +85,9 @@ def get_user(
 
         if after:
             query = query.after_id36(after)
+
+        if order:
+            query = query.apply_sort_option(order)
 
         query = query.join_all_relationships()
 
@@ -83,6 +106,8 @@ def get_user(
         "user": user,
         "posts": posts,
         "post_type": post_type,
+        "order": order,
+        "order_options": order_options,
         "comment_label_options": CommentLabelOption,
     }
 
