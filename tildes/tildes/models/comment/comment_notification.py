@@ -2,8 +2,9 @@
 
 from datetime import datetime
 import re
-from typing import List, Tuple
+from typing import Any, List, Sequence, Tuple
 
+from pyramid.security import Allow, DENY_ALL
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, TIMESTAMP
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import relationship, Session
@@ -65,6 +66,13 @@ class CommentNotification(DatabaseModel):
         self.user = user
         self.comment = comment
         self.notification_type = notification_type
+
+    def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
+        """Pyramid security ACL."""
+        acl = []
+        acl.append((Allow, self.user_id, 'mark_read'))
+        acl.append(DENY_ALL)
+        return acl
 
     @property
     def is_comment_reply(self) -> bool:

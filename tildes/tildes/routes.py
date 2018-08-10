@@ -6,7 +6,10 @@ from pyramid.config import Configurator
 from pyramid.request import Request
 from pyramid.security import Allow, Authenticated
 
-from tildes.resources.comment import comment_by_id36
+from tildes.resources.comment import (
+    comment_by_id36,
+    notification_by_comment_id36,
+)
 from tildes.resources.group import group_by_path
 from tildes.resources.message import message_conversation_by_id36
 from tildes.resources.topic import topic_by_id36
@@ -158,7 +161,7 @@ def add_intercooler_routes(config: Configurator) -> None:
     add_ic_route(
         'comment_mark_read',
         '/comments/{comment_id36}/mark_read',
-        factory=comment_by_id36,
+        factory=notification_by_comment_id36,
     )
 
     add_ic_route(

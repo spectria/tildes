@@ -5,7 +5,20 @@
 
 {% block title %}Unread notifications{% endblock %}
 
-{% block main_heading %}Unread notifications{% endblock %}
+{% block main_heading %}Unread notifications
+  {% if notifications and not request.user.auto_mark_notifications_read %}
+      <button
+        class="btn btn-link-minimal ml-2"
+        data-ic-put-to="{{ request.route_url(
+            'ic_comment_mark_read',
+            comment_id36=notifications[0].comment.comment_id36,
+            _query={"mark_all_previous": "true"},
+        )}}",
+        data-ic-target="closest main"
+      >Mark all read</button>
+  {% endif %}
+
+{% endblock %}
 
 {% block content %}
 {% if notifications %}

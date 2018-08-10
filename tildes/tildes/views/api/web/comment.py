@@ -1,9 +1,11 @@
 """Web API endpoints related to comments."""
 
+from marshmallow.fields import Boolean
 from pyramid.request import Request
 from pyramid.response import Response
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import joinedload
 from sqlalchemy.orm.exc import FlushError
 from webargs.pyramidparser import use_kwargs
 from zope.sqlalchemy import mark_changed
@@ -20,6 +22,41 @@ from tildes.models.topic import TopicVisit
 from tildes.schemas.comment import CommentSchema, CommentTagSchema
 from tildes.views import IC_NOOP
 from tildes.views.decorators import ic_view_config
+
+
+def _increment_topic_comments_seen(
+        request: Request,
+        comment: Comment,
+) -> None:
+    """Increment the number of comments in a topic the user has viewed.
+
+    If the user has the "track comment visits" feature enabled, we want to
+    increment the number of comments they've seen in the thread that the
+    comment came from, so that they don't *both* get a notification as well as
+    have the thread highlight with "(1 new)". This should only happen if their
+    last visit was before the comment was posted, however.  Below, this is
+    implemented as a INSERT ... ON CONFLICT DO UPDATE so that it will insert
+    a new topic visit with 1 comment if they didn't previously have one at
+    all.
+    """
+    if request.user.track_comment_visits:
+        statement = (
+            insert(TopicVisit.__table__)
+            .values(
+                user_id=request.user.user_id,
+                topic_id=comment.topic_id,
+                visit_time=utc_now(),
+                num_comments=1,
+            )
+            .on_conflict_do_update(
+                constraint=TopicVisit.__table__.primary_key,
+                set_={'num_comments': TopicVisit.num_comments + 1},
+                where=TopicVisit.visit_time < comment.created_time,
+            )
+        )
+
+        request.db_session.execute(statement)
+        mark_changed(request.db_session)
 
 
 @ic_view_config(
@@ -287,41 +324,40 @@ def untag_comment(request: Request, name: CommentTagOption) -> Response:
     request_method='PUT',
     permission='mark_read',
 )
-def mark_read_comment(request: Request) -> Response:
-    """Mark a comment read (clear all notifications)."""
-    comment = request.context
+@use_kwargs({'mark_all_previous': Boolean(missing=False)})
+def put_mark_comments_read(
+        request: Request,
+        mark_all_previous: bool,
+) -> Response:
+    """Mark comment(s) read, clearing notifications.
 
-    request.query(CommentNotification).filter(
-        CommentNotification.user == request.user,
-        CommentNotification.comment == comment,
-    ).update(
-        {CommentNotification.is_unread: False}, synchronize_session=False)
+    The "main" notification (request.context) will always be marked read, and
+    if the query param mark_all_previous is Truthy, all notifications prior to
+    that one will be marked read as well.
+    """
+    notification = request.context
 
-    # If the user has the "track comment visits" feature enabled, we want to
-    # increment the number of comments they've seen in the thread that the
-    # comment came from, so that they don't *both* get a notification as well
-    # as have the thread highlight with "(1 new)". This should only happen if
-    # their last visit was before the comment was posted, however.
-    # Below, this is implemented as a INSERT ... ON CONFLICT DO UPDATE so that
-    # it will insert a new topic visit with 1 comment if they didn't previously
-    # have one at all.
-    if request.user.track_comment_visits:
-        statement = (
-            insert(TopicVisit.__table__)
-            .values(
-                user_id=request.user.user_id,
-                topic_id=comment.topic_id,
-                visit_time=utc_now(),
-                num_comments=1,
+    if mark_all_previous:
+        prev_notifications = (
+            request.query(CommentNotification).filter(
+                CommentNotification.user == request.user,
+                CommentNotification.is_unread == True,  # noqa
+                CommentNotification.created_time <= notification.created_time,
             )
-            .on_conflict_do_update(
-                constraint=TopicVisit.__table__.primary_key,
-                set_={'num_comments': TopicVisit.num_comments + 1},
-                where=TopicVisit.visit_time < comment.created_time,
-            )
+            .options(joinedload(CommentNotification.comment))
+            .all()
         )
 
-        request.db_session.execute(statement)
-        mark_changed(request.db_session)
+        for comment_notification in prev_notifications:
+            comment_notification.is_unread = False
+            _increment_topic_comments_seen(
+                request,
+                comment_notification.comment
+            )
+
+        return Response('Your comment notifications have been cleared.')
+
+    notification.is_unread = False
+    _increment_topic_comments_seen(request, notification.comment)
 
     return IC_NOOP
