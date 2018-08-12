@@ -1,4 +1,20 @@
-{% from 'common.jinja2' import app_dir, bin_dir %}
+{% from 'common.jinja2' import app_dir, python_version %}
+
+{% set boussole_venv_dir = '/opt/venvs/boussole' %}
+
+# Salt seems to use the deprecated pyvenv script, manual for now
+boussole-venv-setup:
+  cmd.run:
+    - name: /usr/local/pyenv/versions/{{ python_version }}/bin/python -m venv {{ boussole_venv_dir }}
+    - creates: {{ boussole_venv_dir }}
+    - require:
+      - pkg: python3-venv
+      - pyenv: {{ python_version }}
+
+boussole-pip-installs:
+  cmd.run:
+    - name: {{ boussole_venv_dir }}/bin/pip install boussole
+    - unless: ls {{ boussole_venv_dir }}/lib/python3.6/site-packages/boussole
 
 /etc/systemd/system/boussole.service:
   file.managed:
@@ -22,7 +38,7 @@ create-css-directory:
 
 initial-boussole-run:
   cmd.run:
-    - name: {{ bin_dir }}/boussole compile --backend=yaml --config=boussole.yaml
+    - name: {{ boussole_venv_dir }}/bin/boussole compile --backend=yaml --config=boussole.yaml
     - cwd: {{ app_dir }}
     - env:
       - LC_ALL: C.UTF-8

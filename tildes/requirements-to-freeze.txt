@@ -4,8 +4,7 @@ amqpy
 argon2_cffi
 astroid==1.5.3  # pylama has issues with pylint 1.8.1
 bleach
-boussole
-click==5.1  # boussole needs < 6.0
+click
 cornice
 freezegun
 gunicorn
@@ -29,6 +28,7 @@ pyramid-tm
 pyramid-webassets
 pytest
 pytest-mock
+PyYAML  # needs to be installed separately for webassets
 SQLAlchemy
 SQLAlchemy-Utils
 stripe
