@@ -43,9 +43,8 @@ class SimpleHoursPeriod:
     def __str__(self) -> str:
         """Return a representation of the period as a string.
 
-        Will be of the form "4 hours", "2 days", "1 day, 6 hours", etc. except
-        for the special case of exactly "1 day", which is replaced with "24
-        hours".
+        Will be of the form "4 hours", "2 days", "1 day, 6 hours", etc. except for the
+        special case of exactly "1 day", which is replaced with "24 hours".
         """
         string = human(self.timedelta, past_tense="{}")
         if string == "1 day":
@@ -63,8 +62,8 @@ class SimpleHoursPeriod:
     def as_short_form(self) -> str:
         """Return a representation of the period as a "short form" string.
 
-        Uses "hours" representation unless the period is an exact multiple of
-        24 hours (except for 24 hours itself).
+        Uses "hours" representation unless the period is an exact multiple of 24 hours
+        (except for 24 hours itself).
         """
         if self.hours % 24 == 0 and self.hours != 24:
             return "{}d".format(self.hours // 24)
@@ -80,14 +79,13 @@ def utc_now() -> datetime:
 def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
     """Return a descriptive string for how long ago a datetime was.
 
-    The returned string will be of a format like "4 hours ago" or
-    "3 hours, 21 minutes ago". The second "precision level" is only added if
-    it will be at least minutes, and only one "level" below the first unit.
-    That is, you'd never see anything like "4 hours, 5 seconds ago" or
-    "2 years, 3 hours ago".
+    The returned string will be of a format like "4 hours ago" or "3 hours, 21 minutes
+    ago". The second "precision level" is only added if it will be at least minutes, and
+    only one "level" below the first unit.  That is, you'd never see anything like "4
+    hours, 5 seconds ago" or "2 years, 3 hours ago".
 
-    If `abbreviate` is true, the units will be shortened to return a string
-    like "12h 28m ago" instead of "12 hours, 28 minutes ago".
+    If `abbreviate` is true, the units will be shortened to return a string like
+    "12h 28m ago" instead of "12 hours, 28 minutes ago".
 
     A time of less than a second returns "a moment ago".
     """

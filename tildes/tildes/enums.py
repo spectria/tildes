@@ -68,9 +68,9 @@ class TopicSortOption(enum.Enum):
     def descending_description(self) -> str:
         """Describe this sort option when used in a "descending" order.
 
-        For example, the "votes" sort has a description of "most votes", since
-        using that sort in descending order means that topics with the most
-        votes will be listed first.
+        For example, the "votes" sort has a description of "most votes", since using
+        that sort in descending order means that topics with the most votes will be
+        listed first.
         """
         if self.name == "NEW":
             return "newest"

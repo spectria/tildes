@@ -35,9 +35,9 @@ def obtain_transaction_lock(
 ) -> None:
     """Obtain a transaction-level advisory lock from PostgreSQL.
 
-    The lock_space arg must be either None or the name of one of the members of
-    the LockSpaces enum (case-insensitive). Contention for a lock will only
-    occur when both lock_space and lock_value have the same values.
+    The lock_space arg must be either None or the name of one of the members of the
+    LockSpaces enum (case-insensitive). Contention for a lock will only occur when both
+    lock_space and lock_value have the same values.
     """
     if lock_space:
         try:
@@ -125,8 +125,8 @@ class ArrayOfLtree(ARRAY):  # pylint: disable=too-many-ancestors
     class comparator_factory(ARRAY.comparator_factory):
         """Add custom comparison functions.
 
-        The ancestor_of and descendant_of functions are supported by LtreeType,
-        so this duplicates them here so they can be used on ArrayOfLtree too.
+        The ancestor_of and descendant_of functions are supported by LtreeType, so this
+        duplicates them here so they can be used on ArrayOfLtree too.
         """
 
         def ancestor_of(self, other):  # type: ignore

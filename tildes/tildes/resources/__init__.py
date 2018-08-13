@@ -8,9 +8,9 @@ from tildes.models import DatabaseModel, ModelQuery
 
 def get_resource(request: Request, base_query: ModelQuery) -> DatabaseModel:
     """Prepare and execute base query from a root factory, returning result."""
-    # While the site is private, we don't want to leak information about which
-    # usernames or groups exist. So we should just always raise a 403 before
-    # doing a lookup and potentially raising a 404.
+    # While the site is private, we don't want to leak information about which usernames
+    # or groups exist. So we should just always raise a 403 before doing a lookup and
+    # potentially raising a 404.
     if not request.user:
         raise HTTPForbidden
 

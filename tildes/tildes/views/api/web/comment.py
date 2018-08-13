@@ -22,14 +22,13 @@ from tildes.views.decorators import ic_view_config
 def _increment_topic_comments_seen(request: Request, comment: Comment) -> None:
     """Increment the number of comments in a topic the user has viewed.
 
-    If the user has the "track comment visits" feature enabled, we want to
-    increment the number of comments they've seen in the thread that the
-    comment came from, so that they don't *both* get a notification as well as
-    have the thread highlight with "(1 new)". This should only happen if their
-    last visit was before the comment was posted, however.  Below, this is
-    implemented as a INSERT ... ON CONFLICT DO UPDATE so that it will insert
-    a new topic visit with 1 comment if they didn't previously have one at
-    all.
+    If the user has the "track comment visits" feature enabled, we want to increment the
+    number of comments they've seen in the thread that the comment came from, so that
+    they don't *both* get a notification as well as have the thread highlight with "(1
+    new)". This should only happen if their last visit was before the comment was
+    posted, however.  Below, this is implemented as a INSERT ... ON CONFLICT DO UPDATE
+    so that it will insert a new topic visit with 1 comment if they didn't previously
+    have one at all.
     """
     if request.user.track_comment_visits:
         statement = (
@@ -190,8 +189,8 @@ def put_vote_comment(request: Request) -> dict:
     request.db_session.add(new_vote)
 
     try:
-        # manually flush before attempting to commit, to avoid having all
-        # objects detached from the session in case of an error
+        # manually flush before attempting to commit, to avoid having all objects
+        # detached from the session in case of an error
         request.db_session.flush()
         request.tm.commit()
     except IntegrityError:
@@ -254,8 +253,8 @@ def put_tag_comment(request: Request, name: CommentTagOption) -> Response:
     request.db_session.add(tag)
 
     try:
-        # manually flush before attempting to commit, to avoid having all
-        # objects detached from the session in case of an error
+        # manually flush before attempting to commit, to avoid having all objects
+        # detached from the session in case of an error
         request.db_session.flush()
         request.tm.commit()
     except FlushError:
@@ -309,9 +308,9 @@ def delete_tag_comment(request: Request, name: CommentTagOption) -> Response:
 def put_mark_comments_read(request: Request, mark_all_previous: bool) -> Response:
     """Mark comment(s) read, clearing notifications.
 
-    The "main" notification (request.context) will always be marked read, and
-    if the query param mark_all_previous is Truthy, all notifications prior to
-    that one will be marked read as well.
+    The "main" notification (request.context) will always be marked read, and if the
+    query param mark_all_previous is Truthy, all notifications prior to that one will be
+    marked read as well.
     """
     notification = request.context
 

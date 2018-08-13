@@ -38,8 +38,8 @@ def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
 
     config.add_request_method(is_safe_request_method, "is_safe_method", reify=True)
 
-    # Add the request.redis request method to access a redis connection. This
-    # is done in a bit of a strange way to support being overridden in tests.
+    # Add the request.redis request method to access a redis connection. This is done in
+    # a bit of a strange way to support being overridden in tests.
     config.registry["redis_connection_factory"] = get_redis_connection
     # pylint: disable=unnecessary-lambda
     config.add_request_method(
@@ -125,8 +125,8 @@ def current_listing_base_url(
 ) -> str:
     """Return the "base" url for the current listing route.
 
-    The "base" url represents the current listing, including any filtering
-    options (or the fact that filters are disabled).
+    The "base" url represents the current listing, including any filtering options (or
+    the fact that filters are disabled).
 
     The `query` argument allows adding query variables to the generated url.
     """

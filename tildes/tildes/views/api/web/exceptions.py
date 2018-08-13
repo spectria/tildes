@@ -91,11 +91,11 @@ def httptoomanyrequests(request: Request) -> Response:
 def httpfound(request: Request) -> Response:
     """Convert an HTTPFound to a 200 with the header for a redirect.
 
-    Intercooler won't handle a 302 response as a "full" redirect, and will just
-    load the content of the destination page into the target element, the same
-    as any other response. However, it has support for a special X-IC-Redirect
-    header, which allows the response to trigger a client-side redirect. This
-    exception view will convert a 302 into a 200 with that header so it works
-    as a redirect for both standard requests as well as Intercooler ones.
+    Intercooler won't handle a 302 response as a "full" redirect, and will just load the
+    content of the destination page into the target element, the same as any other
+    response. However, it has support for a special X-IC-Redirect header, which allows
+    the response to trigger a client-side redirect. This exception view will convert a
+    302 into a 200 with that header so it works as a redirect for both standard requests
+    as well as Intercooler ones.
     """
     return Response(headers={"X-IC-Redirect": request.exception.location})

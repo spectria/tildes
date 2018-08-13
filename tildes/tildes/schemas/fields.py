@@ -108,8 +108,8 @@ class SimpleString(Field):
     These strings should generally not contain any special formatting (such as
     markdown), and have problematic whitespace/unicode/etc. removed.
 
-    See the simplify_string() function for full details of how these strings
-    are processed and sanitized.
+    See the simplify_string() function for full details of how these strings are
+    processed and sanitized.
 
     """
 

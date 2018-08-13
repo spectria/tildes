@@ -13,8 +13,8 @@ from tildes.models.user import User
 def serialize_model(model_item: DatabaseModel, request: Request) -> dict:
     """Return serializable data for a DatabaseModel item.
 
-    Uses the .schema class attribute to serialize a model by using its
-    corresponding marshmallow schema.
+    Uses the .schema class attribute to serialize a model by using its corresponding
+    marshmallow schema.
     """
     # pylint: disable=unused-argument
     return model_item.schema.dump(model_item)

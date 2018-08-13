@@ -13,15 +13,14 @@ from tildes.lib.database import get_session_from_config
 class PgsqlQueueConsumer(AbstractConsumer):
     """Base class for consumers of events sent from PostgreSQL via rabbitmq.
 
-    This class is intended to be used in a completely "stand-alone" manner,
-    such as inside a script being run separately as a background job. As such,
-    it also includes connecting to rabbitmq, declaring the underlying queue and
-    bindings, and (optionally) connecting to the database to be able to fetch
-    and modify data as necessary. It relies on the environment variable
-    INI_FILE being set.
+    This class is intended to be used in a completely "stand-alone" manner, such as
+    inside a script being run separately as a background job. As such, it also includes
+    connecting to rabbitmq, declaring the underlying queue and bindings, and
+    (optionally) connecting to the database to be able to fetch and modify data as
+    necessary. It relies on the environment variable INI_FILE being set.
 
-    Note that all messages received by these consumers are expected to be in
-    JSON format.
+    Note that all messages received by these consumers are expected to be in JSON
+    format.
     """
 
     PGSQL_EXCHANGE_NAME = "pgsql_events"

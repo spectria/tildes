@@ -19,9 +19,8 @@ class RateLimitError(Exception):
 class RateLimitResult:
     """The result from a rate-limit check.
 
-    Includes data relating to whether the action should be allowed or blocked,
-    how much of the limit is remaining, how long until the action can be
-    retried, etc.
+    Includes data relating to whether the action should be allowed or blocked, how much
+    of the limit is remaining, how long until the action can be retried, etc.
     """
 
     def __init__(
@@ -100,23 +99,22 @@ class RateLimitResult:
     def merged_result(cls, results: Sequence["RateLimitResult"]) -> "RateLimitResult":
         """Merge any number of RateLimitResults into a single result.
 
-        Basically, the merged result should be the "most restrictive"
-        combination of all the source results. That is, it should only allow
-        the action if *all* of the source results would allow it, the limit
-        counts should be the lowest of the set, and the waiting times should
-        be the highest of the set.
+        Basically, the merged result should be the "most restrictive" combination of all
+        the source results. That is, it should only allow the action if *all* of the
+        source results would allow it, the limit counts should be the lowest of the set,
+        and the waiting times should be the highest of the set.
 
-        Note: I think the behavior for time_until_max is not truly correct, but
-        it should be reasonable for now. Consider a situation like two
-        "overlapping" limits of 10/min and 100/hour and what the time_until_max
-        value of the combination should be. It might be a bit tricky.
+        Note: I think the behavior for time_until_max is not truly correct, but it
+        should be reasonable for now. Consider a situation like two "overlapping" limits
+        of 10/min and 100/hour and what the time_until_max value of the combination
+        should be. It might be a bit tricky.
         """
         # if there's only one result, just return that one
         if len(results) == 1:
             return results[0]
 
-        # time_until_retry is a bit trickier than the others because some/all
-        # of the source values might be None
+        # time_until_retry is a bit trickier than the others because some/all of the
+        # source values might be None
         if all(r.time_until_retry is None for r in results):
             time_until_retry = None
         else:
@@ -156,9 +154,9 @@ class RateLimitResult:
 class RateLimitedAction:
     """Represents a particular action and the limits on its usage.
 
-    This class uses the redis-cell Redis module to implement a Generic Cell
-    Rate Algorithm (GCRA) for rate-limiting, which includes several desirable
-    characteristics including a rolling time window and support for "bursts".
+    This class uses the redis-cell Redis module to implement a Generic Cell Rate
+    Algorithm (GCRA) for rate-limiting, which includes several desirable characteristics
+    including a rolling time window and support for "bursts".
     """
 
     def __init__(
@@ -173,13 +171,12 @@ class RateLimitedAction:
     ) -> None:
         """Initialize the limits on a particular action.
 
-        The action will be limited to a maximum of `limit` calls over the time
-        period specified in `period`. By default, up to half of the actions
-        inside a period may be used in a "burst", in which no specific time
-        restrictions are applied.  This behavior is controlled by the
-        `max_burst` argument, which can range from 1 (no burst allowed,
-        requests must wait at least `period / limit` time between them), up to
-        the same value as `limit` (the full limit may be used at any rate, but
+        The action will be limited to a maximum of `limit` calls over the time period
+        specified in `period`. By default, up to half of the actions inside a period may
+        be used in a "burst", in which no specific time restrictions are applied.  This
+        behavior is controlled by the `max_burst` argument, which can range from 1 (no
+        burst allowed, requests must wait at least `period / limit` time between them),
+        up to the same value as `limit` (the full limit may be used at any rate, but
         never more than `limit` inside any given period).
         """
         # pylint: disable=too-many-arguments
@@ -202,8 +199,8 @@ class RateLimitedAction:
         self.by_user = by_user
         self.by_ip = by_ip
 
-        # if a redis connection wasn't specified, it will need to be
-        # initialized before any checks or resets for this action can be done
+        # if a redis connection wasn't specified, it will need to be initialized before
+        # any checks or resets for this action can be done
         self._redis = redis
 
     @property

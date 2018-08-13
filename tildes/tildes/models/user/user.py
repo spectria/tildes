@@ -39,12 +39,10 @@ class User(DatabaseModel):
 
     Trigger behavior:
       Incoming:
-        - num_unread_notifications will be incremented and decremented by
-          insertions, deletions, and updates to is_unread in
-          comment_notifications.
-        - num_unread_messages will be incremented and decremented by
-          insertions, deletions, and updates to unread_user_ids in
-          message_conversations.
+        - num_unread_notifications will be incremented and decremented by insertions,
+          deletions, and updates to is_unread in comment_notifications.
+        - num_unread_messages will be incremented and decremented by insertions,
+          deletions, and updates to unread_user_ids in message_conversations.
     """
 
     schema_class = UserSchema
@@ -142,8 +140,8 @@ class User(DatabaseModel):
 
     @password.setter
     def password(self, value: str) -> None:
-        # need to do manual validation since some password checks depend on
-        # checking the username at the same time (for similarity)
+        # need to do manual validation since some password checks depend on checking the
+        # username at the same time (for similarity)
         self.schema.validate({"username": self.username, "password": value})
 
         self.password_hash = hash_string(value)

@@ -22,9 +22,9 @@ def get_new_message_form(request: Request) -> dict:
 @view_config(route_name="messages", renderer="messages.jinja2")
 def get_user_messages(request: Request) -> dict:
     """Show the logged-in user's message conversations."""
-    # select conversations where either the user is the recipient, or they
-    # were the sender and there is at least one reply (don't need to show
-    # conversations the user started but haven't been replied to)
+    # select conversations where either the user is the recipient, or they were the
+    # sender and there is at least one reply (don't need to show conversations the user
+    # started but haven't been replied to)
     conversations = (
         request.query(MessageConversation)
         .filter(
@@ -63,8 +63,8 @@ def get_user_unread_messages(request: Request) -> dict:
 @view_config(route_name="messages_sent", renderer="messages_sent.jinja2")
 def get_user_sent_messages(request: Request) -> dict:
     """Show the logged-in user's sent message conversations."""
-    # select conversations where either the user was the sender, or they
-    # were the recipient and there is at least one reply
+    # select conversations where either the user was the sender, or they were the
+    # recipient and there is at least one reply
     conversations = (
         request.query(MessageConversation)
         .filter(

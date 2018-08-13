@@ -68,11 +68,11 @@ class TopicSchema(Schema):
     def validate_tags(self, value: typing.List[sqlalchemy_utils.Ltree]) -> None:
         """Validate the tags field, raising an error if an issue exists.
 
-        Note that tags are validated by ensuring that each tag would be a valid
-        group path. This is definitely mixing concerns, but it's deliberate in
-        this case. It will allow for some interesting possibilities by ensuring
-        naming "compatibility" between groups and tags. For example, a popular
-        tag in a group could be converted into a sub-group easily.
+        Note that tags are validated by ensuring that each tag would be a valid group
+        path. This is definitely mixing concerns, but it's deliberate in this case. It
+        will allow for some interesting possibilities by ensuring naming "compatibility"
+        between groups and tags. For example, a popular tag in a group could be
+        converted into a sub-group easily.
         """
         group_schema = GroupSchema(partial=True)
         for tag in value:

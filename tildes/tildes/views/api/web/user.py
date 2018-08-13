@@ -66,10 +66,10 @@ def patch_change_email_address(
     """Change the user's email address (and descriptive note)."""
     user = request.context
 
-    # If the user already has an email address set, we need to retain the
-    # previous hash and description in the log. Otherwise, if an account is
-    # compromised and the attacker changes the email address, we'd have no way
-    # to support recovery for the owner.
+    # If the user already has an email address set, we need to retain the previous hash
+    # and description in the log. Otherwise, if an account is compromised and the
+    # attacker changes the email address, we'd have no way to support recovery for the
+    # owner.
     log_info = None
     if user.email_address_hash:
         log_info = {
@@ -155,8 +155,8 @@ def get_invite_code(request: Request) -> dict:
     # obtain a lock to prevent concurrent requests generating multiple codes
     request.obtain_lock("generate_invite_code", user.user_id)
 
-    # it's possible to randomly generate an existing code, so we'll retry
-    # until we create a new one (will practically always be the first try)
+    # it's possible to randomly generate an existing code, so we'll retry until we
+    # create a new one (will practically always be the first try)
     while True:
         savepoint = request.tm.savepoint()
 
@@ -169,9 +169,9 @@ def get_invite_code(request: Request) -> dict:
         except IntegrityError:
             savepoint.rollback()
 
-    # doing an atomic decrement on request.user.invite_codes_remaining is going
-    # to make it unusable as an integer in the template, so store the expected
-    # value after the decrement first, to be able to use that instead
+    # doing an atomic decrement on request.user.invite_codes_remaining is going to make
+    # it unusable as an integer in the template, so store the expected value after the
+    # decrement first, to be able to use that instead
     num_remaining = request.user.invite_codes_remaining - 1
     request.user.invite_codes_remaining = User.invite_codes_remaining - 1
 

@@ -17,8 +17,8 @@ class Group(DatabaseModel):
 
     Trigger behavior:
       Incoming:
-        - num_subscriptions will be incremented and decremented by insertions
-          and deletions in group_subscriptions.
+        - num_subscriptions will be incremented and decremented by insertions and
+          deletions in group_subscriptions.
     """
 
     schema_class = GroupSchema
@@ -45,9 +45,9 @@ class Group(DatabaseModel):
         Boolean, nullable=False, server_default="false"
     )
 
-    # Create a GiST index on path as well as the btree one that will be created
-    # by the index=True/unique=True keyword args to Column above. The GiST
-    # index supports additional operators for ltree queries: @>, <@, @, ~, ?
+    # Create a GiST index on path as well as the btree one that will be created by the
+    # index=True/unique=True keyword args to Column above. The GiST index supports
+    # additional operators for ltree queries: @>, <@, @, ~, ?
     __table_args__ = (Index("ix_groups_path_gist", path, postgresql_using="gist"),)
 
     def __repr__(self) -> str:

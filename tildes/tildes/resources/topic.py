@@ -22,8 +22,8 @@ def topic_by_id36(request: Request, topic_id36: str) -> Topic:
 
     topic = get_resource(request, query)
 
-    # if there's also a group specified in the route, check that it's the same
-    # group as the topic was posted in, otherwise redirect to correct group
+    # if there's also a group specified in the route, check that it's the same group as
+    # the topic was posted in, otherwise redirect to correct group
     if "group_path" in request.matchdict:
         path_from_route = request.matchdict["group_path"].lower()
         if path_from_route != topic.group.path:

@@ -22,11 +22,10 @@ class CommentNotification(DatabaseModel):
 
     Trigger behavior:
       Incoming:
-        - Rows will be deleted if the relevant comment has is_deleted set to
-          true.
+        - Rows will be deleted if the relevant comment has is_deleted set to true.
       Outgoing:
-        - Inserting, deleting, or updating is_unread will increment or
-          decrement num_unread_notifications for the relevant user.
+        - Inserting, deleting, or updating is_unread will increment or decrement
+          num_unread_notifications for the relevant user.
     """
 
     __tablename__ = "comment_notifications"
@@ -122,16 +121,14 @@ class CommentNotification(DatabaseModel):
     ) -> Tuple[List["CommentNotification"], List["CommentNotification"]]:
         """Filter new notifications for edited comments.
 
-        Protect against sending a notification for the same comment to
-        the same user twice. Edits can sent notifications to users
-        now mentioned in the content, but only if they weren't sent
-        a notification for that comment before.
+        Protect against sending a notification for the same comment to the same user
+        twice. Edits can sent notifications to users now mentioned in the content, but
+        only if they weren't sent a notification for that comment before.
 
-        This method returns a tuple of lists of this class. The first
-        item is the notifications that were previously sent for this
-        comment but need to be deleted (i.e. mentioned username was edited
-        out of the comment), and the second item is the notifications
-        that need to be added, as they're new.
+        This method returns a tuple of lists of this class. The first item is the
+        notifications that were previously sent for this comment but need to be deleted
+        (i.e. mentioned username was edited out of the comment), and the second item is
+        the notifications that need to be added, as they're new.
         """
         previous_notifications = (
             db_session.query(CommentNotification)

@@ -56,22 +56,20 @@ class PaginatedQuery(ModelQuery):
     def is_reversed(self) -> bool:
         """Return whether the query is operating "in reverse".
 
-        This is a bit confusing. When moving "forward" through pages, items
-        will be queried in the same order that they are displayed. For example,
-        when displaying the newest topics, the query is simply for "newest N
-        topics" (where N is the number of items per page), with an optional
-        "after topic X" clause. Either way, the first result from the query
-        will have the highest created_time, and should be the first item
-        displayed.
+        This is a bit confusing. When moving "forward" through pages, items will be
+        queried in the same order that they are displayed. For example, when displaying
+        the newest topics, the query is simply for "newest N topics" (where N is the
+        number of items per page), with an optional "after topic X" clause. Either way,
+        the first result from the query will have the highest created_time, and should
+        be the first item displayed.
 
-        However, things work differently when you are paging "backwards". Since
-        this is done by looking before a specific item, the query needs to
-        fetch items in the opposite order of how they will be displayed. For
-        the "newest" sort example, when paging backwards you need to query for
-        "*oldest* N items before topic X", so the query ordering is the exact
-        opposite of the desired display order. The first result from the query
-        will have the *lowest* created_time, so should be the last item
-        displayed. Because of this, the results need to be reversed.
+        However, things work differently when you are paging "backwards". Since this is
+        done by looking before a specific item, the query needs to fetch items in the
+        opposite order of how they will be displayed. For the "newest" sort example,
+        when paging backwards you need to query for "*oldest* N items before topic X",
+        so the query ordering is the exact opposite of the desired display order. The
+        first result from the query will have the *lowest* created_time, so should be
+        the last item displayed. Because of this, the results need to be reversed.
         """
         return bool(self.before_id)
 
@@ -100,20 +98,20 @@ class PaginatedQuery(ModelQuery):
 
         query = self
 
-        # determine the ID of the "anchor item" that we're using as an upper or
-        # lower bound, and which type of bound it is
+        # determine the ID of the "anchor item" that we're using as an upper or lower
+        # bound, and which type of bound it is
         if self.after_id:
             anchor_id = self.after_id
 
-            # since we're looking for other items "after" the anchor item, it
-            # will act as an upper bound when the sort order is descending,
-            # otherwise it's a lower bound
+            # since we're looking for other items "after" the anchor item, it will act
+            # as an upper bound when the sort order is descending, otherwise it's a
+            # lower bound
             is_anchor_upper_bound = self.sort_desc
         elif self.before_id:
             anchor_id = self.before_id
 
-            # opposite of "after" behavior - when looking "before" the anchor
-            # item, it's an upper bound if the sort order is *ascending*
+            # opposite of "after" behavior - when looking "before" the anchor item, it's
+            # an upper bound if the sort order is *ascending*
             is_anchor_upper_bound = not self.sort_desc
 
         # create a subquery to get comparison values for the anchor item
@@ -136,8 +134,8 @@ class PaginatedQuery(ModelQuery):
         """Finalize the query before execution."""
         query = super()._finalize()
 
-        # if the query is reversed, we need to sort in the opposite dir
-        # (basically self.sort_desc XOR self.is_reversed)
+        # if the query is reversed, we need to sort in the opposite dir (basically
+        # self.sort_desc XOR self.is_reversed)
         desc = self.sort_desc
         if self.is_reversed:
             desc = not desc
@@ -167,18 +165,18 @@ class PaginatedResults:
         """Fetch results from a PaginatedQuery."""
         self.per_page = per_page
 
-        # if the query had `before` or `after` restrictions, there must be a
-        # page in that direction (it's where we came from)
+        # if the query had `before` or `after` restrictions, there must be a page in
+        # that direction (it's where we came from)
         self.has_next_page = bool(query.before_id)
         self.has_prev_page = bool(query.after_id)
 
-        # fetch the results - try to get one more than we're actually going to
-        # display, so that we know if there's another page
+        # fetch the results - try to get one more than we're actually going to display,
+        # so that we know if there's another page
         self.results = query.limit(per_page + 1).all()
 
-        # if we managed to get one more item than the page size, there's
-        # another page in the same direction that we're going - set the
-        # relevant attr and remove the extra item so it's not displayed
+        # if we managed to get one more item than the page size, there's another page in
+        # the same direction that we're going - set the relevant attr and remove the
+        # extra item so it's not displayed
         if len(self.results) > per_page:
             if query.is_reversed:
                 self.results = self.results[1:]
@@ -187,8 +185,8 @@ class PaginatedResults:
                 self.has_next_page = True
                 self.results = self.results[:-1]
 
-        # if the query came back empty for some reason, we won't be able to
-        # have next/prev pages since there are no items to base them on
+        # if the query came back empty for some reason, we won't be able to have
+        # next/prev pages since there are no items to base them on
         if not self.results:
             self.has_next_page = False
             self.has_prev_page = False

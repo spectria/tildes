@@ -96,17 +96,17 @@ def test_multibyte_url_slug():
 
 def test_multibyte_conservative_truncation():
     """Ensure truncating a multibyte url slug won't massively shorten it."""
-    # this string has a comma as the 6th char which will be converted to an
-    # underscore, so if truncation amount isn't restricted, it would result in
-    # a 46-char slug instead of the full 100.
+    # this string has a comma as the 6th char which will be converted to an underscore,
+    # so if truncation amount isn't restricted, it would result in a 46-char slug
+    # instead of the full 100.
     original = "パイソンは、汎用のプログラミング言語である"
     assert len(convert_to_url_slug(original, 100)) == 100
 
 
 def test_multibyte_whole_character_truncation():
     """Ensure truncation happens at the edge of a multibyte character."""
-    # each of these characters url-encodes to 3 bytes = 9 characters each, so
-    # only the first character should be included for all lengths from 9 - 17
+    # each of these characters url-encodes to 3 bytes = 9 characters each, so only the
+    # first character should be included for all lengths from 9 - 17
     original = "コード"
     for limit in range(9, 18):
         assert convert_to_url_slug(original, limit) == "%E3%82%B3"

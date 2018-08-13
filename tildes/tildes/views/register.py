@@ -32,8 +32,8 @@ def get_register(request: Request) -> dict:
 def user_schema_check_breaches(request: Request) -> UserSchema:
     """Return a UserSchema that will check the password against breaches.
 
-    It would probably be good to generalize this function at some point,
-    probably similar to:
+    It would probably be good to generalize this function at some point, probably
+    similar to:
     http://webargs.readthedocs.io/en/latest/advanced.html#reducing-boilerplate
     """
     # pylint: disable=unused-argument
@@ -67,8 +67,8 @@ def post_register(
     if password != password_confirm:
         raise HTTPUnprocessableEntity("Password and confirmation do not match.")
 
-    # attempt to fetch and lock the row for the specified invite code (lock
-    # prevents concurrent requests from using the same invite code)
+    # attempt to fetch and lock the row for the specified invite code (lock prevents
+    # concurrent requests from using the same invite code)
     lookup_code = UserInviteCode.prepare_code_for_lookup(invite_code)
     code_row = (
         request.query(UserInviteCode)
@@ -95,8 +95,8 @@ def post_register(
     except IntegrityError:
         raise HTTPUnprocessableEntity("That username has already been registered.")
 
-    # the flush above will generate the new user's ID, so use that to update
-    # the invite code with info about the user that registered with it
+    # the flush above will generate the new user's ID, so use that to update the invite
+    # code with info about the user that registered with it
     code_row.invitee_id = user.user_id
 
     # subscribe the new user to all groups except ~test

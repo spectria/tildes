@@ -32,8 +32,8 @@ def put_subscribe_group(request: Request) -> dict:
     request.db_session.add(new_subscription)
 
     try:
-        # manually flush before attempting to commit, to avoid having all
-        # objects detached from the session in case of an error
+        # manually flush before attempting to commit, to avoid having all objects
+        # detached from the session in case of an error
         request.db_session.flush()
         request.tm.commit()
     except IntegrityError:

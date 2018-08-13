@@ -28,8 +28,8 @@ def notification_by_comment_id36(
 ) -> CommentNotification:
     """Get a comment notification specified by {comment_id36} in the route.
 
-    Looks up a comment notification for the logged-in user with the
-    {comment_id36} specified in the route.
+    Looks up a comment notification for the logged-in user with the {comment_id36}
+    specified in the route.
     """
     if not request.user:
         raise HTTPForbidden

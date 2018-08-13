@@ -46,15 +46,15 @@ class Topic(DatabaseModel):
 
     Trigger behavior:
       Incoming:
-        - num_votes will be incremented and decremented by insertions and
-          deletions in topic_votes.
-        - num_comments will be incremented and decremented by insertions,
-          deletions, and updates to is_deleted in comments.
-        - last_activity_time will be updated by insertions, deletions, and
+        - num_votes will be incremented and decremented by insertions and deletions in
+          topic_votes.
+        - num_comments will be incremented and decremented by insertions, deletions, and
           updates to is_deleted in comments.
+        - last_activity_time will be updated by insertions, deletions, and updates to
+          is_deleted in comments.
       Outgoing:
-        - Inserting a row or updating markdown will send a rabbitmq message
-          for "topic.created" or "topic.edited" respectively.
+        - Inserting a row or updating markdown will send a rabbitmq message for
+          "topic.created" or "topic.edited" respectively.
       Internal:
         - deleted_time will be set when is_deleted is set to true
     """
@@ -317,8 +317,8 @@ class Topic(DatabaseModel):
         if not self.is_link_type or not self.link:
             raise ValueError("Non-link topics do not have a domain")
 
-        # get the domain from the content metadata if possible, but fall back
-        # to just parsing it from the link if it's not present
+        # get the domain from the content metadata if possible, but fall back to just
+        # parsing it from the link if it's not present
         return self.get_content_metadata("domain") or get_domain_from_url(self.link)
 
     @property
@@ -329,8 +329,8 @@ class Topic(DatabaseModel):
     def get_content_metadata(self, key: str) -> Any:
         """Get a piece of content metadata "safely".
 
-        Will return None if the topic has no metadata defined, if this key
-        doesn't exist in the metadata, etc.
+        Will return None if the topic has no metadata defined, if this key doesn't exist
+        in the metadata, etc.
         """
         if not isinstance(self.content_metadata, dict):
             return None

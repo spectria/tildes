@@ -22,8 +22,8 @@ def get_user_unread_notifications(request: Request) -> dict:
         .all()
     )
 
-    # if the user has the "automatically mark notifications as read" setting
-    # enabled, mark all their notifications as read
+    # if the user has the "automatically mark notifications as read" setting enabled,
+    # mark all their notifications as read
     if request.user.auto_mark_notifications_read:
         for notification in notifications:
             notification.is_unread = False

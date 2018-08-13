@@ -87,8 +87,8 @@ def put_topic_vote(request: Request) -> Response:
     request.db_session.add(new_vote)
 
     try:
-        # manually flush before attempting to commit, to avoid having all
-        # objects detached from the session in case of an error
+        # manually flush before attempting to commit, to avoid having all objects
+        # detached from the session in case of an error
         request.db_session.flush()
         request.tm.commit()
     except IntegrityError:

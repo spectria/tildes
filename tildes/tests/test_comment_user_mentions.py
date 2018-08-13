@@ -68,8 +68,8 @@ def test_prevent_duplicate_notifications(db, user_list, topic):
     """Test that notifications are cleaned up for edits.
 
     Flow:
-        1. A comment is created by user A that mentions user B. Notifications
-        are generated, and yield A mentioning B.
+        1. A comment is created by user A that mentions user B. Notifications are
+           generated, and yield A mentioning B.
         2. The comment is edited to mention C and not B.
         3. The comment is edited to mention B and C.
         4. The comment is deleted.

@@ -19,8 +19,8 @@ class APIv0(Service):
 
         super().__init__(name=name, path=path, **kwargs)
 
-        # Service.__init__ does this setup to support config.scan(), but it
-        # doesn't seem to inherit properly, so it needs to be done again here
+        # Service.__init__ does this setup to support config.scan(), but it doesn't seem
+        # to inherit properly, so it needs to be done again here
         def callback(context: Any, name: Any, obj: Any) -> None:
             # pylint: disable=unused-argument
             config = context.config.with_package(info.module)  # noqa

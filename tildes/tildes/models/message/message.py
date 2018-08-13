@@ -1,13 +1,12 @@
 """Contains the MessageConversation and MessageReply classes.
 
-Note the difference between these two classes - MessageConversation represents
-both the overall conversation and the initial message in a particular message
-conversation/thread. Subsequent replies (if any) inside that same conversation
-are represented by MessageReply.
+Note the difference between these two classes - MessageConversation represents both the
+overall conversation and the initial message in a particular message
+conversation/thread. Subsequent replies (if any) inside that same conversation are
+represented by MessageReply.
 
-This might feel a bit unusual since it splits "all messages" across two
-tables/classes, but it simplifies a lot of things when organizing them into
-threads.
+This might feel a bit unusual since it splits "all messages" across two tables/classes,
+but it simplifies a lot of things when organizing them into threads.
 """
 
 from datetime import datetime
@@ -44,13 +43,13 @@ class MessageConversation(DatabaseModel):
 
     Trigger behavior:
       Incoming:
-        - num_replies, last_reply_time, and unread_user_ids are updated when a
-          new message_replies row is inserted for the conversation.
-        - num_replies and last_reply_time will be updated if a message_replies
-          row is deleted.
+        - num_replies, last_reply_time, and unread_user_ids are updated when a new
+          message_replies row is inserted for the conversation.
+        - num_replies and last_reply_time will be updated if a message_replies row is
+          deleted.
       Outgoing:
-        - Inserting or updating unread_user_ids will update num_unread_messages
-          for all relevant users.
+        - Inserting or updating unread_user_ids will update num_unread_messages for all
+          relevant users.
     """
 
     schema_class = MessageConversationSchema
@@ -95,9 +94,9 @@ class MessageConversation(DatabaseModel):
         "MessageReply", order_by="MessageReply.created_time"
     )
 
-    # Create a GIN index on the unread_user_ids column using the gin__int_ops
-    # operator class supplied by the intarray module. This should be the best
-    # index for "array contains" queries.
+    # Create a GIN index on the unread_user_ids column using the gin__int_ops operator
+    # class supplied by the intarray module. This should be the best index for "array
+    # contains" queries.
     __table_args__ = (
         Index(
             "ix_message_conversations_unread_user_ids_gin",
@@ -151,8 +150,8 @@ class MessageConversation(DatabaseModel):
     def other_user(self, viewer: User) -> User:
         """Return the conversation's other user from viewer's perspective.
 
-        That is, if the viewer is the sender, this will be the recipient, and
-        vice versa.
+        That is, if the viewer is the sender, this will be the recipient, and vice
+        versa.
         """
         if not self.is_participant(viewer):
             raise ValueError("User is not a participant in this conversation.")
@@ -172,8 +171,8 @@ class MessageConversation(DatabaseModel):
     def mark_unread_for_user(self, user: User) -> None:
         """Mark the conversation unread for the specified user.
 
-        Uses the postgresql intarray union operator `|`, so there's no need to
-        worry about duplicate values, race conditions, etc.
+        Uses the postgresql intarray union operator `|`, so there's no need to worry
+        about duplicate values, race conditions, etc.
         """
         if not self.is_participant(user):
             raise ValueError("User is not a participant in this conversation.")
@@ -184,9 +183,9 @@ class MessageConversation(DatabaseModel):
     def mark_read_for_user(self, user: User) -> None:
         """Mark the conversation read for the specified user.
 
-        Uses the postgresql intarray "remove element from array" operation, so
-        there's no need to worry about whether the value is present or not,
-        race conditions, etc.
+        Uses the postgresql intarray "remove element from array" operation, so there's
+        no need to worry about whether the value is present or not, race conditions,
+        etc.
         """
         if not self.is_participant(user):
             raise ValueError("User is not a participant in this conversation.")
@@ -202,8 +201,8 @@ class MessageReply(DatabaseModel):
 
     Trigger behavior:
       Outgoing:
-        - Inserting will update num_replies, last_reply_time, and
-          unread_user_ids for the relevant conversation.
+        - Inserting will update num_replies, last_reply_time, and unread_user_ids for
+          the relevant conversation.
         - Deleting will update num_replies and last_reply_time for the relevant
           conversation.
     """

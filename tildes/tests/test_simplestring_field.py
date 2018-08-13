@@ -13,8 +13,8 @@ class SimpleStringTestSchema(Schema):
 def process_string(string):
     """Deserialize a string with the field and return the "final" version.
 
-    This also works for testing validation since .load() will raise a
-    ValidationError if an invalid string is attempted.
+    This also works for testing validation since .load() will raise a ValidationError if
+    an invalid string is attempted.
     """
     schema = SimpleStringTestSchema(strict=True)
     result = schema.load({"subject": string})

@@ -28,9 +28,8 @@ def rate_limit_view(action_name: str) -> Callable:
     Needs to be used with the name of the rate-limited action, such as:
     @rate_limit_view('register')
 
-    If the ratelimit check comes back with the action being blocked, a 429
-    response with appropriate headers will be raised instead of calling the
-    decorated view.
+    If the ratelimit check comes back with the action being blocked, a 429 response with
+    appropriate headers will be raised instead of calling the decorated view.
     """
 
     def decorator(func: Callable) -> Callable:
@@ -51,10 +50,9 @@ def rate_limit_view(action_name: str) -> Callable:
 def not_logged_in(func: Callable) -> Callable:
     """Decorate a view function to prevent access by logged-in users.
 
-    If a logged-in user attempts to access a view decorated by this function,
-    they will be redirected to the home page instead. This is useful for views
-    such as the login page, registration page, etc. which only logged-out users
-    should be accessing.
+    If a logged-in user attempts to access a view decorated by this function, they will
+    be redirected to the home page instead. This is useful for views such as the login
+    page, registration page, etc. which only logged-out users should be accessing.
     """
 
     def wrapper(request: Request, **kwargs: Any) -> Any:

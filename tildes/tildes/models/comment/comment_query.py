@@ -15,9 +15,8 @@ class CommentQuery(PaginatedQuery):
     def __init__(self, request: Request) -> None:
         """Initialize a CommentQuery for the request.
 
-        If the user is logged in, additional user-specific data will be fetched
-        along with the comments. For the moment, this is whether the user has
-        voted on them.
+        If the user is logged in, additional user-specific data will be fetched along
+        with the comments. For the moment, this is whether the user has voted on them.
         """
         super().__init__(Comment, request)
 

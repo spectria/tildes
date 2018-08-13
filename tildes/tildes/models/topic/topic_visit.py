@@ -16,16 +16,16 @@ from .topic import Topic
 class TopicVisit(DatabaseModel):
     """Model for a user's visit to a topic.
 
-    New visits should not be created through __init__(), but by executing the
-    statement returned by the `generate_insert_statement` method. This will
-    take advantage of postgresql's ability to update any existing visit.
+    New visits should not be created through __init__(), but by executing the statement
+    returned by the `generate_insert_statement` method. This will take advantage of
+    postgresql's ability to update any existing visit.
 
     Trigger behavior:
       Incoming:
-        - num_comments will be incremented for the author's topic visit when
-          they post a comment in that topic.
-        - num_comments will be decremented when a comment is deleted, for all
-          visits to the topic that were after it was posted.
+        - num_comments will be incremented for the author's topic visit when they post a
+          comment in that topic.
+        - num_comments will be decremented when a comment is deleted, for all visits to
+          the topic that were after it was posted.
     """
 
     __tablename__ = "topic_visits"

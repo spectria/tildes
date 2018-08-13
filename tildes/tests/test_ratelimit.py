@@ -104,8 +104,8 @@ def test_time_until_retry(redis):
     period = timedelta(seconds=60)
     limit = 2
 
-    # create an action with no burst allowed, which will force the actions to
-    # be spaced "evenly" across the limit
+    # create an action with no burst allowed, which will force the actions to be spaced
+    # "evenly" across the limit
     action = RateLimitedAction(
         "test", period=period, limit=limit, max_burst=1, redis=redis
     )

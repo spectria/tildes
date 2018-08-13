@@ -22,6 +22,6 @@ def is_breached_password(password: str) -> bool:
             redis.execute_command("BF.EXISTS", BREACHED_PASSWORDS_BF_KEY, hashed)
         )
     except (ConnectionError, ResponseError):
-        # server isn't running, bloom filter doesn't exist or the key is a
-        # different data type
+        # server isn't running, bloom filter doesn't exist or the key is a different
+        # data type
         return False

@@ -74,9 +74,8 @@ class Log(DatabaseModel, BaseLog):
     ) -> None:
         """Create a new log entry.
 
-        User and IP address info is extracted from the Request object.
-        `info` is an optional dict of arbitrary data that will be stored in
-        JSON form.
+        User and IP address info is extracted from the Request object. `info` is an
+        optional dict of arbitrary data that will be stored in JSON form.
         """
         self.user = request.user
         self.event_type = event_type

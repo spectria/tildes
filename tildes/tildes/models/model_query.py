@@ -30,8 +30,8 @@ class ModelQuery(Query):
     def __iter__(self) -> Iterator[ModelType]:
         """Iterate over the (processed) results of the query.
 
-        SQLAlchemy goes through __iter__ to execute the query and return the
-        results, so adding processing here should cover all the possibilities.
+        SQLAlchemy goes through __iter__ to execute the query and return the results, so
+        adding processing here should cover all the possibilities.
         """
         results = super().__iter__()
         return iter([self._process_result(result) for result in results])
@@ -44,10 +44,10 @@ class ModelQuery(Query):
         """Finalize the query before it's executed."""
         # pylint: disable=protected-access
 
-        # Assertions are disabled to allow these functions to add more filters
-        # even though .limit() or .offset() may have already been called. This
-        # is potentially dangerous, but should be fine with the existing
-        # straightforward usage patterns.
+        # Assertions are disabled to allow these functions to add more filters even
+        # though .limit() or .offset() may have already been called. This is potentially
+        # dangerous, but should be fine with the existing straightforward usage
+        # patterns.
         return (
             self.enable_assertions(False)
             ._attach_extra_data()
@@ -58,9 +58,9 @@ class ModelQuery(Query):
     def _before_compile_listener(self) -> "ModelQuery":
         """Do any final adjustments to the query before it's compiled.
 
-        Note that this method cannot be overridden by subclasses because of
-        the way it is subscribed to the event. Subclasses should override the
-        _finalize() method instead if necessary.
+        Note that this method cannot be overridden by subclasses because of the way it
+        is subscribed to the event. Subclasses should override the _finalize() method
+        instead if necessary.
         """
         return self._finalize()
 
@@ -81,13 +81,13 @@ class ModelQuery(Query):
     def lock_based_on_request_method(self) -> "ModelQuery":
         """Lock the rows if request method implies it's needed (generative).
 
-        Applying this function to a query will cause the database to acquire
-        a row-level FOR UPDATE lock on any rows the query retrieves. This is
-        only done if the request method is DELETE, PATCH, or PUT, which all
-        imply that the item(s) being fetched are going to be modified.
+        Applying this function to a query will cause the database to acquire a row-level
+        FOR UPDATE lock on any rows the query retrieves. This is only done if the
+        request method is DELETE, PATCH, or PUT, which all imply that the item(s) being
+        fetched are going to be modified.
 
-        Note that POST is specifically not included, because the item being
-        POSTed to is not usually modified in a "dangerous" way as a result.
+        Note that POST is specifically not included, because the item being POSTed to is
+        not usually modified in a "dangerous" way as a result.
         """
         if self.request.method in {"DELETE", "PATCH", "PUT"}:
             return self.with_for_update(of=self.model_cls)
@@ -109,8 +109,8 @@ class ModelQuery(Query):
     def join_all_relationships(self) -> "ModelQuery":
         """Eagerly join all lazy relationships (generative).
 
-        This is useful for being able to load an item "fully" in a single
-        query and avoid needing to make additional queries for related items.
+        This is useful for being able to load an item "fully" in a single query and
+        avoid needing to make additional queries for related items.
         """
         # pylint: disable=no-member
         self = self.options(Load(self.model_cls).joinedload("*"))
@@ -129,8 +129,8 @@ class ModelQuery(Query):
         return result
 
 
-# add a listener so the _finalize() function will be called automatically just
-# before the query executes
+# add a listener so the _finalize() function will be called automatically just before
+# the query executes
 event.listen(
     ModelQuery,
     "before_compile",

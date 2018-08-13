@@ -17,11 +17,10 @@ def id_to_id36(id_val: int) -> str:
     # the "alphabet" of our ID36s - 0-9 followed by a-z
     alphabet = string.digits + string.ascii_lowercase
 
-    # Repeatedly use divmod() on the value, which returns the quotient and
-    # remainder of each integer division - divmod(a, b) == (a // b, a % b).
-    # The remainder of each division works as an index into the alphabet, and
-    # doing this repeatedly will build up our ID36 string in reverse order
-    # (with the least-significant "digit" first).
+    # Repeatedly use divmod() on the value, which returns the quotient and remainder of
+    # each integer division - divmod(a, b) == (a // b, a % b). The remainder of each
+    # division works as an index into the alphabet, and doing this repeatedly will build
+    # up our ID36 string in reverse order (with the least-significant "digit" first).
     quotient, index = divmod(id_val, 36)
     while quotient != 0:
         reversed_chars.append(alphabet[index])

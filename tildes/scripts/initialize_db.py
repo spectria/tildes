@@ -24,8 +24,8 @@ def initialize_db(config_path: str, alembic_config_path: Optional[str] = None) -
 
     run_sql_scripts_in_dir("sql/init/", engine)
 
-    # if an Alembic config file wasn't specified, assume it's alembic.ini in
-    # the same directory
+    # if an Alembic config file wasn't specified, assume it's alembic.ini in the same
+    # directory
     if not alembic_config_path:
         path = os.path.split(config_path)[0]
         alembic_config_path = os.path.join(path, "alembic.ini")

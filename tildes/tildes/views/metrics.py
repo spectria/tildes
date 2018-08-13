@@ -13,10 +13,10 @@ def get_metrics(request: Request) -> str:
     multiprocess.MultiProcessCollector(registry)
     data = generate_latest(registry)
 
-    # When Prometheus accesses this page it will always create a new session.
-    # This session is useless and will never be used again, so we can just
-    # invalidate it to cause it to be deleted from storage. It would be even
-    # better to find a way to not create it in the first place.
+    # When Prometheus accesses this page it will always create a new session.  This
+    # session is useless and will never be used again, so we can just invalidate it to
+    # cause it to be deleted from storage. It would be even better to find a way to not
+    # create it in the first place.
     request.session.invalidate()
 
     return data.decode("utf-8")

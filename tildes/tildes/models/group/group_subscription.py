@@ -17,8 +17,8 @@ class GroupSubscription(DatabaseModel):
 
     Trigger behavior:
       Outgoing:
-        - Inserting or deleting a row will increment or decrement the
-          num_subscriptions column for the relevant group.
+        - Inserting or deleting a row will increment or decrement the num_subscriptions
+          column for the relevant group.
     """
 
     __tablename__ = "group_subscriptions"

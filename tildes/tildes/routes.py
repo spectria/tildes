@@ -149,9 +149,9 @@ def add_intercooler_routes(config: Configurator) -> None:
 class LoggedInFactory:
     """Simple class to use as `factory` to restrict routes to logged-in users.
 
-    This class can be used when a route should only be accessible to logged-in
-    users but doesn't already have another factory that would handle that by
-    checking access to a specific resource (such as a topic or message).
+    This class can be used when a route should only be accessible to logged-in users but
+    doesn't already have another factory that would handle that by checking access to a
+    specific resource (such as a topic or message).
     """
 
     __acl__ = ((Allow, Authenticated, "view"),)

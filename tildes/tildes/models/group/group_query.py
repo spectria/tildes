@@ -15,9 +15,8 @@ class GroupQuery(ModelQuery):
     def __init__(self, request: Request) -> None:
         """Initialize a GroupQuery for the request.
 
-        If the user is logged in, additional user-specific data will be fetched
-        along with the groups. For the moment, this is whether the user is
-        subscribed to them.
+        If the user is logged in, additional user-specific data will be fetched along
+        with the groups. For the moment, this is whether the user is subscribed to them.
         """
         super().__init__(Group, request)
 

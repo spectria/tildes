@@ -20,9 +20,9 @@ def _get_user_recent_activity(
 ) -> List[Union[Comment, Topic]]:
     page_size = 20
 
-    # Since we don't know how many comments or topics will be needed to make
-    # up a page, we'll fetch the full page size of both types, merge them,
-    # and then trim down to the size afterwards
+    # Since we don't know how many comments or topics will be needed to make up a page,
+    # we'll fetch the full page size of both types, merge them, and then trim down to
+    # the size afterwards
     query = (
         request.query(Comment)
         .filter(Comment.user == user)

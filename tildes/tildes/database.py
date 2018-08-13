@@ -56,20 +56,18 @@ def includeme(config: Configurator) -> None:
 
     Currently adds:
 
-    * request.db_session - the db session for the current request, managed by
-      pyramid_tm.
-    * request.query() - a factory method that will return a ModelQuery or
-      subclass for querying the model class supplied. This will generally be
-      used generatively, similar to standard SQLALchemy session.query(...).
-    * request.obtain_lock() - obtains a transaction-level advisory lock from
-      PostgreSQL.
+    * request.db_session - db session for the current request, managed by pyramid_tm.
+    * request.query() - a factory method that will return a ModelQuery or subclass for
+      querying the model class supplied. This will generally be used generatively,
+      similar to standard SQLALchemy session.query(...).
+    * request.obtain_lock() - obtains a transaction-level advisory lock from PostgreSQL.
     """
     settings = config.get_settings()
 
-    # Enable pyramid_tm's default_commit_veto behavior, which will abort the
-    # transaction if the response code starts with 4 or 5. The main benefit of
-    # this is to avoid aborting on exceptions that don't actually indicate a
-    # problem, such as a HTTPFound 302 redirect.
+    # Enable pyramid_tm's default_commit_veto behavior, which will abort the transaction
+    # if the response code starts with 4 or 5. The main benefit of this is to avoid
+    # aborting on exceptions that don't actually indicate a problem, such as a HTTPFound
+    # 302 redirect.
     settings["tm.commit_veto"] = "pyramid_tm.default_commit_veto"
 
     config.include("pyramid_tm")

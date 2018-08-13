@@ -1,7 +1,7 @@
 """Contains Prometheus metric objects and functions for instrumentation."""
 
-# The prometheus_client classes work in a pretty crazy way, need to disable
-# these pylint checks to avoid errors
+# The prometheus_client classes work in a pretty crazy way, need to disable these pylint
+# checks to avoid errors
 # pylint: disable=no-value-for-parameter,redundant-keyword-arg
 
 from typing import Callable

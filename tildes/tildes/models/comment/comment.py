@@ -29,23 +29,23 @@ class Comment(DatabaseModel):
 
     Trigger behavior:
       Incoming:
-        - num_votes will be incremented and decremented by insertions and
-          deletions in comment_votes.
+        - num_votes will be incremented and decremented by insertions and deletions in
+          comment_votes.
       Outgoing:
-        - Inserting or deleting rows, or updating is_deleted/is_removed to
-          change visibility will increment or decrement num_comments
-          accordingly on the relevant topic.
-        - Inserting a row will increment num_comments on any topic_visit rows
-          for the comment's author and the relevant topic.
-        - Inserting a new comment or updating is_deleted or is_removed will
-          update last_activity_time on the relevant topic.
+        - Inserting or deleting rows, or updating is_deleted/is_removed to change
+          visibility will increment or decrement num_comments accordingly on the
+          relevant topic.
+        - Inserting a row will increment num_comments on any topic_visit rows for the
+          comment's author and the relevant topic.
+        - Inserting a new comment or updating is_deleted or is_removed will update
+          last_activity_time on the relevant topic.
         - Setting is_deleted or is_removed to true will delete any rows in
           comment_notifications related to the comment.
-        - Changing is_deleted or is_removed will adjust num_comments on all
-          topic_visit rows for the relevant topic, where the visit_time was
-          after the time the comment was originally posted.
-        - Inserting a row or updating markdown will send a rabbitmq message
-          for "comment.created" or "comment.edited" respectively.
+        - Changing is_deleted or is_removed will adjust num_comments on all topic_visit
+          rows for the relevant topic, where the visit_time was after the time the
+          comment was originally posted.
+        - Inserting a row or updating markdown will send a rabbitmq message for
+          "comment.created" or "comment.edited" respectively.
       Internal:
         - deleted_time will be set or unset when is_deleted is changed
         - removed_time will be set or unset when is_removed is changed

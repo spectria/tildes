@@ -14,8 +14,8 @@ class CommentTree:
 
     The Comment objects held by this class have additional attributes added:
         - `replies`: the list of all immediate children to that comment
-        - `has_visible_descendant`: whether the comment has any visible
-            descendants (if not, it can be pruned from the tree)
+        - `has_visible_descendant`: whether the comment has any visible descendants (if
+          not, it can be pruned from the tree)
     """
 
     def __init__(self, comments: Sequence[Comment], sort: CommentSortOption) -> None:
@@ -23,8 +23,8 @@ class CommentTree:
         self.tree: List[Comment] = []
         self.sort = sort
 
-        # sort the comments by date, since replies will always be posted later
-        # this will ensure that parent comments are always processed first
+        # sort the comments by date, since replies will always be posted later this will
+        # ensure that parent comments are always processed first
         self.comments = sorted(comments, key=lambda c: c.created_time)
 
         # if there aren't any comments, we can just bail out here
@@ -33,11 +33,10 @@ class CommentTree:
 
         self._build_tree()
 
-        # The method of building the tree already sorts it by posting time, so
-        # there's no need to sort again if that's the desired sorting. Note
-        # also that because _sort_tree() uses sorted() which is a stable sort,
-        # this means that the "secondary sort" will always be by posting time
-        # as well.
+        # The method of building the tree already sorts it by posting time, so there's
+        # no need to sort again if that's the desired sorting. Note also that because
+        # _sort_tree() uses sorted() which is a stable sort, this means that the
+        # "secondary sort" will always be by posting time as well.
         if sort != CommentSortOption.POSTED:
             with self._sorting_histogram().time():
                 self.tree = self._sort_tree(self.tree, self.sort)
@@ -75,9 +74,9 @@ class CommentTree:
     def _sort_tree(tree: List[Comment], sort: CommentSortOption) -> List[Comment]:
         """Sort the tree by the desired ordering (recursively).
 
-        Because Python's sorted() function is stable, the ordering of any
-        comments that compare equal on the sorting method will be the same as
-        the order that they were originally in when passed to this function.
+        Because Python's sorted() function is stable, the ordering of any comments that
+        compare equal on the sorting method will be the same as the order that they were
+        originally in when passed to this function.
         """
         if sort == CommentSortOption.NEWEST:
             tree = sorted(tree, key=lambda c: c.created_time, reverse=True)

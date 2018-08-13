@@ -21,10 +21,10 @@ class TopicQuery(PaginatedQuery):
     def __init__(self, request: Request) -> None:
         """Initialize a TopicQuery for the request.
 
-        If the user is logged in, additional user-specific data will be fetched
-        along with the topics. For the moment, this is whether the user has
-        voted on the topics, and data related to their last visit - what time
-        they last visited, and how many new comments have been posted since.
+        If the user is logged in, additional user-specific data will be fetched along
+        with the topics. For the moment, this is whether the user has voted on the
+        topics, and data related to their last visit - what time they last visited, and
+        how many new comments have been posted since.
         """
         super().__init__(Topic, request)
 
@@ -118,9 +118,9 @@ class TopicQuery(PaginatedQuery):
 
     def inside_time_period(self, period: SimpleHoursPeriod) -> "TopicQuery":
         """Restrict the topics to inside a time period (generative)."""
-        # if the time period is too long, this will crash by creating a
-        # datetime outside the valid range - catch that and just don't filter
-        # by time period at all if the range is that large
+        # if the time period is too long, this will crash by creating a datetime outside
+        # the valid range - catch that and just don't filter by time period at all if
+        # the range is that large
         try:
             start_time = utc_now() - period.timedelta
         except OverflowError:
@@ -130,9 +130,9 @@ class TopicQuery(PaginatedQuery):
 
     def has_tag(self, tag: Ltree) -> "TopicQuery":
         """Restrict the topics to ones with a specific tag (generative)."""
-        # casting tag to string really shouldn't be necessary, but some kind of
-        # strange interaction seems to be happening with the ArrayOfLtree
-        # class, this will need some investigation
+        # casting tag to string really shouldn't be necessary, but some kind of strange
+        # interaction seems to be happening with the ArrayOfLtree class, this will need
+        # some investigation
         tag = str(tag)
 
         # pylint: disable=protected-access

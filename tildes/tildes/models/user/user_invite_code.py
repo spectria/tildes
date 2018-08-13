@@ -50,8 +50,8 @@ class UserInviteCode(DatabaseModel):
     def __init__(self, user: User) -> None:
         """Create a new (random) invite code owned by the user.
 
-        Note that uniqueness is not confirmed here, so there is the potential
-        to create duplicate codes (which will fail to commit to the database).
+        Note that uniqueness is not confirmed here, so there is the potential to create
+        duplicate codes (which will fail to commit to the database).
         """
         self.user_id = user.user_id
 
@@ -64,8 +64,8 @@ class UserInviteCode(DatabaseModel):
         # codes are stored in uppercase
         code = code.upper()
 
-        # remove any characters that aren't in the code alphabet (allows
-        # dashes, spaces, etc. to be used to make the codes more readable)
+        # remove any characters that aren't in the code alphabet (allows dashes, spaces,
+        # etc. to be used to make the codes more readable)
         code = "".join(letter for letter in code if letter in cls.ALPHABET)
 
         if len(code) > cls.LENGTH:

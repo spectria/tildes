@@ -1,17 +1,15 @@
 """Command-line tools for managing a breached-passwords bloom filter.
 
-This tool will help with creating and updating a bloom filter in Redis (using
-ReBloom: https://github.com/RedisLabsModules/rebloom) to hold hashes for
-passwords that have been revealed through data breaches (to prevent users from
-using these passwords here). The dumps are likely primarily sourced from Troy
-Hunt's "Pwned Passwords" files:
+This tool will help with creating and updating a bloom filter in Redis (using ReBloom:
+https://github.com/RedisLabsModules/rebloom) to hold hashes for passwords that have been
+revealed through data breaches (to prevent users from using these passwords here). The
+dumps are likely primarily sourced from Troy Hunt's "Pwned Passwords" files:
 https://haveibeenpwned.com/Passwords
 
-Specifically, the commands in this tool allow building the bloom filter
-somewhere else, then the RDB file can be transferred to the production server.
-Note that it is expected that a separate redis server instance is running
-solely for holding this bloom filter. Replacing the RDB file will result in all
-other keys being lost.
+Specifically, the commands in this tool allow building the bloom filter somewhere else,
+then the RDB file can be transferred to the production server.  Note that it is expected
+that a separate redis server instance is running solely for holding this bloom filter.
+Replacing the RDB file will result in all other keys being lost.
 
 Expected usage of this tool should look something like:
 
@@ -20,8 +18,8 @@ On the machine building the bloom filter:
     python breached_passwords.py addhashes pwned-passwords-1.0.txt
     python breached_passwords.py addhashes pwned-passwords-update-1.txt
 
-Then the RDB file can simply be transferred to the production server,
-overwriting any previous RDB file.
+Then the RDB file can simply be transferred to the production server, overwriting any
+previous RDB file.
 
 """
 
@@ -90,14 +88,13 @@ def validate_init_error_rate(ctx: Any, param: Any, value: Any) -> float:
 def init(estimate: int, error_rate: float) -> None:
     """Initialize a new bloom filter (destroying any existing one).
 
-    It generally shouldn't be necessary to re-init a new bloom filter very
-    often with this command, only if the previous one was created with too low
-    of an estimate for number of passwords, or to change to a different false
-    positive rate. For choosing an estimate value, according to the ReBloom
-    documentation: "Performance will begin to degrade after adding more items
-    than this number. The actual degradation will depend on how far the limit
-    has been exceeded. Performance will degrade linearly as the number of
-    entries grow exponentially."
+    It generally shouldn't be necessary to re-init a new bloom filter very often with
+    this command, only if the previous one was created with too low of an estimate for
+    number of passwords, or to change to a different false positive rate. For choosing
+    an estimate value, according to the ReBloom documentation: "Performance will begin
+    to degrade after adding more items than this number. The actual degradation will
+    depend on how far the limit has been exceeded. Performance will degrade linearly as
+    the number of entries grow exponentially."
     """
     REDIS.delete(BREACHED_PASSWORDS_BF_KEY)
 
@@ -115,8 +112,8 @@ def init(estimate: int, error_rate: float) -> None:
 def addhashes(filename: str) -> None:
     """Add all hashes from a file to the bloom filter.
 
-    This uses the method of generating commands in Redis protocol and feeding
-    them into an instance of `redis-cli --pipe`, as recommended in
+    This uses the method of generating commands in Redis protocol and feeding them into
+    an instance of `redis-cli --pipe`, as recommended in
     https://redis.io/topics/mass-insert
     """
     # make sure the key exists and is a bloom filter
@@ -146,9 +143,9 @@ def addhashes(filename: str) -> None:
     for count, line in enumerate(open(filename), start=1):
         hashval = line.strip().lower()
 
-        # the Pwned Passwords hash lists now have a frequency count for each
-        # hash, which is separated from the hash with a colon, so we need to
-        # handle that if it's present
+        # the Pwned Passwords hash lists now have a frequency count for each hash, which
+        # is separated from the hash with a colon, so we need to handle that if it's
+        # present
         hashval = hashval.split(":")[0]
 
         command = generate_redis_protocol("BF.ADD", BREACHED_PASSWORDS_BF_KEY, hashval)

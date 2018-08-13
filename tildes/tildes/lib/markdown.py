@@ -79,18 +79,18 @@ HTML_ATTRIBUTE_WHITELIST = {
 }
 PROTOCOL_WHITELIST = ("http", "https")
 
-# Regex that finds ordered list markdown that was probably accidental - ones
-# being initiated by anything except "1."
+# Regex that finds ordered list markdown that was probably accidental - ones being
+# initiated by anything except "1."
 BAD_ORDERED_LIST_REGEX = re.compile(
     r"((?:\A|\n\n)"  # Either the start of the entire text, or a new paragraph
     r"(?!1\.)\d+)"  # A number that isn't "1"
     r"\.\s"  # Followed by a period and a space
 )
 
-# Type alias for the "namespaced attr dict" used inside bleach.linkify
-# callbacks. This looks pretty ridiculous, but it's a dict where the keys are
-# namespaced attr names, like `(None, 'href')`, and there's also a `_text`
-# key for getting the innerText of the <a> tag.
+# Type alias for the "namespaced attr dict" used inside bleach.linkify callbacks. This
+# looks pretty ridiculous, but it's a dict where the keys are namespaced attr names,
+# like `(None, 'href')`, and there's also a `_text` key for getting the innerText of the
+# <a> tag.
 NamespacedAttrDict = Dict[Union[Tuple[Optional[str], str], str], str]  # noqa
 
 
@@ -155,15 +155,14 @@ def preprocess_markdown(markdown: str) -> str:
 def escape_accidental_ordered_lists(markdown: str) -> str:
     """Escape markdown that's probably an accidental ordered list.
 
-    It's a common markdown mistake to accidentally start a numbered list, by
-    beginning a post or paragraph with a number followed by a period. For
-    example, someone might try to write "1975. It was a long time ago.", and
-    the result will be a comment that says "1. It was a long time ago." since
-    that gets parsed into a numbered list.
+    It's a common markdown mistake to accidentally start a numbered list, by beginning a
+    post or paragraph with a number followed by a period. For example, someone might try
+    to write "1975. It was a long time ago.", and the result will be a comment that says
+    "1. It was a long time ago." since that gets parsed into a numbered list.
 
-    This fixes that quirk of markdown by escaping anything that would start a
-    numbered list except for "1. ". This will cause a few other edge cases, but
-    I believe they're less common/important than fixing this common error.
+    This fixes that quirk of markdown by escaping anything that would start a numbered
+    list except for "1. ". This will cause a few other edge cases, but I believe they're
+    less common/important than fixing this common error.
     """
     return BAD_ORDERED_LIST_REGEX.sub(r"\1\\. ", markdown)
 
@@ -205,24 +204,24 @@ def apply_linkification(html: str, skip_tags: Optional[List[str]] = None) -> str
 class LinkifyFilter(Filter):
     """html5lib Filter to convert custom text patterns to links.
 
-    This replaces references to group paths and usernames with links to the
-    relevant pages.
+    This replaces references to group paths and usernames with links to the relevant
+    pages.
 
-    This implementation is based heavily on the linkify implementation from
-    the Bleach library.
+    This implementation is based heavily on the linkify implementation from the Bleach
+    library.
     """
 
-    # Regex that finds probable references to groups. This isn't "perfect",
-    # just a first pass to find likely candidates. The validity of the group
-    # path is checked more carefully later.
-    # Note: currently specifically excludes paths immediately followed by a
-    # tilde, but this may be possible to remove once strikethrough is
-    # implemented (since that's probably what they were trying to do)
+    # Regex that finds probable references to groups. This isn't "perfect", just a first
+    # pass to find likely candidates. The validity of the group path is checked more
+    # carefully later.
+    # Note: currently specifically excludes paths immediately followed by a tilde, but
+    # this may be possible to remove once strikethrough is implemented (since that's
+    # probably what they were trying to do)
     GROUP_REFERENCE_REGEX = re.compile(r"(?<!\w)~([\w.]+)\b(?!~)")
 
-    # Regex that finds probable references to users. As above, this isn't
-    # "perfect" either but works as an initial pass with the validity of
-    # the username checked more carefully later.
+    # Regex that finds probable references to users. As above, this isn't "perfect"
+    # either but works as an initial pass with the validity of the username checked more
+    # carefully later.
     USERNAME_REFERENCE_REGEX = re.compile(r"(?<!\w)(?:/?u/|@)([\w-]+)\b")
 
     def __init__(
@@ -230,8 +229,8 @@ class LinkifyFilter(Filter):
     ) -> None:
         """Initialize a linkification filter to apply to HTML.
 
-        The skip_tags argument can be a list of tag names, and the contents of
-        any of those tags will be excluded from linkification.
+        The skip_tags argument can be a list of tag names, and the contents of any of
+        those tags will be excluded from linkification.
         """
         super().__init__(source)
         self.skip_tags = skip_tags or []
@@ -248,28 +247,27 @@ class LinkifyFilter(Filter):
                 token["type"] in ("StartTag", "EmptyTag")
                 and token["name"] in self.skip_tags
             ):
-                # if this is the start of a tag we want to skip, add it to the
-                # list of skipped tags that we're currently inside
+                # if this is the start of a tag we want to skip, add it to the list of
+                # skipped tags that we're currently inside
                 inside_skipped_tags.append(token["name"])
             elif inside_skipped_tags:
-                # if we're currently inside any skipped tags, the only thing we
-                # want to do is look for all the end tags we need to be able to
-                # finish skipping
+                # if we're currently inside any skipped tags, the only thing we want to
+                # do is look for all the end tags we need to be able to finish skipping
                 if token["type"] == "EndTag":
                     try:
                         inside_skipped_tags.remove(token["name"])
                     except ValueError:
                         pass
             elif token["type"] == "Characters":
-                # this is only reachable if inside_skipped_tags is empty, so
-                # this is a text token not inside a skipped tag - do the actual
-                # linkification replacements
+                # this is only reachable if inside_skipped_tags is empty, so this is a
+                # text token not inside a skipped tag - do the actual linkification
+                # replacements
 
-                # Note: doing the two replacements "iteratively" like this only
-                # works because they are "disjoint" and we know they're not
-                # competing to replace the same text. If more replacements are
-                # added in the future that might conflict with each other, this
-                # will need to be reworked somehow.
+                # Note: doing the two replacements "iteratively" like this only works
+                # because they are "disjoint" and we know they're not competing to
+                # replace the same text. If more replacements are added in the future
+                # that might conflict with each other, this will need to be reworked
+                # somehow.
                 replaced_tokens = self._linkify_tokens(
                     [token],
                     filter_regex=self.GROUP_REFERENCE_REGEX,
@@ -281,13 +279,13 @@ class LinkifyFilter(Filter):
                     linkify_function=self._tokenize_username_match,
                 )
 
-                # yield all the tokens returned from the replacement process
-                # (will be just the original token if nothing was replaced)
+                # yield all the tokens returned from the replacement process (will be
+                # just the original token if nothing was replaced)
                 for new_token in replaced_tokens:
                     yield new_token
 
-                # we either yielded new tokens or the original one already, so
-                # we don't want to fall through and yield the original again
+                # we either yielded new tokens or the original one already, so we don't
+                # want to fall through and yield the original again
                 continue
 
             yield token
@@ -298,11 +296,11 @@ class LinkifyFilter(Filter):
     ) -> List[dict]:
         """Check tokens for text that matches a regex and linkify it.
 
-        The `filter_regex` argument should be a compiled pattern that will be
-        applied to the text in all of the supplied tokens. If any matches are
-        found, they will each be used to call `linkify_function`, which will
-        validate the match and convert it back into tokens (representing an <a>
-        tag if it is valid for linkifying, or just text if not).
+        The `filter_regex` argument should be a compiled pattern that will be applied to
+        the text in all of the supplied tokens. If any matches are found, they will each
+        be used to call `linkify_function`, which will validate the match and convert it
+        back into tokens (representing an <a> tag if it is valid for linkifying, or just
+        text if not).
         """
         new_tokens = []
 
@@ -316,8 +314,8 @@ class LinkifyFilter(Filter):
             current_index = 0
 
             for match in filter_regex.finditer(original_text):
-                # if there were some characters between the previous match and
-                # this one, add a token containing those first
+                # if there were some characters between the previous match and this one,
+                # add a token containing those first
                 if match.start() > current_index:
                     new_tokens.append(
                         {
@@ -333,8 +331,8 @@ class LinkifyFilter(Filter):
                 # move the progress marker up to the end of this match
                 current_index = match.end()
 
-            # if there's still some text left over, add one more token for it
-            # (this will be the entire thing if there weren't any matches)
+            # if there's still some text left over, add one more token for it (this will
+            # be the entire thing if there weren't any matches)
             if current_index < len(original_text):
                 new_tokens.append(
                     {"type": "Characters", "data": original_text[current_index:]}
@@ -345,14 +343,14 @@ class LinkifyFilter(Filter):
     @staticmethod
     def _tokenize_group_match(match: Match) -> List[dict]:
         """Convert a potential group reference into HTML tokens."""
-        # convert the potential group path to lowercase to allow people to use
-        # incorrect casing but still have it link properly
+        # convert the potential group path to lowercase to allow people to use incorrect
+        # casing but still have it link properly
         group_path = match[1].lower()
 
-        # Even though they're technically valid paths, we don't want to linkify
-        # things like "~10" or "~4.5" since that's just going to be someone
-        # using it in the "approximately" sense. So if the path consists of
-        # only numbers and/or periods, we won't linkify it
+        # Even though they're technically valid paths, we don't want to linkify things
+        # like "~10" or "~4.5" since that's just going to be someone using it in the
+        # "approximately" sense. So if the path consists of only numbers and/or periods,
+        # we won't linkify it
         is_numeric = all(char in "0123456789." for char in group_path)
 
         # if it's a valid group path and not totally numeric, convert to <a>

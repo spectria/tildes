@@ -17,8 +17,8 @@ class CommentVote(DatabaseModel):
 
     Trigger behavior:
       Outgoing:
-        - Inserting or deleting a row will increment or decrement the num_votes
-          column for the relevant comment.
+        - Inserting or deleting a row will increment or decrement the num_votes column
+          for the relevant comment.
     """
 
     __tablename__ = "comment_votes"

@@ -16,9 +16,9 @@ USERNAME_MAX_LENGTH = 20
 # Valid username regex, encodes the following:
 #   - must start with a number or letter
 #   - must end with a number or letter
-#   - the middle can contain numbers, letters, underscores and dashes, but no
-#     more than one underscore/dash consecutively (this includes both "_-" and
-#     "-_" sequences being invalid)
+#   - the middle can contain numbers, letters, underscores and dashes, but no more than
+#     one underscore/dash consecutively (this includes both "_-" and "-_" sequences
+#     being invalid)
 # Note: this regex does not contain any length checks, must be done separately
 # fmt: off
 USERNAME_VALID_REGEX = re.compile(
@@ -110,9 +110,9 @@ class UserSchema(Schema):
 def is_valid_username(username: str) -> bool:
     """Return whether the username is valid or not.
 
-    Simple convenience wrapper that uses the schema to validate a username,
-    useful in cases where a simple valid/invalid result is needed without
-    worrying about the specific reason for invalidity.
+    Simple convenience wrapper that uses the schema to validate a username, useful in
+    cases where a simple valid/invalid result is needed without worrying about the
+    specific reason for invalidity.
     """
     schema = UserSchema(partial=True)
     try:

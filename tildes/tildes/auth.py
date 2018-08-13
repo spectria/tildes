@@ -15,10 +15,10 @@ from tildes.models.user import User
 class DefaultRootFactory:
     """Default root factory to grant everyone 'view' permission by default.
 
-    Note that this will only be applied in cases where a view does not have a
-    factory specified at all (so request.context doesn't have a meaningful
-    value). Any classes that could be returned by a root factory must have
-    an __acl__ defined, they will not "fall back" to this one.
+    Note that this will only be applied in cases where a view does not have a factory
+    specified at all (so request.context doesn't have a meaningful value). Any classes
+    that could be returned by a root factory must have an __acl__ defined, they will not
+    "fall back" to this one.
     """
 
     __acl__ = ((Allow, Everyone, "view"),)
@@ -42,8 +42,8 @@ def get_authenticated_user(request: Request) -> Optional[User]:
 def auth_callback(user_id: int, request: Request) -> Optional[Sequence[str]]:
     """Return authorization principals for a user_id from the session.
 
-    This is a callback function needed by SessionAuthenticationPolicy. It
-    should return None if the user_id does not exist (such as a deleted user).
+    This is a callback function needed by SessionAuthenticationPolicy. It should return
+    None if the user_id does not exist (such as a deleted user).
     """
     if not request.user:
         return None
@@ -69,14 +69,14 @@ def includeme(config: Configurator) -> None:
     # make all views require "view" permission unless specifically overridden
     config.set_default_permission("view")
 
-    # replace the default root factory with a custom one to more easily support
-    # the default permission
+    # replace the default root factory with a custom one to more easily support the
+    # default permission
     config.set_root_factory(DefaultRootFactory)
 
-    # Set the authorization policy to a custom one that always returns a
-    # "denied" result if the user isn't logged in. When overall site access is
-    # no longer being restricted, the AuthorizedOnlyPolicy class can just be
-    # replaced with the standard ACLAuthorizationPolicy
+    # Set the authorization policy to a custom one that always returns a "denied" result
+    # if the user isn't logged in. When overall site access is no longer being
+    # restricted, the AuthorizedOnlyPolicy class can just be replaced with the standard
+    # ACLAuthorizationPolicy
     config.set_authorization_policy(AuthorizedOnlyPolicy())
 
     config.set_authentication_policy(

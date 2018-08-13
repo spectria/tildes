@@ -66,9 +66,9 @@ def overall_db_session(pyramid_config):
 
     create_tables(session.connection())
 
-    # SQL init scripts need to be executed "manually" instead of using psql
-    # like the normal database init process does, since the tables only exist
-    # inside this transaction
+    # SQL init scripts need to be executed "manually" instead of using psql like the
+    # normal database init process does, since the tables only exist inside this
+    # transaction
     init_scripts_dir = "sql/init/"
     for root, _, files in os.walk(init_scripts_dir):
         sql_files = [filename for filename in files if filename.endswith(".sql")]
@@ -76,8 +76,8 @@ def overall_db_session(pyramid_config):
             with open(os.path.join(root, sql_file)) as current_file:
                 session.execute(current_file.read())
 
-    # convert the Session to the wrapper class to enforce staying inside
-    # nested transactions in the test functions
+    # convert the Session to the wrapper class to enforce staying inside nested
+    # transactions in the test functions
     session.__class__ = NestedSessionWrapper
 
     yield session
@@ -110,8 +110,8 @@ def db(overall_db_session):
 @fixture(scope="session", autouse=True)
 def overall_redis_session():
     """Create a session-level connection to a temporary redis server."""
-    # list of redis modules that need to be loaded (would be much nicer to do
-    # this automatically somehow, maybe reading from the real redis.conf?)
+    # list of redis modules that need to be loaded (would be much nicer to do this
+    # automatically somehow, maybe reading from the real redis.conf?)
     redis_modules = ["/opt/redis-cell/libredis_cell.so"]
 
     with RedisServer() as temp_redis_server:
@@ -134,9 +134,9 @@ def redis(overall_redis_session):
 @fixture(scope="session", autouse=True)
 def session_user(sdb):
     """Create a user named 'SessionUser' in the db for test session."""
-    # note that some tests may depend on this username/password having these
-    # specific values, so make sure to search for and update those tests if you
-    # change the username or password for any reason
+    # note that some tests may depend on this username/password having these specific
+    # values, so make sure to search for and update those tests if you change the
+    # username or password for any reason
     user = User("SessionUser", "session user password")
     sdb.add(user)
     sdb.commit()
@@ -148,8 +148,8 @@ def session_user(sdb):
 def session_user2(sdb):
     """Create a second user named 'OtherUser' in the db for test session.
 
-    This is useful for cases where two different users are needed, such as
-    when testing private messages.
+    This is useful for cases where two different users are needed, such as when testing
+    private messages.
     """
     user = User("OtherUser", "other user password")
     sdb.add(user)
@@ -173,8 +173,8 @@ def base_app(overall_redis_session, sdb):
     """Configure a base WSGI app that webtest can create TestApps based on."""
     testing_app = get_app("development.ini")
 
-    # replace the redis connection used by the redis-sessions library with a
-    # connection to the temporary server for this test session
+    # replace the redis connection used by the redis-sessions library with a connection
+    # to the temporary server for this test session
     testing_app.app.registry._redis_sessions = overall_redis_session
 
     def redis_factory(request):
@@ -183,8 +183,8 @@ def base_app(overall_redis_session, sdb):
 
     testing_app.app.registry["redis_connection_factory"] = redis_factory
 
-    # replace the session factory function with one that will return the
-    # testing db session (inside a nested transaction)
+    # replace the session factory function with one that will return the testing db
+    # session (inside a nested transaction)
     def session_factory():
         return sdb
 
@@ -196,8 +196,8 @@ def base_app(overall_redis_session, sdb):
 @fixture(scope="session")
 def webtest(base_app):
     """Create a webtest TestApp and log in as the SessionUser account in it."""
-    # create the TestApp - note that specifying wsgi.url_scheme is necessary
-    # so that the secure cookies from the session library will work
+    # create the TestApp - note that specifying wsgi.url_scheme is necessary so that the
+    # secure cookies from the session library will work
     app = TestApp(
         base_app, extra_environ={"wsgi.url_scheme": "https"}, cookiejar=CookieJar()
     )

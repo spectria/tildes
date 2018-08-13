@@ -24,8 +24,8 @@ RETENTION_PERIOD = timedelta(days=30)
 def clean_all_data(config_path: str) -> None:
     """Clean all private/deleted data.
 
-    This should generally be the only function called in most cases, and will
-    initiate the full cleanup process.
+    This should generally be the only function called in most cases, and will initiate
+    the full cleanup process.
     """
     db_session = get_session_from_config(config_path)
 
@@ -54,8 +54,8 @@ class DataCleaner:
     def delete_old_log_entries(self) -> None:
         """Delete all log entries older than the retention cutoff.
 
-        Note that this will also delete all entries from the child tables that
-        inherit from Log (LogTopics, etc.).
+        Note that this will also delete all entries from the child tables that inherit
+        from Log (LogTopics, etc.).
         """
         deleted = (
             self.db_session.query(Log)
@@ -78,8 +78,8 @@ class DataCleaner:
     def clean_old_deleted_comments(self) -> None:
         """Clean the data of old deleted comments.
 
-        Change the comment's author to the "unknown user" (id 0), and delete
-        its contents.
+        Change the comment's author to the "unknown user" (id 0), and delete its
+        contents.
         """
         updated = (
             self.db_session.query(Comment)
@@ -98,8 +98,8 @@ class DataCleaner:
     def clean_old_deleted_topics(self) -> None:
         """Clean the data of old deleted topics.
 
-        Change the topic's author to the "unknown user" (id 0), and delete its
-        title, contents, tags, and metadata.
+        Change the topic's author to the "unknown user" (id 0), and delete its title,
+        contents, tags, and metadata.
         """
         updated = (
             self.db_session.query(Topic)

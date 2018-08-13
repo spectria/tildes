@@ -47,8 +47,8 @@ def post_group_topics(
             group=request.context, author=request.user, title=title, link=link
         )
 
-        # if they specified both a link and markdown, use the markdown to post
-        # an initial comment on the topic
+        # if they specified both a link and markdown, use the markdown to post an
+        # initial comment on the topic
         if markdown:
             new_comment = Comment(
                 topic=new_topic, author=request.user, markdown=markdown
@@ -139,8 +139,8 @@ def get_group_topics(
 
     period_options = [SimpleHoursPeriod(hours) for hours in (1, 12, 24, 72)]
 
-    # add the current period to the bottom of the dropdown if it's not one of
-    # the "standard" ones
+    # add the current period to the bottom of the dropdown if it's not one of the
+    # "standard" ones
     if period and period not in period_options:
         period_options.append(period)
 
@@ -177,8 +177,8 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
     """View a single topic."""
     topic = request.context
 
-    # deleted and removed comments need to be included since they're necessary
-    # for building the tree if they have replies
+    # deleted and removed comments need to be included since they're necessary for
+    # building the tree if they have replies
     comments = (
         request.query(Comment)
         .include_deleted()
@@ -263,8 +263,8 @@ def _get_default_settings(request: Request, order: Any) -> DefaultSettings:
     else:
         default_order = TopicSortOption.ACTIVITY
 
-    # the default period depends on what the order is, so we need to see if
-    # we're going to end up using the default order here as well
+    # the default period depends on what the order is, so we need to see if we're going
+    # to end up using the default order here as well
     if order is missing:
         order = default_order
 
@@ -275,8 +275,8 @@ def _get_default_settings(request: Request, order: Any) -> DefaultSettings:
         user_default = request.user.home_default_period
         default_period = ShortTimePeriod().deserialize(user_default)
     else:
-        # Overall default periods, if the user doesn't have either a
-        # group-specific or a home default set up:
+        # Overall default periods, if the user doesn't have either a group-specific or a
+        # home default set up:
         #   * "all time" if sorting by new
         #   * "all time" if sorting by activity and inside a group
         #   * "3 days" if sorting by activity and on home page
