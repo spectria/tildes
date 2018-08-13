@@ -338,3 +338,11 @@ def test_username_ref_inside_pre_ignored():
     processed = convert_markdown_to_safe_html(markdown)
 
     assert "<a" not in processed
+
+
+def test_group_ref_inside_code_ignored():
+    """Ensure a group reference inside a <code> tag doesn't get linked."""
+    markdown = "Strikethrough works like: `this ~should not~ work`."
+    processed = convert_markdown_to_safe_html(markdown)
+
+    assert "<a" not in processed
