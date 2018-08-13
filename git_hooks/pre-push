@@ -4,5 +4,6 @@
 
 vagrant ssh -c ". activate \
     && echo 'Checking mypy type annotations...' && mypy . \
+    && echo 'Checking if Black would reformat any code...' && black --check . \
     && echo -n 'Running tests: ' && pytest -q \
-    && echo 'Checking code style (takes a while)...' && pylama"
+    && echo 'Checking code style fully (takes a while)...' && pylama"
