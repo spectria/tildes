@@ -14,11 +14,7 @@ def get_resource(request: Request, base_query: ModelQuery) -> DatabaseModel:
     if not request.user:
         raise HTTPForbidden
 
-    query = (
-        base_query
-        .lock_based_on_request_method()
-        .join_all_relationships()
-    )
+    query = base_query.lock_based_on_request_method().join_all_relationships()
 
     if not request.is_safe_method:
         query = query.undefer_all_columns()

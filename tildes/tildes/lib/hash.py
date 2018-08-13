@@ -11,7 +11,8 @@ ARGON2_TIME_COST = 4
 ARGON2_MEMORY_COST = 8092
 
 ARGON2_HASHER = PasswordHasher(
-    time_cost=ARGON2_TIME_COST, memory_cost=ARGON2_MEMORY_COST)
+    time_cost=ARGON2_TIME_COST, memory_cost=ARGON2_MEMORY_COST
+)
 
 
 def hash_string(string: str) -> str:

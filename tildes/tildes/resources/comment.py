@@ -10,10 +10,7 @@ from tildes.resources import get_resource
 from tildes.schemas.comment import CommentSchema
 
 
-@use_kwargs(
-    CommentSchema(only=('comment_id36',)),
-    locations=('matchdict',),
-)
+@use_kwargs(CommentSchema(only=("comment_id36",)), locations=("matchdict",))
 def comment_by_id36(request: Request, comment_id36: str) -> Comment:
     """Get a comment specified by {comment_id36} in the route (or 404)."""
     query = (
@@ -25,13 +22,9 @@ def comment_by_id36(request: Request, comment_id36: str) -> Comment:
     return get_resource(request, query)
 
 
-@use_kwargs(
-    CommentSchema(only=('comment_id36',)),
-    locations=('matchdict',),
-)
+@use_kwargs(CommentSchema(only=("comment_id36",)), locations=("matchdict",))
 def notification_by_comment_id36(
-        request: Request,
-        comment_id36: str,
+    request: Request, comment_id36: str
 ) -> CommentNotification:
     """Get a comment notification specified by {comment_id36} in the route.
 
@@ -43,8 +36,7 @@ def notification_by_comment_id36(
 
     comment_id = id36_to_id(comment_id36)
     query = request.query(CommentNotification).filter_by(
-        user=request.user,
-        comment_id=comment_id,
+        user=request.user, comment_id=comment_id
     )
 
     return get_resource(request, query)

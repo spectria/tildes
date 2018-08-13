@@ -20,9 +20,7 @@ from tildes.views.decorators import not_logged_in, rate_limit_view
 
 
 @view_config(
-    route_name='register',
-    renderer='register.jinja2',
-    permission=NO_PERMISSION_REQUIRED,
+    route_name="register", renderer="register.jinja2", permission=NO_PERMISSION_REQUIRED
 )
 @not_logged_in
 def get_register(request: Request) -> dict:
@@ -40,38 +38,34 @@ def user_schema_check_breaches(request: Request) -> UserSchema:
     """
     # pylint: disable=unused-argument
     return UserSchema(
-        only=('username', 'password'),
-        context={'check_breached_passwords': True},
+        only=("username", "password"), context={"check_breached_passwords": True}
     )
 
 
 @view_config(
-    route_name='register',
-    request_method='POST',
-    permission=NO_PERMISSION_REQUIRED,
+    route_name="register", request_method="POST", permission=NO_PERMISSION_REQUIRED
 )
 @use_kwargs(user_schema_check_breaches)
-@use_kwargs({
-    'invite_code': String(required=True),
-    'password_confirm': String(required=True),
-})
+@use_kwargs(
+    {"invite_code": String(required=True), "password_confirm": String(required=True)}
+)
 @not_logged_in
-@rate_limit_view('register')
+@rate_limit_view("register")
 def post_register(
-        request: Request,
-        username: str,
-        password: str,
-        password_confirm: str,
-        invite_code: str,
+    request: Request,
+    username: str,
+    password: str,
+    password_confirm: str,
+    invite_code: str,
 ) -> HTTPFound:
     """Process a registration request."""
-    if not request.params.get('accepted_terms'):
+    if not request.params.get("accepted_terms"):
         raise HTTPUnprocessableEntity(
-            'Terms of Use and Privacy Policy must be accepted.')
+            "Terms of Use and Privacy Policy must be accepted."
+        )
 
     if password != password_confirm:
-        raise HTTPUnprocessableEntity(
-            'Password and confirmation do not match.')
+        raise HTTPUnprocessableEntity("Password and confirmation do not match.")
 
     # attempt to fetch and lock the row for the specified invite code (lock
     # prevents concurrent requests from using the same invite code)
@@ -87,8 +81,8 @@ def post_register(
     )
 
     if not code_row:
-        incr_counter('invite_code_failures')
-        raise HTTPUnprocessableEntity('Invalid invite code')
+        incr_counter("invite_code_failures")
+        raise HTTPUnprocessableEntity("Invalid invite code")
 
     # create the user and set inviter to the owner of the invite code
     user = User(username, password)
@@ -99,8 +93,7 @@ def post_register(
     try:
         request.db_session.flush()
     except IntegrityError:
-        raise HTTPUnprocessableEntity(
-            'That username has already been registered.')
+        raise HTTPUnprocessableEntity("That username has already been registered.")
 
     # the flush above will generate the new user's ID, so use that to update
     # the invite code with info about the user that registered with it
@@ -109,13 +102,13 @@ def post_register(
     # subscribe the new user to all groups except ~test
     all_groups = request.query(Group).all()
     for group in all_groups:
-        if group.path == 'test':
+        if group.path == "test":
             continue
         request.db_session.add(GroupSubscription(user, group))
 
     _send_welcome_message(user, request)
 
-    incr_counter('registrations')
+    incr_counter("registrations")
 
     # log the user in to the new account
     remember(request, user.user_id)
@@ -125,28 +118,20 @@ def post_register(
     request.db_session.add(Log(LogEventType.USER_REGISTER, request))
 
     # redirect to the front page
-    raise HTTPFound(location='/')
+    raise HTTPFound(location="/")
 
 
 def _send_welcome_message(recipient: User, request: Request) -> None:
     """Send the welcome message if a sender is configured in the INI."""
-    sender_username = request.registry.settings.get(
-        'tildes.welcome_message_sender')
+    sender_username = request.registry.settings.get("tildes.welcome_message_sender")
     if not sender_username:
         return
 
-    sender = (
-        request.query(User)
-        .filter(User.username == sender_username)
-        .one_or_none()
-    )
+    sender = request.query(User).filter(User.username == sender_username).one_or_none()
     if not sender:
         return
 
     welcome_message = MessageConversation(
-        sender,
-        recipient,
-        WELCOME_MESSAGE_SUBJECT,
-        WELCOME_MESSAGE_TEXT,
+        sender, recipient, WELCOME_MESSAGE_SUBJECT, WELCOME_MESSAGE_TEXT
     )
     request.db_session.add(welcome_message)

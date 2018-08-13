@@ -26,9 +26,7 @@ class TopicMetadataGenerator(PgsqlQueueConsumer):
     def run(self, msg: Message) -> None:
         """Process a delivered message."""
         topic = (
-            self.db_session.query(Topic)
-            .filter_by(topic_id=msg.body['topic_id'])
-            .one()
+            self.db_session.query(Topic).filter_by(topic_id=msg.body["topic_id"]).one()
         )
 
         if topic.is_text_type:
@@ -42,22 +40,19 @@ class TopicMetadataGenerator(PgsqlQueueConsumer):
         html_tree = HTMLParser().parseFragment(topic.rendered_html)
 
         # extract the text from all of the HTML elements
-        extracted_text = ''.join(
-            [element_text for element_text in html_tree.itertext()])
+        extracted_text = "".join(
+            [element_text for element_text in html_tree.itertext()]
+        )
 
         # sanitize unicode, remove leading/trailing whitespace, etc.
         extracted_text = simplify_string(extracted_text)
 
         # create a short excerpt by truncating the simplified string
-        excerpt = truncate_string(
-            extracted_text,
-            length=200,
-            truncate_at_chars=' ',
-        )
+        excerpt = truncate_string(extracted_text, length=200, truncate_at_chars=" ")
 
         topic.content_metadata = {
-            'word_count': word_count(extracted_text),
-            'excerpt': excerpt,
+            "word_count": word_count(extracted_text),
+            "excerpt": excerpt,
         }
 
     def _generate_link_metadata(self, topic: Topic) -> None:
@@ -68,13 +63,11 @@ class TopicMetadataGenerator(PgsqlQueueConsumer):
         parsed_domain = get_domain_from_url(topic.link)
         domain = self.public_suffix_list.get_public_suffix(parsed_domain)
 
-        topic.content_metadata = {
-            'domain': domain,
-        }
+        topic.content_metadata = {"domain": domain}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     TopicMetadataGenerator(
-        queue_name='topic_metadata_generator.q',
-        routing_keys=['topic.created', 'topic.edited'],
+        queue_name="topic_metadata_generator.q",
+        routing_keys=["topic.created", "topic.edited"],
     ).consume_queue()

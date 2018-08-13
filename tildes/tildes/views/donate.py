@@ -11,28 +11,26 @@ from webargs.pyramidparser import use_kwargs
 
 
 @view_config(
-    route_name='donate_stripe',
-    request_method='POST',
-    renderer='donate_stripe.jinja2',
+    route_name="donate_stripe",
+    request_method="POST",
+    renderer="donate_stripe.jinja2",
     permission=NO_PERMISSION_REQUIRED,
     require_csrf=False,
 )
-@use_kwargs({
-    'stripe_token': String(required=True),
-    'donator_email': Email(required=True),
-    'amount': Float(required=True, validate=Range(min=1.0)),
-    'currency': String(required=True, validate=OneOf(('CAD', 'USD'))),
-})
+@use_kwargs(
+    {
+        "stripe_token": String(required=True),
+        "donator_email": Email(required=True),
+        "amount": Float(required=True, validate=Range(min=1.0)),
+        "currency": String(required=True, validate=OneOf(("CAD", "USD"))),
+    }
+)
 def post_donate_stripe(
-        request: Request,
-        stripe_token: str,
-        donator_email: str,
-        amount: int,
-        currency: str,
+    request: Request, stripe_token: str, donator_email: str, amount: int, currency: str
 ) -> dict:
     """Process a Stripe donation."""
     try:
-        stripe.api_key = request.registry.settings['stripe_api_key']
+        stripe.api_key = request.registry.settings["stripe_api_key"]
     except KeyError:
         raise HTTPInternalServerError
 
@@ -40,13 +38,13 @@ def post_donate_stripe(
     try:
         stripe.Charge.create(
             source=stripe_token,
-            amount=int(amount*100),
+            amount=int(amount * 100),
             currency=currency,
             receipt_email=donator_email,
-            description='One-time donation',
-            statement_descriptor='Donation - tildes.net',
+            description="One-time donation",
+            statement_descriptor="Donation - tildes.net",
         )
     except stripe.error.StripeError:
         payment_successful = False
 
-    return {'payment_successful': payment_successful}
+    return {"payment_successful": payment_successful}

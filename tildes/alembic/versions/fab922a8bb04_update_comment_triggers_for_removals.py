@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fab922a8bb04'
-down_revision = 'f1ecbf24c212'
+revision = "fab922a8bb04"
+down_revision = "f1ecbf24c212"
 branch_labels = None
 depends_on = None
 
@@ -19,17 +19,20 @@ depends_on = None
 def upgrade():
     # comment_notifications
     op.execute("DROP TRIGGER delete_comment_notifications_update ON comments")
-    op.execute("""
+    op.execute(
+        """
         CREATE TRIGGER delete_comment_notifications_update
             AFTER UPDATE ON comments
             FOR EACH ROW
             WHEN ((OLD.is_deleted = false AND NEW.is_deleted = true)
                 OR (OLD.is_removed = false AND NEW.is_removed = true))
             EXECUTE PROCEDURE delete_comment_notifications();
-    """)
+    """
+    )
 
     # comments
-    op.execute("""
+    op.execute(
+        """
         CREATE OR REPLACE FUNCTION set_comment_deleted_time() RETURNS TRIGGER AS $$
         BEGIN
             IF (NEW.is_deleted = TRUE) THEN
@@ -41,17 +44,21 @@ def upgrade():
             RETURN NEW;
         END;
         $$ LANGUAGE plpgsql;
-    """)
+    """
+    )
     op.execute("DROP TRIGGER delete_comment_set_deleted_time_update ON comments")
-    op.execute("""
+    op.execute(
+        """
         CREATE TRIGGER delete_comment_set_deleted_time_update
             BEFORE UPDATE ON comments
             FOR EACH ROW
             WHEN (OLD.is_deleted IS DISTINCT FROM NEW.is_deleted)
             EXECUTE PROCEDURE set_comment_deleted_time();
-    """)
+    """
+    )
 
-    op.execute("""
+    op.execute(
+        """
         CREATE OR REPLACE FUNCTION set_comment_removed_time() RETURNS TRIGGER AS $$
         BEGIN
             IF (NEW.is_removed = TRUE) THEN
@@ -63,19 +70,23 @@ def upgrade():
             RETURN NEW;
         END;
         $$ LANGUAGE plpgsql;
-    """)
-    op.execute("""
+    """
+    )
+    op.execute(
+        """
         CREATE TRIGGER remove_comment_set_removed_time_update
             BEFORE UPDATE ON comments
             FOR EACH ROW
             WHEN (OLD.is_removed IS DISTINCT FROM NEW.is_removed)
             EXECUTE PROCEDURE set_comment_removed_time();
-    """)
+    """
+    )
 
     # topic_visits
     op.execute("DROP TRIGGER update_topic_visits_num_comments_update ON comments")
     op.execute("DROP FUNCTION decrement_all_topic_visit_num_comments()")
-    op.execute("""
+    op.execute(
+        """
         CREATE OR REPLACE FUNCTION update_all_topic_visit_num_comments() RETURNS TRIGGER AS $$
         DECLARE
             old_visible BOOLEAN := NOT (OLD.is_deleted OR OLD.is_removed);
@@ -96,18 +107,22 @@ def upgrade():
             RETURN NULL;
         END;
         $$ LANGUAGE plpgsql;
-    """)
-    op.execute("""
+    """
+    )
+    op.execute(
+        """
         CREATE TRIGGER update_topic_visits_num_comments_update
             AFTER UPDATE ON comments
             FOR EACH ROW
             WHEN ((OLD.is_deleted IS DISTINCT FROM NEW.is_deleted)
                 OR (OLD.is_removed IS DISTINCT FROM NEW.is_removed))
             EXECUTE PROCEDURE update_all_topic_visit_num_comments();
-    """)
+    """
+    )
 
     # topics
-    op.execute("""
+    op.execute(
+        """
         CREATE OR REPLACE FUNCTION update_topics_num_comments() RETURNS TRIGGER AS $$
         BEGIN
             IF (TG_OP = 'INSERT') THEN
@@ -140,18 +155,22 @@ def upgrade():
             RETURN NULL;
         END;
         $$ LANGUAGE plpgsql;
-    """)
+    """
+    )
     op.execute("DROP TRIGGER update_topics_num_comments_update ON comments")
-    op.execute("""
+    op.execute(
+        """
         CREATE TRIGGER update_topics_num_comments_update
             AFTER UPDATE ON comments
             FOR EACH ROW
             WHEN ((OLD.is_deleted IS DISTINCT FROM NEW.is_deleted)
                 OR (OLD.is_removed IS DISTINCT FROM NEW.is_removed))
             EXECUTE PROCEDURE update_topics_num_comments();
-    """)
+    """
+    )
 
-    op.execute("""
+    op.execute(
+        """
         CREATE OR REPLACE FUNCTION update_topics_last_activity_time() RETURNS TRIGGER AS $$
         DECLARE
             most_recent_comment RECORD;
@@ -182,31 +201,37 @@ def upgrade():
             RETURN NULL;
         END;
         $$ LANGUAGE plpgsql;
-    """)
+    """
+    )
     op.execute("DROP TRIGGER update_topics_last_activity_time_update ON comments")
-    op.execute("""
+    op.execute(
+        """
         CREATE TRIGGER update_topics_last_activity_time_update
             AFTER UPDATE ON comments
             FOR EACH ROW
             WHEN ((OLD.is_deleted IS DISTINCT FROM NEW.is_deleted)
                 OR (OLD.is_removed IS DISTINCT FROM NEW.is_removed))
             EXECUTE PROCEDURE update_topics_last_activity_time();
-    """)
+    """
+    )
 
 
 def downgrade():
     # comment_notifications
     op.execute("DROP TRIGGER delete_comment_notifications_update ON comments")
-    op.execute("""
+    op.execute(
+        """
         CREATE TRIGGER delete_comment_notifications_update
             AFTER UPDATE ON comments
             FOR EACH ROW
             WHEN (OLD.is_deleted = false AND NEW.is_deleted = true)
             EXECUTE PROCEDURE delete_comment_notifications();
-    """)
+    """
+    )
 
     # comments
-    op.execute("""
+    op.execute(
+        """
         CREATE OR REPLACE FUNCTION set_comment_deleted_time() RETURNS TRIGGER AS $$
         BEGIN
             NEW.deleted_time := current_timestamp;
@@ -214,15 +239,18 @@ def downgrade():
             RETURN NEW;
         END;
         $$ LANGUAGE plpgsql;
-    """)
+    """
+    )
     op.execute("DROP TRIGGER delete_comment_set_deleted_time_update ON comments")
-    op.execute("""
+    op.execute(
+        """
         CREATE TRIGGER delete_comment_set_deleted_time_update
             BEFORE UPDATE ON comments
             FOR EACH ROW
             WHEN (OLD.is_deleted = false AND NEW.is_deleted = true)
             EXECUTE PROCEDURE set_comment_deleted_time();
-    """)
+    """
+    )
 
     op.execute("DROP TRIGGER remove_comment_set_removed_time_update ON comments")
     op.execute("DROP FUNCTION set_comment_removed_time()")
@@ -230,7 +258,8 @@ def downgrade():
     # topic_visits
     op.execute("DROP TRIGGER update_topic_visits_num_comments_update ON comments")
     op.execute("DROP FUNCTION update_all_topic_visit_num_comments()")
-    op.execute("""
+    op.execute(
+        """
         CREATE OR REPLACE FUNCTION decrement_all_topic_visit_num_comments() RETURNS TRIGGER AS $$
         BEGIN
             UPDATE topic_visits
@@ -241,17 +270,21 @@ def downgrade():
             RETURN NULL;
         END;
         $$ LANGUAGE plpgsql;
-    """)
-    op.execute("""
+    """
+    )
+    op.execute(
+        """
         CREATE TRIGGER update_topic_visits_num_comments_update
             AFTER UPDATE ON comments
             FOR EACH ROW
             WHEN (OLD.is_deleted = false AND NEW.is_deleted = true)
             EXECUTE PROCEDURE decrement_all_topic_visit_num_comments();
-    """)
+    """
+    )
 
     # topics
-    op.execute("""
+    op.execute(
+        """
         CREATE OR REPLACE FUNCTION update_topics_num_comments() RETURNS TRIGGER AS $$
         BEGIN
             IF (TG_OP = 'INSERT' AND NEW.is_deleted = FALSE) THEN
@@ -277,17 +310,21 @@ def downgrade():
             RETURN NULL;
         END;
         $$ LANGUAGE plpgsql;
-    """)
+    """
+    )
     op.execute("DROP TRIGGER update_topics_num_comments_update ON comments")
-    op.execute("""
+    op.execute(
+        """
         CREATE TRIGGER update_topics_num_comments_update
             AFTER UPDATE ON comments
             FOR EACH ROW
             WHEN (OLD.is_deleted IS DISTINCT FROM NEW.is_deleted)
             EXECUTE PROCEDURE update_topics_num_comments();
-    """)
+    """
+    )
 
-    op.execute("""
+    op.execute(
+        """
         CREATE OR REPLACE FUNCTION update_topics_last_activity_time() RETURNS TRIGGER AS $$
         DECLARE
             most_recent_comment RECORD;
@@ -317,12 +354,15 @@ def downgrade():
             RETURN NULL;
         END;
         $$ LANGUAGE plpgsql;
-    """)
+    """
+    )
     op.execute("DROP TRIGGER update_topics_last_activity_time_update ON comments")
-    op.execute("""
+    op.execute(
+        """
         CREATE TRIGGER update_topics_last_activity_time_update
             AFTER UPDATE ON comments
             FOR EACH ROW
             WHEN (OLD.is_deleted IS DISTINCT FROM NEW.is_deleted)
             EXECUTE PROCEDURE update_topics_last_activity_time();
-    """)
+    """
+    )

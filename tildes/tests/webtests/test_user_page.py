@@ -6,8 +6,10 @@ def test_loggedout_username_leak(webtest_loggedout, session_user):
     particular username exists or not.
     """
     existing_user = webtest_loggedout.get(
-        '/user/' + session_user.username, expect_errors=True)
+        "/user/" + session_user.username, expect_errors=True
+    )
     nonexistent_user = webtest_loggedout.get(
-        '/user/thisdoesntexist', expect_errors=True)
+        "/user/thisdoesntexist", expect_errors=True
+    )
 
     assert existing_user.status == nonexistent_user.status

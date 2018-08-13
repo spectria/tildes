@@ -16,37 +16,24 @@ from .comment import Comment
 class CommentTag(DatabaseModel):
     """Model for the tags attached to comments by users."""
 
-    __tablename__ = 'comment_tags'
+    __tablename__ = "comment_tags"
 
     comment_id: int = Column(
-        Integer,
-        ForeignKey('comments.comment_id'),
-        nullable=False,
-        primary_key=True,
+        Integer, ForeignKey("comments.comment_id"), nullable=False, primary_key=True
     )
     tag: CommentTagOption = Column(
-        ENUM(CommentTagOption), nullable=False, primary_key=True)
+        ENUM(CommentTagOption), nullable=False, primary_key=True
+    )
     user_id: int = Column(
-        Integer,
-        ForeignKey('users.user_id'),
-        nullable=False,
-        primary_key=True,
+        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     created_time: datetime = Column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text('NOW()'),
+        TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")
     )
 
-    comment: Comment = relationship(
-        Comment, backref=backref('tags', lazy=False))
+    comment: Comment = relationship(Comment, backref=backref("tags", lazy=False))
 
-    def __init__(
-            self,
-            comment: Comment,
-            user: User,
-            tag: CommentTagOption,
-    ) -> None:
+    def __init__(self, comment: Comment, user: User, tag: CommentTagOption) -> None:
         """Add a new tag to a comment."""
         self.comment_id = comment.comment_id
         self.user_id = user.user_id

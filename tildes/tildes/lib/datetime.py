@@ -10,32 +10,32 @@ from ago import human
 class SimpleHoursPeriod:
     """A simple class that represents a time period of hours or days."""
 
-    _SHORT_FORM_REGEX = re.compile(r'\d+[hd]', re.IGNORECASE)
+    _SHORT_FORM_REGEX = re.compile(r"\d+[hd]", re.IGNORECASE)
 
     def __init__(self, hours: int) -> None:
         """Initialize a SimpleHoursPeriod from a number of hours."""
         if hours <= 0:
-            raise ValueError('Period must be at least 1 hour.')
+            raise ValueError("Period must be at least 1 hour.")
 
         self.hours = hours
 
         try:
             self.timedelta = timedelta(hours=hours)
         except OverflowError:
-            raise ValueError('Time period is too large')
+            raise ValueError("Time period is too large")
 
     @classmethod
-    def from_short_form(cls, short_form: str) -> 'SimpleHoursPeriod':
+    def from_short_form(cls, short_form: str) -> "SimpleHoursPeriod":
         """Initialize a period from a "short form" string (e.g. "2h", "4d")."""
         if not cls._SHORT_FORM_REGEX.match(short_form):
-            raise ValueError('Invalid time period')
+            raise ValueError("Invalid time period")
 
         unit = short_form[-1].lower()
         count = int(short_form[:-1])
 
-        if unit == 'h':
+        if unit == "h":
             hours = count
-        elif unit == 'd':
+        elif unit == "d":
             hours = count * 24
 
         return cls(hours=hours)
@@ -47,9 +47,9 @@ class SimpleHoursPeriod:
         for the special case of exactly "1 day", which is replaced with "24
         hours".
         """
-        string = human(self.timedelta, past_tense='{}')
-        if string == '1 day':
-            string = '24 hours'
+        string = human(self.timedelta, past_tense="{}")
+        if string == "1 day":
+            string = "24 hours"
 
         return string
 
@@ -67,9 +67,9 @@ class SimpleHoursPeriod:
         24 hours (except for 24 hours itself).
         """
         if self.hours % 24 == 0 and self.hours != 24:
-            return '{}d'.format(self.hours // 24)
+            return "{}d".format(self.hours // 24)
 
-        return f'{self.hours}h'
+        return f"{self.hours}h"
 
 
 def utc_now() -> datetime:
@@ -93,7 +93,7 @@ def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
     """
     seconds_ago = (utc_now() - target).total_seconds()
     if seconds_ago < 1:
-        return 'a moment ago'
+        return "a moment ago"
 
     # determine whether one or two precision levels is appropriate
     if seconds_ago < 3600:
@@ -103,7 +103,7 @@ def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
         # try a precision=2 version, and check the units it ends up with
         result = human(target, precision=2)
 
-        units = ('year', 'day', 'hour', 'minute', 'second')
+        units = ("year", "day", "hour", "minute", "second")
         unit_indices = [i for (i, unit) in enumerate(units) if unit in result]
 
         # if there was only one unit in it, or they're adjacent, this is fine
@@ -117,6 +117,6 @@ def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
 
     # remove commas if abbreviating ("3d 2h ago", not "3d, 2h ago")
     if abbreviate:
-        result = result.replace(',', '')
+        result = result.replace(",", "")
 
     return result

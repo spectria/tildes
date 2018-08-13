@@ -2,13 +2,7 @@
 
 import re
 
-from marshmallow import (
-    post_dump,
-    pre_load,
-    Schema,
-    validates,
-    validates_schema,
-)
+from marshmallow import post_dump, pre_load, Schema, validates, validates_schema
 from marshmallow.exceptions import ValidationError
 from marshmallow.fields import Boolean, DateTime, Email, String
 from marshmallow.validate import Length, Regexp
@@ -26,11 +20,14 @@ USERNAME_MAX_LENGTH = 20
 #     more than one underscore/dash consecutively (this includes both "_-" and
 #     "-_" sequences being invalid)
 # Note: this regex does not contain any length checks, must be done separately
+# fmt: off
 USERNAME_VALID_REGEX = re.compile(
     "^[a-z0-9]"  # start
     "([a-z0-9]|[_-](?![_-]))*"  # middle
     "[a-z0-9]$",  # end
-    re.IGNORECASE)
+    re.IGNORECASE,
+)
+# fmt: on
 
 PASSWORD_MIN_LENGTH = 8
 
@@ -48,29 +45,26 @@ class UserSchema(Schema):
         required=True,
     )
     password = String(
-        validate=Length(min=PASSWORD_MIN_LENGTH),
-        required=True,
-        load_only=True,
+        validate=Length(min=PASSWORD_MIN_LENGTH), required=True, load_only=True
     )
     email_address = Email(allow_none=True, load_only=True)
-    email_address_note = String(
-        validate=Length(max=EMAIL_ADDRESS_NOTE_MAX_LENGTH))
+    email_address_note = String(validate=Length(max=EMAIL_ADDRESS_NOTE_MAX_LENGTH))
     created_time = DateTime(dump_only=True)
     track_comment_visits = Boolean()
 
     @post_dump
     def anonymize_username(self, data: dict) -> dict:
         """Hide the username if the dumping context specifies to do so."""
-        if 'username' in data and self.context.get('hide_username'):
-            data['username'] = '<unknown>'
+        if "username" in data and self.context.get("hide_username"):
+            data["username"] = "<unknown>"
 
         return data
 
     @validates_schema
     def username_pass_not_substrings(self, data: dict) -> None:
         """Ensure the username isn't in the password and vice versa."""
-        username = data.get('username')
-        password = data.get('password')
+        username = data.get("username")
+        password = data.get("password")
         if not (username and password):
             return
 
@@ -78,32 +72,32 @@ class UserSchema(Schema):
         password = password.lower()
 
         if username in password:
-            raise ValidationError('Password cannot contain username')
+            raise ValidationError("Password cannot contain username")
 
         if password in username:
-            raise ValidationError('Username cannot contain password')
+            raise ValidationError("Username cannot contain password")
 
-    @validates('password')
+    @validates("password")
     def password_not_breached(self, value: str) -> None:
         """Validate that the password is not in the breached-passwords list.
 
         Requires check_breached_passwords be True in the schema's context.
         """
-        if not self.context.get('check_breached_passwords'):
+        if not self.context.get("check_breached_passwords"):
             return
 
         if is_breached_password(value):
-            raise ValidationError('That password exists in a data breach')
+            raise ValidationError("That password exists in a data breach")
 
     @pre_load
     def prepare_email_address(self, data: dict) -> dict:
         """Prepare the email address value before it's validated."""
-        if 'email_address' not in data:
+        if "email_address" not in data:
             return data
 
         # if the value is empty, convert it to None
-        if not data['email_address'] or data['email_address'].isspace():
-            data['email_address'] = None
+        if not data["email_address"] or data["email_address"].isspace():
+            data["email_address"] = None
 
         return data
 
@@ -122,7 +116,7 @@ def is_valid_username(username: str) -> bool:
     """
     schema = UserSchema(partial=True)
     try:
-        schema.validate({'username': username})
+        schema.validate({"username": username})
     except ValidationError:
         return False
 

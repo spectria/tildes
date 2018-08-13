@@ -6,7 +6,7 @@ from tildes.api import APIv0
 from tildes.resources.user import user_by_username
 
 
-ONE = APIv0(name='user', path='/users/{username}', factory=user_by_username)
+ONE = APIv0(name="user", path="/users/{username}", factory=user_by_username)
 
 
 @ONE.get()

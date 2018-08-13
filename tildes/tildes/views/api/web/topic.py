@@ -19,66 +19,63 @@ from tildes.views.decorators import ic_view_config
 
 
 @ic_view_config(
-    route_name='topic',
-    request_method='GET',
-    request_param='ic-trigger-name=edit',
-    renderer='topic_edit.jinja2',
-    permission='edit',
+    route_name="topic",
+    request_method="GET",
+    request_param="ic-trigger-name=edit",
+    renderer="topic_edit.jinja2",
+    permission="edit",
 )
 def get_topic_edit(request: Request) -> dict:
     """Get the edit form for a topic with Intercooler."""
-    return {'topic': request.context}
+    return {"topic": request.context}
 
 
 @ic_view_config(
-    route_name='topic',
-    request_method='GET',
-    renderer='topic_contents.jinja2',
-    permission='view',
+    route_name="topic",
+    request_method="GET",
+    renderer="topic_contents.jinja2",
+    permission="view",
 )
 def get_topic_contents(request: Request) -> dict:
     """Get a topic's body with Intercooler."""
-    return {'topic': request.context}
+    return {"topic": request.context}
 
 
 @ic_view_config(
-    route_name='topic',
-    request_method='PATCH',
-    renderer='topic_contents.jinja2',
-    permission='edit',
+    route_name="topic",
+    request_method="PATCH",
+    renderer="topic_contents.jinja2",
+    permission="edit",
 )
-@use_kwargs(TopicSchema(only=('markdown',)))
+@use_kwargs(TopicSchema(only=("markdown",)))
 def patch_topic(request: Request, markdown: str) -> dict:
     """Update a topic with Intercooler."""
     topic = request.context
 
     topic.markdown = markdown
 
-    return {'topic': topic}
+    return {"topic": topic}
 
 
-@ic_view_config(
-    route_name='topic',
-    request_method='DELETE',
-    permission='delete',
-)
+@ic_view_config(route_name="topic", request_method="DELETE", permission="delete")
 def delete_topic(request: Request) -> Response:
     """Delete a topic with Intercooler and redirect to its group."""
     topic = request.context
     topic.is_deleted = True
 
     response = Response()
-    response.headers['X-IC-Redirect'] = request.route_url(
-        'group', group_path=topic.group.path)
+    response.headers["X-IC-Redirect"] = request.route_url(
+        "group", group_path=topic.group.path
+    )
 
     return response
 
 
 @ic_view_config(
-    route_name='topic_vote',
-    request_method='PUT',
-    renderer='topic_voting.jinja2',
-    permission='vote',
+    route_name="topic_vote",
+    request_method="PUT",
+    renderer="topic_voting.jinja2",
+    permission="vote",
 )
 def put_topic_vote(request: Request) -> Response:
     """Vote on a topic with Intercooler."""
@@ -106,22 +103,21 @@ def put_topic_vote(request: Request) -> Response:
         .one()
     )
 
-    return {'topic': topic}
+    return {"topic": topic}
 
 
 @ic_view_config(
-    route_name='topic_vote',
-    request_method='DELETE',
-    renderer='topic_voting.jinja2',
-    permission='vote',
+    route_name="topic_vote",
+    request_method="DELETE",
+    renderer="topic_voting.jinja2",
+    permission="vote",
 )
 def delete_topic_vote(request: Request) -> Response:
     """Remove the user's vote from a topic with Intercooler."""
     topic = request.context
 
     request.query(TopicVote).filter(
-        TopicVote.topic == topic,
-        TopicVote.user == request.user,
+        TopicVote.topic == topic, TopicVote.user == request.user
     ).delete(synchronize_session=False)
 
     # manually commit the transaction so triggers will execute
@@ -135,34 +131,34 @@ def delete_topic_vote(request: Request) -> Response:
         .one()
     )
 
-    return {'topic': topic}
+    return {"topic": topic}
 
 
 @ic_view_config(
-    route_name='topic_tags',
-    request_method='GET',
-    renderer='topic_tags_edit.jinja2',
-    permission='tag',
+    route_name="topic_tags",
+    request_method="GET",
+    renderer="topic_tags_edit.jinja2",
+    permission="tag",
 )
 def get_topic_tags(request: Request) -> dict:
     """Get the tagging form for a topic with Intercooler."""
-    return {'topic': request.context}
+    return {"topic": request.context}
 
 
 @ic_view_config(
-    route_name='topic_tags',
-    request_method='PUT',
-    renderer='topic_tags.jinja2',
-    permission='tag',
+    route_name="topic_tags",
+    request_method="PUT",
+    renderer="topic_tags.jinja2",
+    permission="tag",
 )
-@use_kwargs({'tags': String()})
+@use_kwargs({"tags": String()})
 def put_tag_topic(request: Request, tags: str) -> dict:
     """Apply tags to a topic with Intercooler."""
     topic = request.context
 
     if tags:
         # split the tag string on commas
-        new_tags = tags.split(',')
+        new_tags = tags.split(",")
     else:
         new_tags = []
 
@@ -171,7 +167,7 @@ def put_tag_topic(request: Request, tags: str) -> dict:
     try:
         topic.tags = new_tags
     except ValidationError:
-        raise ValidationError({'tags': ['Invalid tags']})
+        raise ValidationError({"tags": ["Invalid tags"]})
 
     # if tags weren't changed, don't add a log entry or update page
     if set(topic.tags) == set(old_tags):
@@ -182,42 +178,38 @@ def put_tag_topic(request: Request, tags: str) -> dict:
             LogEventType.TOPIC_TAG,
             request,
             topic,
-            info={'old': old_tags, 'new': topic.tags},
-        ),
+            info={"old": old_tags, "new": topic.tags},
+        )
     )
 
-    return {'topic': topic}
+    return {"topic": topic}
 
 
 @ic_view_config(
-    route_name='topic_group',
-    request_method='GET',
-    renderer='topic_group_edit.jinja2',
-    permission='move',
+    route_name="topic_group",
+    request_method="GET",
+    renderer="topic_group_edit.jinja2",
+    permission="move",
 )
 def get_topic_group(request: Request) -> dict:
     """Get the form for moving a topic with Intercooler."""
-    return {'topic': request.context}
+    return {"topic": request.context}
 
 
 @ic_view_config(
-    route_name='topic',
-    request_param='ic-trigger-name=topic-move',
-    request_method='PATCH',
-    permission='move',
+    route_name="topic",
+    request_param="ic-trigger-name=topic-move",
+    request_method="PATCH",
+    permission="move",
 )
-@use_kwargs(GroupSchema(only=('path',)))
+@use_kwargs(GroupSchema(only=("path",)))
 def patch_move_topic(request: Request, path: str) -> dict:
     """Move a topic to a different group with Intercooler."""
     topic = request.context
 
-    new_group = (
-        request.query(Group)
-        .filter(Group.path == path)
-        .one_or_none()
-    )
+    new_group = request.query(Group).filter(Group.path == path).one_or_none()
     if not new_group:
-        raise HTTPNotFound('Group not found')
+        raise HTTPNotFound("Group not found")
 
     old_group = topic.group
 
@@ -231,18 +223,14 @@ def patch_move_topic(request: Request, path: str) -> dict:
             LogEventType.TOPIC_MOVE,
             request,
             topic,
-            info={'old': str(old_group.path), 'new': str(topic.group.path)}
-        ),
+            info={"old": str(old_group.path), "new": str(topic.group.path)},
+        )
     )
 
-    return Response('Moved')
+    return Response("Moved")
 
 
-@ic_view_config(
-    route_name='topic_lock',
-    request_method='PUT',
-    permission='lock',
-)
+@ic_view_config(route_name="topic_lock", request_method="PUT", permission="lock")
 def put_topic_lock(request: Request) -> Response:
     """Lock a topic with Intercooler."""
     topic = request.context
@@ -250,14 +238,10 @@ def put_topic_lock(request: Request) -> Response:
     topic.is_locked = True
     request.db_session.add(LogTopic(LogEventType.TOPIC_LOCK, request, topic))
 
-    return Response('Locked')
+    return Response("Locked")
 
 
-@ic_view_config(
-    route_name='topic_lock',
-    request_method='DELETE',
-    permission='lock',
-)
+@ic_view_config(route_name="topic_lock", request_method="DELETE", permission="lock")
 def delete_topic_lock(request: Request) -> Response:
     """Unlock a topic with Intercooler."""
     topic = request.context
@@ -265,27 +249,27 @@ def delete_topic_lock(request: Request) -> Response:
     topic.is_locked = False
     request.db_session.add(LogTopic(LogEventType.TOPIC_UNLOCK, request, topic))
 
-    return Response('Unlocked')
+    return Response("Unlocked")
 
 
 @ic_view_config(
-    route_name='topic_title',
-    request_method='GET',
-    renderer='topic_title_edit.jinja2',
-    permission='edit_title',
+    route_name="topic_title",
+    request_method="GET",
+    renderer="topic_title_edit.jinja2",
+    permission="edit_title",
 )
 def get_topic_title(request: Request) -> dict:
     """Get the form for editing a topic's title with Intercooler."""
-    return {'topic': request.context}
+    return {"topic": request.context}
 
 
 @ic_view_config(
-    route_name='topic',
-    request_param='ic-trigger-name=topic-title-edit',
-    request_method='PATCH',
-    permission='edit_title',
+    route_name="topic",
+    request_param="ic-trigger-name=topic-title-edit",
+    request_method="PATCH",
+    permission="edit_title",
 )
-@use_kwargs(TopicSchema(only=('title',)))
+@use_kwargs(TopicSchema(only=("title",)))
 def patch_topic_title(request: Request, title: str) -> dict:
     """Edit a topic's title with Intercooler."""
     topic = request.context
@@ -298,8 +282,8 @@ def patch_topic_title(request: Request, title: str) -> dict:
             LogEventType.TOPIC_TITLE_EDIT,
             request,
             topic,
-            info={'old': topic.title, 'new': title}
-        ),
+            info={"old": topic.title, "new": title},
+        )
     )
 
     topic.title = title

@@ -18,7 +18,7 @@ from tildes.views.decorators import ic_view_config
 
 
 def _422_response_with_errors(errors: Sequence[str]) -> Response:
-    response = Response('\n'.join(errors))
+    response = Response("\n".join(errors))
     response.status_int = 422
 
     return response
@@ -44,9 +44,9 @@ def unprocessable_entity(request: Request) -> Response:
 
     error_strings = []
     for field, errors in errors_by_field.items():
-        joined_errors = ' '.join(errors)
-        if field != '_schema':
-            error_strings.append(f'{field}: {joined_errors}')
+        joined_errors = " ".join(errors)
+        if field != "_schema":
+            error_strings.append(f"{field}: {joined_errors}")
         else:
             error_strings.append(joined_errors)
 
@@ -65,11 +65,11 @@ def httpnotfound(request: Request) -> Response:
     response = request.exception
 
     if request.matched_route.factory == comment_by_id36:
-        response.text = 'Comment not found (or it was deleted)'
+        response.text = "Comment not found (or it was deleted)"
     elif request.matched_route.factory == topic_by_id36:
-        response.text = 'Topic not found (or it was deleted)'
+        response.text = "Topic not found (or it was deleted)"
     else:
-        response.text = 'Not found'
+        response.text = "Not found"
 
     return response
 
@@ -79,10 +79,9 @@ def httptoomanyrequests(request: Request) -> Response:
     """Update a 429 error to show wait time info in the response text."""
     response = request.exception
 
-    retry_seconds = request.exception.headers['Retry-After']
+    retry_seconds = request.exception.headers["Retry-After"]
     response.text = (
-        'Rate limit exceeded. '
-        f'Please wait {retry_seconds} seconds before retrying.'
+        f"Rate limit exceeded. Please wait {retry_seconds} seconds before retrying."
     )
 
     return response
@@ -99,4 +98,4 @@ def httpfound(request: Request) -> Response:
     exception view will convert a 302 into a 200 with that header so it works
     as a redirect for both standard requests as well as Intercooler ones.
     """
-    return Response(headers={'X-IC-Redirect': request.exception.location})
+    return Response(headers={"X-IC-Redirect": request.exception.location})

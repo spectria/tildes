@@ -12,12 +12,7 @@ config = context.config
 fileConfig(config.config_file_name)
 
 # import all DatabaseModel subclasses here for autogenerate support
-from tildes.models.comment import (
-    Comment,
-    CommentNotification,
-    CommentTag,
-    CommentVote,
-)
+from tildes.models.comment import Comment, CommentNotification, CommentTag, CommentVote
 from tildes.models.group import Group, GroupSubscription
 from tildes.models.log import Log
 from tildes.models.message import MessageConversation, MessageReply
@@ -25,6 +20,7 @@ from tildes.models.topic import Topic, TopicVisit, TopicVote
 from tildes.models.user import User, UserGroupSettings, UserInviteCode
 
 from tildes.models import DatabaseModel
+
 target_metadata = DatabaseModel.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -46,8 +42,7 @@ def run_migrations_offline():
 
     """
     url = config.get_main_option("sqlalchemy.url")
-    context.configure(
-        url=url, target_metadata=target_metadata, literal_binds=True)
+    context.configure(url=url, target_metadata=target_metadata, literal_binds=True)
 
     with context.begin_transaction():
         context.run_migrations()
@@ -62,17 +57,16 @@ def run_migrations_online():
     """
     connectable = engine_from_config(
         config.get_section(config.config_ini_section),
-        prefix='sqlalchemy.',
-        poolclass=pool.NullPool)
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection,
-            target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
+
 
 if context.is_offline_mode():
     run_migrations_offline()

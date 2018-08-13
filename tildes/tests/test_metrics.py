@@ -9,4 +9,4 @@ def test_all_metric_names_prefixed():
             # this is ugly, but seems to be the "generic" way to get the name
             metric_name = metric.describe()[0].name
 
-            assert metric_name.startswith('tildes_')
+            assert metric_name.startswith("tildes_")

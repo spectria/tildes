@@ -17,39 +17,39 @@ def process_string(string):
     ValidationError if an invalid string is attempted.
     """
     schema = SimpleStringTestSchema(strict=True)
-    result = schema.load({'subject': string})
+    result = schema.load({"subject": string})
 
-    return result.data['subject']
+    return result.data["subject"]
 
 
 def test_changing_max_length():
     """Ensure changing the max_length argument works."""
-    test_string = 'Just some text to try'
+    test_string = "Just some text to try"
 
     # should normally validate
     assert SimpleString()._validate(test_string) is None
 
     # but fails if you set a too-short max_length
     with raises(ValidationError):
-        SimpleString(max_length=len(test_string)-1)._validate(test_string)
+        SimpleString(max_length=len(test_string) - 1)._validate(test_string)
 
 
 def test_long_string():
     """Ensure a long string fails validation."""
     with raises(ValidationError):
-        process_string('A' * 10_000)
+        process_string("A" * 10_000)
 
 
 def test_empty_string():
     """Ensure an empty string fails validation."""
     with raises(ValidationError):
-        process_string('')
+        process_string("")
 
 
 def test_all_whitespace_string():
     """Ensure a string that's entirely whitespace fails validation."""
     with raises(ValidationError):
-        process_string('\n  \t \r\n    ')
+        process_string("\n  \t \r\n    ")
 
 
 def test_normal_string_untouched():
@@ -76,11 +76,11 @@ def test_control_chars_removed():
 
 def test_leading_trailing_spaces_removed():
     """Ensure leading/trailing spaces are removed from the string."""
-    original = '          Centered!          '
-    assert process_string(original) == 'Centered!'
+    original = "          Centered!          "
+    assert process_string(original) == "Centered!"
 
 
 def test_consecutive_spaces_collapsed():
     """Ensure runs of consecutive spaces are "collapsed" inside the string."""
-    original = 'I    wanted   to      space    this        out'
-    assert process_string(original) == 'I wanted to space this out'
+    original = "I    wanted   to      space    this        out"
+    assert process_string(original) == "I wanted to space this out"

@@ -4,14 +4,14 @@
 from ctypes import CDLL, c_char_p, c_int, c_size_t, c_void_p
 
 
-CMARK_DLL = CDLL('/usr/local/lib/libcmark-gfm.so')
-CMARK_EXT_DLL = CDLL('/usr/local/lib/libcmark-gfmextensions.so')
+CMARK_DLL = CDLL("/usr/local/lib/libcmark-gfm.so")
+CMARK_EXT_DLL = CDLL("/usr/local/lib/libcmark-gfmextensions.so")
 
 # enables the --hardbreaks option for cmark
 # (can I import this? it's defined in cmark.h as CMARK_OPT_HARDBREAKS)
 CMARK_OPTS = 4
 
-CMARK_EXTENSIONS = (b'strikethrough', b'table')
+CMARK_EXTENSIONS = (b"strikethrough", b"table")
 
 cmark_parser_new = CMARK_DLL.cmark_parser_new
 cmark_parser_new.restype = c_void_p
@@ -25,13 +25,11 @@ cmark_parser_finish = CMARK_DLL.cmark_parser_finish
 cmark_parser_finish.restype = c_void_p
 cmark_parser_finish.argtypes = (c_void_p,)
 
-cmark_parser_attach_syntax_extension = (
-    CMARK_DLL.cmark_parser_attach_syntax_extension)
+cmark_parser_attach_syntax_extension = CMARK_DLL.cmark_parser_attach_syntax_extension
 cmark_parser_attach_syntax_extension.restype = c_int
 cmark_parser_attach_syntax_extension.argtypes = (c_void_p, c_void_p)
 
-cmark_parser_get_syntax_extensions = (
-    CMARK_DLL.cmark_parser_get_syntax_extensions)
+cmark_parser_get_syntax_extensions = CMARK_DLL.cmark_parser_get_syntax_extensions
 cmark_parser_get_syntax_extensions.restype = c_void_p
 cmark_parser_get_syntax_extensions.argtypes = (c_void_p,)
 

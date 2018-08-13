@@ -25,18 +25,17 @@ class RateLimitResult:
     """
 
     def __init__(
-            self,
-            is_allowed: bool,
-            total_limit: int,
-            remaining_limit: int,
-            time_until_max: timedelta,
-            time_until_retry: Optional[timedelta] = None,
+        self,
+        is_allowed: bool,
+        total_limit: int,
+        remaining_limit: int,
+        time_until_max: timedelta,
+        time_until_retry: Optional[timedelta] = None,
     ) -> None:
         """Initialize a RateLimitResult."""
         # pylint: disable=too-many-arguments
         if is_allowed and time_until_retry is not None:
-            raise ValueError(
-                'time_until_retry must be None if is_allowed is True')
+            raise ValueError("time_until_retry must be None if is_allowed is True")
 
         self.is_allowed = is_allowed
         self.total_limit = total_limit
@@ -58,7 +57,7 @@ class RateLimitResult:
         )
 
     @classmethod
-    def unlimited_result(cls) -> 'RateLimitResult':
+    def unlimited_result(cls) -> "RateLimitResult":
         """Return a "blank" result representing an unlimited action."""
         return cls(
             is_allowed=True,
@@ -68,7 +67,7 @@ class RateLimitResult:
         )
 
     @classmethod
-    def from_redis_cell_result(cls, result: List[int]) -> 'RateLimitResult':
+    def from_redis_cell_result(cls, result: List[int]) -> "RateLimitResult":
         """Convert the response from CL.THROTTLE command to a RateLimitResult.
 
         CL.THROTTLE responds with an array of 5 integers:
@@ -98,10 +97,7 @@ class RateLimitResult:
         )
 
     @classmethod
-    def merged_result(
-            cls,
-            results: Sequence['RateLimitResult'],
-    ) -> 'RateLimitResult':
+    def merged_result(cls, results: Sequence["RateLimitResult"]) -> "RateLimitResult":
         """Merge any number of RateLimitResults into a single result.
 
         Basically, the merged result should be the "most restrictive"
@@ -125,7 +121,8 @@ class RateLimitResult:
             time_until_retry = None
         else:
             time_until_retry = max(
-                r.time_until_retry for r in results if r.time_until_retry)
+                r.time_until_retry for r in results if r.time_until_retry
+            )
 
         return cls(
             is_allowed=all(r.is_allowed for r in results),
@@ -140,18 +137,18 @@ class RateLimitResult:
         # Retry-After: seconds the client should wait until retrying
         if self.time_until_retry:
             retry_seconds = int(self.time_until_retry.total_seconds())
-            response.headers['Retry-After'] = str(retry_seconds)
+            response.headers["Retry-After"] = str(retry_seconds)
 
         # X-RateLimit-Limit: the total action limit (including used)
-        response.headers['X-RateLimit-Limit'] = str(self.total_limit)
+        response.headers["X-RateLimit-Limit"] = str(self.total_limit)
 
         # X-RateLimit-Remaining: remaining actions before client hits the limit
-        response.headers['X-RateLimit-Remaining'] = str(self.remaining_limit)
+        response.headers["X-RateLimit-Remaining"] = str(self.remaining_limit)
 
         # X-RateLimit-Reset: epoch timestamp when limit will be back to full
         reset_time = utc_now() + self.time_until_max
         reset_timestamp = int(reset_time.timestamp())
-        response.headers['X-RateLimit-Reset'] = str(reset_timestamp)
+        response.headers["X-RateLimit-Reset"] = str(reset_timestamp)
 
         return response
 
@@ -165,14 +162,14 @@ class RateLimitedAction:
     """
 
     def __init__(
-            self,
-            name: str,
-            period: timedelta,
-            limit: int,
-            max_burst: Optional[int] = None,
-            by_user: bool = True,
-            by_ip: bool = True,
-            redis: Optional[StrictRedis] = None,
+        self,
+        name: str,
+        period: timedelta,
+        limit: int,
+        max_burst: Optional[int] = None,
+        by_user: bool = True,
+        by_ip: bool = True,
+        redis: Optional[StrictRedis] = None,
     ) -> None:
         """Initialize the limits on a particular action.
 
@@ -187,10 +184,10 @@ class RateLimitedAction:
         """
         # pylint: disable=too-many-arguments
         if max_burst and not 1 <= max_burst <= limit:
-            raise ValueError('max_burst must be at least 1 and <= limit')
+            raise ValueError("max_burst must be at least 1 and <= limit")
 
         if not (by_user or by_ip):
-            raise ValueError('At least one of by_user or by_ip must be True')
+            raise ValueError("At least one of by_user or by_ip must be True")
 
         self.name = name
         self.period = period
@@ -213,7 +210,7 @@ class RateLimitedAction:
     def redis(self) -> StrictRedis:
         """Return the redis connection."""
         if not self._redis:
-            raise RateLimitError('No redis connection set')
+            raise RateLimitError("No redis connection set")
 
         return self._redis
 
@@ -224,19 +221,14 @@ class RateLimitedAction:
 
     def _build_redis_key(self, by_type: str, value: Any) -> str:
         """Build the Redis key where this rate limit is maintained."""
-        parts = [
-            'ratelimit',
-            self.name,
-            by_type,
-            str(value),
-        ]
+        parts = ["ratelimit", self.name, by_type, str(value)]
 
-        return ':'.join(parts)
+        return ":".join(parts)
 
     def _call_redis_command(self, key: str) -> List[int]:
         """Call the redis-cell CL.THROTTLE command for this action."""
         return self.redis.execute_command(
-            'CL.THROTTLE',
+            "CL.THROTTLE",
             key,
             self.max_burst - 1,
             self.limit,
@@ -246,10 +238,9 @@ class RateLimitedAction:
     def check_for_user_id(self, user_id: int) -> RateLimitResult:
         """Check whether a particular user_id can perform this action."""
         if not self.by_user:
-            raise RateLimitError(
-                'check_for_user_id called on non-user-limited action')
+            raise RateLimitError("check_for_user_id called on non-user-limited action")
 
-        key = self._build_redis_key('user', user_id)
+        key = self._build_redis_key("user", user_id)
         result = self._call_redis_command(key)
 
         return RateLimitResult.from_redis_cell_result(result)
@@ -257,22 +248,20 @@ class RateLimitedAction:
     def reset_for_user_id(self, user_id: int) -> None:
         """Reset the ratelimit on this action for a particular user_id."""
         if not self.by_user:
-            raise RateLimitError(
-                'reset_for_user_id called on non-user-limited action')
+            raise RateLimitError("reset_for_user_id called on non-user-limited action")
 
-        key = self._build_redis_key('user', user_id)
+        key = self._build_redis_key("user", user_id)
         self.redis.delete(key)
 
     def check_for_ip(self, ip_str: str) -> RateLimitResult:
         """Check whether a particular IP can perform this action."""
         if not self.by_ip:
-            raise RateLimitError(
-                'check_for_ip called on non-IP-limited action')
+            raise RateLimitError("check_for_ip called on non-IP-limited action")
 
         # check if ip_str is a valid address, will ValueError if not
         ip_address(ip_str)
 
-        key = self._build_redis_key('ip', ip_str)
+        key = self._build_redis_key("ip", ip_str)
         result = self._call_redis_command(key)
 
         return RateLimitResult.from_redis_cell_result(result)
@@ -280,23 +269,21 @@ class RateLimitedAction:
     def reset_for_ip(self, ip_str: str) -> None:
         """Reset the ratelimit on this action for a particular IP."""
         if not self.by_ip:
-            raise RateLimitError(
-                'reset_for_ip called on non-user-limited action')
+            raise RateLimitError("reset_for_ip called on non-user-limited action")
 
         # check if ip_str is a valid address, will ValueError if not
         ip_address(ip_str)
 
-        key = self._build_redis_key('ip', ip_str)
+        key = self._build_redis_key("ip", ip_str)
         self.redis.delete(key)
 
 
 # the actual list of actions with rate-limit restrictions
 # each action must have a unique name to prevent key collisions
 _RATE_LIMITED_ACTIONS = (
-    RateLimitedAction('login', timedelta(hours=1), 20),
-    RateLimitedAction('register', timedelta(hours=1), 50),
+    RateLimitedAction("login", timedelta(hours=1), 20),
+    RateLimitedAction("register", timedelta(hours=1), 50),
 )
 
 # (public) dict to be able to look up the actions by name
-RATE_LIMITED_ACTIONS = {
-    action.name: action for action in _RATE_LIMITED_ACTIONS}
+RATE_LIMITED_ACTIONS = {action.name: action for action in _RATE_LIMITED_ACTIONS}

@@ -8,7 +8,7 @@ from sqlalchemy.orm import Load, undefer
 from sqlalchemy.orm.query import Query
 
 
-ModelType = TypeVar('ModelType')  # pylint: disable=invalid-name
+ModelType = TypeVar("ModelType")  # pylint: disable=invalid-name
 
 
 class ModelQuery(Query):
@@ -22,10 +22,10 @@ class ModelQuery(Query):
         self.request = request
 
         # can only filter deleted items if the table has an 'is_deleted' column
-        self.filter_deleted = bool('is_deleted' in model_cls.__table__.columns)
+        self.filter_deleted = bool("is_deleted" in model_cls.__table__.columns)
 
         # can only filter removed items if the table has an 'is_removed' column
-        self.filter_removed = bool('is_removed' in model_cls.__table__.columns)
+        self.filter_removed = bool("is_removed" in model_cls.__table__.columns)
 
     def __iter__(self) -> Iterator[ModelType]:
         """Iterate over the (processed) results of the query.
@@ -36,11 +36,11 @@ class ModelQuery(Query):
         results = super().__iter__()
         return iter([self._process_result(result) for result in results])
 
-    def _attach_extra_data(self) -> 'ModelQuery':
+    def _attach_extra_data(self) -> "ModelQuery":
         """Override to attach extra data to query before execution."""
         return self
 
-    def _finalize(self) -> 'ModelQuery':
+    def _finalize(self) -> "ModelQuery":
         """Finalize the query before it's executed."""
         # pylint: disable=protected-access
 
@@ -49,14 +49,13 @@ class ModelQuery(Query):
         # is potentially dangerous, but should be fine with the existing
         # straightforward usage patterns.
         return (
-            self
-            .enable_assertions(False)
+            self.enable_assertions(False)
             ._attach_extra_data()
             ._filter_deleted_if_necessary()
             ._filter_removed_if_necessary()
         )
 
-    def _before_compile_listener(self) -> 'ModelQuery':
+    def _before_compile_listener(self) -> "ModelQuery":
         """Do any final adjustments to the query before it's compiled.
 
         Note that this method cannot be overridden by subclasses because of
@@ -65,21 +64,21 @@ class ModelQuery(Query):
         """
         return self._finalize()
 
-    def _filter_deleted_if_necessary(self) -> 'ModelQuery':
+    def _filter_deleted_if_necessary(self) -> "ModelQuery":
         """Filter out deleted rows unless they were explicitly included."""
         if not self.filter_deleted:
             return self
 
         return self.filter(self.model_cls.is_deleted == False)  # noqa
 
-    def _filter_removed_if_necessary(self) -> 'ModelQuery':
+    def _filter_removed_if_necessary(self) -> "ModelQuery":
         """Filter out removed rows unless they were explicitly included."""
         if not self.filter_removed:
             return self
 
         return self.filter(self.model_cls.is_removed == False)  # noqa
 
-    def lock_based_on_request_method(self) -> 'ModelQuery':
+    def lock_based_on_request_method(self) -> "ModelQuery":
         """Lock the rows if request method implies it's needed (generative).
 
         Applying this function to a query will cause the database to acquire
@@ -90,37 +89,37 @@ class ModelQuery(Query):
         Note that POST is specifically not included, because the item being
         POSTed to is not usually modified in a "dangerous" way as a result.
         """
-        if self.request.method in {'DELETE', 'PATCH', 'PUT'}:
+        if self.request.method in {"DELETE", "PATCH", "PUT"}:
             return self.with_for_update(of=self.model_cls)
 
         return self
 
-    def include_deleted(self) -> 'ModelQuery':
+    def include_deleted(self) -> "ModelQuery":
         """Specify that deleted rows should be included (generative)."""
         self.filter_deleted = False
 
         return self
 
-    def include_removed(self) -> 'ModelQuery':
+    def include_removed(self) -> "ModelQuery":
         """Specify that removed rows should be included (generative)."""
         self.filter_removed = False
 
         return self
 
-    def join_all_relationships(self) -> 'ModelQuery':
+    def join_all_relationships(self) -> "ModelQuery":
         """Eagerly join all lazy relationships (generative).
 
         This is useful for being able to load an item "fully" in a single
         query and avoid needing to make additional queries for related items.
         """
         # pylint: disable=no-member
-        self = self.options(Load(self.model_cls).joinedload('*'))
+        self = self.options(Load(self.model_cls).joinedload("*"))
 
         return self
 
-    def undefer_all_columns(self) -> 'ModelQuery':
+    def undefer_all_columns(self) -> "ModelQuery":
         """Undefer all columns (generative)."""
-        self = self.options(undefer('*'))
+        self = self.options(undefer("*"))
 
         return self
 
@@ -134,7 +133,7 @@ class ModelQuery(Query):
 # before the query executes
 event.listen(
     ModelQuery,
-    'before_compile',
+    "before_compile",
     ModelQuery._before_compile_listener,  # pylint: disable=protected-access
     retval=True,
 )

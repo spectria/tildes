@@ -8,7 +8,8 @@ from tildes.models.topic import Topic
 def text_topic(db, session_group, session_user):
     """Create a text topic, delete it as teardown (including comments)."""
     new_topic = Topic.create_text_topic(
-        session_group, session_user, 'A Text Topic', 'the text')
+        session_group, session_user, "A Text Topic", "the text"
+    )
     db.add(new_topic)
     db.commit()
 
@@ -23,7 +24,8 @@ def text_topic(db, session_group, session_user):
 def link_topic(db, session_group, session_user):
     """Create a link topic, delete it as teardown (including comments)."""
     new_topic = Topic.create_link_topic(
-        session_group, session_user, 'A Link Topic', 'http://example.com')
+        session_group, session_user, "A Link Topic", "http://example.com"
+    )
     db.add(new_topic)
     db.commit()
 
@@ -43,7 +45,7 @@ def topic(text_topic):
 @fixture
 def comment(db, session_user, topic):
     """Create a comment in the database, delete it as teardown."""
-    new_comment = Comment(topic, session_user, 'A comment')
+    new_comment = Comment(topic, session_user, "A comment")
     db.add(new_comment)
     db.commit()
 

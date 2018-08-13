@@ -21,12 +21,12 @@ class CommentSortOption(enum.Enum):
     @property
     def description(self) -> str:
         """Describe this sort option."""
-        if self.name == 'NEWEST':
-            return 'newest first'
-        elif self.name == 'POSTED':
-            return 'order posted'
+        if self.name == "NEWEST":
+            return "newest first"
+        elif self.name == "POSTED":
+            return "order posted"
 
-        return 'most {}'.format(self.name.lower())  # noqa
+        return "most {}".format(self.name.lower())  # noqa
 
 
 class CommentTagOption(enum.Enum):
@@ -72,12 +72,12 @@ class TopicSortOption(enum.Enum):
         using that sort in descending order means that topics with the most
         votes will be listed first.
         """
-        if self.name == 'NEW':
-            return 'newest'
-        elif self.name == 'ACTIVITY':
-            return 'activity'
+        if self.name == "NEW":
+            return "newest"
+        elif self.name == "ACTIVITY":
+            return "activity"
 
-        return 'most {}'.format(self.name.lower())  # noqa
+        return "most {}".format(self.name.lower())  # noqa
 
 
 class TopicType(enum.Enum):

@@ -29,38 +29,27 @@ class CommentNotification(DatabaseModel):
           decrement num_unread_notifications for the relevant user.
     """
 
-    __tablename__ = 'comment_notifications'
+    __tablename__ = "comment_notifications"
 
     user_id: int = Column(
-        Integer,
-        ForeignKey('users.user_id'),
-        nullable=False,
-        primary_key=True,
+        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     comment_id: int = Column(
-        Integer,
-        ForeignKey('comments.comment_id'),
-        nullable=False,
-        primary_key=True,
+        Integer, ForeignKey("comments.comment_id"), nullable=False, primary_key=True
     )
     notification_type: CommentNotificationType = Column(
-        ENUM(CommentNotificationType), nullable=False)
-    created_time: datetime = Column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text('NOW()'),
+        ENUM(CommentNotificationType), nullable=False
     )
-    is_unread: bool = Column(
-        Boolean, nullable=False, server_default='true', index=True)
+    created_time: datetime = Column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")
+    )
+    is_unread: bool = Column(Boolean, nullable=False, server_default="true", index=True)
 
-    user: User = relationship('User', innerjoin=True)
-    comment: Comment = relationship('Comment', innerjoin=True)
+    user: User = relationship("User", innerjoin=True)
+    comment: Comment = relationship("Comment", innerjoin=True)
 
     def __init__(
-            self,
-            user: User,
-            comment: Comment,
-            notification_type: CommentNotificationType,
+        self, user: User, comment: Comment, notification_type: CommentNotificationType
     ) -> None:
         """Create a new notification for a user from a comment."""
         self.user = user
@@ -70,7 +59,7 @@ class CommentNotification(DatabaseModel):
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""
         acl = []
-        acl.append((Allow, self.user_id, 'mark_read'))
+        acl.append((Allow, self.user_id, "mark_read"))
         acl.append(DENY_ALL)
         return acl
 
@@ -91,17 +80,12 @@ class CommentNotification(DatabaseModel):
 
     @classmethod
     def get_mentions_for_comment(
-            cls,
-            db_session: Session,
-            comment: Comment,
-    ) -> List['CommentNotification']:
+        cls, db_session: Session, comment: Comment
+    ) -> List["CommentNotification"]:
         """Get a list of notifications for user mentions in the comment."""
         notifications = []
 
-        raw_names = re.findall(
-            LinkifyFilter.USERNAME_REFERENCE_REGEX,
-            comment.markdown,
-        )
+        raw_names = re.findall(LinkifyFilter.USERNAME_REFERENCE_REGEX, comment.markdown)
         users_to_mention = (
             db_session.query(User)
             .filter(User.username.in_(raw_names))  # type: ignore
@@ -124,17 +108,18 @@ class CommentNotification(DatabaseModel):
                 continue
 
             mention_notification = cls(
-                user, comment, CommentNotificationType.USER_MENTION)
+                user, comment, CommentNotificationType.USER_MENTION
+            )
             notifications.append(mention_notification)
 
         return notifications
 
     @staticmethod
     def prevent_duplicate_notifications(
-            db_session: Session,
-            comment: Comment,
-            new_notifications: List['CommentNotification'],
-    ) -> Tuple[List['CommentNotification'], List['CommentNotification']]:
+        db_session: Session,
+        comment: Comment,
+        new_notifications: List["CommentNotification"],
+    ) -> Tuple[List["CommentNotification"], List["CommentNotification"]]:
         """Filter new notifications for edited comments.
 
         Protect against sending a notification for the same comment to
@@ -149,13 +134,13 @@ class CommentNotification(DatabaseModel):
         that need to be added, as they're new.
         """
         previous_notifications = (
-            db_session
-            .query(CommentNotification)
+            db_session.query(CommentNotification)
             .filter(
                 CommentNotification.comment_id == comment.comment_id,
-                CommentNotification.notification_type ==
-                CommentNotificationType.USER_MENTION,
-            ).all()
+                CommentNotification.notification_type
+                == CommentNotificationType.USER_MENTION,
+            )
+            .all()
         )
 
         new_mention_user_ids = [
@@ -167,12 +152,14 @@ class CommentNotification(DatabaseModel):
         ]
 
         to_delete = [
-            notification for notification in previous_notifications
+            notification
+            for notification in previous_notifications
             if notification.user.user_id not in new_mention_user_ids
         ]
 
         to_add = [
-            notification for notification in new_notifications
+            notification
+            for notification in new_notifications
             if notification.user.user_id not in previous_mention_user_ids
         ]
 

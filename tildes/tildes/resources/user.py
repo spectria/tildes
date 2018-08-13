@@ -8,10 +8,7 @@ from tildes.resources import get_resource
 from tildes.schemas.user import UserSchema
 
 
-@use_kwargs(
-    UserSchema(only=('username',)),
-    locations=('matchdict',),
-)
+@use_kwargs(UserSchema(only=("username",)), locations=("matchdict",))
 def user_by_username(request: Request, username: str) -> User:
     """Get a user specified by {username} in the route or 404 if not found."""
     query = request.query(User).filter(User.username == username)

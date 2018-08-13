@@ -7,9 +7,7 @@ from tildes.resources.topic import topic_by_id36
 
 
 ONE = APIv0(
-    name='topic',
-    path='/groups/{group_path}/topics/{topic_id36}',
-    factory=topic_by_id36,
+    name="topic", path="/groups/{group_path}/topics/{topic_id36}", factory=topic_by_id36
 )
 
 

@@ -28,7 +28,7 @@ class TopicQuery(PaginatedQuery):
         """
         super().__init__(Topic, request)
 
-    def _attach_extra_data(self) -> 'TopicQuery':
+    def _attach_extra_data(self) -> "TopicQuery":
         """Attach the extra user data to the query."""
         if not self.request.user:
             return self
@@ -36,7 +36,7 @@ class TopicQuery(PaginatedQuery):
         # pylint: disable=protected-access
         return self._attach_vote_data()._attach_visit_data()
 
-    def _attach_vote_data(self) -> 'TopicQuery':
+    def _attach_vote_data(self) -> "TopicQuery":
         """Add a subquery to include whether the user has voted."""
         vote_subquery = (
             self.request.query(TopicVote)
@@ -45,24 +45,25 @@ class TopicQuery(PaginatedQuery):
                 TopicVote.user == self.request.user,
             )
             .exists()
-            .label('user_voted')
+            .label("user_voted")
         )
         return self.add_columns(vote_subquery)
 
-    def _attach_visit_data(self) -> 'TopicQuery':
+    def _attach_visit_data(self) -> "TopicQuery":
         """Join the data related to the user's last visit to the topic(s)."""
         if self.request.user.track_comment_visits:
-            query = self.outerjoin(TopicVisit, and_(
-                TopicVisit.topic_id == Topic.topic_id,
-                TopicVisit.user == self.request.user,
-            ))
-            query = query.add_columns(
-                TopicVisit.visit_time, TopicVisit.num_comments)
+            query = self.outerjoin(
+                TopicVisit,
+                and_(
+                    TopicVisit.topic_id == Topic.topic_id,
+                    TopicVisit.user == self.request.user,
+                ),
+            )
+            query = query.add_columns(TopicVisit.visit_time, TopicVisit.num_comments)
         else:
             # if the user has the feature disabled, just add literal NULLs
             query = self.add_columns(
-                null().label('visit_time'),
-                null().label('num_comments'),
+                null().label("visit_time"), null().label("num_comments")
             )
 
         return query
@@ -90,10 +91,8 @@ class TopicQuery(PaginatedQuery):
         return topic
 
     def apply_sort_option(
-            self,
-            sort: TopicSortOption,
-            desc: bool = True,
-    ) -> 'TopicQuery':
+        self, sort: TopicSortOption, desc: bool = True
+    ) -> "TopicQuery":
         """Apply a TopicSortOption sorting method (generative)."""
         if sort == TopicSortOption.VOTES:
             self._sort_column = Topic.num_votes
@@ -108,18 +107,16 @@ class TopicQuery(PaginatedQuery):
 
         return self
 
-    def inside_groups(self, groups: Sequence[Group]) -> 'TopicQuery':
+    def inside_groups(self, groups: Sequence[Group]) -> "TopicQuery":
         """Restrict the topics to inside specific groups (generative)."""
         query_paths = [group.path for group in groups]
-        subgroup_subquery = (
-            self.request.db_session.query(Group.group_id)
-            .filter(Group.path.descendant_of(query_paths))
+        subgroup_subquery = self.request.db_session.query(Group.group_id).filter(
+            Group.path.descendant_of(query_paths)
         )
 
-        return self.filter(
-            Topic.group_id.in_(subgroup_subquery))  # type: ignore
+        return self.filter(Topic.group_id.in_(subgroup_subquery))  # type: ignore
 
-    def inside_time_period(self, period: SimpleHoursPeriod) -> 'TopicQuery':
+    def inside_time_period(self, period: SimpleHoursPeriod) -> "TopicQuery":
         """Restrict the topics to inside a time period (generative)."""
         # if the time period is too long, this will crash by creating a
         # datetime outside the valid range - catch that and just don't filter
@@ -131,7 +128,7 @@ class TopicQuery(PaginatedQuery):
 
         return self.filter(Topic.created_time > start_time)
 
-    def has_tag(self, tag: Ltree) -> 'TopicQuery':
+    def has_tag(self, tag: Ltree) -> "TopicQuery":
         """Restrict the topics to ones with a specific tag (generative)."""
         # casting tag to string really shouldn't be necessary, but some kind of
         # strange interaction seems to be happening with the ArrayOfLtree

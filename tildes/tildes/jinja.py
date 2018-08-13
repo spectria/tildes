@@ -29,28 +29,26 @@ def includeme(config: Configurator) -> None:
     """Configure Jinja2 template renderer."""
     settings = config.get_settings()
 
-    settings['jinja2.lstrip_blocks'] = True
-    settings['jinja2.trim_blocks'] = True
-    settings['jinja2.undefined'] = 'strict'
+    settings["jinja2.lstrip_blocks"] = True
+    settings["jinja2.trim_blocks"] = True
+    settings["jinja2.undefined"] = "strict"
 
     # add custom jinja filters
-    settings['jinja2.filters'] = {
-        'ago': descriptive_timedelta,
-    }
+    settings["jinja2.filters"] = {"ago": descriptive_timedelta}
 
     # add custom jinja tests
-    settings['jinja2.tests'] = {
-        'comment': is_comment,
-        'group': is_group,
-        'topic': is_topic,
+    settings["jinja2.tests"] = {
+        "comment": is_comment,
+        "group": is_group,
+        "topic": is_topic,
     }
 
-    config.include('pyramid_jinja2')
+    config.include("pyramid_jinja2")
 
-    config.add_jinja2_search_path('tildes:templates/')
+    config.add_jinja2_search_path("tildes:templates/")
 
-    config.add_jinja2_extension('jinja2.ext.do')
-    config.add_jinja2_extension('webassets.ext.jinja2.AssetsExtension')
+    config.add_jinja2_extension("jinja2.ext.do")
+    config.add_jinja2_extension("webassets.ext.jinja2.AssetsExtension")
 
     # attach webassets to jinja2 environment (via scheduled action)
     def attach_webassets_to_jinja2() -> None:

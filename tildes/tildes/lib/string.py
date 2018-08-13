@@ -20,16 +20,16 @@ def convert_to_url_slug(original: str, max_length: int = 100) -> str:
     slug = original.lower()
 
     # remove apostrophes so contractions don't get broken up by underscores
-    slug = re.sub("['’]", '', slug)
+    slug = re.sub("['’]", "", slug)
 
     # replace all remaining non-word characters with underscores
-    slug = re.sub(r'\W+', '_', slug)
+    slug = re.sub(r"\W+", "_", slug)
 
     # remove any consecutive underscores
-    slug = re.sub('_{2,}', '_', slug)
+    slug = re.sub("_{2,}", "_", slug)
 
     # remove "hanging" underscores on the start and/or end
-    slug = slug.strip('_')
+    slug = slug.strip("_")
 
     # url-encode the slug
     encoded_slug = quote(slug)
@@ -42,7 +42,7 @@ def convert_to_url_slug(original: str, max_length: int = 100) -> str:
     # Truncating a url-encoded slug can be tricky if there are any multi-byte
     # unicode characters, since the %-encoded forms of them can be quite long.
     # Check to see if the slug looks like it might contain any of those.
-    maybe_multi_bytes = bool(re.search('%..%', encoded_slug))
+    maybe_multi_bytes = bool(re.search("%..%", encoded_slug))
 
     # if that matched, we need to take a more complicated approach
     if maybe_multi_bytes:
@@ -50,10 +50,7 @@ def convert_to_url_slug(original: str, max_length: int = 100) -> str:
 
     # simple truncate - break at underscore if possible, no overflow string
     return truncate_string(
-        encoded_slug,
-        max_length,
-        truncate_at_chars='_',
-        overflow_str=None,
+        encoded_slug, max_length, truncate_at_chars="_", overflow_str=None
     )
 
 
@@ -62,7 +59,7 @@ def _truncate_multibyte_slug(original: str, max_length: int) -> str:
     # instead of the normal method of truncating "backwards" from the end of
     # the string, build it up one encoded character at a time from the start
     # until it's too long
-    encoded_slug = ''
+    encoded_slug = ""
     for character in original:
         encoded_char = quote(character)
 
@@ -82,7 +79,7 @@ def _truncate_multibyte_slug(original: str, max_length: int) -> str:
     # determining the word edges is not simple.
     acceptable_truncation = 0.7
 
-    truncated_slug = truncate_string_at_char(encoded_slug, '_')
+    truncated_slug = truncate_string_at_char(encoded_slug, "_")
 
     if len(truncated_slug) / len(encoded_slug) >= acceptable_truncation:
         return truncated_slug
@@ -91,10 +88,10 @@ def _truncate_multibyte_slug(original: str, max_length: int) -> str:
 
 
 def truncate_string(
-        original: str,
-        length: int,
-        truncate_at_chars: Optional[str] = None,
-        overflow_str: Optional[str] = '...',
+    original: str,
+    length: int,
+    truncate_at_chars: Optional[str] = None,
+    overflow_str: Optional[str] = "...",
 ) -> str:
     """Truncate a string to be no longer than a specified length.
 
@@ -109,7 +106,7 @@ def truncate_string(
     string will be kept.
     """
     if overflow_str is None:
-        overflow_str = ''
+        overflow_str = ""
 
     # no need to do anything if the string is already short enough
     if len(original) <= length:
@@ -117,7 +114,7 @@ def truncate_string(
 
     # cut the string down to the max desired length (leaving space for the
     # overflow string if one is specified)
-    truncated = original[:length - len(overflow_str)]
+    truncated = original[: length - len(overflow_str)]
 
     # if we don't want to truncate at particular characters, we're done
     if not truncate_at_chars:
@@ -167,7 +164,7 @@ def simplify_string(original: str) -> str:
     simplified = _sanitize_characters(original)
 
     # replace consecutive spaces with a single space
-    simplified = re.sub(r'\s{2,}', ' ', simplified)
+    simplified = re.sub(r"\s{2,}", " ", simplified)
 
     # remove any remaining leading/trailing whitespace
     simplified = simplified.strip()
@@ -182,16 +179,16 @@ def _sanitize_characters(original: str) -> str:
     for char in original:
         category = unicodedata.category(char)
 
-        if category.startswith('Z'):
+        if category.startswith("Z"):
             # "separator" chars - replace with a normal space
-            final_characters.append(' ')
-        elif category.startswith('C'):
+            final_characters.append(" ")
+        elif category.startswith("C"):
             # "other" chars (control, formatting, etc.) - filter them out
             # except for newlines, which are replaced with normal spaces
-            if char == '\n':
-                final_characters.append(' ')
+            if char == "\n":
+                final_characters.append(" ")
         else:
             # any other type of character, just keep it
             final_characters.append(char)
 
-    return ''.join(final_characters)
+    return "".join(final_characters)

@@ -7,12 +7,12 @@ from tildes.lib.id import id_to_id36, id36_to_id
 
 def test_id_to_id36():
     """Make sure an ID->ID36 conversion is correct."""
-    assert id_to_id36(571049189) == '9fzkdh'
+    assert id_to_id36(571049189) == "9fzkdh"
 
 
 def test_id36_to_id():
     """Make sure an ID36->ID conversion is correct."""
-    assert id36_to_id('x48l4z') == 2002502915
+    assert id36_to_id("x48l4z") == 2002502915
 
 
 def test_reversed_conversion_from_id():
@@ -23,7 +23,7 @@ def test_reversed_conversion_from_id():
 
 def test_reversed_conversion_from_id36():
     """Make sure an ID36->ID->ID36 conversion returns to original value."""
-    original = 'h2l4pe'
+    original = "h2l4pe"
     assert id_to_id36(id36_to_id(original)) == original
 
 
@@ -36,7 +36,7 @@ def test_zero_id_conversion_blocked():
 def test_zero_id36_conversion_blocked():
     """Ensure the ID36 conversion function doesn't accept zero."""
     with raises(ValueError):
-        id36_to_id('0')
+        id36_to_id("0")
 
 
 def test_negative_id_conversion_blocked():
@@ -48,4 +48,4 @@ def test_negative_id_conversion_blocked():
 def test_negative_id36_conversion_blocked():
     """Ensure the ID36 conversion function doesn't accept negative numbers."""
     with raises(ValueError):
-        id36_to_id('-1')
+        id36_to_id("-1")

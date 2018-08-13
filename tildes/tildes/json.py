@@ -23,8 +23,8 @@ def serialize_model(model_item: DatabaseModel, request: Request) -> dict:
 def serialize_topic(topic: Topic, request: Request) -> dict:
     """Return serializable data for a Topic."""
     context = {}
-    if not request.has_permission('view_author', topic):
-        context['hide_username'] = True
+    if not request.has_permission("view_author", topic):
+        context["hide_username"] = True
 
     return topic.schema_class(context=context).dump(topic)
 
@@ -40,4 +40,4 @@ def includeme(config: Configurator) -> None:
     # add specific adapters
     json_renderer.add_adapter(Topic, serialize_topic)
 
-    config.add_renderer('json', json_renderer)
+    config.add_renderer("json", json_renderer)

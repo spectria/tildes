@@ -46,11 +46,11 @@ def generate_redis_protocol(*elements: Any) -> str:
     Based on the example Ruby code from
     https://redis.io/topics/mass-insert#generating-redis-protocol
     """
-    command = f'*{len(elements)}\r\n'
+    command = f"*{len(elements)}\r\n"
 
     for element in elements:
         element = str(element)
-        command += f'${len(element)}\r\n{element}\r\n'
+        command += f"${len(element)}\r\n{element}\r\n"
 
     return command
 
@@ -65,27 +65,27 @@ def validate_init_error_rate(ctx: Any, param: Any, value: Any) -> float:
     """Validate the --error-rate arg for the init command."""
     # pylint: disable=unused-argument
     if not 0 < value < 1:
-        raise click.BadParameter('error rate must be a float between 0 and 1')
+        raise click.BadParameter("error rate must be a float between 0 and 1")
 
     return value
 
 
-@cli.command(help='Initialize a new empty bloom filter')
+@cli.command(help="Initialize a new empty bloom filter")
 @click.option(
-    '--estimate',
+    "--estimate",
     required=True,
     type=int,
-    help='Expected number of passwords that will be added',
+    help="Expected number of passwords that will be added",
 )
 @click.option(
-    '--error-rate',
+    "--error-rate",
     default=0.01,
     show_default=True,
-    help='Bloom filter desired false positive ratio',
+    help="Bloom filter desired false positive ratio",
     callback=validate_init_error_rate,
 )
 @click.confirmation_option(
-    prompt='Are you sure you want to clear any existing bloom filter?',
+    prompt="Are you sure you want to clear any existing bloom filter?"
 )
 def init(estimate: int, error_rate: float) -> None:
     """Initialize a new bloom filter (destroying any existing one).
@@ -102,22 +102,16 @@ def init(estimate: int, error_rate: float) -> None:
     REDIS.delete(BREACHED_PASSWORDS_BF_KEY)
 
     # BF.RESERVE {key} {error_rate} {size}
-    REDIS.execute_command(
-        'BF.RESERVE',
-        BREACHED_PASSWORDS_BF_KEY,
-        error_rate,
-        estimate,
-    )
+    REDIS.execute_command("BF.RESERVE", BREACHED_PASSWORDS_BF_KEY, error_rate, estimate)
 
     click.echo(
-        'Initialized bloom filter with expected size of {:,} and false '
-        'positive rate of {}%'
-        .format(estimate, error_rate * 100)
+        "Initialized bloom filter with expected size of {:,} and false "
+        "positive rate of {}%".format(estimate, error_rate * 100)
     )
 
 
-@cli.command(help='Add hashes from a file to the bloom filter')
-@click.argument('filename', type=click.Path(exists=True, dir_okay=False))
+@cli.command(help="Add hashes from a file to the bloom filter")
+@click.argument("filename", type=click.Path(exists=True, dir_okay=False))
 def addhashes(filename: str) -> None:
     """Add all hashes from a file to the bloom filter.
 
@@ -127,26 +121,26 @@ def addhashes(filename: str) -> None:
     """
     # make sure the key exists and is a bloom filter
     try:
-        REDIS.execute_command('BF.DEBUG', BREACHED_PASSWORDS_BF_KEY)
+        REDIS.execute_command("BF.DEBUG", BREACHED_PASSWORDS_BF_KEY)
     except ResponseError:
-        click.echo('Bloom filter is not set up properly - run init first.')
+        click.echo("Bloom filter is not set up properly - run init first.")
         raise click.Abort
 
     # call wc to count the number of lines in the file for the progress bar
-    click.echo('Determining hash count...')
-    result = subprocess.run(['wc', '-l', filename], stdout=subprocess.PIPE)
-    line_count = int(result.stdout.split(b' ')[0])
+    click.echo("Determining hash count...")
+    result = subprocess.run(["wc", "-l", filename], stdout=subprocess.PIPE)
+    line_count = int(result.stdout.split(b" ")[0])
 
     progress_bar: Any = click.progressbar(length=line_count)
     update_interval = 100_000
 
-    click.echo('Adding {:,} hashes to bloom filter...'.format(line_count))
+    click.echo("Adding {:,} hashes to bloom filter...".format(line_count))
 
     redis_pipe = subprocess.Popen(
-        ['redis-cli', '-s', BREACHED_PASSWORDS_REDIS_SOCKET, '--pipe'],
+        ["redis-cli", "-s", BREACHED_PASSWORDS_REDIS_SOCKET, "--pipe"],
         stdin=subprocess.PIPE,
         stdout=subprocess.DEVNULL,
-        encoding='utf-8',
+        encoding="utf-8",
     )
 
     for count, line in enumerate(open(filename), start=1):
@@ -155,10 +149,9 @@ def addhashes(filename: str) -> None:
         # the Pwned Passwords hash lists now have a frequency count for each
         # hash, which is separated from the hash with a colon, so we need to
         # handle that if it's present
-        hashval = hashval.split(':')[0]
+        hashval = hashval.split(":")[0]
 
-        command = generate_redis_protocol(
-            'BF.ADD', BREACHED_PASSWORDS_BF_KEY, hashval)
+        command = generate_redis_protocol("BF.ADD", BREACHED_PASSWORDS_BF_KEY, hashval)
         redis_pipe.stdin.write(command)
 
         if count % update_interval == 0:
@@ -173,5 +166,5 @@ def addhashes(filename: str) -> None:
     progress_bar.render_finish()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()

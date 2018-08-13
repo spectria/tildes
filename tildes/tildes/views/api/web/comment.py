@@ -12,22 +12,14 @@ from zope.sqlalchemy import mark_changed
 
 from tildes.enums import CommentNotificationType, CommentTagOption
 from tildes.lib.datetime import utc_now
-from tildes.models.comment import (
-    Comment,
-    CommentNotification,
-    CommentTag,
-    CommentVote,
-)
+from tildes.models.comment import Comment, CommentNotification, CommentTag, CommentVote
 from tildes.models.topic import TopicVisit
 from tildes.schemas.comment import CommentSchema, CommentTagSchema
 from tildes.views import IC_NOOP
 from tildes.views.decorators import ic_view_config
 
 
-def _increment_topic_comments_seen(
-        request: Request,
-        comment: Comment,
-) -> None:
+def _increment_topic_comments_seen(request: Request, comment: Comment) -> None:
     """Increment the number of comments in a topic the user has viewed.
 
     If the user has the "track comment visits" feature enabled, we want to
@@ -50,7 +42,7 @@ def _increment_topic_comments_seen(
             )
             .on_conflict_do_update(
                 constraint=TopicVisit.__table__.primary_key,
-                set_={'num_comments': TopicVisit.num_comments + 1},
+                set_={"num_comments": TopicVisit.num_comments + 1},
                 where=TopicVisit.visit_time < comment.created_time,
             )
         )
@@ -60,28 +52,22 @@ def _increment_topic_comments_seen(
 
 
 @ic_view_config(
-    route_name='topic_comments',
-    request_method='POST',
-    renderer='single_comment.jinja2',
-    permission='comment',
+    route_name="topic_comments",
+    request_method="POST",
+    renderer="single_comment.jinja2",
+    permission="comment",
 )
-@use_kwargs(CommentSchema(only=('markdown',)))
+@use_kwargs(CommentSchema(only=("markdown",)))
 def post_toplevel_comment(request: Request, markdown: str) -> dict:
     """Post a new top-level comment on a topic with Intercooler."""
     topic = request.context
 
-    new_comment = Comment(
-        topic=topic,
-        author=request.user,
-        markdown=markdown,
-    )
+    new_comment = Comment(topic=topic, author=request.user, markdown=markdown)
     request.db_session.add(new_comment)
 
     if topic.user != request.user and not topic.is_deleted:
         notification = CommentNotification(
-            topic.user,
-            new_comment,
-            CommentNotificationType.TOPIC_REPLY,
+            topic.user, new_comment, CommentNotificationType.TOPIC_REPLY
         )
         request.db_session.add(notification)
 
@@ -95,16 +81,16 @@ def post_toplevel_comment(request: Request, markdown: str) -> dict:
         .one()
     )
 
-    return {'comment': new_comment, 'topic': topic}
+    return {"comment": new_comment, "topic": topic}
 
 
 @ic_view_config(
-    route_name='comment_replies',
-    request_method='POST',
-    renderer='single_comment.jinja2',
-    permission='reply',
+    route_name="comment_replies",
+    request_method="POST",
+    renderer="single_comment.jinja2",
+    permission="reply",
 )
-@use_kwargs(CommentSchema(only=('markdown',)))
+@use_kwargs(CommentSchema(only=("markdown",)))
 def post_comment_reply(request: Request, markdown: str) -> dict:
     """Post a reply to a comment with Intercooler."""
     parent_comment = request.context
@@ -118,9 +104,7 @@ def post_comment_reply(request: Request, markdown: str) -> dict:
 
     if parent_comment.user != request.user:
         notification = CommentNotification(
-            parent_comment.user,
-            new_comment,
-            CommentNotificationType.COMMENT_REPLY,
+            parent_comment.user, new_comment, CommentNotificationType.COMMENT_REPLY
         )
         request.db_session.add(notification)
 
@@ -134,67 +118,67 @@ def post_comment_reply(request: Request, markdown: str) -> dict:
         .one()
     )
 
-    return {'comment': new_comment}
+    return {"comment": new_comment}
 
 
 @ic_view_config(
-    route_name='comment',
-    request_method='GET',
-    renderer='comment_contents.jinja2',
-    permission='view',
+    route_name="comment",
+    request_method="GET",
+    renderer="comment_contents.jinja2",
+    permission="view",
 )
 def get_comment_contents(request: Request) -> dict:
     """Get a comment's body with Intercooler."""
-    return {'comment': request.context}
+    return {"comment": request.context}
 
 
 @ic_view_config(
-    route_name='comment',
-    request_method='GET',
-    request_param='ic-trigger-name=edit',
-    renderer='comment_edit.jinja2',
-    permission='edit',
+    route_name="comment",
+    request_method="GET",
+    request_param="ic-trigger-name=edit",
+    renderer="comment_edit.jinja2",
+    permission="edit",
 )
 def get_comment_edit(request: Request) -> dict:
     """Get the edit form for a comment with Intercooler."""
-    return {'comment': request.context}
+    return {"comment": request.context}
 
 
 @ic_view_config(
-    route_name='comment',
-    request_method='PATCH',
-    renderer='comment_contents.jinja2',
-    permission='edit',
+    route_name="comment",
+    request_method="PATCH",
+    renderer="comment_contents.jinja2",
+    permission="edit",
 )
-@use_kwargs(CommentSchema(only=('markdown',)))
+@use_kwargs(CommentSchema(only=("markdown",)))
 def patch_comment(request: Request, markdown: str) -> dict:
     """Update a comment with Intercooler."""
     comment = request.context
 
     comment.markdown = markdown
 
-    return {'comment': comment}
+    return {"comment": comment}
 
 
 @ic_view_config(
-    route_name='comment',
-    request_method='DELETE',
-    renderer='comment_contents.jinja2',
-    permission='delete',
+    route_name="comment",
+    request_method="DELETE",
+    renderer="comment_contents.jinja2",
+    permission="delete",
 )
 def delete_comment(request: Request) -> dict:
     """Delete a comment with Intercooler."""
     comment = request.context
     comment.is_deleted = True
 
-    return {'comment': comment}
+    return {"comment": comment}
 
 
 @ic_view_config(
-    route_name='comment_vote',
-    request_method='PUT',
-    permission='vote',
-    renderer='comment_contents.jinja2',
+    route_name="comment_vote",
+    request_method="PUT",
+    permission="vote",
+    renderer="comment_contents.jinja2",
 )
 def put_vote_comment(request: Request) -> dict:
     """Vote on a comment with Intercooler."""
@@ -222,22 +206,21 @@ def put_vote_comment(request: Request) -> dict:
         .one()
     )
 
-    return {'comment': comment}
+    return {"comment": comment}
 
 
 @ic_view_config(
-    route_name='comment_vote',
-    request_method='DELETE',
-    permission='vote',
-    renderer='comment_contents.jinja2',
+    route_name="comment_vote",
+    request_method="DELETE",
+    permission="vote",
+    renderer="comment_contents.jinja2",
 )
 def delete_vote_comment(request: Request) -> dict:
     """Remove the user's vote from a comment with Intercooler."""
     comment = request.context
 
     request.query(CommentVote).filter(
-        CommentVote.comment == comment,
-        CommentVote.user == request.user,
+        CommentVote.comment == comment, CommentVote.user == request.user
     ).delete(synchronize_session=False)
 
     # manually commit the transaction so triggers will execute
@@ -251,16 +234,16 @@ def delete_vote_comment(request: Request) -> dict:
         .one()
     )
 
-    return {'comment': comment}
+    return {"comment": comment}
 
 
 @ic_view_config(
-    route_name='comment_tag',
-    request_method='PUT',
-    permission='tag',
-    renderer='comment_contents.jinja2',
+    route_name="comment_tag",
+    request_method="PUT",
+    permission="tag",
+    renderer="comment_contents.jinja2",
 )
-@use_kwargs(CommentTagSchema(only=('name',)), locations=('matchdict',))
+@use_kwargs(CommentTagSchema(only=("name",)), locations=("matchdict",))
 def put_tag_comment(request: Request, name: CommentTagOption) -> Response:
     """Add a tag to a comment."""
     comment = request.context
@@ -286,16 +269,16 @@ def put_tag_comment(request: Request, name: CommentTagOption) -> Response:
         .one()
     )
 
-    return {'comment': comment}
+    return {"comment": comment}
 
 
 @ic_view_config(
-    route_name='comment_tag',
-    request_method='DELETE',
-    permission='tag',
-    renderer='comment_contents.jinja2',
+    route_name="comment_tag",
+    request_method="DELETE",
+    permission="tag",
+    renderer="comment_contents.jinja2",
 )
-@use_kwargs(CommentTagSchema(only=('name',)), locations=('matchdict',))
+@use_kwargs(CommentTagSchema(only=("name",)), locations=("matchdict",))
 def delete_tag_comment(request: Request, name: CommentTagOption) -> Response:
     """Remove a tag (that the user previously added) from a comment."""
     comment = request.context
@@ -316,19 +299,14 @@ def delete_tag_comment(request: Request, name: CommentTagOption) -> Response:
         .one()
     )
 
-    return {'comment': comment}
+    return {"comment": comment}
 
 
 @ic_view_config(
-    route_name='comment_mark_read',
-    request_method='PUT',
-    permission='mark_read',
+    route_name="comment_mark_read", request_method="PUT", permission="mark_read"
 )
-@use_kwargs({'mark_all_previous': Boolean(missing=False)})
-def put_mark_comments_read(
-        request: Request,
-        mark_all_previous: bool,
-) -> Response:
+@use_kwargs({"mark_all_previous": Boolean(missing=False)})
+def put_mark_comments_read(request: Request, mark_all_previous: bool) -> Response:
     """Mark comment(s) read, clearing notifications.
 
     The "main" notification (request.context) will always be marked read, and
@@ -339,7 +317,8 @@ def put_mark_comments_read(
 
     if mark_all_previous:
         prev_notifications = (
-            request.query(CommentNotification).filter(
+            request.query(CommentNotification)
+            .filter(
                 CommentNotification.user == request.user,
                 CommentNotification.is_unread == True,  # noqa
                 CommentNotification.created_time <= notification.created_time,
@@ -351,16 +330,14 @@ def put_mark_comments_read(
         # sort the notifications by created_time of their comment so that the
         # INSERT ... ON CONFLICT DO UPDATE statements work as expected
         prev_notifications = sorted(
-            prev_notifications, key=lambda c: c.comment.created_time)
+            prev_notifications, key=lambda c: c.comment.created_time
+        )
 
         for comment_notification in prev_notifications:
             comment_notification.is_unread = False
-            _increment_topic_comments_seen(
-                request,
-                comment_notification.comment
-            )
+            _increment_topic_comments_seen(request, comment_notification.comment)
 
-        return Response('Your comment notifications have been cleared.')
+        return Response("Your comment notifications have been cleared.")
 
     notification.is_unread = False
     _increment_topic_comments_seen(request, notification.comment)

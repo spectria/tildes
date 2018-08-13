@@ -9,8 +9,8 @@ import venusian
 class APIv0(Service):
     """Service wrapper class for v0 of the API."""
 
-    name_prefix = 'apiv0_'
-    base_path = '/api/v0'
+    name_prefix = "apiv0_"
+    base_path = "/api/v0"
 
     def __init__(self, name: str, path: str, **kwargs: Any) -> None:
         """Create a new service."""
@@ -28,4 +28,4 @@ class APIv0(Service):
             # TEMP: disable API until I can fix the private-fields issue
             # config.add_cornice_service(self)
 
-        info = venusian.attach(self, callback, category='pyramid')
+        info = venusian.attach(self, callback, category="pyramid")

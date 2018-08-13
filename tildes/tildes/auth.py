@@ -7,13 +7,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from pyramid.httpexceptions import HTTPFound
 from pyramid.request import Request
-from pyramid.security import (
-    ACLDenied,
-    ACLPermitsResult,
-    Allow,
-    Authenticated,
-    Everyone,
-)
+from pyramid.security import ACLDenied, ACLPermitsResult, Allow, Authenticated, Everyone
 
 from tildes.models.user import User
 
@@ -27,7 +21,7 @@ class DefaultRootFactory:
     an __acl__ defined, they will not "fall back" to this one.
     """
 
-    __acl__ = ((Allow, Everyone, 'view'),)
+    __acl__ = ((Allow, Everyone, "view"),)
 
     def __init__(self, request: Request) -> None:
         """Root factory constructor - must take a request argument."""
@@ -40,10 +34,7 @@ def get_authenticated_user(request: Request) -> Optional[User]:
     if not user_id:
         return None
 
-    query = (
-        request.query(User)
-        .filter_by(user_id=user_id)
-    )
+    query = request.query(User).filter_by(user_id=user_id)
 
     return query.one_or_none()
 
@@ -60,15 +51,15 @@ def auth_callback(user_id: int, request: Request) -> Optional[Sequence[str]]:
     # if the user is banned, log them out - is there a better place to do this?
     if request.user.is_banned:
         request.session.invalidate()
-        raise HTTPFound('/')
+        raise HTTPFound("/")
 
     if user_id != request.user.user_id:
-        raise AssertionError('auth_callback called with different user_id')
+        raise AssertionError("auth_callback called with different user_id")
 
     principals = []
 
     if request.user.is_admin:
-        principals.append('admin')
+        principals.append("admin")
 
     return principals
 
@@ -76,7 +67,7 @@ def auth_callback(user_id: int, request: Request) -> Optional[Sequence[str]]:
 def includeme(config: Configurator) -> None:
     """Config updates related to authentication/authorization."""
     # make all views require "view" permission unless specifically overridden
-    config.set_default_permission('view')
+    config.set_default_permission("view")
 
     # replace the default root factory with a custom one to more easily support
     # the default permission
@@ -89,32 +80,30 @@ def includeme(config: Configurator) -> None:
     config.set_authorization_policy(AuthorizedOnlyPolicy())
 
     config.set_authentication_policy(
-        SessionAuthenticationPolicy(callback=auth_callback))
+        SessionAuthenticationPolicy(callback=auth_callback)
+    )
 
     # enable CSRF checking globally by default
     config.set_default_csrf_options(require_csrf=True)
 
     # make the logged-in User object available as request.user
-    config.add_request_method(get_authenticated_user, 'user', reify=True)
+    config.add_request_method(get_authenticated_user, "user", reify=True)
 
     # add has_any_permission method for easily checking multiple permissions
-    config.add_request_method(has_any_permission, 'has_any_permission')
+    config.add_request_method(has_any_permission, "has_any_permission")
 
 
 class AuthorizedOnlyPolicy(ACLAuthorizationPolicy):
     """ACLAuthorizationPolicy override that always denies logged-out users."""
 
     def permits(
-            self,
-            context: Any,
-            principals: Sequence[Any],
-            permission: str,
+        self, context: Any, principals: Sequence[Any], permission: str
     ) -> ACLPermitsResult:
         """Deny logged-out users, otherwise pass up to normal policy."""
         if Authenticated not in principals:
             return ACLDenied(
-                '<authorized only>',
-                '<no ACLs checked yet>',
+                "<authorized only>",
+                "<no ACLs checked yet>",
                 permission,
                 principals,
                 context,
@@ -124,12 +113,9 @@ class AuthorizedOnlyPolicy(ACLAuthorizationPolicy):
 
 
 def has_any_permission(
-        request: Request,
-        permissions: Sequence[str],
-        context: Any,
+    request: Request, permissions: Sequence[str], context: Any
 ) -> bool:
     """Return whether the user has any of the permissions on the item."""
     return any(
-        request.has_permission(permission, context)
-        for permission in permissions
+        request.has_permission(permission, context) for permission in permissions
     )

@@ -10,4 +10,4 @@ IC_NOOP_404 = Response(status_int=404)
 
 # Because of the above, in order to deliberately cause Intercooler to replace
 # an element with whitespace, the response needs to contain at least two spaces
-IC_EMPTY = Response('  ')
+IC_EMPTY = Response("  ")

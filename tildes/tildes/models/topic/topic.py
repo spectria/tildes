@@ -31,17 +31,14 @@ from tildes.metrics import incr_counter
 from tildes.models import DatabaseModel
 from tildes.models.group import Group
 from tildes.models.user import User
-from tildes.schemas.topic import (
-    TITLE_MAX_LENGTH,
-    TopicSchema,
-)
+from tildes.schemas.topic import TITLE_MAX_LENGTH, TopicSchema
 
 
 # edits inside this period after creation will not mark the topic as edited
 EDIT_GRACE_PERIOD = timedelta(minutes=5)
 
 # special tags to put at the front of the tag list
-SPECIAL_TAGS = ['nsfw', 'spoiler']
+SPECIAL_TAGS = ["nsfw", "spoiler"]
 
 
 class Topic(DatabaseModel):
@@ -64,76 +61,67 @@ class Topic(DatabaseModel):
 
     schema_class = TopicSchema
 
-    __tablename__ = 'topics'
+    __tablename__ = "topics"
 
     topic_id: int = Column(Integer, primary_key=True)
     group_id: int = Column(
-        Integer,
-        ForeignKey('groups.group_id'),
-        nullable=False,
-        index=True,
+        Integer, ForeignKey("groups.group_id"), nullable=False, index=True
     )
     user_id: int = Column(
-        Integer,
-        ForeignKey('users.user_id'),
-        nullable=False,
-        index=True,
+        Integer, ForeignKey("users.user_id"), nullable=False, index=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
         index=True,
-        server_default=text('NOW()'),
+        server_default=text("NOW()"),
     )
     last_edited_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     last_activity_time: datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
         index=True,
-        server_default=text('NOW()'),
+        server_default=text("NOW()"),
     )
     is_deleted: bool = Column(
-        Boolean, nullable=False, server_default='false', index=True)
+        Boolean, nullable=False, server_default="false", index=True
+    )
     deleted_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     is_removed: bool = Column(
-        Boolean, nullable=False, server_default='false', index=True)
+        Boolean, nullable=False, server_default="false", index=True
+    )
     removed_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     title: str = Column(
         Text,
-        CheckConstraint(
-            f'LENGTH(title) <= {TITLE_MAX_LENGTH}',
-            name='title_length',
-        ),
+        CheckConstraint(f"LENGTH(title) <= {TITLE_MAX_LENGTH}", name="title_length"),
         nullable=False,
     )
     topic_type: TopicType = Column(
-        ENUM(TopicType), nullable=False, server_default='TEXT')
-    _markdown: Optional[str] = deferred(Column('markdown', Text))
+        ENUM(TopicType), nullable=False, server_default="TEXT"
+    )
+    _markdown: Optional[str] = deferred(Column("markdown", Text))
     rendered_html: Optional[str] = Column(Text)
     link: Optional[str] = Column(Text)
     content_metadata: Dict[str, Any] = Column(JSONB)
-    num_comments: int = Column(
-        Integer, nullable=False, server_default='0', index=True)
-    num_votes: int = Column(
-        Integer, nullable=False, server_default='0', index=True)
+    num_comments: int = Column(Integer, nullable=False, server_default="0", index=True)
+    num_votes: int = Column(Integer, nullable=False, server_default="0", index=True)
     _tags: List[Ltree] = Column(
-        'tags', ArrayOfLtree, nullable=False, server_default='{}')
-    is_official: bool = Column(Boolean, nullable=False, server_default='false')
-    is_locked: bool = Column(Boolean, nullable=False, server_default='false')
+        "tags", ArrayOfLtree, nullable=False, server_default="{}"
+    )
+    is_official: bool = Column(Boolean, nullable=False, server_default="false")
+    is_locked: bool = Column(Boolean, nullable=False, server_default="false")
 
-    user: User = relationship('User', lazy=False, innerjoin=True)
-    group: Group = relationship('Group', innerjoin=True)
+    user: User = relationship("User", lazy=False, innerjoin=True)
+    group: Group = relationship("Group", innerjoin=True)
 
     # Create a GiST index on the tags column
-    __table_args__ = (
-        Index('ix_topics_tags_gist', _tags, postgresql_using='gist'),
-    )
+    __table_args__ = (Index("ix_topics_tags_gist", _tags, postgresql_using="gist"),)
 
     @hybrid_property
     def markdown(self) -> Optional[str]:
         """Return the topic's markdown."""
         if not self.is_text_type:
-            raise AttributeError('Only text topics have markdown')
+            raise AttributeError("Only text topics have markdown")
 
         return self._markdown
 
@@ -141,7 +129,7 @@ class Topic(DatabaseModel):
     def markdown(self, new_markdown: str) -> None:
         """Set the topic's markdown and render its HTML."""
         if not self.is_text_type:
-            raise AttributeError('Can only set markdown for text topics')
+            raise AttributeError("Can only set markdown for text topics")
 
         if new_markdown == self.markdown:
             return
@@ -149,21 +137,19 @@ class Topic(DatabaseModel):
         self._markdown = new_markdown
         self.rendered_html = convert_markdown_to_safe_html(new_markdown)
 
-        if (self.created_time and
-                utc_now() - self.created_time > EDIT_GRACE_PERIOD):
+        if self.created_time and utc_now() - self.created_time > EDIT_GRACE_PERIOD:
             self.last_edited_time = utc_now()
 
     @hybrid_property
     def tags(self) -> List[str]:
         """Return the topic's tags."""
-        sorted_tags = [str(tag).replace('_', ' ') for tag in self._tags]
+        sorted_tags = [str(tag).replace("_", " ") for tag in self._tags]
 
         # move special tags in front
         # reverse so that tags at the start of the list appear first
         for tag in reversed(SPECIAL_TAGS):
             if tag in sorted_tags:
-                sorted_tags.insert(
-                    0, sorted_tags.pop(sorted_tags.index(tag)))
+                sorted_tags.insert(0, sorted_tags.pop(sorted_tags.index(tag)))
 
         return sorted_tags
 
@@ -176,12 +162,7 @@ class Topic(DatabaseModel):
         return f'<Topic "{self.title}" ({self.topic_id})>'
 
     @classmethod
-    def _create_base_topic(
-            cls,
-            group: Group,
-            author: User,
-            title: str,
-    ) -> 'Topic':
+    def _create_base_topic(cls, group: Group, author: User, title: str) -> "Topic":
         """Create the "base" for a new topic."""
         new_topic = cls()
         new_topic.group_id = group.group_id
@@ -192,35 +173,27 @@ class Topic(DatabaseModel):
 
     @classmethod
     def create_text_topic(
-            cls,
-            group: Group,
-            author: User,
-            title: str,
-            markdown: str = '',
-    ) -> 'Topic':
+        cls, group: Group, author: User, title: str, markdown: str = ""
+    ) -> "Topic":
         """Create a new text topic."""
         new_topic = cls._create_base_topic(group, author, title)
         new_topic.topic_type = TopicType.TEXT
         new_topic.markdown = markdown
 
-        incr_counter('topics', type='text')
+        incr_counter("topics", type="text")
 
         return new_topic
 
     @classmethod
     def create_link_topic(
-            cls,
-            group: Group,
-            author: User,
-            title: str,
-            link: str,
-    ) -> 'Topic':
+        cls, group: Group, author: User, title: str, link: str
+    ) -> "Topic":
         """Create a new link topic."""
         new_topic = cls._create_base_topic(group, author, title)
         new_topic.topic_type = TopicType.LINK
         new_topic.link = link
 
-        incr_counter('topics', type='link')
+        incr_counter("topics", type="link")
 
         return new_topic
 
@@ -230,74 +203,74 @@ class Topic(DatabaseModel):
 
         # deleted topics allow "general" viewing, but nothing else
         if self.is_deleted:
-            acl.append((Allow, Everyone, 'view'))
+            acl.append((Allow, Everyone, "view"))
             acl.append(DENY_ALL)
 
         # view:
         #  - everyone gets "general" viewing permission for all topics
-        acl.append((Allow, Everyone, 'view'))
+        acl.append((Allow, Everyone, "view"))
 
         # view_author:
         #  - removed topics' author is only visible to the author and admins
         #  - otherwise, everyone can view the author
         if self.is_removed:
-            acl.append((Allow, 'admin', 'view_author'))
-            acl.append((Allow, self.user_id, 'view_author'))
-            acl.append((Deny, Everyone, 'view_author'))
+            acl.append((Allow, "admin", "view_author"))
+            acl.append((Allow, self.user_id, "view_author"))
+            acl.append((Deny, Everyone, "view_author"))
 
-        acl.append((Allow, Everyone, 'view_author'))
+        acl.append((Allow, Everyone, "view_author"))
 
         # view_content:
         #  - removed topics' content is only visible to the author and admins
         #  - otherwise, everyone can view the content
         if self.is_removed:
-            acl.append((Allow, 'admin', 'view_content'))
-            acl.append((Allow, self.user_id, 'view_content'))
-            acl.append((Deny, Everyone, 'view_content'))
+            acl.append((Allow, "admin", "view_content"))
+            acl.append((Allow, self.user_id, "view_content"))
+            acl.append((Deny, Everyone, "view_content"))
 
-        acl.append((Allow, Everyone, 'view_content'))
+        acl.append((Allow, Everyone, "view_content"))
 
         # vote:
         #  - removed topics can't be voted on by anyone
         #  - otherwise, logged-in users except the author can vote
         if self.is_removed:
-            acl.append((Deny, Everyone, 'vote'))
+            acl.append((Deny, Everyone, "vote"))
 
-        acl.append((Deny, self.user_id, 'vote'))
-        acl.append((Allow, Authenticated, 'vote'))
+        acl.append((Deny, self.user_id, "vote"))
+        acl.append((Allow, Authenticated, "vote"))
 
         # comment:
         #  - removed topics can only be commented on by admins
         #  - locked topics can only be commented on by admins
         #  - otherwise, logged-in users can comment
         if self.is_removed:
-            acl.append((Allow, 'admin', 'comment'))
-            acl.append((Deny, Everyone, 'comment'))
+            acl.append((Allow, "admin", "comment"))
+            acl.append((Deny, Everyone, "comment"))
 
         if self.is_locked:
-            acl.append((Allow, 'admin', 'comment'))
-            acl.append((Deny, Everyone, 'comment'))
+            acl.append((Allow, "admin", "comment"))
+            acl.append((Deny, Everyone, "comment"))
 
-        acl.append((Allow, Authenticated, 'comment'))
+        acl.append((Allow, Authenticated, "comment"))
 
         # edit:
         #  - only text topics can be edited, only by the author
         if self.is_text_type:
-            acl.append((Allow, self.user_id, 'edit'))
+            acl.append((Allow, self.user_id, "edit"))
 
         # delete:
         #  - only the author can delete
-        acl.append((Allow, self.user_id, 'delete'))
+        acl.append((Allow, self.user_id, "delete"))
 
         # tag:
         #  - only the author and admins can tag topics
-        acl.append((Allow, self.user_id, 'tag'))
-        acl.append((Allow, 'admin', 'tag'))
+        acl.append((Allow, self.user_id, "tag"))
+        acl.append((Allow, "admin", "tag"))
 
         # admin tools
-        acl.append((Allow, 'admin', 'lock'))
-        acl.append((Allow, 'admin', 'move'))
-        acl.append((Allow, 'admin', 'edit_title'))
+        acl.append((Allow, "admin", "lock"))
+        acl.append((Allow, "admin", "move"))
+        acl.append((Allow, "admin", "edit_title"))
 
         acl.append(DENY_ALL)
 
@@ -316,7 +289,7 @@ class Topic(DatabaseModel):
     @property
     def permalink(self) -> str:
         """Return the permalink for this topic."""
-        return f'/~{self.group.path}/{self.topic_id36}/{self.url_slug}'
+        return f"/~{self.group.path}/{self.topic_id36}/{self.url_slug}"
 
     @property
     def is_text_type(self) -> bool:
@@ -332,27 +305,26 @@ class Topic(DatabaseModel):
     def type_for_display(self) -> str:
         """Return a string of the topic's type, suitable for display."""
         if self.is_text_type:
-            return 'Text'
+            return "Text"
         elif self.is_link_type:
-            return 'Link'
+            return "Link"
 
-        return 'Topic'
+        return "Topic"
 
     @property
     def link_domain(self) -> str:
         """Return the link's domain (for link topics only)."""
         if not self.is_link_type or not self.link:
-            raise ValueError('Non-link topics do not have a domain')
+            raise ValueError("Non-link topics do not have a domain")
 
         # get the domain from the content metadata if possible, but fall back
         # to just parsing it from the link if it's not present
-        return (self.get_content_metadata('domain')
-                or get_domain_from_url(self.link))
+        return self.get_content_metadata("domain") or get_domain_from_url(self.link)
 
     @property
     def is_spoiler(self) -> bool:
         """Return whether the topic is marked as a spoiler."""
-        return 'spoiler' in self.tags
+        return "spoiler" in self.tags
 
     def get_content_metadata(self, key: str) -> Any:
         """Get a piece of content metadata "safely".
@@ -371,13 +343,13 @@ class Topic(DatabaseModel):
         metadata_strings = []
 
         if self.is_text_type:
-            word_count = self.get_content_metadata('word_count')
+            word_count = self.get_content_metadata("word_count")
             if word_count is not None:
                 if word_count == 1:
-                    metadata_strings.append('1 word')
+                    metadata_strings.append("1 word")
                 else:
-                    metadata_strings.append(f'{word_count} words')
+                    metadata_strings.append(f"{word_count} words")
         elif self.is_link_type:
-            metadata_strings.append(f'{self.link_domain}')
+            metadata_strings.append(f"{self.link_domain}")
 
-        return ', '.join(metadata_strings)
+        return ", ".join(metadata_strings)

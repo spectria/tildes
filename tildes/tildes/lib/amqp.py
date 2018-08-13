@@ -24,30 +24,24 @@ class PgsqlQueueConsumer(AbstractConsumer):
     JSON format.
     """
 
-    PGSQL_EXCHANGE_NAME = 'pgsql_events'
+    PGSQL_EXCHANGE_NAME = "pgsql_events"
 
     def __init__(
-            self,
-            queue_name: str,
-            routing_keys: Sequence[str],
-            uses_db: bool = True,
+        self, queue_name: str, routing_keys: Sequence[str], uses_db: bool = True
     ) -> None:
         """Initialize a new queue, bindings, and consumer for it."""
         self.connection = Connection()
         self.channel = self.connection.channel()
 
-        self.channel.queue_declare(
-            queue_name, durable=True, auto_delete=False)
+        self.channel.queue_declare(queue_name, durable=True, auto_delete=False)
 
         for routing_key in routing_keys:
             self.channel.queue_bind(
-                queue_name,
-                exchange=self.PGSQL_EXCHANGE_NAME,
-                routing_key=routing_key,
+                queue_name, exchange=self.PGSQL_EXCHANGE_NAME, routing_key=routing_key
             )
 
         if uses_db:
-            self.db_session = get_session_from_config(os.environ['INI_FILE'])
+            self.db_session = get_session_from_config(os.environ["INI_FILE"])
         else:
             self.db_session = None
 

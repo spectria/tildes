@@ -17,7 +17,7 @@ class CommentNotificationQuery(ModelQuery):
         """Initialize a CommentNotificationQuery for the request."""
         super().__init__(CommentNotification, request)
 
-    def _attach_extra_data(self) -> 'CommentNotificationQuery':
+    def _attach_extra_data(self) -> "CommentNotificationQuery":
         """Attach the user's comment votes to the query."""
         vote_subquery = (
             self.request.query(CommentVote)
@@ -26,16 +26,16 @@ class CommentNotificationQuery(ModelQuery):
                 CommentVote.user == self.request.user,
             )
             .exists()
-            .label('user_voted')
+            .label("user_voted")
         )
         return self.add_columns(vote_subquery)
 
-    def join_all_relationships(self) -> 'CommentNotificationQuery':
+    def join_all_relationships(self) -> "CommentNotificationQuery":
         """Eagerly join the comment, topic, and group to the notification."""
         self = self.options(
             joinedload(CommentNotification.comment)
-            .joinedload('topic')
-            .joinedload('group')
+            .joinedload("topic")
+            .joinedload("group")
         )
 
         return self

@@ -20,7 +20,7 @@ NOT_NULL_ERROR_CODE = 23502
 def get_session_from_config(config_path: str) -> Session:
     """Get a database session from a config file (specified by path)."""
     env = bootstrap(config_path)
-    session_factory = env['registry']['db_session_factory']
+    session_factory = env["registry"]["db_session_factory"]
     return session_factory()
 
 
@@ -31,9 +31,7 @@ class LockSpaces(enum.Enum):
 
 
 def obtain_transaction_lock(
-        session: Session,
-        lock_space: Optional[str],
-        lock_value: int,
+    session: Session, lock_space: Optional[str], lock_value: int
 ) -> None:
     """Obtain a transaction-level advisory lock from PostgreSQL.
 
@@ -45,11 +43,9 @@ def obtain_transaction_lock(
         try:
             lock_space_value = LockSpaces[lock_space.upper()].value
         except KeyError:
-            raise ValueError('Invalid lock space: %s' % lock_space)
+            raise ValueError("Invalid lock space: %s" % lock_space)
 
-        session.query(
-            func.pg_advisory_xact_lock(lock_space_value, lock_value)
-        ).one()
+        session.query(func.pg_advisory_xact_lock(lock_space_value, lock_value)).one()
     else:
         session.query(func.pg_advisory_xact_lock(lock_value)).one()
 
@@ -66,10 +62,11 @@ class CIText(UserDefinedType):
     def get_col_spec(self, **kw: Any) -> str:
         """Return the type name (for creating columns and so on)."""
         # pylint: disable=no-self-use,unused-argument
-        return 'CITEXT'
+        return "CITEXT"
 
     def bind_processor(self, dialect: Dialect) -> Callable:
         """Return a conversion function for processing bind values."""
+
         def process(value: Any) -> Any:
             return value
 
@@ -77,6 +74,7 @@ class CIText(UserDefinedType):
 
     def result_processor(self, dialect: Dialect, coltype: Any) -> Callable:
         """Return a conversion function for processing result row values."""
+
         def process(value: Any) -> Any:
             return value
 
@@ -103,8 +101,8 @@ class ArrayOfLtree(ARRAY):  # pylint: disable=too-many-ancestors
         super_rp = super().result_processor(dialect, coltype)
 
         def handle_raw_string(value: str) -> List[str]:
-            if not (value.startswith('{') and value.endswith('}')):
-                raise ValueError('%s is not an array value' % value)
+            if not (value.startswith("{") and value.endswith("}")):
+                raise ValueError("%s is not an array value" % value)
 
             # trim off the surrounding braces
             value = value[1:-1]
@@ -113,7 +111,7 @@ class ArrayOfLtree(ARRAY):  # pylint: disable=too-many-ancestors
             if not value:
                 return []
 
-            return value.split(',')
+            return value.split(",")
 
         def process(value: Optional[str]) -> Optional[List[str]]:
             if value is None:
@@ -133,8 +131,8 @@ class ArrayOfLtree(ARRAY):  # pylint: disable=too-many-ancestors
 
         def ancestor_of(self, other):  # type: ignore
             """Return whether the array contains any ancestor of `other`."""
-            return self.op('@>')(other)
+            return self.op("@>")(other)
 
         def descendant_of(self, other):  # type: ignore
             """Return whether the array contains any descendant of `other`."""
-            return self.op('<@')(other)
+            return self.op("<@")(other)

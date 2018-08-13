@@ -5,14 +5,7 @@ from datetime import datetime, timedelta
 from typing import Any, Optional, Sequence, Tuple
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
-from sqlalchemy import (
-    Boolean,
-    Column,
-    ForeignKey,
-    Integer,
-    Text,
-    TIMESTAMP,
-)
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, TIMESTAMP
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.expression import text
@@ -60,47 +53,40 @@ class Comment(DatabaseModel):
 
     schema_class = CommentSchema
 
-    __tablename__ = 'comments'
+    __tablename__ = "comments"
 
     comment_id: int = Column(Integer, primary_key=True)
     topic_id: int = Column(
-        Integer,
-        ForeignKey('topics.topic_id'),
-        nullable=False,
-        index=True,
+        Integer, ForeignKey("topics.topic_id"), nullable=False, index=True
     )
     user_id: int = Column(
-        Integer,
-        ForeignKey('users.user_id'),
-        nullable=False,
-        index=True,
+        Integer, ForeignKey("users.user_id"), nullable=False, index=True
     )
     parent_comment_id: Optional[int] = Column(
-        Integer,
-        ForeignKey('comments.comment_id'),
-        index=True,
+        Integer, ForeignKey("comments.comment_id"), index=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
         index=True,
-        server_default=text('NOW()'),
+        server_default=text("NOW()"),
     )
     is_deleted: bool = Column(
-        Boolean, nullable=False, server_default='false', index=True)
+        Boolean, nullable=False, server_default="false", index=True
+    )
     deleted_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
-    is_removed: bool = Column(Boolean, nullable=False, server_default='false')
+    is_removed: bool = Column(Boolean, nullable=False, server_default="false")
     removed_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     last_edited_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
-    _markdown: str = deferred(Column('markdown', Text, nullable=False))
+    _markdown: str = deferred(Column("markdown", Text, nullable=False))
     rendered_html: str = Column(Text, nullable=False)
-    num_votes: int = Column(
-        Integer, nullable=False, server_default='0', index=True)
+    num_votes: int = Column(Integer, nullable=False, server_default="0", index=True)
 
-    user: User = relationship('User', lazy=False, innerjoin=True)
-    topic: Topic = relationship('Topic', innerjoin=True)
-    parent_comment: Optional['Comment'] = relationship(
-        'Comment', uselist=False, remote_side=[comment_id])
+    user: User = relationship("User", lazy=False, innerjoin=True)
+    topic: Topic = relationship("Topic", innerjoin=True)
+    parent_comment: Optional["Comment"] = relationship(
+        "Comment", uselist=False, remote_side=[comment_id]
+    )
 
     @hybrid_property
     def markdown(self) -> str:
@@ -117,20 +103,19 @@ class Comment(DatabaseModel):
         self._markdown = new_markdown
         self.rendered_html = convert_markdown_to_safe_html(new_markdown)
 
-        if (self.created_time and
-                utc_now() - self.created_time > EDIT_GRACE_PERIOD):
+        if self.created_time and utc_now() - self.created_time > EDIT_GRACE_PERIOD:
             self.last_edited_time = utc_now()
 
     def __repr__(self) -> str:
         """Display the comment's ID as its repr format."""
-        return f'<Comment ({self.comment_id})>'
+        return f"<Comment ({self.comment_id})>"
 
     def __init__(
-            self,
-            topic: Topic,
-            author: User,
-            markdown: str,
-            parent_comment: Optional['Comment'] = None,
+        self,
+        topic: Topic,
+        author: User,
+        markdown: str,
+        parent_comment: Optional["Comment"] = None,
     ) -> None:
         """Create a new comment."""
         self.topic = topic
@@ -142,7 +127,7 @@ class Comment(DatabaseModel):
 
         self.markdown = markdown
 
-        incr_counter('comments')
+        incr_counter("comments")
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""
@@ -156,49 +141,49 @@ class Comment(DatabaseModel):
         #  - removed comments can only be viewed by admins and the author
         #  - otherwise, everyone can view
         if self.is_removed:
-            acl.append((Allow, 'admin', 'view'))
-            acl.append((Allow, self.user_id, 'view'))
-            acl.append((Deny, Everyone, 'view'))
+            acl.append((Allow, "admin", "view"))
+            acl.append((Allow, self.user_id, "view"))
+            acl.append((Deny, Everyone, "view"))
 
-        acl.append((Allow, Everyone, 'view'))
+        acl.append((Allow, Everyone, "view"))
 
         # vote:
         #  - removed comments can't be voted on by anyone
         #  - otherwise, logged-in users except the author can vote
         if self.is_removed:
-            acl.append((Deny, Everyone, 'vote'))
+            acl.append((Deny, Everyone, "vote"))
 
-        acl.append((Deny, self.user_id, 'vote'))
-        acl.append((Allow, Authenticated, 'vote'))
+        acl.append((Deny, self.user_id, "vote"))
+        acl.append((Allow, Authenticated, "vote"))
 
         # tag:
         #  - temporary: nobody can tag comments
-        acl.append((Deny, Everyone, 'tag'))
+        acl.append((Deny, Everyone, "tag"))
 
         # reply:
         #  - removed comments can't be replied to by anyone
         #  - if the topic is locked, only admins can reply
         #  - otherwise, logged-in users can reply
         if self.is_removed:
-            acl.append((Deny, Everyone, 'reply'))
+            acl.append((Deny, Everyone, "reply"))
 
         if self.topic.is_locked:
-            acl.append((Allow, 'admin', 'reply'))
-            acl.append((Deny, Everyone, 'reply'))
+            acl.append((Allow, "admin", "reply"))
+            acl.append((Deny, Everyone, "reply"))
 
-        acl.append((Allow, Authenticated, 'reply'))
+        acl.append((Allow, Authenticated, "reply"))
 
         # edit:
         #  - only the author can edit
-        acl.append((Allow, self.user_id, 'edit'))
+        acl.append((Allow, self.user_id, "edit"))
 
         # delete:
         #  - only the author can delete
-        acl.append((Allow, self.user_id, 'delete'))
+        acl.append((Allow, self.user_id, "delete"))
 
         # mark_read:
         #  - logged-in users can mark comments read
-        acl.append((Allow, Authenticated, 'mark_read'))
+        acl.append((Allow, Authenticated, "mark_read"))
 
         acl.append(DENY_ALL)
 
@@ -220,7 +205,7 @@ class Comment(DatabaseModel):
     @property
     def permalink(self) -> str:
         """Return the permalink for this comment."""
-        return f'{self.topic.permalink}#comment-{self.comment_id36}'
+        return f"{self.topic.permalink}#comment-{self.comment_id36}"
 
     @property
     def parent_comment_permalink(self) -> str:
@@ -228,7 +213,7 @@ class Comment(DatabaseModel):
         if not self.parent_comment_id:
             raise AttributeError
 
-        return f'{self.topic.permalink}#comment-{self.parent_comment_id36}'
+        return f"{self.topic.permalink}#comment-{self.parent_comment_id36}"
 
     @property
     def tag_counts(self) -> Counter:

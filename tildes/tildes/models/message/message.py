@@ -55,78 +55,70 @@ class MessageConversation(DatabaseModel):
 
     schema_class = MessageConversationSchema
 
-    __tablename__ = 'message_conversations'
+    __tablename__ = "message_conversations"
 
     conversation_id: int = Column(Integer, primary_key=True)
     sender_id: int = Column(
-        Integer,
-        ForeignKey('users.user_id'),
-        nullable=False,
-        index=True,
+        Integer, ForeignKey("users.user_id"), nullable=False, index=True
     )
     recipient_id: int = Column(
-        Integer,
-        ForeignKey('users.user_id'),
-        nullable=False,
-        index=True,
+        Integer, ForeignKey("users.user_id"), nullable=False, index=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
         index=True,
-        server_default=text('NOW()'),
+        server_default=text("NOW()"),
     )
     subject: str = Column(
         Text,
         CheckConstraint(
-            f'LENGTH(subject) <= {SUBJECT_MAX_LENGTH}',
-            name='subject_length',
+            f"LENGTH(subject) <= {SUBJECT_MAX_LENGTH}", name="subject_length"
         ),
         nullable=False,
     )
     markdown: str = deferred(Column(Text, nullable=False))
     rendered_html: str = Column(Text, nullable=False)
-    num_replies: int = Column(Integer, nullable=False, server_default='0')
-    last_reply_time: Optional[datetime] = Column(
-        TIMESTAMP(timezone=True), index=True)
+    num_replies: int = Column(Integer, nullable=False, server_default="0")
+    last_reply_time: Optional[datetime] = Column(TIMESTAMP(timezone=True), index=True)
     unread_user_ids: List[int] = Column(
-        ARRAY(Integer), nullable=False, server_default='{}')
+        ARRAY(Integer), nullable=False, server_default="{}"
+    )
 
     sender: User = relationship(
-        'User', lazy=False, innerjoin=True, foreign_keys=[sender_id])
+        "User", lazy=False, innerjoin=True, foreign_keys=[sender_id]
+    )
     recipient: User = relationship(
-        'User', lazy=False, innerjoin=True, foreign_keys=[recipient_id])
-    replies: Sequence['MessageReply'] = relationship(
-        'MessageReply', order_by='MessageReply.created_time')
+        "User", lazy=False, innerjoin=True, foreign_keys=[recipient_id]
+    )
+    replies: Sequence["MessageReply"] = relationship(
+        "MessageReply", order_by="MessageReply.created_time"
+    )
 
     # Create a GIN index on the unread_user_ids column using the gin__int_ops
     # operator class supplied by the intarray module. This should be the best
     # index for "array contains" queries.
     __table_args__ = (
         Index(
-            'ix_message_conversations_unread_user_ids_gin',
+            "ix_message_conversations_unread_user_ids_gin",
             unread_user_ids,
-            postgresql_using='gin',
-            postgresql_ops={'unread_user_ids': 'gin__int_ops'},
+            postgresql_using="gin",
+            postgresql_ops={"unread_user_ids": "gin__int_ops"},
         ),
     )
 
     def __init__(
-            self,
-            sender: User,
-            recipient: User,
-            subject: str,
-            markdown: str,
+        self, sender: User, recipient: User, subject: str, markdown: str
     ) -> None:
         """Create a new message conversation between two users."""
         self.sender_id = sender.user_id
         self.recipient_id = recipient.user_id
-        self.unread_user_ids = ([self.recipient_id])
+        self.unread_user_ids = [self.recipient_id]
         self.subject = subject
         self.markdown = markdown
         self.rendered_html = convert_markdown_to_safe_html(markdown)
 
-        incr_counter('messages', type='conversation')
+        incr_counter("messages", type="conversation")
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""
@@ -163,7 +155,7 @@ class MessageConversation(DatabaseModel):
         vice versa.
         """
         if not self.is_participant(viewer):
-            raise ValueError('User is not a participant in this conversation.')
+            raise ValueError("User is not a participant in this conversation.")
 
         if viewer == self.sender:
             return self.recipient
@@ -173,7 +165,7 @@ class MessageConversation(DatabaseModel):
     def is_unread_by_user(self, user: User) -> bool:
         """Return whether the conversation is unread by the specified user."""
         if not self.is_participant(user):
-            raise ValueError('User is not a participant in this conversation.')
+            raise ValueError("User is not a participant in this conversation.")
 
         return user.user_id in self.unread_user_ids
 
@@ -184,9 +176,9 @@ class MessageConversation(DatabaseModel):
         worry about duplicate values, race conditions, etc.
         """
         if not self.is_participant(user):
-            raise ValueError('User is not a participant in this conversation.')
+            raise ValueError("User is not a participant in this conversation.")
 
-        union = MessageConversation.unread_user_ids.op('|')  # type: ignore
+        union = MessageConversation.unread_user_ids.op("|")  # type: ignore
         self.unread_user_ids = union(user.user_id)
 
     def mark_read_for_user(self, user: User) -> None:
@@ -197,11 +189,12 @@ class MessageConversation(DatabaseModel):
         race conditions, etc.
         """
         if not self.is_participant(user):
-            raise ValueError('User is not a participant in this conversation.')
+            raise ValueError("User is not a participant in this conversation.")
 
         user_id = user.user_id
         self.unread_user_ids = (  # type: ignore
-            MessageConversation.unread_user_ids - user_id)  # type: ignore
+            MessageConversation.unread_user_ids - user_id  # type: ignore
+        )
 
 
 class MessageReply(DatabaseModel):
@@ -217,37 +210,31 @@ class MessageReply(DatabaseModel):
 
     schema_class = MessageReplySchema
 
-    __tablename__ = 'message_replies'
+    __tablename__ = "message_replies"
 
     reply_id: int = Column(Integer, primary_key=True)
     conversation_id: int = Column(
         Integer,
-        ForeignKey('message_conversations.conversation_id'),
+        ForeignKey("message_conversations.conversation_id"),
         nullable=False,
         index=True,
     )
     sender_id: int = Column(
-        Integer,
-        ForeignKey('users.user_id'),
-        nullable=False,
-        index=True,
+        Integer, ForeignKey("users.user_id"), nullable=False, index=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
         index=True,
-        server_default=text('NOW()'),
+        server_default=text("NOW()"),
     )
     markdown: str = deferred(Column(Text, nullable=False))
     rendered_html: str = Column(Text, nullable=False)
 
-    sender: User = relationship('User', lazy=False, innerjoin=True)
+    sender: User = relationship("User", lazy=False, innerjoin=True)
 
     def __init__(
-            self,
-            conversation: MessageConversation,
-            sender: User,
-            markdown: str,
+        self, conversation: MessageConversation, sender: User, markdown: str
     ) -> None:
         """Add a new reply to a message conversation."""
         self.conversation_id = conversation.conversation_id
@@ -255,7 +242,7 @@ class MessageReply(DatabaseModel):
         self.markdown = markdown
         self.rendered_html = convert_markdown_to_safe_html(markdown)
 
-        incr_counter('messages', type='reply')
+        incr_counter("messages", type="reply")
 
     @property
     def reply_id36(self) -> str:

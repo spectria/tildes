@@ -11,36 +11,31 @@ from sqlalchemy.schema import MetaData
 from sqlalchemy.sql.schema import Table
 
 
-ModelType = TypeVar('ModelType')  # pylint: disable=invalid-name
+ModelType = TypeVar("ModelType")  # pylint: disable=invalid-name
 
 # SQLAlchemy naming convention for constraints and indexes
 NAMING_CONVENTION = {
-    'pk': 'pk_%(table_name)s',
-    'fk': 'fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s',
-    'ix': 'ix_%(table_name)s_%(column_0_name)s',
-    'ck': 'ck_%(table_name)s_%(constraint_name)s',
-    'uq': 'uq_%(table_name)s_%(column_0_name)s',
+    "pk": "pk_%(table_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "ix": "ix_%(table_name)s_%(column_0_name)s",
+    "ck": "ck_%(table_name)s_%(constraint_name)s",
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
 }
 
 
 def attach_set_listener(
-        class_: Type['DatabaseModelBase'],
-        attribute: str,
-        instance: 'DatabaseModelBase',
+    class_: Type["DatabaseModelBase"], attribute: str, instance: "DatabaseModelBase"
 ) -> None:
     """Attach the SQLAlchemy ORM "set" attribute listener."""
     # pylint: disable=unused-argument
     def set_handler(
-            target: 'DatabaseModelBase',
-            value: Any,
-            oldvalue: Any,
-            initiator: Any,
+        target: "DatabaseModelBase", value: Any, oldvalue: Any, initiator: Any
     ) -> Any:
         """Handle an SQLAlchemy ORM "set" attribute event."""
         # pylint: disable=protected-access
         return target._validate_new_value(attribute, value)
 
-    event.listen(instance, 'set', set_handler, retval=True)
+    event.listen(instance, "set", set_handler, retval=True)
 
 
 class DatabaseModelBase:
@@ -71,8 +66,7 @@ class DatabaseModelBase:
         key columns used in __eq__, as recommended in the Python documentation.
         """
         primary_key_values = tuple(
-            getattr(self, column.name)
-            for column in self.__table__.primary_key
+            getattr(self, column.name) for column in self.__table__.primary_key
         )
         return hash(primary_key_values)
 
@@ -82,7 +76,7 @@ class DatabaseModelBase:
         if not self.schema_class:
             raise AttributeError
 
-        if not hasattr(self, '_schema'):
+        if not hasattr(self, "_schema"):
             self._schema = self.schema_class(partial=True)  # noqa
 
         return self._schema
@@ -112,7 +106,7 @@ class DatabaseModelBase:
         # set starts with an underscore, assume that it's due to being set up
         # as a hybrid property, and remove the underscore prefix when looking
         # for a field to validate against.
-        if attribute.startswith('_'):
+        if attribute.startswith("_"):
             attribute = attribute[1:]
 
         field = self.schema.fields.get(attribute)
@@ -126,13 +120,13 @@ class DatabaseModelBase:
 
 DatabaseModel = declarative_base(  # pylint: disable=invalid-name
     cls=DatabaseModelBase,
-    name='DatabaseModel',
+    name="DatabaseModel",
     metadata=MetaData(naming_convention=NAMING_CONVENTION),
 )
 
 
 # attach the listener for SQLAlchemy ORM attribute "set" events to all models
-event.listen(DatabaseModel, 'attribute_instrument', attach_set_listener)
+event.listen(DatabaseModel, "attribute_instrument", attach_set_listener)
 
 # associate JSONB columns with MutableDict so value changes are detected
 MutableDict.associate_with(JSONB)

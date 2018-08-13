@@ -15,27 +15,24 @@ from tildes.models.log import Log
 from tildes.models.user import User
 
 
-def initialize_db(
-        config_path: str,
-        alembic_config_path: Optional[str] = None,
-) -> None:
+def initialize_db(config_path: str, alembic_config_path: Optional[str] = None) -> None:
     """Load the app config and create the database tables."""
     db_session = get_session_from_config(config_path)
     engine = db_session.bind
 
     create_tables(engine)
 
-    run_sql_scripts_in_dir('sql/init/', engine)
+    run_sql_scripts_in_dir("sql/init/", engine)
 
     # if an Alembic config file wasn't specified, assume it's alembic.ini in
     # the same directory
     if not alembic_config_path:
         path = os.path.split(config_path)[0]
-        alembic_config_path = os.path.join(path, 'alembic.ini')
+        alembic_config_path = os.path.join(path, "alembic.ini")
 
     # mark current Alembic revision in db so migrations start from this point
     alembic_cfg = Config(alembic_config_path)
-    command.stamp(alembic_cfg, 'head')
+    command.stamp(alembic_cfg, "head")
 
 
 def create_tables(connectable: Connectable) -> None:
@@ -44,7 +41,8 @@ def create_tables(connectable: Connectable) -> None:
     excluded_tables = Log.INHERITED_TABLES
 
     tables = [
-        table for table in DatabaseModel.metadata.tables.values()
+        table
+        for table in DatabaseModel.metadata.tables.values()
         if table.name not in excluded_tables
     ]
     DatabaseModel.metadata.create_all(connectable, tables=tables)
@@ -53,29 +51,31 @@ def create_tables(connectable: Connectable) -> None:
 def run_sql_scripts_in_dir(path: str, engine: Engine) -> None:
     """Run all sql scripts in a directory."""
     for root, _, files in os.walk(path):
-        sql_files = [
-            filename for filename in files
-            if filename.endswith('.sql')
-        ]
+        sql_files = [filename for filename in files if filename.endswith(".sql")]
         for sql_file in sql_files:
-            subprocess.call([
-                'psql',
-                '-U', engine.url.username,
-                '-f', os.path.join(root, sql_file),
-                engine.url.database,
-            ])
+            subprocess.call(
+                [
+                    "psql",
+                    "-U",
+                    engine.url.username,
+                    "-f",
+                    os.path.join(root, sql_file),
+                    engine.url.database,
+                ]
+            )
 
 
 def insert_dev_data(config_path: str) -> None:
     """Load the app config and insert some "starter" data for a dev version."""
     session = get_session_from_config(config_path)
 
-    session.add_all([
-        User('TestUser', 'password'),
-        Group(
-            'testing',
-            'An automatically created group to use for testing purposes',
-        ),
-    ])
+    session.add_all(
+        [
+            User("TestUser", "password"),
+            Group(
+                "testing", "An automatically created group to use for testing purposes"
+            ),
+        ]
+    )
 
     session.commit()

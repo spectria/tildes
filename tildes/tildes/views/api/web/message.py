@@ -9,19 +9,17 @@ from tildes.views.decorators import ic_view_config
 
 
 @ic_view_config(
-    route_name='message_conversation_replies',
-    request_method='POST',
-    renderer='single_message.jinja2',
-    permission='reply',
+    route_name="message_conversation_replies",
+    request_method="POST",
+    renderer="single_message.jinja2",
+    permission="reply",
 )
-@use_kwargs(MessageReplySchema(only=('markdown',)))
+@use_kwargs(MessageReplySchema(only=("markdown",)))
 def post_message_reply(request: Request, markdown: str) -> dict:
     """Post a reply to a message conversation with Intercooler."""
     conversation = request.context
     new_reply = MessageReply(
-        conversation=conversation,
-        sender=request.user,
-        markdown=markdown,
+        conversation=conversation, sender=request.user, markdown=markdown
     )
     request.db_session.add(new_reply)
 
@@ -35,4 +33,4 @@ def post_message_reply(request: Request, markdown: str) -> dict:
         .one()
     )
 
-    return {'message': new_reply}
+    return {"message": new_reply}

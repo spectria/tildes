@@ -28,10 +28,7 @@ def obtain_lock(request: Request, lock_space: str, lock_value: int) -> None:
     obtain_transaction_lock(request.db_session, lock_space, lock_value)
 
 
-def query_factory(
-        request: Request,
-        model_cls: Type[DatabaseModel],
-) -> ModelQuery:
+def query_factory(request: Request, model_cls: Type[DatabaseModel]) -> ModelQuery:
     """Return a ModelQuery or subclass depending on model_cls specified."""
     if model_cls == Comment:
         return CommentQuery(request)
@@ -46,8 +43,7 @@ def query_factory(
 
 
 def get_tm_session(
-        session_factory: Callable,
-        transaction_manager: ThreadTransactionManager,
+    session_factory: Callable, transaction_manager: ThreadTransactionManager
 ) -> Session:
     """Return a db session being managed by the transaction manager."""
     db_session = session_factory()
@@ -74,26 +70,27 @@ def includeme(config: Configurator) -> None:
     # transaction if the response code starts with 4 or 5. The main benefit of
     # this is to avoid aborting on exceptions that don't actually indicate a
     # problem, such as a HTTPFound 302 redirect.
-    settings['tm.commit_veto'] = 'pyramid_tm.default_commit_veto'
+    settings["tm.commit_veto"] = "pyramid_tm.default_commit_veto"
 
-    config.include('pyramid_tm')
+    config.include("pyramid_tm")
 
     # disable SQLAlchemy connection pooling since pgbouncer will handle it
-    settings['sqlalchemy.poolclass'] = NullPool
+    settings["sqlalchemy.poolclass"] = NullPool
 
-    engine = engine_from_config(settings, 'sqlalchemy.')
+    engine = engine_from_config(settings, "sqlalchemy.")
 
     session_factory = sessionmaker(bind=engine, expire_on_commit=False)
-    config.registry['db_session_factory'] = session_factory
+    config.registry["db_session_factory"] = session_factory
 
     # attach the session to each request as request.db_session
     config.add_request_method(
         lambda request: get_tm_session(
-            config.registry['db_session_factory'], request.tm),
-        'db_session',
+            config.registry["db_session_factory"], request.tm
+        ),
+        "db_session",
         reify=True,
     )
 
-    config.add_request_method(query_factory, 'query')
+    config.add_request_method(query_factory, "query")
 
-    config.add_request_method(obtain_lock, 'obtain_lock')
+    config.add_request_method(obtain_lock, "obtain_lock")

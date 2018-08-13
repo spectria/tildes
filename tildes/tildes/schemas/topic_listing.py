@@ -17,25 +17,22 @@ class TopicListingSchema(Schema):
     period = ShortTimePeriod(allow_none=True)
     after = ID36()
     before = ID36()
-    per_page = Integer(
-        validate=Range(min=1, max=100),
-        missing=DEFAULT_TOPICS_PER_PAGE,
-    )
-    rank_start = Integer(load_from='n', validate=Range(min=1), missing=None)
+    per_page = Integer(validate=Range(min=1, max=100), missing=DEFAULT_TOPICS_PER_PAGE)
+    rank_start = Integer(load_from="n", validate=Range(min=1), missing=None)
     tag = Ltree(missing=None)
     unfiltered = Boolean(missing=False)
 
     @validates_schema
     def either_after_or_before(self, data: dict) -> None:
         """Fail validation if both after and before were specified."""
-        if data.get('after') and data.get('before'):
+        if data.get("after") and data.get("before"):
             raise ValidationError("Can't specify both after and before.")
 
     @pre_load
     def reset_rank_start_on_first_page(self, data: dict) -> dict:
         """Reset rank_start to 1 if this is a first page (no before/after)."""
-        if not (data.get('before') or data.get('after')):
-            data['rank_start'] = 1
+        if not (data.get("before") or data.get("after")):
+            data["rank_start"] = 1
 
         return data
 

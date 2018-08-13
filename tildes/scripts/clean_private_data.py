@@ -33,22 +33,17 @@ def clean_all_data(config_path: str) -> None:
     cleaner.clean_all()
 
 
-class DataCleaner():
+class DataCleaner:
     """Container class for all methods related to cleaning up old data."""
 
-    def __init__(
-            self,
-            db_session: Session,
-            retention_period: timedelta,
-    ) -> None:
+    def __init__(self, db_session: Session, retention_period: timedelta) -> None:
         """Create a new DataCleaner."""
         self.db_session = db_session
         self.retention_cutoff = datetime.now() - retention_period
 
     def clean_all(self) -> None:
         """Call all the cleanup functions."""
-        logging.info(
-            f'Cleaning up all data (retention cutoff {self.retention_cutoff})')
+        logging.info(f"Cleaning up all data (retention cutoff {self.retention_cutoff})")
 
         self.delete_old_log_entries()
         self.delete_old_topic_visits()
@@ -68,7 +63,7 @@ class DataCleaner():
             .delete(synchronize_session=False)
         )
         self.db_session.commit()
-        logging.info(f'Deleted {deleted} old log entries.')
+        logging.info(f"Deleted {deleted} old log entries.")
 
     def delete_old_topic_visits(self) -> None:
         """Delete all topic visits older than the retention cutoff."""
@@ -78,7 +73,7 @@ class DataCleaner():
             .delete(synchronize_session=False)
         )
         self.db_session.commit()
-        logging.info(f'Deleted {deleted} old topic visits.')
+        logging.info(f"Deleted {deleted} old topic visits.")
 
     def clean_old_deleted_comments(self) -> None:
         """Clean the data of old deleted comments.
@@ -92,14 +87,13 @@ class DataCleaner():
                 Comment.deleted_time <= self.retention_cutoff,  # type: ignore
                 Comment.user_id != 0,
             )
-            .update({
-                'user_id': 0,
-                'markdown': '',
-                'rendered_html': '',
-            }, synchronize_session=False)
+            .update(
+                {"user_id": 0, "markdown": "", "rendered_html": ""},
+                synchronize_session=False,
+            )
         )
         self.db_session.commit()
-        logging.info(f'Cleaned {updated} old deleted comments.')
+        logging.info(f"Cleaned {updated} old deleted comments.")
 
     def clean_old_deleted_topics(self) -> None:
         """Clean the data of old deleted topics.
@@ -113,16 +107,19 @@ class DataCleaner():
                 Topic.deleted_time <= self.retention_cutoff,  # type: ignore
                 Topic.user_id != 0,
             )
-            .update({
-                'user_id': 0,
-                'title': '',
-                'topic_type': 'TEXT',
-                'markdown': None,
-                'rendered_html': None,
-                'link': None,
-                'content_metadata': None,
-                '_tags': [],
-            }, synchronize_session=False)
+            .update(
+                {
+                    "user_id": 0,
+                    "title": "",
+                    "topic_type": "TEXT",
+                    "markdown": None,
+                    "rendered_html": None,
+                    "link": None,
+                    "content_metadata": None,
+                    "_tags": [],
+                },
+                synchronize_session=False,
+            )
         )
         self.db_session.commit()
-        logging.info(f'Cleaned {updated} old deleted topics.')
+        logging.info(f"Cleaned {updated} old deleted topics.")

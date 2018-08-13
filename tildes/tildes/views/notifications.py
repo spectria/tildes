@@ -8,10 +8,7 @@ from tildes.enums import CommentTagOption
 from tildes.models.comment import CommentNotification
 
 
-@view_config(
-    route_name='notifications_unread',
-    renderer='notifications_unread.jinja2',
-)
+@view_config(route_name="notifications_unread", renderer="notifications_unread.jinja2")
 def get_user_unread_notifications(request: Request) -> dict:
     """Show the logged-in user's unread notifications."""
     notifications = (
@@ -31,16 +28,10 @@ def get_user_unread_notifications(request: Request) -> dict:
         for notification in notifications:
             notification.is_unread = False
 
-    return {
-        'notifications': notifications,
-        'comment_tag_options': CommentTagOption,
-    }
+    return {"notifications": notifications, "comment_tag_options": CommentTagOption}
 
 
-@view_config(
-    route_name='notifications',
-    renderer='notifications.jinja2',
-)
+@view_config(route_name="notifications", renderer="notifications.jinja2")
 def get_user_notifications(request: Request) -> dict:
     """Show the most recent 100 of the logged-in user's read notifications."""
     notifications = (
@@ -55,7 +46,4 @@ def get_user_notifications(request: Request) -> dict:
         .all()
     )
 
-    return {
-        'notifications': notifications,
-        'comment_tag_options': CommentTagOption,
-    }
+    return {"notifications": notifications, "comment_tag_options": CommentTagOption}

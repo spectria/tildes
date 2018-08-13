@@ -9,7 +9,7 @@ from tildes.lib.id import id_to_id36, id36_to_id
 from .model_query import ModelQuery
 
 
-ModelType = TypeVar('ModelType')  # pylint: disable=invalid-name
+ModelType = TypeVar("ModelType")  # pylint: disable=invalid-name
 
 
 class PaginatedQuery(ModelQuery):
@@ -18,7 +18,7 @@ class PaginatedQuery(ModelQuery):
     def __init__(self, model_cls: Any, request: Request) -> None:
         """Initialize a PaginatedQuery for the specified model and request."""
         if len(model_cls.__table__.primary_key) > 1:
-            raise TypeError('Only single-col primary key tables are supported')
+            raise TypeError("Only single-col primary key tables are supported")
 
         super().__init__(model_cls, request)
 
@@ -75,7 +75,7 @@ class PaginatedQuery(ModelQuery):
         """
         return bool(self.before_id)
 
-    def after_id36(self, id36: str) -> 'PaginatedQuery':
+    def after_id36(self, id36: str) -> "PaginatedQuery":
         """Restrict the query to results after an id36 (generative)."""
         if self.before_id:
             raise ValueError("Can't set both before and after restrictions")
@@ -84,7 +84,7 @@ class PaginatedQuery(ModelQuery):
 
         return self
 
-    def before_id36(self, id36: str) -> 'PaginatedQuery':
+    def before_id36(self, id36: str) -> "PaginatedQuery":
         """Restrict the query to results before an id36 (generative)."""
         if self.after_id:
             raise ValueError("Can't set both before and after restrictions")
@@ -93,7 +93,7 @@ class PaginatedQuery(ModelQuery):
 
         return self
 
-    def _apply_before_or_after(self) -> 'PaginatedQuery':
+    def _apply_before_or_after(self) -> "PaginatedQuery":
         """Apply the "before" or "after" restrictions if necessary."""
         if not (self.after_id or self.before_id):
             return self
@@ -132,7 +132,7 @@ class PaginatedQuery(ModelQuery):
 
         return query
 
-    def _finalize(self) -> 'PaginatedQuery':
+    def _finalize(self) -> "PaginatedQuery":
         """Finalize the query before execution."""
         query = super()._finalize()
 
@@ -152,7 +152,7 @@ class PaginatedQuery(ModelQuery):
 
         return query
 
-    def get_page(self, per_page: int) -> 'PaginatedResults':
+    def get_page(self, per_page: int) -> "PaginatedResults":
         """Get a page worth of results from the query (`per page` items)."""
         return PaginatedResults(self, per_page)
 

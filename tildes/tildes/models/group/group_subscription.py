@@ -21,33 +21,27 @@ class GroupSubscription(DatabaseModel):
           num_subscriptions column for the relevant group.
     """
 
-    __tablename__ = 'group_subscriptions'
+    __tablename__ = "group_subscriptions"
 
     user_id: int = Column(
-        Integer,
-        ForeignKey('users.user_id'),
-        nullable=False,
-        primary_key=True,
+        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     group_id: int = Column(
-        Integer,
-        ForeignKey('groups.group_id'),
-        nullable=False,
-        primary_key=True,
+        Integer, ForeignKey("groups.group_id"), nullable=False, primary_key=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
         index=True,
-        server_default=text('NOW()'),
+        server_default=text("NOW()"),
     )
 
-    user: User = relationship('User', innerjoin=True, backref='subscriptions')
-    group: Group = relationship('Group', innerjoin=True, lazy=False)
+    user: User = relationship("User", innerjoin=True, backref="subscriptions")
+    group: Group = relationship("Group", innerjoin=True, lazy=False)
 
     def __init__(self, user: User, group: Group) -> None:
         """Create a new subscription to a group."""
         self.user = user
         self.group = group
 
-        incr_counter('subscriptions')
+        incr_counter("subscriptions")

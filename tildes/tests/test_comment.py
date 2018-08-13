@@ -1,81 +1,73 @@
 from datetime import timedelta
 
 from freezegun import freeze_time
-from pyramid.security import (
-    Authenticated,
-    Everyone,
-    principals_allowed_by_permission,
-)
+from pyramid.security import Authenticated, Everyone, principals_allowed_by_permission
 
 from tildes.enums import CommentSortOption
 from tildes.lib.datetime import utc_now
-from tildes.models.comment import (
-    Comment,
-    CommentTree,
-    EDIT_GRACE_PERIOD,
-)
+from tildes.models.comment import Comment, CommentTree, EDIT_GRACE_PERIOD
 from tildes.schemas.comment import CommentSchema
 from tildes.schemas.fields import Markdown
 
 
 def test_comment_creation_validates_schema(mocker, session_user, topic):
     """Ensure that comment creation goes through schema validation."""
-    mocker.spy(CommentSchema, 'load')
+    mocker.spy(CommentSchema, "load")
 
-    Comment(topic, session_user, 'A test comment')
+    Comment(topic, session_user, "A test comment")
     call_args = CommentSchema.load.call_args[0]
-    assert {'markdown': 'A test comment'} in call_args
+    assert {"markdown": "A test comment"} in call_args
 
 
 def test_comment_creation_uses_markdown_field(mocker, session_user, topic):
     """Ensure the Markdown field class is validating new comments."""
-    mocker.spy(Markdown, '_validate')
+    mocker.spy(Markdown, "_validate")
 
-    Comment(topic, session_user, 'A test comment')
+    Comment(topic, session_user, "A test comment")
     assert Markdown._validate.called
 
 
 def test_comment_edit_uses_markdown_field(mocker, comment):
     """Ensure editing a comment is validated by the Markdown field class."""
-    mocker.spy(Markdown, '_validate')
+    mocker.spy(Markdown, "_validate")
 
-    comment.markdown = 'Some new text after edit'
+    comment.markdown = "Some new text after edit"
     assert Markdown._validate.called
 
 
 def test_edit_markdown_updates_html(comment):
     """Ensure editing a comment works and the markdown and HTML update."""
-    comment.markdown = 'Updated comment'
-    assert 'Updated' in comment.markdown
-    assert 'Updated' in comment.rendered_html
+    comment.markdown = "Updated comment"
+    assert "Updated" in comment.markdown
+    assert "Updated" in comment.rendered_html
 
 
 def test_comment_viewing_permission(comment):
     """Ensure that anyone can view a comment by default."""
-    assert Everyone in principals_allowed_by_permission(comment, 'view')
+    assert Everyone in principals_allowed_by_permission(comment, "view")
 
 
 def test_comment_editing_permission(comment):
     """Ensure that only the comment's author can edit it."""
-    principals = principals_allowed_by_permission(comment, 'edit')
+    principals = principals_allowed_by_permission(comment, "edit")
     assert principals == {comment.user_id}
 
 
 def test_comment_deleting_permission(comment):
     """Ensure that only the comment's author can delete it."""
-    principals = principals_allowed_by_permission(comment, 'delete')
+    principals = principals_allowed_by_permission(comment, "delete")
     assert principals == {comment.user_id}
 
 
 def test_comment_replying_permission(comment):
     """Ensure that any authenticated user can reply to a comment."""
-    assert Authenticated in principals_allowed_by_permission(comment, 'reply')
+    assert Authenticated in principals_allowed_by_permission(comment, "reply")
 
 
 def test_comment_reply_locked_thread_permission(comment):
     """Ensure that only admins can reply in locked threads."""
     comment.topic.is_locked = True
-    assert principals_allowed_by_permission(comment, 'reply') == {'admin'}
+    assert principals_allowed_by_permission(comment, "reply") == {"admin"}
 
 
 def test_deleted_comment_permissions_removed(comment):
@@ -90,8 +82,8 @@ def test_deleted_comment_permissions_removed(comment):
 def test_removed_comment_view_permission(comment):
     """Ensure a removed comment can only be viewed by its author and admins."""
     comment.is_removed = True
-    principals = principals_allowed_by_permission(comment, 'view')
-    assert principals == {'admin', comment.user_id}
+    principals = principals_allowed_by_permission(comment, "view")
+    assert principals == {"admin", comment.user_id}
 
 
 def test_edit_grace_period(comment):
@@ -100,7 +92,7 @@ def test_edit_grace_period(comment):
     edit_time = comment.created_time + EDIT_GRACE_PERIOD - one_sec
 
     with freeze_time(edit_time):
-        comment.markdown = 'some new markdown'
+        comment.markdown = "some new markdown"
 
     assert not comment.last_edited_time
 
@@ -111,7 +103,7 @@ def test_edit_after_grace_period(comment):
     edit_time = comment.created_time + EDIT_GRACE_PERIOD + one_sec
 
     with freeze_time(edit_time):
-        comment.markdown = 'some new markdown'
+        comment.markdown = "some new markdown"
         assert comment.last_edited_time == utc_now()
 
 
@@ -123,7 +115,7 @@ def test_multiple_edits_update_time(comment):
     for minutes in range(0, 4):
         edit_time = initial_time + timedelta(minutes=minutes)
         with freeze_time(edit_time):
-            comment.markdown = f'edit #{minutes}'
+            comment.markdown = f"edit #{minutes}"
             assert comment.last_edited_time == utc_now()
 
 
@@ -134,8 +126,8 @@ def test_comment_tree(db, topic, session_user):
     sort = CommentSortOption.POSTED
 
     # add two root comments
-    root = Comment(topic, session_user, 'root')
-    root2 = Comment(topic, session_user, 'root2')
+    root = Comment(topic, session_user, "root")
+    root2 = Comment(topic, session_user, "root2")
     all_comments.extend([root, root2])
     db.add_all(all_comments)
     db.commit()
@@ -151,8 +143,8 @@ def test_comment_tree(db, topic, session_user):
     assert tree == [root]
 
     # add two replies to the remaining root comment
-    child = Comment(topic, session_user, '1', parent_comment=root)
-    child2 = Comment(topic, session_user, '2', parent_comment=root)
+    child = Comment(topic, session_user, "1", parent_comment=root)
+    child2 = Comment(topic, session_user, "2", parent_comment=root)
     all_comments.extend([child, child2])
     db.add_all(all_comments)
     db.commit()
@@ -165,8 +157,8 @@ def test_comment_tree(db, topic, session_user):
     assert child2.replies == []
 
     # add two more replies to the second depth-1 comment
-    subchild = Comment(topic, session_user, '2a', parent_comment=child2)
-    subchild2 = Comment(topic, session_user, '2b', parent_comment=child2)
+    subchild = Comment(topic, session_user, "2a", parent_comment=child2)
+    subchild2 = Comment(topic, session_user, "2b", parent_comment=child2)
     all_comments.extend([subchild, subchild2])
     db.add_all(all_comments)
     db.commit()

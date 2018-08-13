@@ -8,7 +8,7 @@ def test_comments_affect_topic_num_comments(session_user, topic, db):
     # Insert some comments, ensure each one increments the count
     comments = []
     for num in range(0, 5):
-        new_comment = Comment(topic, session_user, 'comment')
+        new_comment = Comment(topic, session_user, "comment")
         comments.append(new_comment)
         db.add(new_comment)
         db.commit()
@@ -62,8 +62,8 @@ def test_remove_sets_removed_time(db, comment):
 def test_remove_delete_single_decrement(db, topic, session_user):
     """Ensure that remove+delete doesn't double-decrement num_comments."""
     # add 2 comments
-    comment1 = Comment(topic, session_user, 'Comment 1')
-    comment2 = Comment(topic, session_user, 'Comment 2')
+    comment1 = Comment(topic, session_user, "Comment 1")
+    comment2 = Comment(topic, session_user, "Comment 2")
     db.add_all([comment1, comment2])
     db.commit()
     db.refresh(topic)

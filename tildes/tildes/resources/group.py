@@ -11,8 +11,8 @@ from tildes.schemas.group import GroupSchema
 
 
 @use_kwargs(
-    GroupSchema(only=('path',), context={'fix_path_capitalization': True}),
-    locations=('matchdict',),
+    GroupSchema(only=("path",), context={"fix_path_capitalization": True}),
+    locations=("matchdict",),
 )
 def group_by_path(request: Request, path: str) -> Group:
     """Get a group specified by {group_path} in the route (or 404)."""
@@ -20,10 +20,9 @@ def group_by_path(request: Request, path: str) -> Group:
     # 301 redirect to the resulting group path. This will happen in cases like
     # the original url including capital letters in the group path, where we
     # want to redirect to the proper all-lowercase path instead.
-    if path != request.matchdict['group_path']:
-        request.matchdict['group_path'] = path
-        proper_url = request.route_url(
-            request.matched_route.name, **request.matchdict)
+    if path != request.matchdict["group_path"]:
+        request.matchdict["group_path"] = path
+        proper_url = request.route_url(request.matched_route.name, **request.matchdict)
 
         raise HTTPMovedPermanently(location=proper_url)
 

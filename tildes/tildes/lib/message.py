@@ -1,6 +1,6 @@
 """Functions/constants related to messages."""
 
-WELCOME_MESSAGE_SUBJECT = 'Welcome to the Tildes alpha'
+WELCOME_MESSAGE_SUBJECT = "Welcome to the Tildes alpha"
 
 # pylama:ignore=E501
 WELCOME_MESSAGE_TEXT = """

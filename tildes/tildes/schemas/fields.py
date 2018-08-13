@@ -16,12 +16,7 @@ from tildes.lib.string import simplify_string
 class Enum(Field):
     """Field for a native Python Enum (or subclasses)."""
 
-    def __init__(
-            self,
-            enum_class: Type = None,
-            *args: Any,
-            **kwargs: Any,
-    ) -> None:
+    def __init__(self, enum_class: Type = None, *args: Any, **kwargs: Any) -> None:
         """Initialize the field with an optional enum class."""
         super().__init__(*args, **kwargs)
         self._enum_class = enum_class
@@ -33,12 +28,12 @@ class Enum(Field):
     def _deserialize(self, value: str, attr: str, data: dict) -> enum.Enum:
         """Deserialize a string to the enum member with that name."""
         if not self._enum_class:
-            raise ValidationError('Cannot deserialize with no enum class.')
+            raise ValidationError("Cannot deserialize with no enum class.")
 
         try:
             return self._enum_class[value.upper()]
         except KeyError:
-            raise ValidationError('Invalid enum member')
+            raise ValidationError("Invalid enum member")
 
 
 class ID36(String):
@@ -56,25 +51,19 @@ class ShortTimePeriod(Field):
     """
 
     def _deserialize(
-            self,
-            value: str,
-            attr: str,
-            data: dict,
+        self, value: str, attr: str, data: dict
     ) -> Optional[SimpleHoursPeriod]:
         """Deserialize to a SimpleHoursPeriod object."""
-        if value == 'all':
+        if value == "all":
             return None
 
         try:
             return SimpleHoursPeriod.from_short_form(value)
         except ValueError:
-            raise ValidationError('Invalid time period')
+            raise ValidationError("Invalid time period")
 
     def _serialize(
-            self,
-            value: Optional[SimpleHoursPeriod],
-            attr: str,
-            obj: object,
+        self, value: Optional[SimpleHoursPeriod], attr: str, obj: object
     ) -> Optional[str]:
         """Serialize the value to the "short form" string."""
         if not value:
@@ -100,11 +89,11 @@ class Markdown(Field):
         super()._validate(value)
 
         if value.isspace():
-            raise ValidationError('Cannot be entirely whitespace.')
+            raise ValidationError("Cannot be entirely whitespace.")
 
     def _deserialize(self, value: str, attr: str, data: dict) -> str:
         """Deserialize the string, removing carriage returns in the process."""
-        value = value.replace('\r', '')
+        value = value.replace("\r", "")
 
         return value
 
@@ -145,23 +134,13 @@ class SimpleString(Field):
 class Ltree(Field):
     """Field for postgresql ltree type."""
 
-    def _serialize(
-            self,
-            value: sqlalchemy_utils.Ltree,
-            attr: str,
-            obj: object,
-    ) -> str:
+    def _serialize(self, value: sqlalchemy_utils.Ltree, attr: str, obj: object) -> str:
         """Serialize the Ltree value - use the (string) path."""
         return value.path
 
-    def _deserialize(
-            self,
-            value: str,
-            attr: str,
-            data: dict,
-    ) -> sqlalchemy_utils.Ltree:
+    def _deserialize(self, value: str, attr: str, data: dict) -> sqlalchemy_utils.Ltree:
         """Deserialize a string path to an Ltree object."""
         try:
             return sqlalchemy_utils.Ltree(value)
         except (TypeError, ValueError):
-            raise ValidationError('Invalid path')
+            raise ValidationError("Invalid path")

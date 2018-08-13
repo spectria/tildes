@@ -21,33 +21,27 @@ class CommentVote(DatabaseModel):
           column for the relevant comment.
     """
 
-    __tablename__ = 'comment_votes'
+    __tablename__ = "comment_votes"
 
     user_id: int = Column(
-        Integer,
-        ForeignKey('users.user_id'),
-        nullable=False,
-        primary_key=True,
+        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     comment_id: int = Column(
-        Integer,
-        ForeignKey('comments.comment_id'),
-        nullable=False,
-        primary_key=True,
+        Integer, ForeignKey("comments.comment_id"), nullable=False, primary_key=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
         index=True,
-        server_default=text('NOW()'),
+        server_default=text("NOW()"),
     )
 
-    user: User = relationship('User', innerjoin=True)
-    comment: Comment = relationship('Comment', innerjoin=True)
+    user: User = relationship("User", innerjoin=True)
+    comment: Comment = relationship("Comment", innerjoin=True)
 
     def __init__(self, user: User, comment: Comment) -> None:
         """Create a new vote on a comment."""
         self.user = user
         self.comment = comment
 
-        incr_counter('votes', target_type='comment')
+        incr_counter("votes", target_type="comment")

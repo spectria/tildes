@@ -32,58 +32,41 @@ from tildes.schemas.topic import TopicSchema
 from tildes.schemas.topic_listing import TopicListingSchema
 
 
-DefaultSettings = namedtuple('DefaultSettings', ['order', 'period'])
+DefaultSettings = namedtuple("DefaultSettings", ["order", "period"])
 
 
-@view_config(
-    route_name='group_topics',
-    request_method='POST',
-    permission='post_topic',
-)
-@use_kwargs(TopicSchema(only=('title', 'markdown', 'link')))
-@use_kwargs({'tags': String()})
+@view_config(route_name="group_topics", request_method="POST", permission="post_topic")
+@use_kwargs(TopicSchema(only=("title", "markdown", "link")))
+@use_kwargs({"tags": String()})
 def post_group_topics(
-        request: Request,
-        title: str,
-        markdown: str,
-        link: str,
-        tags: str,
+    request: Request, title: str, markdown: str, link: str, tags: str
 ) -> HTTPFound:
     """Post a new topic to a group."""
     if link:
         new_topic = Topic.create_link_topic(
-            group=request.context,
-            author=request.user,
-            title=title,
-            link=link,
+            group=request.context, author=request.user, title=title, link=link
         )
 
         # if they specified both a link and markdown, use the markdown to post
         # an initial comment on the topic
         if markdown:
             new_comment = Comment(
-                topic=new_topic,
-                author=request.user,
-                markdown=markdown,
+                topic=new_topic, author=request.user, markdown=markdown
             )
             request.db_session.add(new_comment)
     else:
         new_topic = Topic.create_text_topic(
-            group=request.context,
-            author=request.user,
-            title=title,
-            markdown=markdown,
+            group=request.context, author=request.user, title=title, markdown=markdown
         )
 
     try:
-        new_topic.tags = tags.split(',')
+        new_topic.tags = tags.split(",")
     except ValidationError:
-        raise ValidationError({'tags': ['Invalid tags']})
+        raise ValidationError({"tags": ["Invalid tags"]})
 
     request.db_session.add(new_topic)
 
-    request.db_session.add(
-        LogTopic(LogEventType.TOPIC_POST, request, new_topic))
+    request.db_session.add(LogTopic(LogEventType.TOPIC_POST, request, new_topic))
 
     # flush the changes to the database so the new topic's ID is generated
     request.db_session.flush()
@@ -91,23 +74,23 @@ def post_group_topics(
     raise HTTPFound(location=new_topic.permalink)
 
 
-@view_config(route_name='home', renderer='home.jinja2')
-@view_config(route_name='group', renderer='topic_listing.jinja2')
+@view_config(route_name="home", renderer="home.jinja2")
+@view_config(route_name="group", renderer="topic_listing.jinja2")
 @use_kwargs(TopicListingSchema())
 def get_group_topics(
-        request: Request,
-        order: Any,  # more specific would be better, but missing isn't typed
-        period: Any,  # more specific would be better, but missing isn't typed
-        after: str,
-        before: str,
-        per_page: int,
-        rank_start: Optional[int],
-        tag: Optional[Ltree],
-        unfiltered: bool,
+    request: Request,
+    order: Any,  # more specific would be better, but missing isn't typed
+    period: Any,  # more specific would be better, but missing isn't typed
+    after: str,
+    before: str,
+    per_page: int,
+    rank_start: Optional[int],
+    tag: Optional[Ltree],
+    unfiltered: bool,
 ) -> dict:
     """Get a listing of topics in the group."""
     # pylint: disable=too-many-arguments
-    if request.matched_route.name == 'home':
+    if request.matched_route.name == "home":
         # on the home page, include topics from the user's subscribed groups
         groups = [sub.group for sub in request.user.subscriptions]
     else:
@@ -149,14 +132,12 @@ def get_group_topics(
     if not (tag or unfiltered):
         # pylint: disable=protected-access
         query = query.filter(
-            ~Topic._tags.overlap(  # type: ignore
-                request.user._filtered_topic_tags)
+            ~Topic._tags.overlap(request.user._filtered_topic_tags)  # type: ignore
         )
 
     topics = query.get_page(per_page)
 
-    period_options = [
-        SimpleHoursPeriod(hours) for hours in (1, 12, 24, 72)]
+    period_options = [SimpleHoursPeriod(hours) for hours in (1, 12, 24, 72)]
 
     # add the current period to the bottom of the dropdown if it's not one of
     # the "standard" ones
@@ -164,39 +145,34 @@ def get_group_topics(
         period_options.append(period)
 
     return {
-        'group': request.context,
-        'topics': topics,
-        'order': order,
-        'order_options': TopicSortOption,
-        'period': period,
-        'period_options': period_options,
-        'is_default_period': period == default_settings.period,
-        'is_default_view': (
-            period == default_settings.period and
-            order == default_settings.order
+        "group": request.context,
+        "topics": topics,
+        "order": order,
+        "order_options": TopicSortOption,
+        "period": period,
+        "period_options": period_options,
+        "is_default_period": period == default_settings.period,
+        "is_default_view": (
+            period == default_settings.period and order == default_settings.order
         ),
-        'rank_start': rank_start,
-        'tag': tag,
-        'unfiltered': unfiltered,
+        "rank_start": rank_start,
+        "tag": tag,
+        "unfiltered": unfiltered,
     }
 
 
 @view_config(
-    route_name='new_topic',
-    renderer='new_topic.jinja2',
-    permission='post_topic',
+    route_name="new_topic", renderer="new_topic.jinja2", permission="post_topic"
 )
 def get_new_topic_form(request: Request) -> dict:
     """Form for entering a new topic to post."""
     group = request.context
 
-    return {'group': group}
+    return {"group": group}
 
 
-@view_config(route_name='topic', renderer='topic.jinja2')
-@use_kwargs({
-    'comment_order': Enum(CommentSortOption, missing='votes'),
-})
+@view_config(route_name="topic", renderer="topic.jinja2")
+@use_kwargs({"comment_order": Enum(CommentSortOption, missing="votes")})
 def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
     """View a single topic."""
     topic = request.context
@@ -224,8 +200,7 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
     log = (
         request.query(LogTopic)
         .filter(
-            LogTopic.topic == topic,
-            LogTopic.event_type.in_(visible_events)  # noqa
+            LogTopic.topic == topic, LogTopic.event_type.in_(visible_events)  # noqa
         )
         .order_by(desc(LogTopic.event_time))
         .all()
@@ -239,33 +214,27 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
         mark_changed(request.db_session)
 
     return {
-        'topic': topic,
-        'log': log,
-        'comments': tree,
-        'comment_order': comment_order,
-        'comment_order_options': CommentSortOption,
-        'comment_tag_options': CommentTagOption,
+        "topic": topic,
+        "log": log,
+        "comments": tree,
+        "comment_order": comment_order,
+        "comment_order_options": CommentSortOption,
+        "comment_tag_options": CommentTagOption,
     }
 
 
-@view_config(route_name='topic', request_method='POST', permission='comment')
-@use_kwargs(CommentSchema(only=('markdown',)))
+@view_config(route_name="topic", request_method="POST", permission="comment")
+@use_kwargs(CommentSchema(only=("markdown",)))
 def post_comment_on_topic(request: Request, markdown: str) -> HTTPFound:
     """Post a new top-level comment on a topic."""
     topic = request.context
 
-    new_comment = Comment(
-        topic=topic,
-        author=request.user,
-        markdown=markdown,
-    )
+    new_comment = Comment(topic=topic, author=request.user, markdown=markdown)
     request.db_session.add(new_comment)
 
     if topic.user != request.user and not topic.is_deleted:
         notification = CommentNotification(
-            topic.user,
-            new_comment,
-            CommentNotificationType.TOPIC_REPLY,
+            topic.user, new_comment, CommentNotificationType.TOPIC_REPLY
         )
         request.db_session.add(notification)
 

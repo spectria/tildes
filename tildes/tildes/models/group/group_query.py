@@ -21,14 +21,14 @@ class GroupQuery(ModelQuery):
         """
         super().__init__(Group, request)
 
-    def _attach_extra_data(self) -> 'GroupQuery':
+    def _attach_extra_data(self) -> "GroupQuery":
         """Attach the extra user data to the query."""
         if not self.request.user:
             return self
 
         return self._attach_subscription_data()
 
-    def _attach_subscription_data(self) -> 'GroupQuery':
+    def _attach_subscription_data(self) -> "GroupQuery":
         """Add a subquery to include whether the user is subscribed."""
         subscription_subquery = (
             self.request.query(GroupSubscription)
@@ -37,7 +37,7 @@ class GroupQuery(ModelQuery):
                 GroupSubscription.user == self.request.user,
             )
             .exists()
-            .label('user_subscribed')
+            .label("user_subscribed")
         )
         return self.add_columns(subscription_subquery)
 

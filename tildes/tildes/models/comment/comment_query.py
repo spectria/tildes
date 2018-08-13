@@ -21,14 +21,14 @@ class CommentQuery(PaginatedQuery):
         """
         super().__init__(Comment, request)
 
-    def _attach_extra_data(self) -> 'CommentQuery':
+    def _attach_extra_data(self) -> "CommentQuery":
         """Attach the extra user data to the query."""
         if not self.request.user:
             return self
 
         return self._attach_vote_data()
 
-    def _attach_vote_data(self) -> 'CommentQuery':
+    def _attach_vote_data(self) -> "CommentQuery":
         """Add a subquery to include whether the user has voted."""
         vote_subquery = (
             self.request.query(CommentVote)
@@ -37,7 +37,7 @@ class CommentQuery(PaginatedQuery):
                 CommentVote.user_id == self.request.user.user_id,
             )
             .exists()
-            .label('user_voted')
+            .label("user_voted")
         )
         return self.add_columns(vote_subquery)
 

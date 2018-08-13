@@ -15,11 +15,13 @@ from tildes.schemas.fields import Ltree, SimpleString
 #   - must end with a number or lowercase letter
 #   - the middle can contain numbers, lowercase letters, and underscores
 # Note: this regex does not contain any length checks, must be done separately
+# fmt: off
 GROUP_PATH_ELEMENT_VALID_REGEX = re.compile(
-    '^[a-z0-9]'  # start
-    '([a-z0-9_]*'  # middle
-    '[a-z0-9])?$',  # end
+    "^[a-z0-9]"  # start
+    "([a-z0-9_]*"  # middle
+    "[a-z0-9])?$"  # end
 )
+# fmt: on
 
 SHORT_DESCRIPTION_MAX_LENGTH = 200
 
@@ -27,21 +29,20 @@ SHORT_DESCRIPTION_MAX_LENGTH = 200
 class GroupSchema(Schema):
     """Marshmallow schema for groups."""
 
-    path = Ltree(required=True, load_from='group_path')
+    path = Ltree(required=True, load_from="group_path")
     created_time = DateTime(dump_only=True)
     short_description = SimpleString(
-        max_length=SHORT_DESCRIPTION_MAX_LENGTH,
-        allow_none=True,
+        max_length=SHORT_DESCRIPTION_MAX_LENGTH, allow_none=True
     )
 
     @pre_load
     def prepare_path(self, data: dict) -> dict:
         """Prepare the path value before it's validated."""
-        if not self.context.get('fix_path_capitalization'):
+        if not self.context.get("fix_path_capitalization"):
             return data
 
         # path can also be loaded from group_path, so we need to check both
-        keys = ('path', 'group_path')
+        keys = ("path", "group_path")
 
         for key in keys:
             if key in data and isinstance(data[key], str):
@@ -49,17 +50,17 @@ class GroupSchema(Schema):
 
         return data
 
-    @validates('path')
+    @validates("path")
     def validate_path(self, value: sqlalchemy_utils.Ltree) -> None:
         """Validate the path field, raising an error if an issue exists."""
         # check each element for length and against validity regex
-        path_elements = value.path.split('.')
+        path_elements = value.path.split(".")
         for element in path_elements:
             if len(element) > 256:
-                raise ValidationError('Path element %s is too long' % element)
+                raise ValidationError("Path element %s is too long" % element)
 
             if not GROUP_PATH_ELEMENT_VALID_REGEX.match(element):
-                raise ValidationError('Path element %s is invalid' % element)
+                raise ValidationError("Path element %s is invalid" % element)
 
     class Meta:
         """Always use strict checking so error handlers are invoked."""
@@ -71,7 +72,7 @@ def is_valid_group_path(path: str) -> bool:
     """Return whether the group path is valid or not."""
     schema = GroupSchema(partial=True)
     try:
-        schema.validate({'path': path})
+        schema.validate({"path": path})
     except ValidationError:
         return False
 

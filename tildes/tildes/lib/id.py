@@ -4,13 +4,13 @@ import re
 import string
 
 
-ID36_REGEX = re.compile('^[a-z0-9]+$', re.IGNORECASE)
+ID36_REGEX = re.compile("^[a-z0-9]+$", re.IGNORECASE)
 
 
 def id_to_id36(id_val: int) -> str:
     """Convert an integer ID to the string ID36 representation."""
     if id_val < 1:
-        raise ValueError('ID values should never be zero or negative')
+        raise ValueError("ID values should never be zero or negative")
 
     reversed_chars = []
 
@@ -29,13 +29,13 @@ def id_to_id36(id_val: int) -> str:
     reversed_chars.append(alphabet[index])
 
     # join the characters in reversed order and return as the result
-    return ''.join(reversed(reversed_chars))
+    return "".join(reversed(reversed_chars))
 
 
 def id36_to_id(id36_val: str) -> int:
     """Convert a string ID36 to the integer ID representation."""
-    if id36_val.startswith('-') or id36_val == '0':
-        raise ValueError('ID values should never be zero or negative')
+    if id36_val.startswith("-") or id36_val == "0":
+        raise ValueError("ID values should never be zero or negative")
 
     # Python's stdlib can handle this, much simpler in this direction
     return int(id36_val, 36)

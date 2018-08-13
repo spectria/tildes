@@ -16,8 +16,7 @@ from tildes.schemas.topic_listing import TopicListingSchema
 
 
 def _get_user_recent_activity(
-        request: Request,
-        user: User,
+    request: Request, user: User
 ) -> List[Union[Comment, Topic]]:
     page_size = 20
 
@@ -62,31 +61,24 @@ def _get_user_recent_activity(
     return merged_posts
 
 
-@view_config(route_name='user', renderer='user.jinja2')
-@use_kwargs(TopicListingSchema(only=('after', 'before', 'per_page')))
-@use_kwargs({
-    'post_type': String(
-        load_from='type',
-        validate=OneOf(('topic', 'comment')),
-    ),
-})
+@view_config(route_name="user", renderer="user.jinja2")
+@use_kwargs(TopicListingSchema(only=("after", "before", "per_page")))
+@use_kwargs(
+    {"post_type": String(load_from="type", validate=OneOf(("topic", "comment")))}
+)
 def get_user(
-        request: Request,
-        after: str,
-        before: str,
-        per_page: int,
-        post_type: str = None,
+    request: Request, after: str, before: str, per_page: int, post_type: str = None
 ) -> dict:
     """Generate the main user history page."""
     user = request.context
 
-    if not request.has_permission('view_types', user):
+    if not request.has_permission("view_types", user):
         post_type = None
 
     if post_type:
-        if post_type == 'topic':
+        if post_type == "topic":
             query = request.query(Topic).filter(Topic.user == user)
-        elif post_type == 'comment':
+        elif post_type == "comment":
             query = request.query(Comment).filter(Comment.user == user)
 
         if before:
@@ -105,14 +97,10 @@ def get_user(
     else:
         posts = _get_user_recent_activity(request, user)
 
-    return {
-        'user': user,
-        'posts': posts,
-        'post_type': post_type,
-    }
+    return {"user": user, "posts": posts, "post_type": post_type}
 
 
-@view_config(route_name='invite', renderer='invite.jinja2')
+@view_config(route_name="invite", renderer="invite.jinja2")
 def get_invite(request: Request) -> dict:
     """Generate the invite page."""
     # get any existing unused invite codes
@@ -126,4 +114,4 @@ def get_invite(request: Request) -> dict:
         .all()
     )
 
-    return {'codes': codes}
+    return {"codes": codes}

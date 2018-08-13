@@ -18,11 +18,7 @@ class CommentTree:
             descendants (if not, it can be pruned from the tree)
     """
 
-    def __init__(
-            self,
-            comments: Sequence[Comment],
-            sort: CommentSortOption,
-    ) -> None:
+    def __init__(self, comments: Sequence[Comment], sort: CommentSortOption) -> None:
         """Create a sorted CommentTree from a flat list of Comments."""
         self.tree: List[Comment] = []
         self.sort = sort
@@ -76,10 +72,7 @@ class CommentTree:
                 self.tree.append(comment)
 
     @staticmethod
-    def _sort_tree(
-            tree: List[Comment],
-            sort: CommentSortOption,
-    ) -> List[Comment]:
+    def _sort_tree(tree: List[Comment], sort: CommentSortOption) -> List[Comment]:
         """Sort the tree by the desired ordering (recursively).
 
         Because Python's sorted() function is stable, the ordering of any
@@ -149,18 +142,18 @@ class CommentTree:
 
         # make an "order of magnitude" label based on the number of comments
         if num_comments == 0:
-            raise ValueError('Attempting to time an empty comment tree sort')
+            raise ValueError("Attempting to time an empty comment tree sort")
         if num_comments < 10:
-            num_comments_range = '1 - 9'
+            num_comments_range = "1 - 9"
         elif num_comments < 100:
-            num_comments_range = '10 - 99'
+            num_comments_range = "10 - 99"
         elif num_comments < 1000:
-            num_comments_range = '100 - 999'
+            num_comments_range = "100 - 999"
         else:
-            num_comments_range = '1000+'
+            num_comments_range = "1000+"
 
         return get_histogram(
-            'comment_tree_sorting',
+            "comment_tree_sorting",
             num_comments_range=num_comments_range,
             order=self.sort.name,
         )

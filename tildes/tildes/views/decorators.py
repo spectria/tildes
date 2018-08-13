@@ -9,15 +9,15 @@ from pyramid.view import view_config
 
 def ic_view_config(**kwargs: Any) -> Callable:
     """Wrap the @view_config decorator for Intercooler views."""
-    if 'route_name' in kwargs:
-        kwargs['route_name'] = 'ic_' + kwargs['route_name']
+    if "route_name" in kwargs:
+        kwargs["route_name"] = "ic_" + kwargs["route_name"]
 
-    if 'renderer' in kwargs:
-        kwargs['renderer'] = 'intercooler/' + kwargs['renderer']
+    if "renderer" in kwargs:
+        kwargs["renderer"] = "intercooler/" + kwargs["renderer"]
 
-    if 'header' in kwargs:
+    if "header" in kwargs:
         raise ValueError("Can't add a header check to Intercooler view.")
-    kwargs['header'] = 'X-IC-Request:true'
+    kwargs["header"] = "X-IC-Request:true"
 
     return view_config(**kwargs)
 
@@ -32,6 +32,7 @@ def rate_limit_view(action_name: str) -> Callable:
     response with appropriate headers will be raised instead of calling the
     decorated view.
     """
+
     def decorator(func: Callable) -> Callable:
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             request = args[0]
@@ -55,9 +56,10 @@ def not_logged_in(func: Callable) -> Callable:
     such as the login page, registration page, etc. which only logged-out users
     should be accessing.
     """
+
     def wrapper(request: Request, **kwargs: Any) -> Any:
         if request.user:
-            raise HTTPFound(location=request.route_url('home'))
+            raise HTTPFound(location=request.route_url("home"))
 
         return func(request, **kwargs)
 

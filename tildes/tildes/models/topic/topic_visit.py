@@ -28,28 +28,19 @@ class TopicVisit(DatabaseModel):
           visits to the topic that were after it was posted.
     """
 
-    __tablename__ = 'topic_visits'
+    __tablename__ = "topic_visits"
 
     user_id: int = Column(
-        Integer,
-        ForeignKey('users.user_id'),
-        nullable=False,
-        primary_key=True,
+        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     topic_id: int = Column(
-        Integer,
-        ForeignKey('topics.topic_id'),
-        nullable=False,
-        primary_key=True,
+        Integer, ForeignKey("topics.topic_id"), nullable=False, primary_key=True
     )
-    visit_time: datetime = Column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-    )
+    visit_time: datetime = Column(TIMESTAMP(timezone=True), nullable=False)
     num_comments: int = Column(Integer, nullable=False)
 
-    user: User = relationship('User', innerjoin=True)
-    topic: Topic = relationship('Topic', innerjoin=True)
+    user: User = relationship("User", innerjoin=True)
+    topic: Topic = relationship("Topic", innerjoin=True)
 
     @classmethod
     def generate_insert_statement(cls, user: User, topic: Topic) -> Insert:
@@ -65,9 +56,6 @@ class TopicVisit(DatabaseModel):
             )
             .on_conflict_do_update(
                 constraint=cls.__table__.primary_key,
-                set_={
-                    'visit_time': visit_time,
-                    'num_comments': topic.num_comments,
-                },
+                set_={"visit_time": visit_time, "num_comments": topic.num_comments},
             )
         )

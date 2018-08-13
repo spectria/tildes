@@ -10,17 +10,33 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2512581c91b3'
+revision = "2512581c91b3"
 down_revision = None
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-    op.add_column('users', sa.Column('open_new_tab_external', sa.Boolean(), server_default='false', nullable=False))
-    op.add_column('users', sa.Column('open_new_tab_internal', sa.Boolean(), server_default='false', nullable=False))
+    op.add_column(
+        "users",
+        sa.Column(
+            "open_new_tab_external",
+            sa.Boolean(),
+            server_default="false",
+            nullable=False,
+        ),
+    )
+    op.add_column(
+        "users",
+        sa.Column(
+            "open_new_tab_internal",
+            sa.Boolean(),
+            server_default="false",
+            nullable=False,
+        ),
+    )
 
 
 def downgrade():
-    op.drop_column('users', 'open_new_tab_internal')
-    op.drop_column('users', 'open_new_tab_external')
+    op.drop_column("users", "open_new_tab_internal")
+    op.drop_column("users", "open_new_tab_external")
