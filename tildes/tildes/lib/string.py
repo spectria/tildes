@@ -188,3 +188,20 @@ def _sanitize_characters(original: str) -> str:
             final_characters.append(char)
 
     return "".join(final_characters)
+
+
+def separate_string(original: str, separator: str, segment_size: int) -> str:
+    """Separate a string into "segments", inserting a separator every X chars.
+
+    This is useful for strings being used as "codes" such as invite codes and 2FA backup
+    codes, so that they can be displayed in a more easily-readable format.
+    """
+    separated = ""
+
+    for count, char in enumerate(original):
+        if count > 0 and count % segment_size == 0:
+            separated += separator
+
+        separated += char
+
+    return separated

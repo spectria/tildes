@@ -1,6 +1,7 @@
 """Views related to user settings."""
 
 from io import BytesIO
+
 import pyotp
 from pyramid.httpexceptions import HTTPForbidden, HTTPUnprocessableEntity
 from pyramid.request import Request

@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any, List, Optional, Sequence, Tuple
 
 from mypy_extensions import NoReturn
-import pyotp
+from pyotp import TOTP
 from pyramid.security import (
     ALL_PERMISSIONS,
     Allow,
@@ -167,12 +167,13 @@ class User(DatabaseModel):
 
     def is_correct_two_factor_code(self, code: str) -> bool:
         """Verify that a TOTP/backup code is correct."""
-        totp = pyotp.TOTP(self.two_factor_secret)
-        code = code.strip()
+        totp = TOTP(self.two_factor_secret)
 
-        if totp.verify(code.replace(" ", "")):
+        code = code.strip().replace(" ", "").lower()
+
+        if totp.verify(code):
             return True
-        elif code in self.two_factor_backup_codes:
+        elif self.two_factor_backup_codes and code in self.two_factor_backup_codes:
             # Need to set the attribute so SQLAlchemy knows it changed
             self.two_factor_backup_codes = [
                 backup_code

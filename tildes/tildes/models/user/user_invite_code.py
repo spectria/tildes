@@ -7,6 +7,7 @@ import string
 from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Text, TIMESTAMP
 from sqlalchemy.sql.expression import text
 
+from tildes.lib.string import separate_string
 from tildes.models import DatabaseModel
 from .user import User
 
@@ -36,16 +37,7 @@ class UserInviteCode(DatabaseModel):
 
     def __str__(self) -> str:
         """Format the code into a more easily readable version."""
-        formatted = ""
-
-        for count, char in enumerate(self.code):
-            # add a dash every 5 chars
-            if count > 0 and count % 5 == 0:
-                formatted += "-"
-
-            formatted += char.upper()
-
-        return formatted
+        return separate_string(self.code, "-", 5)
 
     def __init__(self, user: User) -> None:
         """Create a new (random) invite code owned by the user.

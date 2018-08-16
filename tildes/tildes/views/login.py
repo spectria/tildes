@@ -1,5 +1,6 @@
 """Views related to logging in/out."""
 
+from marshmallow.fields import String
 from pyramid.httpexceptions import HTTPFound, HTTPUnauthorized, HTTPUnprocessableEntity
 from pyramid.renderers import render_to_response
 from pyramid.request import Request
@@ -96,7 +97,8 @@ def post_login(request: Request, username: str, password: str) -> HTTPFound:
 )
 @not_logged_in
 @rate_limit_view("login_two_factor")
-def post_login_two_factor(request: Request) -> Response:
+@use_kwargs({"code": String()})
+def post_login_two_factor(request: Request, code: str) -> Response:
     """Process a log in request with 2FA."""
     # Look up the user for the supplied username
     user = (
@@ -105,7 +107,6 @@ def post_login_two_factor(request: Request) -> Response:
         .filter(User.username == request.session["two_factor_username"])
         .one_or_none()
     )
-    code = str(request.params.get("code"))
 
     if user.is_correct_two_factor_code(code):
         del request.session["two_factor_username"]

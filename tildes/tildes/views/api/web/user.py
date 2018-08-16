@@ -6,7 +6,6 @@ from typing import Optional
 
 from marshmallow import ValidationError
 from marshmallow.fields import String
-import pyotp
 from pyramid.httpexceptions import (
     HTTPForbidden,
     HTTPUnauthorized,
@@ -18,6 +17,7 @@ from sqlalchemy.exc import IntegrityError
 from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import LogEventType, TopicSortOption
+from tildes.lib.string import separate_string
 from tildes.models.log import Log
 from tildes.models.user import User, UserInviteCode
 from tildes.schemas.fields import Enum, ShortTimePeriod
@@ -91,17 +91,6 @@ def patch_change_email_address(
     return Response("Your email address has been updated")
 
 
-def generate_backup_code() -> str:
-    """Generate a user-friendly (easy to read) backup code for 2FA."""
-    parts = []
-    # Generate 4 four-length random strings.
-    for _ in range(4):
-        parts.append("".join(random.choices(string.ascii_lowercase, k=4)))
-
-    # Combine parts to make one, e.g. xxxx xxxx xxxx xxxx
-    return " ".join(parts)
-
-
 @ic_view_config(
     route_name="user",
     request_method="POST",
@@ -109,20 +98,25 @@ def generate_backup_code() -> str:
     renderer="two_factor_enabled.jinja2",
     permission="change_two_factor",
 )
-def post_enable_two_factor(request: Request) -> dict:
+@use_kwargs({"code": String()})
+def post_enable_two_factor(request: Request, code: str) -> dict:
     """Enable two-factor authentication for the user."""
     user = request.context
-    totp = pyotp.TOTP(user.two_factor_secret)
-    code = str(request.params.get("code"))
 
-    if not totp.verify(code):
+    if not user.is_correct_two_factor_code(code):
         raise HTTPUnprocessableEntity("Invalid code, please try again.")
 
-    # Generate 10 backup codes.
-    backup_codes = [generate_backup_code() for _ in range(10)]
-
     request.user.two_factor_enabled = True
-    request.user.two_factor_backup_codes = backup_codes
+
+    # Generate 10 backup codes (16 lowercase letters each)
+    request.user.two_factor_backup_codes = [
+        "".join(random.choices(string.ascii_lowercase, k=16)) for _ in range(10)
+    ]
+
+    # format the backup codes to be easier to read for output
+    backup_codes = [
+        separate_string(code, " ", 4) for code in request.user.two_factor_backup_codes
+    ]
 
     return {"backup_codes": backup_codes}
 
@@ -134,10 +128,9 @@ def post_enable_two_factor(request: Request) -> dict:
     renderer="two_factor_disabled.jinja2",
     permission="change_two_factor",
 )
-def post_disable_two_factor(request: Request) -> Response:
+@use_kwargs({"code": String()})
+def post_disable_two_factor(request: Request, code: str) -> Response:
     """Disable two-factor authentication for the user."""
-    code = str(request.params.get("code"))
-
     if not request.user.is_correct_two_factor_code(code):
         raise HTTPUnauthorized(body="Invalid code")
 

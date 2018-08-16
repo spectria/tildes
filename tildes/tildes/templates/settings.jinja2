@@ -96,8 +96,13 @@
       <div class="text-small text-secondary">To be able to regain access in case of lost password, compromise, etc.</div>
     </li>
     <li>
-      <a href="/settings/two_factor">Set up two-factor authentication</a>
-      <div class="text-small text-secondary">For extra security, you can enable two-factor authentication.</div>
+      {% if not request.user.two_factor_enabled %}
+        <a href="/settings/two_factor">Enable two-factor authentication</a>
+        <div class="text-small text-secondary">For extra security, you can enable two-factor authentication.</div>
+      {% else %}
+        <a href="/settings/two_factor">Disable two-factor authentication</a>
+        <div class="text-small text-secondary">Disabling two-factor authentication requires a code from your device or a backup code.</div>
+      {% endif %}
     </li>
     <li>
       <a href="/settings/comment_visits">Toggle marking new comments (currently {{ 'enabled' if request.user.track_comment_visits else 'disabled' }})</a>
