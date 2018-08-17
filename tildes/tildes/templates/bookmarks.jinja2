@@ -1,0 +1,59 @@
+{% extends 'base_user_menu.jinja2' %}
+
+{% from 'macros/comments.jinja2' import render_single_comment with context %}
+{% from 'macros/links.jinja2' import group_linked, username_linked %}
+{% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
+
+{% block title %}Bookmarks{% endblock %}
+
+{% block main_heading %}Bookmarks{% endblock %}
+
+{% block content %}
+
+<div class="listing-options">
+  <menu class="tab tab-listing-order">
+    <li class="tab-item{{' active' if (post_type == 'topic' or not post_type) else ''}}">
+      <a href="{{ request.current_listing_normal_url({'type': 'topic'}) }}">Topics</a>
+    </li>
+    <li class="tab-item{{ ' active' if post_type == 'comment' else ''}}">
+      <a href="{{ request.current_listing_normal_url({'type': 'comment'}) }}">Comments</a>
+    </li>
+  </menu>
+</div>
+
+{% if posts %}
+  <ol class="post-listing">
+  {% for post in posts if request.has_permission('view', post) %}
+    <li>
+    {% if post is topic %}
+      {{ render_topic_for_listing(post, show_group=True) }}
+    {% elif post is comment %}
+      <h2>Comment on <a href="{{ post.topic.permalink }}">{{ post.topic.title }}</a> in {{ group_linked(post.topic.group.path) }}</h2>
+      {{ render_single_comment(post) }}
+    {% endif %}
+    </li>
+  {% endfor %}
+  </ol>
+
+  {% if post_type and (posts.has_prev_page or posts.has_next_page) %}
+    <div class="pagination">
+      {% if posts.has_prev_page %}
+        <a class="page-item btn" id="prev-page"
+          href="{{ request.current_listing_base_url({'before': posts.prev_page_before_id36}) }}"
+        >Prev</a>
+      {% endif %}
+
+      {% if posts.has_next_page %}
+        <a class="page-item btn" id="next-page"
+          href="{{ request.current_listing_base_url({'after': posts.next_page_after_id36}) }}"
+        >Next</a>
+      {% endif %}
+    </div>
+  {% endif %}
+{% else %}
+  <div class="empty">
+    <h2 class="empty-title">You haven't bookmarked any posts</h2>
+  </div>
+{% endif %}
+
+{% endblock %}

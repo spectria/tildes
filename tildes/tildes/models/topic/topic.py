@@ -297,6 +297,10 @@ class Topic(DatabaseModel):
         acl.append((Allow, "admin", "edit_title"))
         acl.append((Allow, "topic.edit_title", "edit_title"))
 
+        # bookmark:
+        #  - logged-in users can bookmark topics
+        acl.append((Allow, Authenticated, "bookmark"))
+
         acl.append(DENY_ALL)
 
         return acl

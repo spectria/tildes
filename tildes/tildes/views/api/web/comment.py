@@ -18,6 +18,7 @@ from tildes.enums import CommentNotificationType, CommentLabelOption, LogEventTy
 from tildes.lib.datetime import utc_now
 from tildes.models.comment import (
     Comment,
+    CommentBookmark,
     CommentLabel,
     CommentNotification,
     CommentVote,
@@ -392,3 +393,65 @@ def delete_comment_remove(request: Request) -> Response:
     request.db_session.add(LogComment(LogEventType.COMMENT_UNREMOVE, request, comment))
 
     return Response("Un-removed")
+
+
+@ic_view_config(
+    route_name="comment_bookmark",
+    request_method="PUT",
+    permission="bookmark",
+    renderer="comment_contents.jinja2",
+)
+def put_comment_bookmark(request: Request) -> dict:
+    """Bookmark a comment with Intercooler."""
+    comment = request.context
+
+    savepoint = request.tm.savepoint()
+
+    bookmark = CommentBookmark(request.user, comment)
+    request.db_session.add(bookmark)
+
+    try:
+        # manually flush before attempting to commit, to avoid having all
+        # objects detached from the session in case of an error
+        request.db_session.flush()
+        request.tm.commit()
+    except IntegrityError:
+        # the user has already bookmarked this comment
+        savepoint.rollback()
+
+    # re-query the comment to get complete data
+    comment = (
+        request.query(Comment)
+        .join_all_relationships()
+        .filter_by(comment_id=comment.comment_id)
+        .one()
+    )
+
+    return {"comment": comment}
+
+
+@ic_view_config(
+    route_name="comment_bookmark",
+    request_method="DELETE",
+    permission="bookmark",
+    renderer="comment_contents.jinja2",
+)
+def delete_comment_bookmark(request: Request) -> dict:
+    """Unbookmark a comment with Intercooler."""
+    comment = request.context
+
+    request.query(CommentBookmark).filter(
+        CommentBookmark.user == request.user, CommentBookmark.comment == comment
+    ).delete(synchronize_session=False)
+
+    # commit and then re-query the comment to get complete data
+    request.tm.commit()
+
+    comment = (
+        request.query(Comment)
+        .join_all_relationships()
+        .filter_by(comment_id=comment.comment_id)
+        .one()
+    )
+
+    return {"comment": comment}

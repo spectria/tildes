@@ -14,7 +14,7 @@ from webargs.pyramidparser import use_kwargs
 from tildes.enums import LogEventType
 from tildes.models.group import Group
 from tildes.models.log import LogTopic
-from tildes.models.topic import Topic, TopicVote
+from tildes.models.topic import Topic, TopicBookmark, TopicVote
 from tildes.schemas.group import GroupSchema
 from tildes.schemas.topic import TopicSchema
 from tildes.views import IC_NOOP
@@ -314,3 +314,41 @@ def patch_topic_title(request: Request, title: str) -> dict:
     topic.title = title
 
     return Response(topic.title)
+
+
+@ic_view_config(
+    route_name="topic_bookmark", request_method="PUT", permission="bookmark"
+)
+def put_topic_bookmark(request: Request) -> Response:
+    """Bookmark a topic with Intercooler."""
+    topic = request.context
+
+    savepoint = request.tm.savepoint()
+
+    bookmark = TopicBookmark(request.user, topic)
+    request.db_session.add(bookmark)
+
+    try:
+        # manually flush before attempting to commit, to avoid having all
+        # objects detached from the session in case of an error
+        request.db_session.flush()
+        request.tm.commit()
+    except IntegrityError:
+        # the user has already bookmarked this topic
+        savepoint.rollback()
+
+    return Response("Bookmarked")
+
+
+@ic_view_config(
+    route_name="topic_bookmark", request_method="DELETE", permission="bookmark"
+)
+def delete_topic_bookmark(request: Request) -> Response:
+    """Unbookmark a topic with Intercooler."""
+    topic = request.context
+
+    request.query(TopicBookmark).filter(
+        TopicBookmark.user == request.user, TopicBookmark.topic == topic
+    ).delete(synchronize_session=False)
+
+    return Response("Unbookmarked")

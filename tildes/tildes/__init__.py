@@ -143,6 +143,7 @@ def current_listing_base_url(
     The `query` argument allows adding query variables to the generated url.
     """
     base_vars_by_route: Dict[str, Tuple[str, ...]] = {
+        "bookmarks": ("per_page", "type"),
         "group": ("order", "period", "per_page", "tag", "unfiltered"),
         "home": ("order", "period", "per_page", "tag", "unfiltered"),
         "search": ("order", "period", "per_page", "q"),
@@ -177,6 +178,7 @@ def current_listing_normal_url(
     The `query` argument allows adding query variables to the generated url.
     """
     normal_vars_by_route: Dict[str, Tuple[str, ...]] = {
+        "bookmarks": ("order", "period", "per_page"),
         "group": ("order", "period", "per_page"),
         "home": ("order", "period", "per_page"),
         "notifications": ("per_page",),

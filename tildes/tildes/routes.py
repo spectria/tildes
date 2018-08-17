@@ -83,6 +83,8 @@ def includeme(config: Configurator) -> None:
         "settings_password_change", "/settings/password_change", factory=LoggedInFactory
     )
 
+    config.add_route("bookmarks", "/bookmarks", factory=LoggedInFactory)
+
     config.add_route("invite", "/invite", factory=LoggedInFactory)
 
     # Route to expose metrics to Prometheus
@@ -122,6 +124,9 @@ def add_intercooler_routes(config: Configurator) -> None:
     add_ic_route("topic_title", "/topics/{topic_id36}/title", factory=topic_by_id36)
     add_ic_route("topic_vote", "/topics/{topic_id36}/vote", factory=topic_by_id36)
     add_ic_route("topic_tags", "/topics/{topic_id36}/tags", factory=topic_by_id36)
+    add_ic_route(
+        "topic_bookmark", "/topics/{topic_id36}/bookmark", factory=topic_by_id36
+    )
 
     add_ic_route("comment", "/comments/{comment_id36}", factory=comment_by_id36)
     add_ic_route(
@@ -137,6 +142,9 @@ def add_intercooler_routes(config: Configurator) -> None:
         "comment_label",
         "/comments/{comment_id36}/labels/{name}",
         factory=comment_by_id36,
+    )
+    add_ic_route(
+        "comment_bookmark", "/comments/{comment_id36}/bookmark", factory=comment_by_id36
     )
     add_ic_route(
         "comment_mark_read",

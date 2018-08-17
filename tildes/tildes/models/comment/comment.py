@@ -203,6 +203,10 @@ class Comment(DatabaseModel):
         #  - logged-in users can mark comments read
         acl.append((Allow, Authenticated, "mark_read"))
 
+        # bookmark:
+        #  - logged-in users can bookmark comments
+        acl.append((Allow, Authenticated, "bookmark"))
+
         # tools that require specifically granted permissions
         acl.append((Allow, "admin", "remove"))
         acl.append((Allow, "admin", "view_labels"))

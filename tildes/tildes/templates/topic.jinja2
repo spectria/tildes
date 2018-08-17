@@ -63,7 +63,7 @@
   {% endif %}
 {% endif %}
 
-{% if request.has_any_permission(('edit', 'delete', 'tag', 'lock', 'move', 'edit_title', 'remove'), topic) %}
+{% if request.has_any_permission(('edit', 'delete', 'tag', 'lock', 'move', 'edit_title', 'remove', 'bookmark'), topic) %}
   <menu class="post-buttons">
     {% if request.has_permission('edit', topic) %}
       <li><a class="post-button" name="edit"
@@ -139,6 +139,28 @@
           data-ic-replace-target="true"
           data-ic-confirm="Unlock this topic?"
         >Unlock</a>
+      {% endif %}
+      </li>
+    {% endif %}
+
+    {% if request.has_permission('bookmark', topic) %}
+      <li>
+      {% if not topic.bookmark_created_time %}
+        <a class="post-button"
+          data-ic-put-to="{{ request.route_url(
+            'ic_topic_bookmark',
+            topic_id36=topic.topic_id36,
+          ) }}"
+          data-ic-replace-target="true"
+        >Bookmark</a>
+      {% else %}
+        <a class="post-button"
+          data-ic-delete-from="{{ request.route_url(
+            'ic_topic_bookmark',
+            topic_id36=topic.topic_id36,
+          ) }}"
+          data-ic-replace-target="true"
+        >Unbookmark</a>
       {% endif %}
       </li>
     {% endif %}

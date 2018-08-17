@@ -194,6 +194,29 @@
           >Delete</a></li>
         {% endif %}
 
+        {% if request.has_permission('bookmark', comment) %}
+          {% if comment.bookmark_created_time %}
+            <li><a class="post-button post-button-used" name="unbookmark"
+              data-ic-delete-from="{{ request.route_url(
+                'ic_comment_bookmark',
+                comment_id36=comment.comment_id36,
+              ) }}"
+              data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+              data-ic-replace-target="true"
+              >Bookmarked
+          {% else %}
+            <li><a class="post-button" name="bookmark"
+              data-ic-put-to="{{ request.route_url(
+                'ic_comment_bookmark',
+                comment_id36=comment.comment_id36,
+              ) }}"
+              data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
+              data-ic-replace-target="true"
+              >Bookmark
+          {% endif %}
+          </a></li>
+        {% endif %}
+
         {% if request.has_permission("remove", comment) %}
           <li>
           {% if not comment.is_removed %}

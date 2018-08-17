@@ -54,13 +54,18 @@
 
     <li>Misc</li>
     <ul class="nav">
-        <li class="nav-item {{ 'active' if route == 'invite' else '' }}">
-          {% if request.user.invite_codes_remaining %}<strong>{% endif %}
-          <a href="/invite">
-            Invite someone {% if request.user.invite_codes_remaining %}({{ request.user.invite_codes_remaining }}){% endif %}
-          </a>
-          {% if request.user.invite_codes_remaining %}</strong>{% endif %}
-        </li>
+      <li class="nav-item {{ 'active' if route == 'bookmarks' else '' }}">
+        <a href="/bookmarks">
+          Bookmarks
+        </a>
+      </li>
+      <li class="nav-item {{ 'active' if route == 'invite' else '' }}">
+        {% if request.user.invite_codes_remaining %}<strong>{% endif %}
+        <a href="/invite">
+          Invite someone {% if request.user.invite_codes_remaining %}({{ request.user.invite_codes_remaining }}){% endif %}
+        </a>
+        {% if request.user.invite_codes_remaining %}</strong>{% endif %}
+      </li>
       <li class="nav-item {{ 'active' if route == 'settings' else '' }}">
         <a href="/settings">
           Settings

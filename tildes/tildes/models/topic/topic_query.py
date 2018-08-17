@@ -15,6 +15,7 @@ from tildes.lib.datetime import SimpleHoursPeriod, utc_now
 from tildes.models.group import Group
 from tildes.models.pagination import PaginatedQuery
 from .topic import Topic
+from .topic_bookmark import TopicBookmark
 from .topic_visit import TopicVisit
 from .topic_vote import TopicVote
 
@@ -38,7 +39,7 @@ class TopicQuery(PaginatedQuery):
             return self
 
         # pylint: disable=protected-access
-        return self._attach_vote_data()._attach_visit_data()
+        return self._attach_vote_data()._attach_visit_data()._attach_bookmark_data()
 
     def _attach_vote_data(self) -> "TopicQuery":
         """Add a subquery to include whether the user has voted."""
@@ -52,6 +53,19 @@ class TopicQuery(PaginatedQuery):
             .label("user_voted")
         )
         return self.add_columns(vote_subquery)
+
+    def _attach_bookmark_data(self) -> "TopicQuery":
+        """Join the data related to whether the user has bookmarked the topic."""
+        query = self.outerjoin(
+            TopicBookmark,
+            and_(
+                TopicBookmark.topic_id == Topic.topic_id,
+                TopicBookmark.user == self.request.user,
+            ),
+        )
+        query = query.add_columns(TopicBookmark.created_time)
+
+        return query
 
     def _attach_visit_data(self) -> "TopicQuery":
         """Join the data related to the user's last visit to the topic(s)."""
@@ -80,12 +94,15 @@ class TopicQuery(PaginatedQuery):
             # the result is already a Topic, no merging needed
             topic = result
             topic.user_voted = False
+            topic.bookmark_created_time = None
             topic.last_visit_time = None
             topic.comments_since_last_visit = None
         else:
             topic = result.Topic
 
             topic.user_voted = result.user_voted
+
+            topic.bookmark_created_time = result.created_time
 
             topic.last_visit_time = result.visit_time
             if result.num_comments is not None:
