@@ -70,11 +70,7 @@ def test_deliberate_ordered_list():
 
 def test_accidental_ordered_list():
     """Ensure a common "accidental" ordered list gets escaped."""
-    markdown = (
-        "What year did this happen?\n\n"
-        "1975. It was a long time ago.\n\n"
-        "But I remember it like it was yesterday."
-    )
+    markdown = "1975. It was a long time ago."
     html = convert_markdown_to_safe_html(markdown)
 
     assert "<ol" not in html

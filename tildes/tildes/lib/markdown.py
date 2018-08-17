@@ -80,9 +80,9 @@ HTML_ATTRIBUTE_WHITELIST = {
 PROTOCOL_WHITELIST = ("http", "https")
 
 # Regex that finds ordered list markdown that was probably accidental - ones being
-# initiated by anything except "1."
+# initiated by anything except "1." at the start of a post
 BAD_ORDERED_LIST_REGEX = re.compile(
-    r"((?:\A|\n\n)"  # Either the start of the entire text, or a new paragraph
+    r"((?:\A)"  # The start of the entire text
     r"(?!1\.)\d+)"  # A number that isn't "1"
     r"\.\s"  # Followed by a period and a space
 )
@@ -156,13 +156,12 @@ def escape_accidental_ordered_lists(markdown: str) -> str:
     """Escape markdown that's probably an accidental ordered list.
 
     It's a common markdown mistake to accidentally start a numbered list, by beginning a
-    post or paragraph with a number followed by a period. For example, someone might try
-    to write "1975. It was a long time ago.", and the result will be a comment that says
-    "1. It was a long time ago." since that gets parsed into a numbered list.
+    post with a number followed by a period. For example, someone might try to write
+    "1975. It was a long time ago.", and the result will be a comment that says "1. It
+    was a long time ago." since that gets parsed into a numbered list.
 
     This fixes that quirk of markdown by escaping anything that would start a numbered
-    list except for "1. ". This will cause a few other edge cases, but I believe they're
-    less common/important than fixing this common error.
+    list at the beginning of a post, except for "1. ".
     """
     return BAD_ORDERED_LIST_REGEX.sub(r"\1\\. ", markdown)
 
