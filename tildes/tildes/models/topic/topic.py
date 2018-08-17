@@ -264,14 +264,19 @@ class Topic(DatabaseModel):
         acl.append((Allow, self.user_id, "delete"))
 
         # tag:
-        #  - only the author and admins can tag topics
+        #  - allow tagging by the author, admins, and people with "topic.tag" principal
         acl.append((Allow, self.user_id, "tag"))
         acl.append((Allow, "admin", "tag"))
+        acl.append((Allow, "topic.tag", "tag"))
 
-        # admin tools
+        # tools that require specifically granted permissions
         acl.append((Allow, "admin", "lock"))
+
         acl.append((Allow, "admin", "move"))
+        acl.append((Allow, "topic.move", "move"))
+
         acl.append((Allow, "admin", "edit_title"))
+        acl.append((Allow, "topic.edit_title", "edit_title"))
 
         acl.append(DENY_ALL)
 
