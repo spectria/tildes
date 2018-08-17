@@ -4,9 +4,7 @@ from typing import Any, Optional, Type, TypeVar
 
 from marshmallow import Schema
 from sqlalchemy import event
-from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.schema import MetaData
 from sqlalchemy.sql.schema import Table
 
@@ -124,6 +122,3 @@ DatabaseModel = declarative_base(  # pylint: disable=invalid-name
 
 # attach the listener for SQLAlchemy ORM attribute "set" events to all models
 event.listen(DatabaseModel, "attribute_instrument", attach_set_listener)
-
-# associate JSONB columns with MutableDict so value changes are detected
-MutableDict.associate_with(JSONB)

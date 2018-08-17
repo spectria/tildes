@@ -22,7 +22,7 @@ from sqlalchemy import (
     Text,
     TIMESTAMP,
 )
-from sqlalchemy.dialects.postgresql import ARRAY, ENUM
+from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import text
@@ -88,7 +88,7 @@ class User(DatabaseModel):
     )
     open_new_tab_text: bool = Column(Boolean, nullable=False, server_default="false")
     is_banned: bool = Column(Boolean, nullable=False, server_default="false")
-    is_admin: bool = Column(Boolean, nullable=False, server_default="false")
+    permissions: Any = Column(JSONB)
     home_default_order: Optional[TopicSortOption] = Column(ENUM(TopicSortOption))
     home_default_period: Optional[str] = Column(Text)
     _filtered_topic_tags: List[Ltree] = Column(
@@ -204,3 +204,17 @@ class User(DatabaseModel):
     def num_unread_total(self) -> int:
         """Return total number of unread items (notifications + messages)."""
         return self.num_unread_messages + self.num_unread_notifications
+
+    @property
+    def auth_principals(self) -> List[str]:
+        """Return the user's authorization principals (used for permissions)."""
+        if not self.permissions:
+            return []
+
+        if isinstance(self.permissions, str):
+            return [self.permissions]
+
+        if isinstance(self.permissions, list):
+            return self.permissions
+
+        raise ValueError("Unknown permissions format")

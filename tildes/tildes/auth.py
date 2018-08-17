@@ -56,12 +56,7 @@ def auth_callback(user_id: int, request: Request) -> Optional[Sequence[str]]:
     if user_id != request.user.user_id:
         raise AssertionError("auth_callback called with different user_id")
 
-    principals = []
-
-    if request.user.is_admin:
-        principals.append("admin")
-
-    return principals
+    return request.user.auth_principals
 
 
 def includeme(config: Configurator) -> None:

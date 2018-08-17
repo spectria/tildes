@@ -7,6 +7,7 @@ from sqlalchemy import BigInteger, Column, event, ForeignKey, Integer, Table, TI
 from sqlalchemy.dialects.postgresql import ENUM, INET, JSONB
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
@@ -51,7 +52,7 @@ class BaseLog:
     @declared_attr
     def info(self) -> Column:
         """Return the info column."""
-        return Column(JSONB)
+        return Column(MutableDict.as_mutable(JSONB))
 
     @declared_attr
     def user(self) -> Any:

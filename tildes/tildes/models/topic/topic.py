@@ -16,6 +16,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import ENUM, JSONB
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.expression import text
 from sqlalchemy_utils import Ltree
@@ -102,7 +103,7 @@ class Topic(DatabaseModel):
     _markdown: Optional[str] = deferred(Column("markdown", Text))
     rendered_html: Optional[str] = Column(Text)
     link: Optional[str] = Column(Text)
-    content_metadata: Dict[str, Any] = Column(JSONB)
+    content_metadata: Dict[str, Any] = Column(MutableDict.as_mutable(JSONB))
     num_comments: int = Column(Integer, nullable=False, server_default="0", index=True)
     num_votes: int = Column(Integer, nullable=False, server_default="0", index=True)
     _tags: List[Ltree] = Column(
