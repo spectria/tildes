@@ -39,6 +39,13 @@ site-db-enable-pg_stat_statements:
     - require:
       - postgres_database: tildes
 
+site-db-enable-pg_trgm:
+  postgres_extension.present:
+    - name: pg_trgm
+    - maintenance_db: tildes
+    - require:
+      - postgres_database: tildes
+
 site-db-pg_hba-lines:
   file.accumulated:
     - name: pg_hba_lines

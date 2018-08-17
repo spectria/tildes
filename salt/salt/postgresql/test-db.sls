@@ -26,6 +26,13 @@ test-db-enable-intarray:
     - require:
       - postgres_database: tildes_test
 
+test-db-enable-pg_trgm:
+  postgres_extension.present:
+    - name: pg_trgm
+    - maintenance_db: tildes_test
+    - require:
+      - postgres_database: tildes_test
+
 test-db-pg_hba-lines:
   file.accumulated:
     - name: pg_hba_lines

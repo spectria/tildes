@@ -1,0 +1,27 @@
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% from 'macros/links.jinja2' import group_linked %}
+
+{% block title %}
+Group not found
+{% endblock %}
+
+{% block content %}
+
+<div class="empty">
+  <h2 class="empty-title">No group named '{{ supplied_name }}'</h2>
+  {% if group_suggestions %}
+    <p class="empty-subtitle">
+      Did you mean one of these groups instead?
+      <br><br>
+      {% for group in group_suggestions %}
+        {{ group_linked(group) }}
+        <br>
+      {% endfor %}
+    </p>
+  {% endif %}
+  <br><br>
+  <a href="/groups" class="btn btn-primary">Browse the list of groups</a>
+</div>
+
+{% endblock %}
