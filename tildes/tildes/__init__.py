@@ -4,6 +4,7 @@ from typing import Any, Callable, Dict, Optional
 
 from paste.deploy.config import PrefixMiddleware
 from pyramid.config import Configurator
+from pyramid.httpexceptions import HTTPTooManyRequests
 from pyramid.registry import Registry
 from pyramid.request import Request
 from redis import StrictRedis
@@ -50,6 +51,7 @@ def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
     # pylint: enable=unnecessary-lambda
 
     config.add_request_method(check_rate_limit, "check_rate_limit")
+    config.add_request_method(apply_rate_limit, "apply_rate_limit")
 
     config.add_request_method(current_listing_base_url, "current_listing_base_url")
     config.add_request_method(current_listing_normal_url, "current_listing_normal_url")
@@ -118,6 +120,13 @@ def check_rate_limit(request: Request, action_name: str) -> RateLimitResult:
         return RateLimitResult.unlimited_result()
 
     return RateLimitResult.merged_result(results)
+
+
+def apply_rate_limit(request: Request, action_name: str) -> None:
+    """Check the rate limit for an action, and raise HTTP 429 if it's exceeded."""
+    result = request.check_rate_limit(action_name)
+    if not result.is_allowed:
+        raise result.add_headers_to_response(HTTPTooManyRequests())
 
 
 def current_listing_base_url(

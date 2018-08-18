@@ -2,7 +2,7 @@
 
 from typing import Any, Callable
 
-from pyramid.httpexceptions import HTTPFound, HTTPTooManyRequests
+from pyramid.httpexceptions import HTTPFound
 from pyramid.request import Request
 from pyramid.view import view_config
 
@@ -35,10 +35,8 @@ def rate_limit_view(action_name: str) -> Callable:
     def decorator(func: Callable) -> Callable:
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             request = args[0]
-            result = request.check_rate_limit(action_name)
 
-            if not result.is_allowed:
-                raise result.add_headers_to_response(HTTPTooManyRequests())
+            request.apply_rate_limit(action_name)
 
             return func(*args, **kwargs)
 

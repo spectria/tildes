@@ -30,6 +30,7 @@ from tildes.schemas.comment import CommentSchema
 from tildes.schemas.fields import Enum, ShortTimePeriod
 from tildes.schemas.topic import TopicSchema
 from tildes.schemas.topic_listing import TopicListingSchema
+from tildes.views.decorators import rate_limit_view
 
 
 DefaultSettings = namedtuple("DefaultSettings", ["order", "period"])
@@ -63,6 +64,8 @@ def post_group_topics(
         new_topic.tags = tags.split(",")
     except ValidationError:
         raise ValidationError({"tags": ["Invalid tags"]})
+
+    request.apply_rate_limit("topic_post")
 
     request.db_session.add(new_topic)
 
@@ -225,6 +228,7 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
 
 @view_config(route_name="topic", request_method="POST", permission="comment")
 @use_kwargs(CommentSchema(only=("markdown",)))
+@rate_limit_view("comment_post")
 def post_comment_on_topic(request: Request, markdown: str) -> HTTPFound:
     """Post a new top-level comment on a topic."""
     topic = request.context

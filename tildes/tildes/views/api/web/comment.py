@@ -16,7 +16,7 @@ from tildes.models.comment import Comment, CommentNotification, CommentTag, Comm
 from tildes.models.topic import TopicVisit
 from tildes.schemas.comment import CommentSchema, CommentTagSchema
 from tildes.views import IC_NOOP
-from tildes.views.decorators import ic_view_config
+from tildes.views.decorators import ic_view_config, rate_limit_view
 
 
 def _increment_topic_comments_seen(request: Request, comment: Comment) -> None:
@@ -57,6 +57,7 @@ def _increment_topic_comments_seen(request: Request, comment: Comment) -> None:
     permission="comment",
 )
 @use_kwargs(CommentSchema(only=("markdown",)))
+@rate_limit_view("comment_post")
 def post_toplevel_comment(request: Request, markdown: str) -> dict:
     """Post a new top-level comment on a topic with Intercooler."""
     topic = request.context
@@ -90,6 +91,7 @@ def post_toplevel_comment(request: Request, markdown: str) -> dict:
     permission="reply",
 )
 @use_kwargs(CommentSchema(only=("markdown",)))
+@rate_limit_view("comment_post")
 def post_comment_reply(request: Request, markdown: str) -> dict:
     """Post a reply to a comment with Intercooler."""
     parent_comment = request.context
