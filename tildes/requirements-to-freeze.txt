@@ -17,6 +17,7 @@ prometheus-client
 prospector
 psycopg2
 publicsuffix2
+Pygments
 pyotp
 pyramid
 pyramid-debugtoolbar
