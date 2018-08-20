@@ -1,6 +1,6 @@
 """Configure and initialize the Pyramid app."""
 
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict, Optional, Tuple
 
 from paste.deploy.config import PrefixMiddleware
 from pyramid.config import Configurator
@@ -139,10 +139,17 @@ def current_listing_base_url(
 
     The `query` argument allows adding query variables to the generated url.
     """
-    if request.matched_route.name not in ("home", "group", "user"):
+    base_vars_by_route: Dict[str, Tuple[str, ...]] = {
+        "group": ("order", "period", "per_page", "tag", "unfiltered"),
+        "home": ("order", "period", "per_page", "tag", "unfiltered"),
+        "user": ("per_page", "type"),
+    }
+
+    try:
+        base_view_vars = base_vars_by_route[request.matched_route.name]
+    except KeyError:
         raise AttributeError("Current route is not supported.")
 
-    base_view_vars = ("order", "period", "per_page", "tag", "type", "unfiltered")
     query_vars = {
         key: val for key, val in request.GET.copy().items() if key in base_view_vars
     }
@@ -165,10 +172,17 @@ def current_listing_normal_url(
 
     The `query` argument allows adding query variables to the generated url.
     """
-    if request.matched_route.name not in ("home", "group", "user"):
+    normal_vars_by_route: Dict[str, Tuple[str, ...]] = {
+        "group": ("order", "period", "per_page"),
+        "home": ("order", "period", "per_page"),
+        "user": ("per_page",),
+    }
+
+    try:
+        normal_view_vars = normal_vars_by_route[request.matched_route.name]
+    except KeyError:
         raise AttributeError("Current route is not supported.")
 
-    normal_view_vars = ("order", "period", "per_page")
     query_vars = {
         key: val for key, val in request.GET.copy().items() if key in normal_view_vars
     }
