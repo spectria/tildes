@@ -20,6 +20,7 @@ from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.expression import text
 from sqlalchemy_utils import Ltree
+from titlecase import titlecase
 
 from tildes.enums import TopicType
 from tildes.lib.database import ArrayOfLtree
@@ -172,6 +173,11 @@ class Topic(DatabaseModel):
         new_topic = cls()
         new_topic.group_id = group.group_id
         new_topic.user_id = author.user_id
+
+        # if the title is all caps, convert to title case
+        if title.isupper():
+            title = titlecase(title)
+
         new_topic.title = title
 
         return new_topic

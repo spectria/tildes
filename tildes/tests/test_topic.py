@@ -130,3 +130,19 @@ def test_multiple_edits_update_time(text_topic):
 def test_topic_initial_last_activity_time(text_topic):
     """Ensure last_activity_time is initially the same as created_time."""
     assert text_topic.last_activity_time == text_topic.created_time
+
+
+def test_convert_all_caps(session_user, session_group):
+    """Ensure that all-caps titles are converted to title case."""
+    topic = Topic.create_link_topic(
+        session_group, session_user, "THE TITLE", "http://example.com"
+    )
+    assert topic.title == "The Title"
+
+
+def test_no_convert_partial_caps_title(session_user, session_group):
+    """Ensure that partially-caps titles are not converted to title case."""
+    topic = Topic.create_link_topic(
+        session_group, session_user, "This is a TITLE", "http://example.com"
+    )
+    assert topic.title == "This is a TITLE"

@@ -83,6 +83,7 @@ SQLAlchemy-Utils==0.33.3
 stripe==2.4.0
 testing.common.database==2.0.3
 testing.redis==1.1.1
+titlecase==0.12.0
 toml==0.9.4
 traitlets==4.3.2
 transaction==2.2.1

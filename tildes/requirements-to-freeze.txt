@@ -37,6 +37,7 @@ SQLAlchemy
 SQLAlchemy-Utils
 stripe
 testing.redis
+titlecase
 webargs
 webtest
 zope.sqlalchemy
