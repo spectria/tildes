@@ -14,7 +14,7 @@ from sqlalchemy import (
     Text,
     TIMESTAMP,
 )
-from sqlalchemy.dialects.postgresql import ENUM, JSONB
+from sqlalchemy.dialects.postgresql import ENUM, JSONB, TSVECTOR
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import deferred, relationship
@@ -111,12 +111,16 @@ class Topic(DatabaseModel):
     )
     is_official: bool = Column(Boolean, nullable=False, server_default="false")
     is_locked: bool = Column(Boolean, nullable=False, server_default="false")
+    search_tsv: Any = deferred(Column(TSVECTOR))
 
     user: User = relationship("User", lazy=False, innerjoin=True)
     group: Group = relationship("Group", innerjoin=True)
 
-    # Create a GiST index on the tags column
-    __table_args__ = (Index("ix_topics_tags_gist", _tags, postgresql_using="gist"),)
+    # Create specialized indexes
+    __table_args__ = (
+        Index("ix_topics_tags_gist", _tags, postgresql_using="gist"),
+        Index("ix_topics_search_tsv_gin", "search_tsv", postgresql_using="gin"),
+    )
 
     @hybrid_property
     def markdown(self) -> Optional[str]:

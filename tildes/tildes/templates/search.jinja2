@@ -1,0 +1,31 @@
+{% extends 'topic_listing.jinja2' %}
+
+{% block title %}Search results for "{{ search }}"{% endblock %}
+
+{% block header_context_link %}<span class="site-header-context">Search: "{{ search }}"</span>{% endblock %}
+
+{% block sidebar %}
+  <form class="form-search" method="GET" action="/search">
+    <div class="input-group">
+      <input type="text" class="form-input input-sm" name="q" id="q" value="{{ search }}">
+      <button class="btn btn-sm input-group-btn">Search</button>
+    </div>
+  </form>
+
+  <h2>Search results</h2>
+
+  <p><a href="/">Back to home page</a></p>
+
+  {% if request.user and request.user.subscriptions %}
+    <div class="divider"></div>
+    <ul class="nav">
+      <li>Subscriptions</li>
+      <ul class="nav">
+      {% for subscription in request.user.subscriptions|sort(attribute='group') %}
+        <li class="nav-item"><a href="/~{{ subscription.group.path }}">~{{ subscription.group.path }}</a></li>
+      {% endfor %}
+      </ul>
+    </ul>
+  {% endif %}
+
+{% endblock %}

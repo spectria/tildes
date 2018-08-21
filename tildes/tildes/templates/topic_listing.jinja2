@@ -46,9 +46,14 @@
 
   <form class="form-listing-options" method="get">
     <input type="hidden" name="order" value="{{ order.name.lower() }}">
-    {% if tag %}
+    {% if tag is defined and tag %}
       <input type="hidden" name="tag" value="{{ tag }}">
     {% endif %}
+
+    {% if search is defined %}
+      <input type="hidden" name="q" value="{{ search }}">
+    {% endif %}
+
     <div class="form-group">
       <label for="period">from</label>
       <select id="period" name="period" class="form-select" data-js-time-period-select>
@@ -71,7 +76,7 @@
     </div>
   </form>
 
-  {% if not is_default_view %}
+  {% if is_default_view is defined and not is_default_view %}
     <form
       {% if is_single_group %}
         data-ic-patch-to="{{ request.route_url(
@@ -95,6 +100,7 @@
   {% endif %}
 </div>
 
+{% if search is not defined %}
 <div class="topic-listing-filter">
 {% if tag %}
   Showing only topics with the tag "{{ tag|replace('_', ' ') }}".
@@ -107,6 +113,7 @@
   <a href="{{ request.current_listing_normal_url({'unfiltered': 'true'}) }}">View unfiltered list</a>
 {% endif %}
 </div>
+{% endif %}
 
 {% if not topics %}
   <div class="empty">
@@ -124,7 +131,7 @@
 
 {% if topics %}
   <ol class="topic-listing"
-  {% if rank_start is not none %}
+  {% if rank_start is defined and rank_start is not none %}
     start="{{ rank_start }}"
   {% endif %}
   >
@@ -133,7 +140,7 @@
     <li>
 
     {# only display the rank on topics if the rank_start variable is set #}
-    {% if rank_start is not none %}
+    {% if rank_start is defined and rank_start is not none %}
       {{ render_topic_for_listing(
           topic,
           show_group=topic.group != request.context,
@@ -168,6 +175,13 @@
 {% endblock %}
 
 {% block sidebar %}
+  <form class="form-search" method="GET" action="/search">
+    <div class="input-group">
+      <input type="text" class="form-input input-sm" name="q" id="q">
+      <button class="btn btn-sm input-group-btn">Search</button>
+    </div>
+  </form>
+
   <h3>~{{ group.path }}</h3>
 
   {% if group.short_description %}

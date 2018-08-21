@@ -164,6 +164,63 @@ def get_group_topics(
     }
 
 
+@view_config(route_name="search", renderer="search.jinja2")
+@use_kwargs(TopicListingSchema(only=("after", "before", "order", "per_page", "period")))
+@use_kwargs({"search": String(load_from="q")})
+def get_search(
+    request: Request,
+    order: Any,
+    period: Any,
+    after: str,
+    before: str,
+    per_page: int,
+    search: str,
+) -> dict:
+    """Get a list of search results."""
+    # pylint: disable=too-many-arguments
+    if order is missing:
+        order = TopicSortOption.NEW
+
+    if period is missing:
+        period = None
+
+    query = (
+        request.query(Topic)
+        .join_all_relationships()
+        .search(search)
+        .apply_sort_option(order)
+    )
+
+    # restrict the time period, if not set to "all time"
+    if period:
+        query = query.inside_time_period(period)
+
+    # apply before/after pagination restrictions if relevant
+    if before:
+        query = query.before_id36(before)
+
+    if after:
+        query = query.after_id36(after)
+
+    topics = query.get_page(per_page)
+
+    period_options = [SimpleHoursPeriod(hours) for hours in (1, 12, 24, 72)]
+
+    # add the current period to the bottom of the dropdown if it's not one of the
+    # "standard" ones
+    if period and period not in period_options:
+        period_options.append(period)
+
+    return {
+        "search": search,
+        "topics": topics,
+        "order": order,
+        "order_options": TopicSortOption,
+        "period": period,
+        "period_options": period_options,
+    }
+
+
 @view_config(
     route_name="new_topic", renderer="new_topic.jinja2", permission="post_topic"
 )

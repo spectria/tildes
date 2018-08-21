@@ -17,6 +17,8 @@ def includeme(config: Configurator) -> None:
     """Set up application routes."""
     config.add_route("home", "/")
 
+    config.add_route("search", "/search")
+
     config.add_route("groups", "/groups")
 
     config.add_route("login", "/login")

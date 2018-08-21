@@ -3,6 +3,7 @@
 from typing import Any, Sequence
 
 from pyramid.request import Request
+from sqlalchemy import func
 from sqlalchemy.sql.expression import and_, null
 from sqlalchemy_utils import Ltree
 
@@ -137,3 +138,7 @@ class TopicQuery(PaginatedQuery):
 
         # pylint: disable=protected-access
         return self.filter(Topic._tags.descendant_of(tag))  # type: ignore
+
+    def search(self, query: str) -> "TopicQuery":
+        """Restrict the topics to ones that match a search query (generative)."""
+        return self.filter(Topic.search_tsv.op("@@")(func.plainto_tsquery(query)))
