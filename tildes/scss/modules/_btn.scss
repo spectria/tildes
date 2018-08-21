@@ -52,32 +52,14 @@
 
   font-weight: normal;
 
-  border-left-width: 0;
   margin-right: 0.4rem;
   @media (min-width: $size-md) {
-    border-left-width: 1px;
     margin-right: 0.2rem;
     min-width: 0.8rem;
   }
 
   &:hover {
     color: $blue;
-  }
-}
-
-.btn-comment-collapse-all {
-  margin-left: 0.4rem;
-  border-left-width: 1px;
-  @media (min-width: $size-md) {
-    margin-top: 0.35rem;
-  }
-}
-
-.btn-comment-expand-all {
-  margin-left: 0.2rem;
-  border-left-width: 1px;
-  @media (min-width: $size-md) {
-    margin-top: 0.35rem;
   }
 }
 

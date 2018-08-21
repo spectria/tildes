@@ -248,8 +248,14 @@
 .topic-comments {
   header {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    margin-bottom: 0.4rem;
 
     h2 {
+      margin-bottom: 0;
+      margin-right: 0.4rem;
       white-space: nowrap;
     }
 
