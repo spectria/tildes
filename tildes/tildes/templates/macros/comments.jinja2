@@ -99,8 +99,8 @@
         data-js-external-links-new-tabs
         {% endif %}
       >
-        {% if comment.is_removed and 'admin' in request.effective_principals %}
-          <p class="text-warning">Comment removed</p>
+        {% if comment.is_removed %}
+          <p class="comment-removed-warning">This comment has been removed and is not visible to other users</p>
         {% endif %}
 
         {{ comment.rendered_html|safe }}

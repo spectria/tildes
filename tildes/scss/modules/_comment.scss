@@ -88,6 +88,12 @@
   overflow: auto;
 }
 
+.comment-removed-warning {
+  color: $warning-color;
+  font-weight: bold;
+  font-size: 0.6rem;
+}
+
 .comment-votes {
   font-size: 0.6rem;
   font-weight: bold;
