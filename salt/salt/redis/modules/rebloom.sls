@@ -1,3 +1,7 @@
+# Take care if updating this module - Redis Labs changed the license on July 16, 2018
+# to Apache 2 with their "Commons Clause": https://commonsclause.com/
+# The legality and specific implications of that clause are currently unclear, so we
+# probably shouldn't update to a version under that license without more research.
 rebloom-clone:
   git.latest:
     - name: https://github.com/RedisLabsModules/rebloom
