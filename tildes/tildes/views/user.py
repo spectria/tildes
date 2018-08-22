@@ -31,8 +31,8 @@ def _get_user_recent_activity(
         .join_all_relationships()
     )
 
-    # include removed comments if the user's looking at their own page
-    if user == request.user:
+    # include removed comments if the user's looking at their own page or is an admin
+    if user == request.user or request.user.is_admin:
         query = query.include_removed()
 
     comments = query.all()
@@ -45,8 +45,8 @@ def _get_user_recent_activity(
         .join_all_relationships()
     )
 
-    # include removed topics if the user's looking at their own page
-    if user == request.user:
+    # include removed topics if the user's looking at their own page or is an admin
+    if user == request.user or request.user.is_admin:
         query = query.include_removed()
 
     topics = query.all()
@@ -89,8 +89,8 @@ def get_user(
 
         query = query.join_all_relationships()
 
-        # include removed posts if the user's looking at their own page
-        if user == request.user:
+        # include removed posts if the user's looking at their own page or is an admin
+        if user == request.user or request.user.is_admin:
             query = query.include_removed()
 
         posts = query.get_page(per_page)

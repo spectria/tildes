@@ -218,3 +218,8 @@ class User(DatabaseModel):
             return self.permissions
 
         raise ValueError("Unknown permissions format")
+
+    @property
+    def is_admin(self) -> bool:
+        """Return whether the user has admin permissions."""
+        return "admin" in self.auth_principals
