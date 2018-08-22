@@ -11,17 +11,16 @@ Group not found
 <div class="empty">
   <h2 class="empty-title">No group named '{{ supplied_name }}'</h2>
   {% if group_suggestions %}
-    <p class="empty-subtitle">
-      Did you mean one of these groups instead?
-      <br><br>
-      {% for group in group_suggestions %}
-        {{ group_linked(group) }}
-        <br>
-      {% endfor %}
-    </p>
+    <p class="empty-subtitle">Did you mean one of these groups instead?</p>
+    <ul class="empty-list">
+    {% for group in group_suggestions %}
+      <li>{{ group_linked(group) }}</li>
+    {% endfor %}
+    </ul>
   {% endif %}
-  <br><br>
-  <a href="/groups" class="btn btn-primary">Browse the list of groups</a>
+  <div class="empty-action">
+    <a href="/groups" class="btn btn-primary">Browse the list of groups</a>
+  </div>
 </div>
 
 {% endblock %}
