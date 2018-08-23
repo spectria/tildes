@@ -92,7 +92,6 @@ class Topic(DatabaseModel):
     is_removed: bool = Column(
         Boolean, nullable=False, server_default="false", index=True
     )
-    removed_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     title: str = Column(
         Text,
         CheckConstraint(f"LENGTH(title) <= {TITLE_MAX_LENGTH}", name="title_length"),
