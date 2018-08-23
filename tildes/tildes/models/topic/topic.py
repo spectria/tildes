@@ -282,6 +282,8 @@ class Topic(DatabaseModel):
         # tools that require specifically granted permissions
         acl.append((Allow, "admin", "lock"))
 
+        acl.append((Allow, "admin", "remove"))
+
         acl.append((Allow, "admin", "move"))
         acl.append((Allow, "topic.move", "move"))
 

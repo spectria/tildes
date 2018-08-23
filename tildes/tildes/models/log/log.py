@@ -112,6 +112,7 @@ class LogTopic(DatabaseModel, BaseLog):
 
     def __str__(self) -> str:
         """Return a string representation of the log event."""
+        # pylint: disable=too-many-return-statements
         if self.event_type == LogEventType.TOPIC_TAG:
             return self._tag_event_description()
         elif self.event_type == LogEventType.TOPIC_MOVE:
@@ -120,8 +121,12 @@ class LogTopic(DatabaseModel, BaseLog):
             return f"moved from ~{old_group} to ~{new_group}"
         elif self.event_type == LogEventType.TOPIC_LOCK:
             return "locked comments"
+        elif self.event_type == LogEventType.TOPIC_REMOVE:
+            return "removed"
         elif self.event_type == LogEventType.TOPIC_UNLOCK:
             return "unlocked comments"
+        elif self.event_type == LogEventType.TOPIC_UNREMOVE:
+            return "un-removed"
         elif self.event_type == LogEventType.TOPIC_TITLE_EDIT:
             old_title = self.info["old"]  # noqa
             new_title = self.info["new"]  # noqa

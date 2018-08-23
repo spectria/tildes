@@ -51,9 +51,11 @@ class LogEventType(enum.Enum):
     TOPIC_LOCK = enum.auto()
     TOPIC_MOVE = enum.auto()
     TOPIC_POST = enum.auto()
+    TOPIC_REMOVE = enum.auto()
     TOPIC_TAG = enum.auto()
     TOPIC_TITLE_EDIT = enum.auto()
     TOPIC_UNLOCK = enum.auto()
+    TOPIC_UNREMOVE = enum.auto()
 
 
 class TopicSortOption(enum.Enum):

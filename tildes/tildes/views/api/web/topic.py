@@ -230,6 +230,28 @@ def patch_move_topic(request: Request, path: str) -> dict:
     return Response("Moved")
 
 
+@ic_view_config(route_name="topic_remove", request_method="PUT", permission="remove")
+def put_topic_remove(request: Request) -> Response:
+    """Remove a topic with Intercooler."""
+    topic = request.context
+
+    topic.is_removed = True
+    request.db_session.add(LogTopic(LogEventType.TOPIC_REMOVE, request, topic))
+
+    return Response("Removed")
+
+
+@ic_view_config(route_name="topic_remove", request_method="DELETE", permission="remove")
+def delete_topic_remove(request: Request) -> Response:
+    """Un-remove a topic with Intercooler."""
+    topic = request.context
+
+    topic.is_removed = False
+    request.db_session.add(LogTopic(LogEventType.TOPIC_UNREMOVE, request, topic))
+
+    return Response("Un-removed")
+
+
 @ic_view_config(route_name="topic_lock", request_method="PUT", permission="lock")
 def put_topic_lock(request: Request) -> Response:
     """Lock a topic with Intercooler."""
