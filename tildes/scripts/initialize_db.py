@@ -38,7 +38,7 @@ def initialize_db(config_path: str, alembic_config_path: Optional[str] = None) -
 def create_tables(connectable: Connectable) -> None:
     """Create the database tables."""
     # tables to skip (due to inheritance or other need to create manually)
-    excluded_tables = Log.INHERITED_TABLES
+    excluded_tables = Log.INHERITED_TABLES + ["log"]
 
     tables = [
         table
@@ -46,6 +46,9 @@ def create_tables(connectable: Connectable) -> None:
         if table.name not in excluded_tables
     ]
     DatabaseModel.metadata.create_all(connectable, tables=tables)
+
+    # create log table (and inherited ones) last
+    DatabaseModel.metadata.create_all(connectable, tables=[Log.__table__])
 
 
 def run_sql_scripts_in_dir(path: str, engine: Engine) -> None:

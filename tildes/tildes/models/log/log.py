@@ -13,6 +13,7 @@ from sqlalchemy.sql.expression import text
 
 from tildes.enums import LogEventType
 from tildes.models import DatabaseModel
+from tildes.models.comment import Comment
 from tildes.models.topic import Topic
 
 
@@ -65,7 +66,7 @@ class Log(DatabaseModel, BaseLog):
 
     __tablename__ = "log"
 
-    INHERITED_TABLES = ["log_topics"]
+    INHERITED_TABLES = ["log_comments", "log_topics"]
 
     def __init__(
         self,
@@ -84,6 +85,35 @@ class Log(DatabaseModel, BaseLog):
 
         if info:
             self.info = info
+
+
+class LogComment(DatabaseModel, BaseLog):
+    """Model for a log entry related to a specific comment."""
+
+    __tablename__ = "log_comments"
+
+    comment_id: int = Column(
+        Integer, ForeignKey("comments.comment_id"), index=True, nullable=False
+    )
+
+    comment: Comment = relationship("Comment")
+
+    def __init__(
+        self,
+        event_type: LogEventType,
+        request: Request,
+        comment: Comment,
+        info: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Create a new log entry related to a specific comment."""
+        # pylint: disable=non-parent-init-called
+        Log.__init__(self, event_type, request, info)
+
+        self.comment = comment
+
+    def __str__(self) -> str:
+        """Return a string representation of the log event."""
+        return f"performed action {self.event_type.name}"  # noqa
 
 
 class LogTopic(DatabaseModel, BaseLog):
@@ -191,6 +221,27 @@ def create_inherited_tables(
 
     ix_name = naming["ix"] % {"table_name": "log_topics", "column_0_name": "topic_id"}
     connection.execute(f"CREATE INDEX {ix_name} ON log_topics (topic_id)")
+
+    # log_comments
+    connection.execute(
+        "CREATE TABLE log_comments (comment_id integer not null) INHERITS (log)"
+    )
+
+    fk_name = naming["fk"] % {
+        "table_name": "log_comments",
+        "column_0_name": "comment_id",
+        "referred_table_name": "comments",
+    }
+    connection.execute(
+        f"ALTER TABLE log_comments ADD CONSTRAINT {fk_name} "
+        "FOREIGN KEY (comment_id) REFERENCES comments (comment_id)"
+    )
+
+    ix_name = naming["ix"] % {
+        "table_name": "log_comments",
+        "column_0_name": "comment_id",
+    }
+    connection.execute(f"CREATE INDEX {ix_name} ON log_comments (comment_id)")
 
     # duplicate all the indexes/constraints from the base log table
     for table in Log.INHERITED_TABLES:
