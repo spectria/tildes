@@ -16,7 +16,9 @@ from tildes.lib.string import simplify_string
 class Enum(Field):
     """Field for a native Python Enum (or subclasses)."""
 
-    def __init__(self, enum_class: Type = None, *args: Any, **kwargs: Any) -> None:
+    def __init__(
+        self, enum_class: Optional[Type] = None, *args: Any, **kwargs: Any
+    ) -> None:
         """Initialize the field with an optional enum class."""
         super().__init__(*args, **kwargs)
         self._enum_class = enum_class
@@ -77,7 +79,7 @@ class Markdown(Field):
 
     DEFAULT_MAX_LENGTH = 50_000
 
-    def __init__(self, max_length: int = None, **kwargs: Any) -> None:
+    def __init__(self, max_length: Optional[int] = None, **kwargs: Any) -> None:
         """Initialize the field with a length validator."""
         if not max_length:
             max_length = self.DEFAULT_MAX_LENGTH
@@ -115,7 +117,7 @@ class SimpleString(Field):
 
     DEFAULT_MAX_LENGTH = 200
 
-    def __init__(self, max_length: int = None, **kwargs: Any) -> None:
+    def __init__(self, max_length: Optional[int] = None, **kwargs: Any) -> None:
         """Initialize the field with a length validator."""
         if not max_length:
             max_length = self.DEFAULT_MAX_LENGTH

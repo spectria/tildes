@@ -1,6 +1,6 @@
 """Views related to a specific user."""
 
-from typing import List, Union
+from typing import List, Optional, Union
 
 from marshmallow.fields import String
 from marshmallow.validate import OneOf
@@ -67,7 +67,11 @@ def _get_user_recent_activity(
     {"post_type": String(load_from="type", validate=OneOf(("topic", "comment")))}
 )
 def get_user(
-    request: Request, after: str, before: str, per_page: int, post_type: str = None
+    request: Request,
+    after: str,
+    before: str,
+    per_page: int,
+    post_type: Optional[str] = None,
 ) -> dict:
     """Generate the main user history page."""
     user = request.context
