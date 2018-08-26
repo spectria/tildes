@@ -160,6 +160,30 @@
           >Delete</a></li>
         {% endif %}
 
+        {% if request.has_permission("remove", comment) %}
+          <li>
+          {% if not comment.is_removed %}
+            <a class="post-button"
+              data-ic-put-to="{{ request.route_url(
+                'ic_comment_remove',
+                comment_id36=comment.comment_id36,
+              ) }}"
+              data-ic-replace-target="true"
+              data-ic-confirm="Remove this comment?"
+            >Remove</a>
+          {% else %}
+            <a class="post-button"
+              data-ic-delete-from="{{ request.route_url(
+                'ic_comment_remove',
+                comment_id36=comment.comment_id36,
+              ) }}"
+              data-ic-replace-target="true"
+              data-ic-confirm="Un-remove this comment?"
+            >Un-remove</a>
+          {% endif %}
+          </li>
+        {% endif %}
+
         {% if request.has_permission('reply', comment) %}
           <li><a class="post-button" name="reply" data-js-comment-reply-button>Reply</a></li>
         {% endif %}

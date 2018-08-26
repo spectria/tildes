@@ -49,6 +49,8 @@ class LogEventType(enum.Enum):
     USER_REGISTER = enum.auto()
 
     COMMENT_POST = enum.auto()
+    COMMENT_REMOVE = enum.auto()
+    COMMENT_UNREMOVE = enum.auto()
 
     TOPIC_LOCK = enum.auto()
     TOPIC_MOVE = enum.auto()

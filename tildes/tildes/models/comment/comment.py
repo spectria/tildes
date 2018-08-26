@@ -185,6 +185,9 @@ class Comment(DatabaseModel):
         #  - logged-in users can mark comments read
         acl.append((Allow, Authenticated, "mark_read"))
 
+        # tools that require specifically granted permissions
+        acl.append((Allow, "admin", "remove"))
+
         acl.append(DENY_ALL)
 
         return acl

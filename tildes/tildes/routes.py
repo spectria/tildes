@@ -122,6 +122,9 @@ def add_intercooler_routes(config: Configurator) -> None:
 
     add_ic_route("comment", "/comments/{comment_id36}", factory=comment_by_id36)
     add_ic_route(
+        "comment_remove", "/comments/{comment_id36}/remove", factory=comment_by_id36
+    )
+    add_ic_route(
         "comment_replies", "/comments/{comment_id36}/replies", factory=comment_by_id36
     )
     add_ic_route(
