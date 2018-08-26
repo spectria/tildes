@@ -23,7 +23,7 @@ from tildes.enums import (
 from tildes.lib.datetime import SimpleHoursPeriod
 from tildes.models.comment import Comment, CommentNotification, CommentTree
 from tildes.models.group import Group
-from tildes.models.log import LogTopic
+from tildes.models.log import LogComment, LogTopic
 from tildes.models.topic import Topic, TopicVisit
 from tildes.models.user import UserGroupSettings
 from tildes.schemas.comment import CommentSchema
@@ -55,6 +55,10 @@ def post_group_topics(
                 topic=new_topic, author=request.user, markdown=markdown
             )
             request.db_session.add(new_comment)
+
+            request.db_session.add(
+                LogComment(LogEventType.COMMENT_POST, request, new_comment)
+            )
     else:
         new_topic = Topic.create_text_topic(
             group=request.context, author=request.user, title=title, markdown=markdown
@@ -294,6 +298,8 @@ def post_comment_on_topic(request: Request, markdown: str) -> HTTPFound:
 
     new_comment = Comment(topic=topic, author=request.user, markdown=markdown)
     request.db_session.add(new_comment)
+
+    request.db_session.add(LogComment(LogEventType.COMMENT_POST, request, new_comment))
 
     if topic.user != request.user and not topic.is_deleted:
         notification = CommentNotification(

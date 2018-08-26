@@ -10,9 +10,10 @@ from sqlalchemy.orm.exc import FlushError
 from webargs.pyramidparser import use_kwargs
 from zope.sqlalchemy import mark_changed
 
-from tildes.enums import CommentNotificationType, CommentTagOption
+from tildes.enums import CommentNotificationType, CommentTagOption, LogEventType
 from tildes.lib.datetime import utc_now
 from tildes.models.comment import Comment, CommentNotification, CommentTag, CommentVote
+from tildes.models.log import LogComment
 from tildes.models.topic import TopicVisit
 from tildes.schemas.comment import CommentSchema, CommentTagSchema
 from tildes.views import IC_NOOP
@@ -65,6 +66,8 @@ def post_toplevel_comment(request: Request, markdown: str) -> dict:
     new_comment = Comment(topic=topic, author=request.user, markdown=markdown)
     request.db_session.add(new_comment)
 
+    request.db_session.add(LogComment(LogEventType.COMMENT_POST, request, new_comment))
+
     if topic.user != request.user and not topic.is_deleted:
         notification = CommentNotification(
             topic.user, new_comment, CommentNotificationType.TOPIC_REPLY
@@ -102,6 +105,8 @@ def post_comment_reply(request: Request, markdown: str) -> dict:
         parent_comment=parent_comment,
     )
     request.db_session.add(new_comment)
+
+    request.db_session.add(LogComment(LogEventType.COMMENT_POST, request, new_comment))
 
     if parent_comment.user != request.user:
         notification = CommentNotification(
