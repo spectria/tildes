@@ -41,24 +41,6 @@ def test_delete_sets_deleted_time(db, comment):
     assert not comment.deleted_time
 
 
-def test_remove_sets_removed_time(db, comment):
-    """Ensure a removed comment gets its removed_time set and unset."""
-    assert not comment.is_removed
-    assert not comment.removed_time
-
-    comment.is_removed = True
-    db.commit()
-    db.refresh(comment)
-
-    assert comment.removed_time
-
-    comment.is_removed = False
-    db.commit()
-    db.refresh(comment)
-
-    assert not comment.removed_time
-
-
 def test_remove_delete_single_decrement(db, topic, session_user):
     """Ensure that remove+delete doesn't double-decrement num_comments."""
     # add 2 comments

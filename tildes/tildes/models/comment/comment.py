@@ -48,7 +48,6 @@ class Comment(DatabaseModel):
           "comment.created" or "comment.edited" respectively.
       Internal:
         - deleted_time will be set or unset when is_deleted is changed
-        - removed_time will be set or unset when is_removed is changed
     """
 
     schema_class = CommentSchema
@@ -76,7 +75,6 @@ class Comment(DatabaseModel):
     )
     deleted_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     is_removed: bool = Column(Boolean, nullable=False, server_default="false")
-    removed_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     last_edited_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     _markdown: str = deferred(Column("markdown", Text, nullable=False))
     rendered_html: str = Column(Text, nullable=False)
