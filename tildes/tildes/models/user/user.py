@@ -87,6 +87,7 @@ class User(DatabaseModel):
         Boolean, nullable=False, server_default="false"
     )
     open_new_tab_text: bool = Column(Boolean, nullable=False, server_default="false")
+    theme_default: str = Column(Text)
     is_banned: bool = Column(Boolean, nullable=False, server_default="false")
     permissions: Any = Column(JSONB)
     home_default_order: Optional[TopicSortOption] = Column(ENUM(TopicSortOption))

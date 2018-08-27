@@ -3,6 +3,8 @@
 {% block body_tag %}
   {% if request.cookies.get('theme', '') %}
   <body class="l-no-sidebar theme-{{ request.cookies.get('theme', '') }}">
+  {% elif request.user and request.user.theme_default %}
+  <body class="l-no-sidebar theme-{{ request.user.theme_default }}">
   {% else %}
   <body class="l-no-sidebar">
   {% endif %}

@@ -38,6 +38,8 @@
 {% block body_tag %}
   {% if request.cookies.get('theme', '') %}
   <body class="theme-{{ request.cookies.get('theme', '') }}">
+  {% elif request.user and request.user.theme_default %}
+  <body class="theme-{{ request.user.theme_default }}">
   {% else %}
   <body>
   {% endif %}

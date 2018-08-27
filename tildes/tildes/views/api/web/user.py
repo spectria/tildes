@@ -197,6 +197,22 @@ def patch_change_track_comment_visits(request: Request) -> Response:
 
 
 @ic_view_config(
+    route_name="user",
+    request_method="PATCH",
+    request_param="ic-trigger-name=account-default-theme",
+    permission="change_account_default_theme_setting",
+)
+def patch_change_account_default_theme(request: Request) -> Response:
+    """Change the user's "theme account default" setting."""
+    user = request.context
+
+    new_theme = request.params.get("theme")
+    user.theme_default = new_theme
+
+    return IC_NOOP
+
+
+@ic_view_config(
     route_name="user_invite_code",
     request_method="GET",
     permission="view_invite_code",

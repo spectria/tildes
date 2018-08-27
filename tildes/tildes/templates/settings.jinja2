@@ -8,14 +8,37 @@
   <ul class="settings-list">
     <li>
       <label for="theme">Choose a display theme:</label>
-      <select class="form-select" name="theme" id="theme" data-js-theme-selector>
-        {% for theme, description in theme_options.items() %}
-          <option
-            value="{{ theme }}"
-            {{ 'selected' if theme == current_theme else ''}}
-          >{{ description }}</option>
-        {% endfor %}
-      </select>
+      <div class="form-oneline">
+        <select class="form-select form-oneline-item-double" name="theme" id="theme" data-js-theme-selector>
+          {% for theme, description in theme_options.items() %}
+            <option
+              value="{{ theme }}"
+              {{ 'selected' if theme == current_theme else '' }}
+            >
+              {{ description }}
+            </option>
+          {% endfor %}
+        </select>
+        <div class="form-oneline-item">
+          <form
+            name="account-default-theme"
+            data-ic-patch-to="{{ request.route_url(
+              'ic_user',
+              username=request.user.username
+            ) }}"
+          >
+            <input type="hidden" name="theme" id="input-set-default-theme" value="{{ current_theme }}">
+            <div class="form-buttons no-reverse">
+              <button id="button-set-default-theme"
+                class="btn btn-link
+                {% if current_theme == request.user.theme_default %}d-invisible{% endif %}"
+              >
+                Set as account default
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </li>
     <li>
       <form

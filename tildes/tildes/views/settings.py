@@ -14,18 +14,25 @@ from tildes.schemas.user import EMAIL_ADDRESS_NOTE_MAX_LENGTH, UserSchema
 
 
 PASSWORD_FIELD = UserSchema(only=("password",)).fields["password"]
+DEFAULT_THEME_NAME = "white"
 
 
 @view_config(route_name="settings", renderer="settings.jinja2")
 def get_settings(request: Request) -> dict:
     """Generate the user settings page."""
-    current_theme = request.cookies.get("theme", "")
+    current_theme = request.cookies.get("theme", "") or request.user.theme_default
+    user_default = request.user.theme_default or DEFAULT_THEME_NAME
     theme_options = {
-        "": "White (default)",
+        "white": "White",
         "light": "Solarized Light",
         "dark": "Solarized Dark",
         "black": "Black",
     }
+    if DEFAULT_THEME_NAME == user_default:
+        theme_options[DEFAULT_THEME_NAME] += " (site and account default)"
+    else:
+        theme_options[user_default] += " (account default)"
+        theme_options[DEFAULT_THEME_NAME] += " (site default)"
 
     return {"current_theme": current_theme, "theme_options": theme_options}
 

@@ -199,7 +199,15 @@ def webtest(base_app):
     # create the TestApp - note that specifying wsgi.url_scheme is necessary so that the
     # secure cookies from the session library will work
     app = TestApp(
-        base_app, extra_environ={"wsgi.url_scheme": "https"}, cookiejar=CookieJar()
+        base_app,
+        # This "tm.active" is a temporary fix around this fixture failing to rollback
+        # data after the tests are complete (it effectively deactivates pyramid_tm).
+        extra_environ={
+            "wsgi.url_scheme": "https",
+            "tm.active": True,
+            "REMOTE_ADDR": "0.0.0.0",
+        },
+        cookiejar=CookieJar(),
     )
 
     # fetch the login page, fill in the form, and submit it (sets the cookie)
