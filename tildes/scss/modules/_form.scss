@@ -38,10 +38,6 @@ select.form-select:not([multiple]) {
   }
 }
 
-.form-buttons.no-reverse {
-  flex-direction: row;
-}
-
 textarea.form-input {
   height: 8rem;
   line-height: 1.5;
@@ -75,20 +71,6 @@ textarea.form-input {
 
   a {
     font-size: 0.6rem;
-  }
-}
-
-.form-oneline {
-  display: flex;
-  font-size: 0.6rem;
-  margin-bottom: 0.4rem;
-
-  .form-oneline-item {
-    flex: 2;
-  }
-
-  .form-oneline-item-double {
-    flex: 4;
   }
 }
 
