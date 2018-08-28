@@ -3,11 +3,10 @@
 from typing import Sequence
 
 from amqpy import Message
-from html5lib import HTMLParser
 import publicsuffix
 
 from tildes.lib.amqp import PgsqlQueueConsumer
-from tildes.lib.string import simplify_string, truncate_string, word_count
+from tildes.lib.string import extract_text_from_html, truncate_string, word_count
 from tildes.lib.url import get_domain_from_url
 from tildes.models.topic import Topic
 
@@ -37,17 +36,9 @@ class TopicMetadataGenerator(PgsqlQueueConsumer):
     @staticmethod
     def _generate_text_metadata(topic: Topic) -> None:
         """Generate metadata for a text topic (word count and excerpt)."""
-        html_tree = HTMLParser().parseFragment(topic.rendered_html)
+        extracted_text = extract_text_from_html(topic.rendered_html)
 
-        # extract the text from all of the HTML elements
-        extracted_text = "".join(
-            [element_text for element_text in html_tree.itertext()]
-        )
-
-        # sanitize unicode, remove leading/trailing whitespace, etc.
-        extracted_text = simplify_string(extracted_text)
-
-        # create a short excerpt by truncating the simplified string
+        # create a short excerpt by truncating the extracted string
         excerpt = truncate_string(extracted_text, length=200, truncate_at_chars=" ")
 
         topic.content_metadata = {

@@ -13,6 +13,7 @@ from sqlalchemy.sql.expression import text
 from tildes.lib.datetime import utc_now
 from tildes.lib.id import id_to_id36
 from tildes.lib.markdown import convert_markdown_to_safe_html
+from tildes.lib.string import extract_text_from_html, truncate_string
 from tildes.metrics import incr_counter
 from tildes.models import DatabaseModel
 from tildes.models.topic import Topic
@@ -78,6 +79,7 @@ class Comment(DatabaseModel):
     last_edited_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     _markdown: str = deferred(Column("markdown", Text, nullable=False))
     rendered_html: str = Column(Text, nullable=False)
+    excerpt: str = Column(Text, nullable=False, server_default="")
     num_votes: int = Column(Integer, nullable=False, server_default="0", index=True)
 
     user: User = relationship("User", lazy=False, innerjoin=True)
@@ -100,6 +102,11 @@ class Comment(DatabaseModel):
 
         self._markdown = new_markdown
         self.rendered_html = convert_markdown_to_safe_html(new_markdown)
+
+        extracted_text = extract_text_from_html(self.rendered_html)
+        self.excerpt = truncate_string(
+            extracted_text, length=200, truncate_at_chars=" "
+        )
 
         if self.created_time and utc_now() - self.created_time > EDIT_GRACE_PERIOD:
             self.last_edited_time = utc_now()

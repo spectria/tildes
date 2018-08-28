@@ -46,7 +46,7 @@
           </span>
         {% endif %}
 
-        {{ time_ago_responsive(comment.created_time) }}
+        {{ time_ago_responsive(comment.created_time, class_="comment-posted-time") }}
 
         {% if comment.last_edited_time %}
           <span class="comment-edited-time">
@@ -69,6 +69,8 @@
           {% if not is_individual_comment %}data-js-comment-parent-button{% endif %}
         >Parent</a>
       {% endif %}
+
+      <div class="comment-excerpt">{{ comment.excerpt }}</div>
     </header>
 
     {% if request.has_permission('view', comment) %}

@@ -5,6 +5,8 @@ from typing import Optional
 import unicodedata
 from urllib.parse import quote
 
+from html5lib import HTMLParser
+
 
 # regex for matching an entire word, handles words that include an apostrophe
 WORD_REGEX = re.compile(r"\w[\w'’]*")
@@ -205,3 +207,14 @@ def separate_string(original: str, separator: str, segment_size: int) -> str:
         separated += char
 
     return separated
+
+
+def extract_text_from_html(html: str) -> str:
+    """Extract plain text content from the elements inside an HTML string."""
+    html_tree = HTMLParser().parseFragment(html)
+
+    # extract the text from all of the HTML elements
+    extracted_text = "".join([element_text for element_text in html_tree.itertext()])
+
+    # sanitize unicode, remove leading/trailing whitespace, etc.
+    return simplify_string(extracted_text)
