@@ -1,5 +1,6 @@
 """Contains the CommentTree class."""
 
+from datetime import datetime
 from typing import Iterator, List, Optional, Sequence
 
 from prometheus_client import Histogram
@@ -16,6 +17,7 @@ class CommentTree:
         - `replies`: the list of all immediate children to that comment
         - `has_visible_descendant`: whether the comment has any visible descendants (if
           not, it can be pruned from the tree)
+        - `collapsed_state`: whether to display this comment in a collapsed state
     """
 
     def __init__(self, comments: Sequence[Comment], sort: CommentSortOption) -> None:
@@ -26,6 +28,11 @@ class CommentTree:
         # sort the comments by date, since replies will always be posted later this will
         # ensure that parent comments are always processed first
         self.comments = sorted(comments, key=lambda c: c.created_time)
+
+        for comment in self.comments:
+            comment.collapsed_state = None
+
+        self.comments_by_id = {comment.comment_id: comment for comment in comments}
 
         # if there aren't any comments, we can just bail out here
         if not self.comments:
@@ -45,15 +52,12 @@ class CommentTree:
 
     def _build_tree(self) -> None:
         """Build the initial tree from the flat list of Comments."""
-        comments_by_id = {}
-
         for comment in self.comments:
             comment.replies = []
             comment.has_visible_descendant = False
-            comments_by_id[comment.comment_id] = comment
 
             if comment.parent_comment_id:
-                parent_comment = comments_by_id[comment.parent_comment_id]
+                parent_comment = self.comments_by_id[comment.parent_comment_id]
                 parent_comment.replies.append(comment)
 
                 # if this comment isn't deleted, work back up towards the root,
@@ -66,7 +70,7 @@ class CommentTree:
                             break
 
                         next_parent_id = parent_comment.parent_comment_id
-                        parent_comment = comments_by_id[next_parent_id]
+                        parent_comment = self.comments_by_id[next_parent_id]
             else:
                 self.tree.append(comment)
 
@@ -156,3 +160,61 @@ class CommentTree:
             num_comments_range=num_comments_range,
             order=self.sort.name,
         )
+
+    def collapse_old_comments(self, threshold: datetime) -> None:
+        """Collapse old comments in the tree.
+
+        Any comments newer than the threshold will be uncollapsed, along with their
+        direct parents. All comments with any uncollapsed descendant will be collapsed
+        individually. Branches with no uncollapsed comments will be collapsed fully.
+        """
+        for comment in reversed(self.comments):
+            # as soon as we reach an old comment, we can stop
+            if comment.created_time <= threshold:
+                break
+
+            if comment.is_deleted or comment.is_removed:
+                continue
+
+            # uncollapse the comment
+            comment.collapsed_state = "uncollapsed"
+
+            # fetch its direct parent and uncollapse it as well
+            parent_comment: Optional[Comment] = None
+            if comment.parent_comment_id:
+                parent_comment = self.comments_by_id[comment.parent_comment_id]
+                parent_comment.collapsed_state = "uncollapsed"
+
+            # then follow parents to the root, individually collapsing them all
+            while parent_comment:
+                if not parent_comment.collapsed_state:
+                    parent_comment.collapsed_state = "individual"
+
+                if parent_comment.parent_comment_id:
+                    parent_comment = self.comments_by_id[
+                        parent_comment.parent_comment_id
+                    ]
+                else:
+                    parent_comment = None
+
+        self._finalize_collapsing()
+
+    def _finalize_collapsing(self) -> None:
+        """Finish collapsing that was done partially by a different method."""
+        # if all the comments would end up collapsed, leave them all uncollapsed
+        if all([comment.collapsed_state is None for comment in self.comments]):
+            return
+
+        # go over each top-level comment and go into each branch depth-first. Any
+        # comment that still has its state as None can be fully collapsed (and we can
+        # stop looking down that branch)
+        def recursively_collapse(comment: Comment) -> None:
+            if not comment.collapsed_state:
+                comment.collapsed_state = "full"
+                return
+
+            for reply in comment.replies:
+                recursively_collapse(reply)
+
+        for comment in self.tree:
+            recursively_collapse(comment)

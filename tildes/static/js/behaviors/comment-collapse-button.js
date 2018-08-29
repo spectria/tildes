@@ -3,7 +3,13 @@ $.onmount('[data-js-comment-collapse-button]', function() {
         $this = $(this);
         $comment = $this.closest('.comment');
 
-        $comment.toggleClass('is-comment-collapsed');
+        // if the comment is individually collapsed, just remove that class,
+        // otherwise toggle the collapsed state
+        if ($comment.hasClass('is-comment-collapsed-individual')) {
+            $comment.removeClass('is-comment-collapsed-individual');
+        } else {
+            $comment.toggleClass('is-comment-collapsed');
+        }
 
         if ($comment.hasClass('is-comment-collapsed')) {
             $this.text('+');

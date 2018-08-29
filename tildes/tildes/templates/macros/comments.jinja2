@@ -35,7 +35,9 @@
 {% macro render_comment_contents(comment, is_individual_comment=False) %}
   <div class="comment-itself">
     <header>
-      <button class="btn btn-comment-collapse" data-js-comment-collapse-button>&minus;</button>
+      <button class="btn btn-comment-collapse" data-js-comment-collapse-button>
+        {{ "+" if comment.collapsed_state in ("full", "individual") else "−" }}
+      </button>
 
       {% if request.has_permission('view', comment) %}
         {{ username_linked(comment.user.username) }}
@@ -205,6 +207,12 @@
       {% do classes.append('is-comment-new') %}
     {% elif request.has_permission('view_author', comment.topic) and comment.user == comment.topic.user %}
       {% do classes.append('is-comment-by-op') %}
+    {% endif %}
+
+    {% if comment.collapsed_state == "full" %}
+      {% do classes.append("is-comment-collapsed") %}
+    {% elif comment.collapsed_state == "individual" %}
+      {% do classes.append("is-comment-collapsed-individual") %}
     {% endif %}
   {% endif %}
 

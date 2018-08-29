@@ -142,6 +142,14 @@
   }
 }
 
+// uses @extend to only collapse everything inside the collapsed comment itself and
+// not its replies
+.is-comment-collapsed-individual {
+  & > .comment-itself {
+    @extend .is-comment-collapsed;
+  }
+}
+
 .is-comment-deleted, .is-comment-removed {
   font-size: 0.7rem;
   font-style: italic;

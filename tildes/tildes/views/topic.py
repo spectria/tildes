@@ -272,12 +272,16 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
         .all()
     )
 
-    # if the feature's enabled, update their last visit to this topic
+    # if the user has the "mark new comments" feature enabled
     if request.user and request.user.track_comment_visits:
+        # update their last visit time for this topic
         statement = TopicVisit.generate_insert_statement(request.user, topic)
-
         request.db_session.execute(statement)
         mark_changed(request.db_session)
+
+        # collapse old comments if the user has a previous visit to the topic
+        if topic.last_visit_time:
+            tree.collapse_old_comments(topic.last_visit_time)
 
     return {
         "topic": topic,

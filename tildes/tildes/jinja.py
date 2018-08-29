@@ -31,7 +31,6 @@ def includeme(config: Configurator) -> None:
 
     settings["jinja2.lstrip_blocks"] = True
     settings["jinja2.trim_blocks"] = True
-    settings["jinja2.undefined"] = "strict"
 
     # add custom jinja filters
     settings["jinja2.filters"] = {"ago": descriptive_timedelta}
