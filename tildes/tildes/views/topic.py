@@ -280,7 +280,8 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
         mark_changed(request.db_session)
 
         # collapse old comments if the user has a previous visit to the topic
-        if topic.last_visit_time:
+        # (and doesn't have that behavior disabled)
+        if topic.last_visit_time and request.user.collapse_old_comments:
             tree.collapse_old_comments(topic.last_visit_time)
 
     return {

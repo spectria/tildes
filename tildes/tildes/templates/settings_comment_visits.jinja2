@@ -24,7 +24,7 @@
   name="comment-visits"
   autocomplete="off"
   data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
-  data-ic-target="closest main"
+  data-js-autosubmit-on-change
 >
   <div class="form-group">
     <label class="form-checkbox">
@@ -37,7 +37,24 @@
       <i class="form-icon"></i> Track my last visit to each topic's comments and mark new comments
     </label>
   </div>
+</form>
 
-  <button class="btn btn-primary" type="submit">Save setting</button>
+<form
+  name="collapse-old-comments"
+  autocomplete="off"
+  data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+>
+  <div class="form-group">
+    <label class="form-checkbox">
+      <input
+        type="checkbox"
+        id="collapse_old_comments"
+        name="collapse_old_comments"
+        data-js-autosubmit-on-change
+        {% if request.user.collapse_old_comments %}checked{% endif %}
+      >
+      <i class="form-icon"></i> Collapse old comments when I return to a topic (no effect unless the overall setting is enabled)
+    </label>
+  </div>
 </form>
 {% endblock %}

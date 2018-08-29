@@ -190,10 +190,23 @@ def patch_change_track_comment_visits(request: Request) -> Response:
     track_comment_visits = bool(request.params.get("track_comment_visits"))
     user.track_comment_visits = track_comment_visits
 
-    if track_comment_visits:
-        return Response("Enabled tracking of last comment visit.")
+    return IC_NOOP
 
-    return Response("Disabled tracking of last comment visit.")
+
+@ic_view_config(
+    route_name="user",
+    request_method="PATCH",
+    request_param="ic-trigger-name=collapse-old-comments",
+    permission="change_collapse_old_comments_setting",
+)
+def patch_change_collapse_old_comments(request: Request) -> Response:
+    """Change the user's "collapse old comments" setting."""
+    user = request.context
+
+    collapse_old_comments = bool(request.params.get("collapse_old_comments"))
+    user.collapse_old_comments = collapse_old_comments
+
+    return IC_NOOP
 
 
 @ic_view_config(
