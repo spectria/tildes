@@ -1,4 +1,5 @@
 """Contains the ModelQuery class, a specialized SQLAlchemy Query subclass."""
+# pylint: disable=self-cls-assignment
 
 from typing import Any, Iterator, TypeVar
 

@@ -52,6 +52,7 @@ class TopicQuery(PaginatedQuery):
 
     def _attach_visit_data(self) -> "TopicQuery":
         """Join the data related to the user's last visit to the topic(s)."""
+        # pylint: disable=assignment-from-no-return
         if self.request.user.track_comment_visits:
             query = self.outerjoin(
                 TopicVisit,

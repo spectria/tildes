@@ -168,6 +168,7 @@ class CommentTree:
         direct parents. All comments with any uncollapsed descendant will be collapsed
         individually. Branches with no uncollapsed comments will be collapsed fully.
         """
+        # pylint: disable=too-many-branches
         for comment in reversed(self.comments):
             # as soon as we reach an old comment, we can stop
             if comment.created_time <= threshold:

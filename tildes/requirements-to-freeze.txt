@@ -2,7 +2,6 @@ ago
 alembic
 amqpy
 argon2_cffi
-astroid==1.5.3  # pylama has issues with pylint 1.8.1
 black
 bleach
 click
@@ -15,12 +14,9 @@ mypy
 mypy-extensions
 Pillow
 prometheus-client
+prospector
 psycopg2
 publicsuffix2
-pydocstyle
-pylama
-pylama-pylint
-pylint==1.7.5  # pylama has issues with 1.8.1
 pyotp
 pyramid
 pyramid-debugtoolbar

@@ -1,0 +1,34 @@
+strictness: none
+doc-warnings: true
+max-line-length: 88
+
+ignore-paths:
+  - alembic
+
+pep8:
+  disable:
+    # "multiple statements on one line" - type declarations seem to trigger sometimes
+    - E704
+
+pep257:
+  disable:
+    # checks for blank lines after a function docstring, but Black will add one
+    # when the first code in the function is another function definition.
+    - D202
+    - D203  # blank line before class docstring
+    - D213  # blank line after summary line for multi-line docstring
+
+pyflakes:
+  disable:
+    - F401  # unused imports, triggers in __init__.py and pylint can handle it otherwise
+
+pylint:
+  enable: all
+  disable:
+    - bad-continuation  # let Black handle line-wrapping
+    - comparison-with-callable  # seems to have a lot of false positives
+    - logging-fstring-interpolation  # rather use f-strings than worry about this
+    - no-else-return  # elif after return - could refactor to enable this check
+    - no-self-use  # schemas do this a lot, would be nice to only disable for schemas
+    - too-few-public-methods  # plenty of classes that don't need multiple methods
+    - too-many-instance-attributes  # models have many instance attributes

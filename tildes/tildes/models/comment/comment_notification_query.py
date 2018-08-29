@@ -32,6 +32,7 @@ class CommentNotificationQuery(ModelQuery):
 
     def join_all_relationships(self) -> "CommentNotificationQuery":
         """Eagerly join the comment, topic, and group to the notification."""
+        # pylint: disable=self-cls-assignment
         self = self.options(
             joinedload(CommentNotification.comment)
             .joinedload("topic")

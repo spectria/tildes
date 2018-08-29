@@ -1,4 +1,5 @@
 """Script for doing the initial setup of database tables."""
+# pylint: disable=wrong-import-order
 
 import os
 import subprocess

@@ -93,6 +93,7 @@ class PaginatedQuery(ModelQuery):
 
     def _apply_before_or_after(self) -> "PaginatedQuery":
         """Apply the "before" or "after" restrictions if necessary."""
+        # pylint: disable=assignment-from-no-return
         if not (self.after_id or self.before_id):
             return self
 

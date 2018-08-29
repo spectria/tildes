@@ -28,6 +28,7 @@ def _422_response_with_errors(errors: Sequence[str]) -> Response:
 @ic_view_config(context=ValidationError)
 def unprocessable_entity(request: Request) -> Response:
     """Exception view for 422 errors."""
+    # pylint: disable=too-many-branches
     if isinstance(request.exception, ValidationError):
         validation_error = request.exception
     else:

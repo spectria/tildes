@@ -209,6 +209,7 @@ class Topic(DatabaseModel):
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""
+        # pylint: disable=too-many-branches
         acl = []
 
         # deleted topics allow "general" viewing, but nothing else

@@ -20,6 +20,7 @@ class Enum(Field):
         self, enum_class: Optional[Type] = None, *args: Any, **kwargs: Any
     ) -> None:
         """Initialize the field with an optional enum class."""
+        # pylint: disable=keyword-arg-before-vararg
         super().__init__(*args, **kwargs)
         self._enum_class = enum_class
 

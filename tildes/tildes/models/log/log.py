@@ -1,4 +1,5 @@
 """Contains the Log class."""
+# pylint: disable=too-many-branches,too-many-return-statements
 
 from typing import Any, Dict, Optional
 
@@ -142,7 +143,6 @@ class LogTopic(DatabaseModel, BaseLog):
 
     def __str__(self) -> str:
         """Return a string representation of the log event."""
-        # pylint: disable=too-many-return-statements
         if self.event_type == LogEventType.TOPIC_TAG:
             return self._tag_event_description()
         elif self.event_type == LogEventType.TOPIC_MOVE:
