@@ -72,7 +72,9 @@
         >Parent</a>
       {% endif %}
 
-      <div class="comment-excerpt">{{ comment.excerpt }}</div>
+      {% if request.has_permission("view", comment) %}
+        <div class="comment-excerpt">{{ comment.excerpt }}</div>
+      {% endif %}
     </header>
 
     {% if request.has_permission('view', comment) %}
