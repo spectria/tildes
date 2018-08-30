@@ -9,7 +9,7 @@ from sqlalchemy.orm import Load, undefer
 from sqlalchemy.orm.query import Query
 
 
-ModelType = TypeVar("ModelType")  # pylint: disable=invalid-name
+ModelType = TypeVar("ModelType")
 
 
 class ModelQuery(Query):
@@ -113,7 +113,6 @@ class ModelQuery(Query):
         This is useful for being able to load an item "fully" in a single query and
         avoid needing to make additional queries for related items.
         """
-        # pylint: disable=no-member
         self = self.options(Load(self.model_cls).joinedload("*"))
 
         return self

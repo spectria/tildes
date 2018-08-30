@@ -91,7 +91,7 @@ BAD_ORDERED_LIST_REGEX = re.compile(
 # looks pretty ridiculous, but it's a dict where the keys are namespaced attr names,
 # like `(None, 'href')`, and there's also a `_text` key for getting the innerText of the
 # <a> tag.
-NamespacedAttrDict = Dict[Union[Tuple[Optional[str], str], str], str]  # noqa
+NamespacedAttrDict = Dict[Union[Tuple[Optional[str], str], str], str]
 
 
 def linkify_protocol_whitelist(

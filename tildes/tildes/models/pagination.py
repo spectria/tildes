@@ -9,7 +9,7 @@ from tildes.lib.id import id_to_id36, id36_to_id
 from .model_query import ModelQuery
 
 
-ModelType = TypeVar("ModelType")  # pylint: disable=invalid-name
+ModelType = TypeVar("ModelType")
 
 
 class PaginatedQuery(ModelQuery):

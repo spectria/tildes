@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine.url import make_url
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from testing.redis import RedisServer  # noqa
+from testing.redis import RedisServer
 from webtest import TestApp
 
 from scripts.initialize_db import create_tables
@@ -178,7 +178,6 @@ def base_app(overall_redis_session, sdb):
     testing_app.app.registry._redis_sessions = overall_redis_session
 
     def redis_factory(request):
-        # pylint: disable=unused-argument
         return overall_redis_session
 
     testing_app.app.registry["redis_connection_factory"] = redis_factory

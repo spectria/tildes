@@ -113,7 +113,7 @@ class DatabaseModelBase:
         return result.data[attribute]
 
 
-DatabaseModel = declarative_base(  # pylint: disable=invalid-name
+DatabaseModel = declarative_base(
     cls=DatabaseModelBase,
     name="DatabaseModel",
     metadata=MetaData(naming_convention=NAMING_CONVENTION),

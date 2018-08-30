@@ -114,7 +114,7 @@ class LogComment(DatabaseModel, BaseLog):
 
     def __str__(self) -> str:
         """Return a string representation of the log event."""
-        return f"performed action {self.event_type.name}"  # noqa
+        return f"performed action {self.event_type.name}"
 
 
 class LogTopic(DatabaseModel, BaseLog):
@@ -146,8 +146,8 @@ class LogTopic(DatabaseModel, BaseLog):
         if self.event_type == LogEventType.TOPIC_TAG:
             return self._tag_event_description()
         elif self.event_type == LogEventType.TOPIC_MOVE:
-            old_group = self.info["old"]  # noqa
-            new_group = self.info["new"]  # noqa
+            old_group = self.info["old"]
+            new_group = self.info["new"]
             return f"moved from ~{old_group} to ~{new_group}"
         elif self.event_type == LogEventType.TOPIC_LOCK:
             return "locked comments"
@@ -158,19 +158,19 @@ class LogTopic(DatabaseModel, BaseLog):
         elif self.event_type == LogEventType.TOPIC_UNREMOVE:
             return "un-removed"
         elif self.event_type == LogEventType.TOPIC_TITLE_EDIT:
-            old_title = self.info["old"]  # noqa
-            new_title = self.info["new"]  # noqa
+            old_title = self.info["old"]
+            new_title = self.info["new"]
             return f'changed title from "{old_title}" to "{new_title}"'
 
-        return f"performed action {self.event_type.name}"  # noqa
+        return f"performed action {self.event_type.name}"
 
     def _tag_event_description(self) -> str:
         """Return a description of a TOPIC_TAG event as a string."""
         if self.event_type != LogEventType.TOPIC_TAG:
             raise TypeError
 
-        old_tags = set(self.info["old"])  # noqa
-        new_tags = set(self.info["new"])  # noqa
+        old_tags = set(self.info["old"])
+        new_tags = set(self.info["new"])
 
         added_tags = new_tags - old_tags
         removed_tags = old_tags - new_tags

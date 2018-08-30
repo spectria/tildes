@@ -23,7 +23,6 @@ pyflakes:
     - F401  # unused imports, triggers in __init__.py and pylint can handle it otherwise
 
 pylint:
-  enable: all
   disable:
     - bad-continuation  # let Black handle line-wrapping
     - comparison-with-callable  # seems to have a lot of false positives

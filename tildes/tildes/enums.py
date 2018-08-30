@@ -26,7 +26,7 @@ class CommentSortOption(enum.Enum):
         elif self.name == "POSTED":
             return "order posted"
 
-        return "most {}".format(self.name.lower())  # noqa
+        return "most {}".format(self.name.lower())
 
 
 class CommentTagOption(enum.Enum):
@@ -83,7 +83,7 @@ class TopicSortOption(enum.Enum):
         elif self.name == "ACTIVITY":
             return "activity"
 
-        return "most {}".format(self.name.lower())  # noqa
+        return "most {}".format(self.name.lower())
 
 
 class TopicType(enum.Enum):

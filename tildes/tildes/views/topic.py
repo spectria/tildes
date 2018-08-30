@@ -265,9 +265,7 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
     )
     log = (
         request.query(LogTopic)
-        .filter(
-            LogTopic.topic == topic, LogTopic.event_type.in_(visible_events)  # noqa
-        )
+        .filter(LogTopic.topic == topic, LogTopic.event_type.in_(visible_events))
         .order_by(desc(LogTopic.event_time))
         .all()
     )

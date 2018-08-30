@@ -91,7 +91,6 @@ class Comment(DatabaseModel):
     @hybrid_property
     def markdown(self) -> str:
         """Return the comment's markdown."""
-        # pylint: disable=method-hidden
         return self._markdown
 
     @markdown.setter  # type: ignore
