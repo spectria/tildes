@@ -49,6 +49,12 @@
   text-overflow: ellipsis;
 }
 
+.comment-branch-counter {
+  display: none;
+
+  margin-right: 0.4rem;
+}
+
 .comment-nav-link {
   font-size: 0.6rem;
   margin-left: 0.4rem;
@@ -135,6 +141,10 @@
   .comment-votes,
   .post-buttons {
     display: none;
+  }
+
+  .comment-branch-counter {
+    display: inline-block;
   }
 
   .comment-excerpt {

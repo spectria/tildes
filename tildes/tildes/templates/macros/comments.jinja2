@@ -39,6 +39,10 @@
         {{ "+" if comment.collapsed_state in ("full", "individual") else "−" }}
       </button>
 
+      {% if not is_individual_comment and comment.num_children > 0 %}
+        <div class="comment-branch-counter">[{{ comment.num_children + 1 }}]</div>
+      {% endif %}
+
       {% if request.has_permission('view', comment) %}
         {{ username_linked(comment.user.username) }}
 

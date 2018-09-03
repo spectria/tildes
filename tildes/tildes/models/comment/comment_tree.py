@@ -18,6 +18,7 @@ class CommentTree:
         - `has_visible_descendant`: whether the comment has any visible descendants (if
           not, it can be pruned from the tree)
         - `collapsed_state`: whether to display this comment in a collapsed state
+        - `num_children`: how many (visible) children the comment has
     """
 
     def __init__(self, comments: Sequence[Comment], sort: CommentSortOption) -> None:
@@ -34,10 +35,6 @@ class CommentTree:
 
         self.comments_by_id = {comment.comment_id: comment for comment in comments}
 
-        # if there aren't any comments, we can just bail out here
-        if not self.comments:
-            return
-
         self._build_tree()
 
         # The method of building the tree already sorts it by posting time, so there's
@@ -49,6 +46,20 @@ class CommentTree:
                 self.tree = self._sort_tree(self.tree, self.sort)
 
         self.tree = self._prune_empty_branches(self.tree)
+
+        self._count_children()
+
+    def _count_children(self) -> None:
+        """Set the num_children attr for all comments."""
+        # work backwards through comments so that all children will have their count
+        # done first, and we can just sum all the counts from the replies
+        for comment in reversed(self.comments):
+            comment.num_children = 0
+            for reply in comment.replies:
+                comment.num_children += reply.num_children
+
+                if not (reply.is_deleted or reply.is_removed):
+                    comment.num_children += 1
 
     def _build_tree(self) -> None:
         """Build the initial tree from the flat list of Comments."""
