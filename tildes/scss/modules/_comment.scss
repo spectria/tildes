@@ -140,6 +140,10 @@
   .comment-excerpt {
     display: inline-block;
   }
+
+  &.is-comment-by-op .comment-user-info {
+    font-weight: normal;
+  }
 }
 
 // uses @extend to only collapse everything inside the collapsed comment itself and
