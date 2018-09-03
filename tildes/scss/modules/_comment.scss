@@ -127,11 +127,7 @@
   }
 }
 
-.is-comment-collapsed {
-  &[data-comment-depth="0"] {
-    border-bottom: 0;
-  }
-
+%collapsed {
   .comment-edited-time,
   .comment-nav-link,
   .comment-posted-time,
@@ -143,10 +139,6 @@
     display: none;
   }
 
-  .comment-branch-counter {
-    display: inline-block;
-  }
-
   .comment-excerpt {
     display: inline-block;
   }
@@ -156,11 +148,23 @@
   }
 }
 
+.is-comment-collapsed {
+  @extend %collapsed;
+
+  &[data-comment-depth="0"] {
+    border-bottom: 0;
+  }
+
+  .comment-branch-counter {
+    display: inline-block;
+  }
+}
+
 // uses @extend to only collapse everything inside the collapsed comment itself and
 // not its replies
 .is-comment-collapsed-individual {
   & > .comment-itself {
-    @extend .is-comment-collapsed;
+    @extend %collapsed;
   }
 }
 

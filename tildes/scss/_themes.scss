@@ -116,7 +116,7 @@
     .label-comment-tag-flame { @include specialtag($comment-tag-flame-color, $is-light); }
   }
 
-  .is-comment-collapsed {
+  %collapsed {
     header {
       background-color: $background-color;
       color: $text-secondary-color;
@@ -124,6 +124,16 @@
       .link-user {
         color: $text-secondary-color;
       }
+    }
+  }
+
+  .is-comment-collapsed {
+    @extend %collapsed;
+  }
+
+  .is-comment-collapsed-individual {
+    & > .comment-itself {
+      @extend %collapsed;
     }
   }
 
