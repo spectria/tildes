@@ -41,7 +41,7 @@ class CommentTree:
         # no need to sort again if that's the desired sorting. Note also that because
         # _sort_tree() uses sorted() which is a stable sort, this means that the
         # "secondary sort" will always be by posting time as well.
-        if sort != CommentSortOption.POSTED:
+        if self.tree and sort != CommentSortOption.POSTED:
             with self._sorting_histogram().time():
                 self.tree = self._sort_tree(self.tree, self.sort)
 
