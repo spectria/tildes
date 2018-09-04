@@ -31,12 +31,6 @@
         <li class="tab-item">
       {% endif %}
 
-      {% if period %}
-        {% set period_string = period.as_short_form() %}
-      {% else %}
-        {% set period_string = 'all' %}
-      {% endif %}
-
       <a href="{{ request.current_listing_base_url({'order': option.name.lower()}) }}">
         {{ option.descending_description.capitalize() }}
       </a>
