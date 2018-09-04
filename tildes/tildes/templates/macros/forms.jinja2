@@ -29,3 +29,18 @@
     >
   </div>
 {% endmacro %}
+
+{% macro search_form(existing_query=None) %}
+  <form class="form-search" method="GET" action="/search">
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-input input-sm"
+        name="q"
+        id="q"
+        {% if existing_query %}value="{{ existing_query }}"{% endif %}
+      >
+      <button class="btn btn-sm btn-link">Search</button>
+    </div>
+  </form>
+{% endmacro %}

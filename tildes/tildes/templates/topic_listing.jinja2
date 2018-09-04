@@ -1,5 +1,6 @@
 {% extends 'base.jinja2' %}
 
+{% from 'macros/forms.jinja2' import search_form %}
 {% from 'macros/groups.jinja2' import render_group_subscription_box with context %}
 {% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
 
@@ -175,12 +176,7 @@
 {% endblock %}
 
 {% block sidebar %}
-  <form class="form-search" method="GET" action="/search">
-    <div class="input-group">
-      <input type="text" class="form-input input-sm" name="q" id="q">
-      <button class="btn btn-sm input-group-btn">Search</button>
-    </div>
-  </form>
+  {{ search_form() }}
 
   <h3>~{{ group.path }}</h3>
 
