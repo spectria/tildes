@@ -20,8 +20,6 @@ redis.sessions.timeout = 3600
 
 sqlalchemy.url = postgresql+psycopg2://tildes:@:6432/tildes
 
-stripe_api_key = sk_live_ActualKeyShouldGoHere
-
 tildes.welcome_message_sender = Deimos
 
 webassets.auto_build = false
@@ -29,6 +27,9 @@ webassets.base_dir = %(here)s/static
 webassets.base_url = /
 webassets.cache = false
 webassets.manifest = json
+
+# API keys for external APIs
+api_keys.stripe = sk_live_ActualKeyShouldGoHere
 
 [server:main]
 use = egg:gunicorn#main

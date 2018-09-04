@@ -30,7 +30,7 @@ def post_donate_stripe(
 ) -> dict:
     """Process a Stripe donation."""
     try:
-        stripe.api_key = request.registry.settings["stripe_api_key"]
+        stripe.api_key = request.registry.settings["api_keys.stripe"]
     except KeyError:
         raise HTTPInternalServerError
 
