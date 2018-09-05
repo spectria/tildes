@@ -7,7 +7,7 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.dialects.postgresql import array
-from sqlalchemy.sql.expression import and_, desc, or_
+from sqlalchemy.sql.expression import and_, or_
 from webargs.pyramidparser import use_kwargs
 
 from tildes.models.message import MessageConversation, MessageReply
@@ -39,9 +39,10 @@ def get_user_messages(request: Request) -> dict:
                 ),
             )
         )
-        .order_by(desc(MessageConversation.last_reply_time))
         .all()
     )
+
+    conversations.sort(key=lambda c: c.last_activity_time, reverse=True)
 
     return {"conversations": conversations}
 
@@ -56,9 +57,10 @@ def get_user_unread_messages(request: Request) -> dict:
                 array([request.user.user_id])
             )
         )
-        .order_by(desc(MessageConversation.last_reply_time))
         .all()
     )
+
+    conversations.sort(key=lambda c: c.last_activity_time, reverse=True)
 
     return {"conversations": conversations}
 
@@ -79,9 +81,10 @@ def get_user_sent_messages(request: Request) -> dict:
                 ),
             )
         )
-        .order_by(desc(MessageConversation.last_reply_time))
         .all()
     )
+
+    conversations.sort(key=lambda c: c.last_activity_time, reverse=True)
 
     return {"conversations": conversations}
 
