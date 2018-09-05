@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """Validation schema for topic listing views."""
 
 from marshmallow import pre_load, Schema, validates_schema, ValidationError

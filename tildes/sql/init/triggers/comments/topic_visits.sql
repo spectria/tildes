@@ -1,3 +1,6 @@
+-- Copyright (c) 2018 Tildes contributors <code@tildes.net>
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+
 -- increment a user's topic visit comment count when they post a comment
 CREATE OR REPLACE FUNCTION increment_user_topic_visit_num_comments() RETURNS TRIGGER AS $$
 BEGIN

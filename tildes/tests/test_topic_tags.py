@@ -1,3 +1,7 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+
 def test_tags_whitespace_stripped(text_topic):
     """Ensure excess whitespace around tags gets stripped."""
     text_topic.tags = ["  one", "two   ", "  three "]

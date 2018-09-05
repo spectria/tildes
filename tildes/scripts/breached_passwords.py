@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """Command-line tools for managing a breached-passwords bloom filter.
 
 This tool will help with creating and updating a bloom filter in Redis (using ReBloom:

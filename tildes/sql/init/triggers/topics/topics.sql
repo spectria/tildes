@@ -1,3 +1,6 @@
+-- Copyright (c) 2018 Tildes contributors <code@tildes.net>
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+
 -- set topic.deleted_time when it's deleted
 CREATE OR REPLACE FUNCTION set_topic_deleted_time() RETURNS TRIGGER AS $$
 BEGIN

@@ -1,3 +1,6 @@
+-- Copyright (c) 2018 Tildes contributors <code@tildes.net>
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+
 CREATE OR REPLACE FUNCTION update_users_num_unread_notifications() RETURNS TRIGGER AS $$
 BEGIN
     IF (TG_OP = 'INSERT') THEN

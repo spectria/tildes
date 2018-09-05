@@ -1,3 +1,6 @@
+-- Copyright (c) 2018 Tildes contributors <code@tildes.net>
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+
 -- delete any notifications related to a comment when it's deleted or removed
 CREATE OR REPLACE FUNCTION delete_comment_notifications() RETURNS TRIGGER AS $$
 BEGIN

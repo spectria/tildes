@@ -1,3 +1,7 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+
 def test_render_theme_options(webtest):
     """Test that theme settings are being rendered."""
     settings = webtest.get("/settings")

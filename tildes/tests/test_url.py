@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from pytest import raises
 
 from tildes.lib.url import get_domain_from_url

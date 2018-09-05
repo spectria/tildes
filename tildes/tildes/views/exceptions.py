@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """Views used by Pyramid when an exception is raised."""
 
 from pyramid.httpexceptions import HTTPNotFound

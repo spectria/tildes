@@ -1,3 +1,6 @@
+-- Copyright (c) 2018 Tildes contributors <code@tildes.net>
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+
 CREATE OR REPLACE FUNCTION send_rabbitmq_message_for_comment() RETURNS TRIGGER AS $$
 DECLARE
     affected_row RECORD;

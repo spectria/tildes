@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """Configure and initialize the Pyramid app."""
 
 from typing import Any, Callable, Dict, Optional, Tuple

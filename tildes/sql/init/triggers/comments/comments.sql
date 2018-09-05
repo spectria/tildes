@@ -1,3 +1,6 @@
+-- Copyright (c) 2018 Tildes contributors <code@tildes.net>
+-- SPDX-License-Identifier: AGPL-3.0-or-later
+
 -- set comment.deleted_time when is_deleted changes
 CREATE OR REPLACE FUNCTION set_comment_deleted_time() RETURNS TRIGGER AS $$
 BEGIN

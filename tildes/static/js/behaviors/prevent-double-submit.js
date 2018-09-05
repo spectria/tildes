@@ -1,3 +1,6 @@
+// Copyright (c) 2018 Tildes contributors <code@tildes.net>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 $.onmount('[data-js-prevent-double-submit]', function() {
     $(this).on('beforeSend.ic', function(evt, elt, data, settings, xhr, requestId) {
         var $form = $(this);

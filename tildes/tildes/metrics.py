@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """Contains Prometheus metric objects and functions for instrumentation."""
 
 # The prometheus_client classes work in a pretty crazy way, need to disable these pylint

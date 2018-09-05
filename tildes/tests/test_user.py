@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from marshmallow.exceptions import ValidationError
 from pytest import raises
 from sqlalchemy.exc import IntegrityError

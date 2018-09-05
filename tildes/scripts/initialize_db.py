@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """Script for doing the initial setup of database tables."""
 # pylint: disable=wrong-import-order
 

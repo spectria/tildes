@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """Functions/constants related to messages."""
 
 WELCOME_MESSAGE_SUBJECT = "Welcome to the Tildes alpha"

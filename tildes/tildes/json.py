@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """Contains custom JSON serializers for Pyramid's renderer."""
 
 from pyramid.config import Configurator

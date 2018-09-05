@@ -1,3 +1,7 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+
 def test_loggedout_username_leak(webtest_loggedout, session_user):
     """Ensure responses from existing and nonexistent users are the same.
 

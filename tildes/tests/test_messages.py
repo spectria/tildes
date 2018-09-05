@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from pyramid.security import principals_allowed_by_permission
 from pytest import fixture, raises
 

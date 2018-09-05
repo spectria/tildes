@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """Contains the MessageConversation and MessageReply classes.
 
 Note the difference between these two classes - MessageConversation represents both the

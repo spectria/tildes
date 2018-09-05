@@ -1,3 +1,6 @@
+# Copyright (c) 2018 Tildes contributors <code@tildes.net>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 """Contains the PaginatedQuery and PaginatedResults classes."""
 
 from typing import Any, Iterator, List, Optional, TypeVar
