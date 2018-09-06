@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 a.link-user, a.link-group {
+  white-space: nowrap;
+
   &:visited {
     color: $blue;
   }
