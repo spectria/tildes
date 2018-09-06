@@ -19,7 +19,7 @@
         data-comment-depth="{{ loop.depth0 }}"
       {% endif %}
 
-      {% if request.has_permission('view', comment) %}
+      {% if request.has_permission("tag", comment) %}
         data-comment-user-tags="{{ comment.tags_by_user(request.user)|join(' ') }}"
       {% endif %}
     >
@@ -96,12 +96,17 @@
         </span>
       {% endif %}
 
-      {% if comment.tag_counts %}
+      {% if comment.tag_counts and request.has_permission("view_tags", comment) %}
         <ul class="comment-tags">
-          {% for tag, count in comment.tag_counts.most_common() %}
+          {% for tag_name, count in comment.tag_counts.most_common() %}
             <li>
-              <span class="label label-comment-tag label-comment-tag-{{ tag|lower }}">{{ tag }}</span>
-              <span class="comment-tag-count">x{{ count }}</span>
+              <span class="label label-comment-tag label-comment-tag-{{ tag_name|lower }}">{{ tag_name }}</span>
+              <span class="comment-tag-count">
+                x{{ count }}
+                ({% for tag in comment.tags if tag.name == tag_name -%}
+                  {{ username_linked(tag.user.username) }}
+                {%- endfor %})
+              </span>
             </li>
           {% endfor %}
         </ul>

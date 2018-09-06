@@ -3,7 +3,7 @@
 
 """Contains the User class."""
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, List, Optional, Sequence, Tuple
 
 from mypy_extensions import NoReturn
@@ -33,6 +33,7 @@ from sqlalchemy_utils import Ltree
 
 from tildes.enums import TopicSortOption
 from tildes.lib.database import ArrayOfLtree, CIText
+from tildes.lib.datetime import utc_now
 from tildes.lib.hash import hash_string, is_match_for_hash
 from tildes.models import DatabaseModel
 from tildes.schemas.user import EMAIL_ADDRESS_NOTE_MAX_LENGTH, UserSchema
@@ -213,16 +214,23 @@ class User(DatabaseModel):
     @property
     def auth_principals(self) -> List[str]:
         """Return the user's authorization principals (used for permissions)."""
+        principals: List[str] = []
+
+        # start with any principals manually defined in the permissions column
         if not self.permissions:
-            return []
+            pass
+        elif isinstance(self.permissions, str):
+            principals = [self.permissions]
+        elif isinstance(self.permissions, list):
+            principals = self.permissions
+        else:
+            raise ValueError("Unknown permissions format")
 
-        if isinstance(self.permissions, str):
-            return [self.permissions]
+        # give the user the "comment.tag" permission if they're over a week old
+        if utc_now() - self.created_time > timedelta(days=7):
+            principals.append("comment.tag")
 
-        if isinstance(self.permissions, list):
-            return self.permissions
-
-        raise ValueError("Unknown permissions format")
+        return principals
 
     @property
     def is_admin(self) -> bool:

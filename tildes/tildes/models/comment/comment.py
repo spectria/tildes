@@ -164,8 +164,13 @@ class Comment(DatabaseModel):
         acl.append((Allow, Authenticated, "vote"))
 
         # tag:
-        #  - temporary: nobody can tag comments
-        acl.append((Deny, Everyone, "tag"))
+        #  - removed comments can't be tagged by anyone
+        #  - otherwise, people with the "comment.tag" permission other than the author
+        if self.is_removed:
+            acl.append((Deny, Everyone, "tag"))
+
+        acl.append((Deny, self.user_id, "tag"))
+        acl.append((Allow, "comment.tag", "tag"))
 
         # reply:
         #  - removed comments can't be replied to by anyone
@@ -194,6 +199,7 @@ class Comment(DatabaseModel):
 
         # tools that require specifically granted permissions
         acl.append((Allow, "admin", "remove"))
+        acl.append((Allow, "admin", "view_tags"))
 
         acl.append(DENY_ALL)
 

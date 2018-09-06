@@ -1,9 +1,9 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% macro username_linked(username) %}
+{% macro username_linked(username) -%}
   <a href="/user/{{ username }}" class="link-user">{{ username }}</a>
-{% endmacro %}
+{%- endmacro %}
 
 {% macro group_linked(group_path) %}
   <a href="/~{{ group_path }}" class="link-group">~{{ group_path }}</a>

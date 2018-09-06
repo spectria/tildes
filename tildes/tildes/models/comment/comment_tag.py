@@ -35,6 +35,7 @@ class CommentTag(DatabaseModel):
     )
 
     comment: Comment = relationship(Comment, backref=backref("tags", lazy=False))
+    user: User = relationship(User, lazy=False, innerjoin=True)
 
     def __init__(self, comment: Comment, user: User, tag: CommentTagOption) -> None:
         """Add a new tag to a comment."""
