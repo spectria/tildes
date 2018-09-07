@@ -102,10 +102,10 @@
             <li>
               <span class="label label-comment-tag label-comment-tag-{{ tag_name|lower }}">{{ tag_name }}</span>
               <span class="comment-tag-count">
-                x{{ count }}
-                ({% for tag in comment.tags if tag.name == tag_name -%}
+                x{{ count }}:
+                {% for tag in comment.tags if tag.name == tag_name %}
                   {{ username_linked(tag.user.username) }}
-                {%- endfor %})
+                {% endfor %}
               </span>
             </li>
           {% endfor %}

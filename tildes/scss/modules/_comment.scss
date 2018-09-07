@@ -73,13 +73,12 @@
 }
 
 .comment-tags {
-  display: inline-flex;
-  align-items: center;
   margin: 0 0 0 0.4rem;
   list-style-type: none;
 
   li {
     margin-top: 0;
+    max-width: none;
   }
 }
 
@@ -96,9 +95,7 @@
 }
 
 .comment-tag-count {
-  font-weight: bold;
-  font-size: 0.5rem;
-  margin-right: 0.4rem;
+  font-size: 0.6rem;
 }
 
 .comment-text {
