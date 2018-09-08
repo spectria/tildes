@@ -122,6 +122,14 @@ def test_multiple_edits_update_time(comment):
             assert comment.last_edited_time == utc_now()
 
 
+def test_comment_excerpt_excludes_blockquote(topic, session_user):
+    """Ensure that comment excerpts don't include text from blockquotes."""
+    markdown = "> Something you said\n\nYeah, I agree."
+    comment = Comment(topic, session_user, markdown)
+
+    assert comment.excerpt == "Yeah, I agree."
+
+
 def test_comment_tree(db, topic, session_user):
     """Ensure that building and pruning a comment tree works."""
     all_comments = []

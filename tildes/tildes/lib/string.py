@@ -3,8 +3,10 @@
 
 """Functions related to processing/manipulating strings."""
 
+from xml.etree.ElementTree import Element
+
 import re
-from typing import Optional
+from typing import Iterator, List, Optional
 import unicodedata
 from urllib.parse import quote
 
@@ -212,12 +214,37 @@ def separate_string(original: str, separator: str, segment_size: int) -> str:
     return separated
 
 
-def extract_text_from_html(html: str) -> str:
+def extract_text_from_html(html: str, skip_tags: Optional[List[str]] = None) -> str:
     """Extract plain text content from the elements inside an HTML string."""
-    html_tree = HTMLParser().parseFragment(html)
+
+    def extract_text(element: Element, skip_tags: List[str]) -> Iterator[str]:
+        """Extract text recursively from elements, optionally skipping some tags.
+
+        This function is Python's xml.etree.ElementTree.Element.itertext() but with the
+        added ability to skip over particular tags and not include the text from inside
+        them or any of their children.
+        """
+        if not isinstance(element.tag, str) and element.tag is not None:
+            return
+
+        if element.tag in skip_tags:
+            return
+
+        if element.text:
+            yield element.text
+
+        for subelement in element:
+            yield from extract_text(subelement, skip_tags)
+
+            if subelement.tail:
+                yield subelement.tail
+
+    skip_tags = skip_tags or []
+
+    html_tree = HTMLParser(namespaceHTMLElements=False).parseFragment(html)
 
     # extract the text from all of the HTML elements
-    extracted_text = "".join([element_text for element_text in html_tree.itertext()])
+    extracted_text = "".join([text for text in extract_text(html_tree, skip_tags)])
 
     # sanitize unicode, remove leading/trailing whitespace, etc.
     return simplify_string(extracted_text)
