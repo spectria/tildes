@@ -11,7 +11,8 @@ from marshmallow.fields import String
 from pyramid.httpexceptions import HTTPFound
 from pyramid.request import Request
 from pyramid.view import view_config
-from sqlalchemy.sql.expression import desc
+from sqlalchemy import cast
+from sqlalchemy.sql.expression import any_, desc
 from sqlalchemy_utils import Ltree
 from webargs.pyramidparser import use_kwargs
 from zope.sqlalchemy import mark_changed
@@ -23,6 +24,7 @@ from tildes.enums import (
     LogEventType,
     TopicSortOption,
 )
+from tildes.lib.database import ArrayOfLtree
 from tildes.lib.datetime import SimpleHoursPeriod
 from tildes.models.comment import Comment, CommentNotification, CommentTree
 from tildes.models.group import Group
@@ -142,7 +144,9 @@ def get_group_topics(
     if not (tag or unfiltered):
         # pylint: disable=protected-access
         query = query.filter(
-            ~Topic._tags.overlap(request.user._filtered_topic_tags)  # type: ignore
+            ~Topic._tags.descendant_of(  # type: ignore
+                any_(cast(request.user._filtered_topic_tags, ArrayOfLtree))
+            )
         )
 
     topics = query.get_page(per_page)
