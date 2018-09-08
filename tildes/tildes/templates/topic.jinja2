@@ -261,7 +261,7 @@
 
     <dt>Last comment posted</dt>
     <dd>
-      <a href="{{ comments.most_recent_comment.permalink }}">
+      <a href="{{ comments.most_recent_comment.permalink }}" data-js-hide-sidebar-no-preventdefault>
         {{ time_ago(topic.last_activity_time) }}
       </a>
     </dd>
