@@ -65,6 +65,12 @@ class LogEventType(enum.Enum):
     TOPIC_UNREMOVE = enum.auto()
 
 
+class ScraperType(enum.Enum):
+    """Enum for the types of scrapers available."""
+
+    EMBEDLY = enum.auto()
+
+
 class TopicSortOption(enum.Enum):
     """Enum for the different methods topics can be sorted by."""
 

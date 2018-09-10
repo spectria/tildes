@@ -29,6 +29,7 @@ webassets.cache = false
 webassets.manifest = json
 
 # API keys for external APIs
+api_keys.embedly = embedlykeygoeshere
 api_keys.stripe = sk_live_ActualKeyShouldGoHere
 
 [server:main]

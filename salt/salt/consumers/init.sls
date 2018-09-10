@@ -21,3 +21,17 @@ consumer-topic_metadata_generator.service:
 consumer-comment_user_mentions_generator.service:
   service.running:
     - enable: True
+
+{% if grains['id'] == 'prod' %}
+/etc/systemd/system/consumer-topic_embedly_extractor.service:
+  file.managed:
+    - source: salt://consumers/topic_embedly_extractor.service.jinja2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: 644
+
+consumer-topic_embedly_extractor.service:
+  service.running:
+    - enable: True
+{% endif %}

@@ -16,6 +16,7 @@ from tildes.models.comment import Comment, CommentNotification, CommentTag, Comm
 from tildes.models.group import Group, GroupSubscription
 from tildes.models.log import Log
 from tildes.models.message import MessageConversation, MessageReply
+from tildes.models.scraper import ScraperResult
 from tildes.models.topic import Topic, TopicVisit, TopicVote
 from tildes.models.user import User, UserGroupSettings, UserInviteCode
 
