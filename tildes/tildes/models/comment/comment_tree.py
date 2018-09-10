@@ -195,41 +195,46 @@ class CommentTree:
             comment.collapsed_state = "uncollapsed"
 
             # fetch its direct parent and uncollapse it as well
-            parent_comment: Optional[Comment] = None
             if comment.parent_comment_id:
                 parent_comment = self.comments_by_id[comment.parent_comment_id]
                 parent_comment.collapsed_state = "uncollapsed"
 
-            # then follow parents to the root, individually collapsing them all
-            while parent_comment:
-                if not parent_comment.collapsed_state:
-                    parent_comment.collapsed_state = "individual"
+    @staticmethod
+    def _has_uncollapsed_descendant(comment: Comment) -> bool:
+        """Recursively check if the comment has an uncollapsed descendant."""
+        for reply in comment.replies:
+            if reply.collapsed_state == "uncollapsed":
+                return True
 
-                if parent_comment.parent_comment_id:
-                    parent_comment = self.comments_by_id[
-                        parent_comment.parent_comment_id
-                    ]
-                else:
-                    parent_comment = None
+            if CommentTree._has_uncollapsed_descendant(reply):
+                return True
 
-        self._finalize_collapsing()
+        return False
 
-    def _finalize_collapsing(self) -> None:
-        """Finish collapsing that was done partially by a different method."""
-        # if all the comments would end up collapsed, leave them all uncollapsed
+    @staticmethod
+    def _recursively_collapse(comment: Comment) -> None:
+        """Recursively collapse a comment and its replies as much as possible."""
+        # stop processing the branch as soon as we hit an uncollapsed comment
+        if comment.collapsed_state == "uncollapsed":
+            return
+
+        # if it doesn't have any uncollapsed descendants, collapse the whole branch
+        # and stop looking any deeper into it
+        if not CommentTree._has_uncollapsed_descendant(comment):
+            comment.collapsed_state = "full"
+            return
+
+        # otherwise (does have uncollapsed descendant), collapse this comment
+        # individually and recurse into all branches underneath it
+        comment.collapsed_state = "individual"
+        for reply in comment.replies:
+            CommentTree._recursively_collapse(reply)
+
+    def finalize_collapsing_maximized(self) -> None:
+        """Finish collapsing comments, collapsing as much as possible."""
+        # if no comments have their state defined, leave them all uncollapsed
         if all([comment.collapsed_state is None for comment in self.comments]):
             return
 
-        # go over each top-level comment and go into each branch depth-first. Any
-        # comment that still has its state as None can be fully collapsed (and we can
-        # stop looking down that branch)
-        def recursively_collapse(comment: Comment) -> None:
-            if not comment.collapsed_state:
-                comment.collapsed_state = "full"
-                return
-
-            for reply in comment.replies:
-                recursively_collapse(reply)
-
         for comment in self.tree:
-            recursively_collapse(comment)
+            self._recursively_collapse(comment)
