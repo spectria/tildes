@@ -3,10 +3,12 @@
 
 """Consumer that generates content_metadata for topics."""
 
-from typing import Sequence
+from typing import Any, Dict, Sequence
 
 from amqpy import Message
 import publicsuffix
+from sqlalchemy import cast, func
+from sqlalchemy.dialects.postgresql import JSONB
 
 from tildes.lib.amqp import PgsqlQueueConsumer
 from tildes.lib.string import extract_text_from_html, truncate_string, word_count
@@ -32,32 +34,41 @@ class TopicMetadataGenerator(PgsqlQueueConsumer):
         )
 
         if topic.is_text_type:
-            self._generate_text_metadata(topic)
+            new_metadata = self._generate_text_metadata(topic)
         elif topic.is_link_type:
-            self._generate_link_metadata(topic)
+            new_metadata = self._generate_link_metadata(topic)
+
+        # update the topic's content_metadata in a way that won't wipe out any existing
+        # values, and can handle the column being null
+        (
+            self.db_session.query(Topic)
+            .filter(Topic.topic_id == topic.topic_id)
+            .update(
+                {
+                    "content_metadata": func.coalesce(
+                        Topic.content_metadata, cast({}, JSONB)
+                    ).op("||")(new_metadata)
+                },
+                synchronize_session=False,
+            )
+        )
 
     @staticmethod
-    def _generate_text_metadata(topic: Topic) -> None:
+    def _generate_text_metadata(topic: Topic) -> Dict[str, Any]:
         """Generate metadata for a text topic (word count and excerpt)."""
         extracted_text = extract_text_from_html(topic.rendered_html)
 
         # create a short excerpt by truncating the extracted string
         excerpt = truncate_string(extracted_text, length=200, truncate_at_chars=" ")
 
-        topic.content_metadata = {
-            "word_count": word_count(extracted_text),
-            "excerpt": excerpt,
-        }
+        return {"word_count": word_count(extracted_text), "excerpt": excerpt}
 
-    def _generate_link_metadata(self, topic: Topic) -> None:
+    def _generate_link_metadata(self, topic: Topic) -> Dict[str, Any]:
         """Generate metadata for a link topic (domain)."""
-        if not topic.link:
-            return
-
         parsed_domain = get_domain_from_url(topic.link)
         domain = self.public_suffix_list.get_public_suffix(parsed_domain)
 
-        topic.content_metadata = {"domain": domain}
+        return {"domain": domain}
 
 
 if __name__ == "__main__":
