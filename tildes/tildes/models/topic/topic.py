@@ -376,3 +376,32 @@ class Topic(DatabaseModel):
             metadata_strings.append(f"{self.link_domain}")
 
         return ", ".join(metadata_strings)
+
+    @property
+    def content_excerpt(self) -> Optional[str]:
+        """Return the topic's content excerpt (if it has one)."""
+        if self.is_text_type:
+            return self.get_content_metadata("excerpt")
+
+        # if it looks like it's a link to a tweet
+        if (
+            self.is_link_type
+            and self.link_domain == "twitter.com"
+            and self.link
+            and "/status/" in self.link
+        ):
+            authors = self.get_content_metadata("authors")
+            tweet = self.get_content_metadata("description")
+
+            if authors and tweet:
+                return f"@{authors[0]}: {tweet}"
+
+        return None
+
+    @property
+    def is_content_excerpt_truncated(self) -> bool:
+        """Return whether the content excerpt has been truncated or not."""
+        if self.is_text_type and self.content_excerpt:
+            return self.content_excerpt.endswith("...")
+
+        return False
