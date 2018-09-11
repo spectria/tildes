@@ -27,7 +27,7 @@ from titlecase import titlecase
 
 from tildes.enums import TopicType
 from tildes.lib.database import ArrayOfLtree
-from tildes.lib.datetime import utc_now
+from tildes.lib.datetime import utc_from_timestamp, utc_now
 from tildes.lib.id import id_to_id36
 from tildes.lib.markdown import convert_markdown_to_safe_html
 from tildes.lib.string import convert_to_url_slug
@@ -363,6 +363,7 @@ class Topic(DatabaseModel):
     @property
     def content_metadata_for_display(self) -> str:
         """Return a string of the content's metadata, suitable for display."""
+        # pylint: disable=too-many-branches
         metadata_strings = []
 
         if self.is_text_type:
@@ -374,6 +375,13 @@ class Topic(DatabaseModel):
                     metadata_strings.append(f"{word_count} words")
         elif self.is_link_type:
             metadata_strings.append(f"{self.link_domain}")
+
+            # display the published date if it's more than 3 days before the topic
+            published_timestamp = self.get_content_metadata("published")
+            if published_timestamp:
+                published = utc_from_timestamp(published_timestamp)
+                if self.created_time - published > timedelta(days=3):
+                    metadata_strings.append(published.strftime("%b %-d %Y"))
 
         return ", ".join(metadata_strings)
 

@@ -79,6 +79,11 @@ def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def utc_from_timestamp(timestamp: int) -> datetime:
+    """Return timezone-aware datetime from a UTC timestamp."""
+    return datetime.fromtimestamp(timestamp, timezone.utc)
+
+
 def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
     """Return a descriptive string for how long ago a datetime was.
 
