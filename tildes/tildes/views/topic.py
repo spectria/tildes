@@ -277,6 +277,8 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
         .all()
     )
 
+    tree.collapse_from_tags(request.user)
+
     # if the user has the "mark new comments" feature enabled
     if request.user and request.user.track_comment_visits:
         # update their last visit time for this topic

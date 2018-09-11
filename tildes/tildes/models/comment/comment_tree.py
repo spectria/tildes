@@ -10,6 +10,7 @@ from prometheus_client import Histogram
 
 from tildes.enums import CommentSortOption
 from tildes.metrics import get_histogram
+from tildes.models.user import User
 from .comment import Comment
 
 
@@ -175,6 +176,16 @@ class CommentTree:
             order=self.sort.name,
         )
 
+    def collapse_from_tags(self, viewer: Optional[User]) -> None:
+        """Collapse comments based on how they've been tagged."""
+        for comment in self.comments:
+            # never affect the viewer's own comments
+            if viewer and comment.user == viewer:
+                continue
+
+            if comment.tag_counts["noise"] >= 2:
+                comment.collapsed_state = "full"
+
     def collapse_old_comments(self, threshold: datetime) -> None:
         """Collapse old comments in the tree.
 
@@ -189,6 +200,10 @@ class CommentTree:
                 break
 
             if comment.is_deleted or comment.is_removed:
+                continue
+
+            # don't override any other collapsing decisions
+            if comment.collapsed_state:
                 continue
 
             # uncollapse the comment
@@ -214,8 +229,8 @@ class CommentTree:
     @staticmethod
     def _recursively_collapse(comment: Comment) -> None:
         """Recursively collapse a comment and its replies as much as possible."""
-        # stop processing the branch as soon as we hit an uncollapsed comment
-        if comment.collapsed_state == "uncollapsed":
+        # stop processing this branch if we hit an uncollapsed/fully-collapsed comment
+        if comment.collapsed_state in ("uncollapsed", "full"):
             return
 
         # if it doesn't have any uncollapsed descendants, collapse the whole branch
@@ -232,9 +247,10 @@ class CommentTree:
 
     def finalize_collapsing_maximized(self) -> None:
         """Finish collapsing comments, collapsing as much as possible."""
-        # if no comments have their state defined, leave them all uncollapsed
-        if all([comment.collapsed_state is None for comment in self.comments]):
-            return
-
         for comment in self.tree:
             self._recursively_collapse(comment)
+
+        # if all the top-level comments end up fully collapsed, uncollapse instead
+        if all([comment.collapsed_state == "full" for comment in self.tree]):
+            for comment in self.tree:
+                comment.collapsed_state = None
