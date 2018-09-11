@@ -33,6 +33,9 @@ class TopicMetadataGenerator(PgsqlQueueConsumer):
             self.db_session.query(Topic).filter_by(topic_id=msg.body["topic_id"]).one()
         )
 
+        if topic.is_deleted:
+            return
+
         if topic.is_text_type:
             new_metadata = self._generate_text_metadata(topic)
         elif topic.is_link_type:
