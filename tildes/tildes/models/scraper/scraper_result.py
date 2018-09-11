@@ -28,7 +28,7 @@ class ScraperResult(DatabaseModel):
         index=True,
         server_default=text("NOW()"),
     )
-    data: Any = Column(JSONB)
+    data: Any = Column(JSONB(none_as_null=True))
 
     def __init__(self, url: str, scraper_type: ScraperType, data: Any) -> None:
         """Create a new ScraperResult."""

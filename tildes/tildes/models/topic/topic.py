@@ -106,7 +106,9 @@ class Topic(DatabaseModel):
     _markdown: Optional[str] = deferred(Column("markdown", Text))
     rendered_html: Optional[str] = Column(Text)
     link: Optional[str] = Column(Text)
-    content_metadata: Dict[str, Any] = Column(MutableDict.as_mutable(JSONB))
+    content_metadata: Dict[str, Any] = Column(
+        MutableDict.as_mutable(JSONB(none_as_null=True))
+    )
     num_comments: int = Column(Integer, nullable=False, server_default="0", index=True)
     num_votes: int = Column(Integer, nullable=False, server_default="0", index=True)
     _tags: List[Ltree] = Column(

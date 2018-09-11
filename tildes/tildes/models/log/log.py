@@ -57,7 +57,7 @@ class BaseLog:
     @declared_attr
     def info(self) -> Column:
         """Return the info column."""
-        return Column(MutableDict.as_mutable(JSONB))
+        return Column(MutableDict.as_mutable(JSONB(none_as_null=True)))
 
     @declared_attr
     def user(self) -> Any:

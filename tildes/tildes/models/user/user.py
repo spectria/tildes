@@ -94,7 +94,7 @@ class User(DatabaseModel):
     open_new_tab_text: bool = Column(Boolean, nullable=False, server_default="false")
     theme_default: str = Column(Text)
     is_banned: bool = Column(Boolean, nullable=False, server_default="false")
-    permissions: Any = Column(JSONB)
+    permissions: Any = Column(JSONB(none_as_null=True))
     home_default_order: Optional[TopicSortOption] = Column(ENUM(TopicSortOption))
     home_default_period: Optional[str] = Column(Text)
     _filtered_topic_tags: List[Ltree] = Column(
