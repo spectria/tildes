@@ -36,4 +36,5 @@ testing.redis
 titlecase
 webargs
 webtest
+wrapt
 zope.sqlalchemy
