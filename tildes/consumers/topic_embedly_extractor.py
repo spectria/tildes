@@ -66,6 +66,10 @@ class TopicEmbedlyExtractor(PgsqlQueueConsumer):
 
             self.db_session.add(result)
 
+        # update the topic's link if embedly says the final url is different
+        if topic.link != result.data["url"]:
+            topic.link = result.data["url"]
+
         new_metadata = EmbedlyScraper.get_metadata_from_result(result)
 
         if new_metadata:
