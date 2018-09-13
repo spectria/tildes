@@ -18,10 +18,16 @@ from .comment import Comment
 class CommentTree:
     """Class representing the tree of comments on a particular topic."""
 
-    def __init__(self, comments: Sequence[Comment], sort: CommentSortOption) -> None:
+    def __init__(
+        self,
+        comments: Sequence[Comment],
+        sort: CommentSortOption,
+        viewer: Optional[User] = None,
+    ) -> None:
         """Create a sorted CommentTree from a flat list of Comments."""
         self.tree: List[CommentInTree] = []
         self.sort = sort
+        self.viewer = viewer
 
         # sort the comments by date, since replies will always be posted later this will
         # ensure that parent comments are always processed first
@@ -164,17 +170,17 @@ class CommentTree:
             order=self.sort.name,
         )
 
-    def collapse_from_tags(self, viewer: Optional[User]) -> None:
+    def collapse_from_tags(self) -> None:
         """Collapse comments based on how they've been tagged."""
         for comment in self.comments:
             # never affect the viewer's own comments
-            if viewer and comment.user == viewer:
+            if comment.user == self.viewer:
                 continue
 
             if comment.tag_counts["noise"] >= 2:
                 comment.collapsed_state = "full"
 
-    def uncollapse_new_comments(self, viewer: User, threshold: datetime) -> None:
+    def uncollapse_new_comments(self, threshold: datetime) -> None:
         """Mark comments newer than the threshold (and parents) to stay uncollapsed."""
         for comment in reversed(self.comments):
             # as soon as we reach an old comment, we can stop
@@ -189,7 +195,7 @@ class CommentTree:
                 continue
 
             # don't apply to the viewer's own comments
-            if comment.user == viewer:
+            if comment.user == self.viewer:
                 continue
 
             # uncollapse the comment
