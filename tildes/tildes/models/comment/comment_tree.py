@@ -252,8 +252,8 @@ class CommentInTree(ObjectProxy):
 
     def recursively_collapse(self) -> None:
         """Recursively collapse a comment and its replies as much as possible."""
-        # stop processing this branch if we hit an uncollapsed/fully-collapsed comment
-        if self.collapsed_state in ("uncollapsed", "full"):
+        # stop processing this branch if we hit a fully-collapsed comment
+        if self.collapsed_state == "full":
             return
 
         # if it doesn't have any uncollapsed descendants, collapse the whole branch
@@ -263,7 +263,10 @@ class CommentInTree(ObjectProxy):
             return
 
         # otherwise (does have uncollapsed descendant), collapse this comment
-        # individually and recurse into all branches underneath it
-        self.collapsed_state = "individual"
+        # individually if it doesn't already have another state set, then recurse into
+        # all branches underneath it
+        if not self.collapsed_state:
+            self.collapsed_state = "individual"
+
         for reply in self.replies:
             reply.recursively_collapse()
