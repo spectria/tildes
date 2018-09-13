@@ -258,7 +258,7 @@ class CommentInTree(ObjectProxy):
 
         # if it doesn't have any uncollapsed descendants, collapse the whole branch
         # and stop looking any deeper into it
-        if not self.has_uncollapsed_descendant:
+        if not self.has_uncollapsed_descendant and not self.collapsed_state:
             self.collapsed_state = "full"
             return
 
