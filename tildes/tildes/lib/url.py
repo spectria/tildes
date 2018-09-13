@@ -17,3 +17,9 @@ def get_domain_from_url(url: str, strip_www: bool = True) -> str:
         domain = domain[4:]
 
     return domain
+
+
+def is_tweet(url: str) -> bool:
+    """Return whether a url is a link to a tweet."""
+    domain = get_domain_from_url(url)
+    return domain == "twitter.com" and "/status/" in url

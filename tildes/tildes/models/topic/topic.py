@@ -31,7 +31,7 @@ from tildes.lib.datetime import utc_from_timestamp, utc_now
 from tildes.lib.id import id_to_id36
 from tildes.lib.markdown import convert_markdown_to_safe_html
 from tildes.lib.string import convert_to_url_slug
-from tildes.lib.url import get_domain_from_url
+from tildes.lib.url import get_domain_from_url, is_tweet
 from tildes.metrics import incr_counter
 from tildes.models import DatabaseModel
 from tildes.models.group import Group
@@ -393,13 +393,7 @@ class Topic(DatabaseModel):
         if self.is_text_type:
             return self.get_content_metadata("excerpt")
 
-        # if it looks like it's a link to a tweet
-        if (
-            self.is_link_type
-            and self.link_domain == "twitter.com"
-            and self.link
-            and "/status/" in self.link
-        ):
+        if self.link and is_tweet(self.link):
             authors = self.get_content_metadata("authors")
             tweet = self.get_content_metadata("description")
 
@@ -415,3 +409,16 @@ class Topic(DatabaseModel):
             return self.content_excerpt.endswith("...")
 
         return False
+
+    @property
+    def additional_content_html(self) -> Optional[str]:
+        """Additional HTML related to the content that can be displayed."""
+        if not self.is_link_type:
+            return None
+
+        if self.link and is_tweet(self.link):
+            authors = self.get_content_metadata("authors")
+            tweet = self.get_content_metadata("description")
+            return f"<cite>@{authors[0]}:</cite><blockquote>{tweet}</blockquote>"
+
+        return None

@@ -56,6 +56,10 @@
         {% if request.user.open_new_tab_external %}target="_blank"{% endif %}
       >{{ topic.link }}</a>
     </div>
+
+    {% if topic.additional_content_html %}
+      <div class="topic-full-content">{{ topic.additional_content_html|safe }}</div>
+    {% endif %}
   {% endif %}
 {% endif %}
 
