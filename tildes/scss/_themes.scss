@@ -119,7 +119,7 @@
     .label-comment-tag-flame { @include specialtag($comment-tag-flame-color, $is-light); }
   }
 
-  %collapsed {
+  %collapsed-theme {
     header {
       background-color: $background-color;
       color: $text-secondary-color;
@@ -130,13 +130,13 @@
     }
   }
 
-  .is-comment-collapsed {
-    @extend %collapsed;
+  .is-comment-collapsed:not(:target) {
+    @extend %collapsed-theme;
   }
 
-  .is-comment-collapsed-individual {
+  .is-comment-collapsed-individual:not(:target) {
     & > .comment-itself {
-      @extend %collapsed;
+      @extend %collapsed-theme;
     }
   }
 

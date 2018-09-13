@@ -148,7 +148,7 @@
   }
 }
 
-.is-comment-collapsed {
+.is-comment-collapsed:not(:target) {
   @extend %collapsed;
 
   &[data-comment-depth="0"] {
@@ -162,7 +162,7 @@
 
 // uses @extend to only collapse everything inside the collapsed comment itself and
 // not its replies
-.is-comment-collapsed-individual {
+.is-comment-collapsed-individual:not(:target) {
   & > .comment-itself {
     @extend %collapsed;
   }
