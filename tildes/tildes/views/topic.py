@@ -289,7 +289,7 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
         # collapse old comments if the user has a previous visit to the topic
         # (and doesn't have that behavior disabled)
         if topic.last_visit_time and request.user.collapse_old_comments:
-            tree.uncollapse_new_comments(topic.last_visit_time)
+            tree.uncollapse_new_comments(request.user, topic.last_visit_time)
             tree.finalize_collapsing_maximized()
 
     return {

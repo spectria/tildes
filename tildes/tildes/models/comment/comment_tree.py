@@ -174,7 +174,7 @@ class CommentTree:
             if comment.tag_counts["noise"] >= 2:
                 comment.collapsed_state = "full"
 
-    def uncollapse_new_comments(self, threshold: datetime) -> None:
+    def uncollapse_new_comments(self, viewer: User, threshold: datetime) -> None:
         """Mark comments newer than the threshold (and parents) to stay uncollapsed."""
         for comment in reversed(self.comments):
             # as soon as we reach an old comment, we can stop
@@ -186,6 +186,10 @@ class CommentTree:
 
             # don't override any other collapsing decisions
             if comment.collapsed_state:
+                continue
+
+            # don't apply to the viewer's own comments
+            if comment.user == viewer:
                 continue
 
             # uncollapse the comment
