@@ -5,7 +5,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import Column, ForeignKey, Integer, TIMESTAMP
+from sqlalchemy import Column, ForeignKey, Integer, REAL, TIMESTAMP
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy.sql.expression import text
@@ -33,15 +33,19 @@ class CommentTag(DatabaseModel):
     created_time: datetime = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")
     )
+    weight: float = Column(REAL, nullable=False, server_default=text("1.0"))
 
     comment: Comment = relationship(Comment, backref=backref("tags", lazy=False))
     user: User = relationship(User, lazy=False, innerjoin=True)
 
-    def __init__(self, comment: Comment, user: User, tag: CommentTagOption) -> None:
+    def __init__(
+        self, comment: Comment, user: User, tag: CommentTagOption, weight: float
+    ) -> None:
         """Add a new tag to a comment."""
         self.comment_id = comment.comment_id
         self.user_id = user.user_id
         self.tag = tag
+        self.weight = weight
 
     @property
     def name(self) -> str:

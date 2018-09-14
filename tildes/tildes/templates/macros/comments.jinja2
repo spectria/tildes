@@ -98,13 +98,13 @@
 
       {% if comment.tag_counts and request.has_permission("view_tags", comment) %}
         <ul class="comment-tags">
-          {% for tag_name, count in comment.tag_counts.most_common() %}
+          {% for tag_name, weight in comment.tag_weights.most_common() %}
             <li>
               <span class="label label-comment-tag label-comment-tag-{{ tag_name|lower }}">{{ tag_name }}</span>
               <span class="comment-tag-count">
-                x{{ count }}:
+                {{ weight }}:
                 {% for tag in comment.tags if tag.name == tag_name %}
-                  {{ username_linked(tag.user.username) }}
+                  {{ username_linked(tag.user.username) }} ({{ tag.weight }})
                 {% endfor %}
               </span>
             </li>

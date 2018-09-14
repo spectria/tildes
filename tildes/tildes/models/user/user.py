@@ -22,6 +22,7 @@ from sqlalchemy import (
     Column,
     ForeignKey,
     Integer,
+    REAL,
     Text,
     TIMESTAMP,
 )
@@ -100,6 +101,7 @@ class User(DatabaseModel):
     _filtered_topic_tags: List[Ltree] = Column(
         "filtered_topic_tags", ArrayOfLtree, nullable=False, server_default="{}"
     )
+    comment_tag_weight: Optional[float] = Column(REAL)
 
     @hybrid_property
     def filtered_topic_tags(self) -> List[str]:

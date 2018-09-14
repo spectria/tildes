@@ -259,7 +259,11 @@ def put_tag_comment(request: Request, name: CommentTagOption) -> Response:
 
     savepoint = request.tm.savepoint()
 
-    tag = CommentTag(comment, request.user, name)
+    weight = request.user.comment_tag_weight
+    if weight is None:
+        weight = request.registry.settings["tildes.default_user_comment_tag_weight"]
+
+    tag = CommentTag(comment, request.user, name, weight)
     request.db_session.add(tag)
 
     try:

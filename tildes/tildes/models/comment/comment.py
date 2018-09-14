@@ -238,6 +238,15 @@ class Comment(DatabaseModel):
         """Counter for number of times each tag is on this comment."""
         return Counter([tag.name for tag in self.tags])
 
+    @property
+    def tag_weights(self) -> Counter:
+        """Counter with cumulative weights of each tag on this comment."""
+        weights: Counter = Counter()
+        for tag in self.tags:
+            weights[tag.name] += tag.weight
+
+        return weights
+
     def tags_by_user(self, user: User) -> Sequence[str]:
         """Return list of tag names that a user has applied to this comment."""
         return [tag.name for tag in self.tags if tag.user_id == user.user_id]
