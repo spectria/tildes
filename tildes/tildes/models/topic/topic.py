@@ -419,6 +419,8 @@ class Topic(DatabaseModel):
         if self.link and is_tweet(self.link):
             authors = self.get_content_metadata("authors")
             tweet = self.get_content_metadata("description")
-            return f"<cite>@{authors[0]}:</cite><blockquote>{tweet}</blockquote>"
+
+            if authors and tweet:
+                return f"<cite>@{authors[0]}:</cite><blockquote>{tweet}</blockquote>"
 
         return None
