@@ -177,7 +177,11 @@ class CommentTree:
             if comment.user == self.viewer:
                 continue
 
-            if comment.tag_counts["noise"] >= 2:
+            # Collapse a comment if it has weight from noise tags of at least
+            # 1.0 and the vote count is less than 5x the weight (so 5 votes are
+            # "stronger" than each 1.0 of noise and will prevent collapsing)
+            noise_weight = comment.tag_weights["noise"]
+            if noise_weight >= 1.0 and comment.num_votes < noise_weight * 5:
                 comment.collapsed_state = "full"
 
     def uncollapse_new_comments(self, threshold: datetime) -> None:
