@@ -12,6 +12,7 @@ from pyramid.view import view_config
 from sqlalchemy.sql.expression import desc
 from webargs.pyramidparser import use_kwargs
 
+from tildes.enums import CommentTagOption
 from tildes.models.comment import Comment
 from tildes.models.topic import Topic
 from tildes.models.user import User, UserInviteCode
@@ -104,7 +105,12 @@ def get_user(
     else:
         posts = _get_user_recent_activity(request, user)
 
-    return {"user": user, "posts": posts, "post_type": post_type}
+    return {
+        "user": user,
+        "posts": posts,
+        "post_type": post_type,
+        "comment_tag_options": CommentTagOption,
+    }
 
 
 @view_config(route_name="invite", renderer="invite.jinja2")
