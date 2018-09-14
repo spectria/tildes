@@ -107,6 +107,10 @@
     border-color: $border-color;
   }
 
+  .comment-branch-counter {
+    color: $text-secondary-color;
+  }
+
   .comment-nav-link {
     color: $text-secondary-color;
   }
@@ -122,10 +126,9 @@
   %collapsed-theme {
     header {
       background-color: $background-color;
-      color: $text-secondary-color;
 
       .link-user {
-        color: $text-secondary-color;
+        color: $text-color;
       }
     }
   }

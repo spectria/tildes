@@ -45,7 +45,6 @@
 .comment-excerpt {
   display: none;
 
-  font-style: italic;
   margin-left: 0.4rem;
   white-space: nowrap;
   overflow: hidden;
@@ -146,6 +145,10 @@
   &.is-comment-by-op .comment-user-info {
     font-weight: normal;
   }
+
+  header {
+    font-size: 0.6rem;
+  }
 }
 
 .is-comment-collapsed:not(:target) {
@@ -157,6 +160,7 @@
 
   .comment-branch-counter {
     display: inline-block;
+    font-size: 0.7rem;
   }
 }
 
