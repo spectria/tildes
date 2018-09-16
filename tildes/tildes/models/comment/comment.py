@@ -250,3 +250,18 @@ class Comment(DatabaseModel):
     def tags_by_user(self, user: User) -> Sequence[str]:
         """Return list of tag names that a user has applied to this comment."""
         return [tag.name for tag in self.tags if tag.user_id == user.user_id]
+
+    def is_tag_active(self, tag_name: str) -> bool:
+        """Return whether a tag has been applied enough to be considered "active"."""
+        tag_weight = self.tag_weights[tag_name]
+
+        # all tags must have at least 1.0 weight
+        if tag_weight < 1.0:
+            return False
+
+        # for "noise", weight must be more than 1/5 of the vote count (5 votes
+        # effectively override 1.0 of tag weight)
+        if tag_name == "noise" and self.num_votes >= tag_weight * 5:
+            return False
+
+        return True

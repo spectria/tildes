@@ -4,7 +4,7 @@
 """Contains the CommentTree and CommentInTree classes."""
 
 from datetime import datetime
-from typing import Iterator, List, Optional, Sequence
+from typing import Iterator, List, Optional, Sequence, Tuple
 
 from prometheus_client import Histogram
 from wrapt import ObjectProxy
@@ -98,6 +98,8 @@ class CommentTree:
             tree = sorted(tree, key=lambda c: c.created_time)
         elif sort == CommentSortOption.VOTES:
             tree = sorted(tree, key=lambda c: c.num_votes, reverse=True)
+        elif sort == CommentSortOption.RELEVANCE:
+            tree = sorted(tree, key=lambda c: c.relevance_sorting_value, reverse=True)
 
         for comment in tree:
             if not comment.has_visible_descendant:
@@ -177,11 +179,7 @@ class CommentTree:
             if comment.user == self.viewer:
                 continue
 
-            # Collapse a comment if it has weight from noise tags of at least
-            # 1.0 and the vote count is less than 5x the weight (so 5 votes are
-            # "stronger" than each 1.0 of noise and will prevent collapsing)
-            noise_weight = comment.tag_weights["noise"]
-            if noise_weight >= 1.0 and comment.num_votes < noise_weight * 5:
+            if comment.is_tag_active("noise"):
                 comment.collapsed_state = "full"
 
     def uncollapse_new_comments(self, threshold: datetime) -> None:
@@ -274,3 +272,26 @@ class CommentInTree(ObjectProxy):
 
         for reply in self.replies:
             reply.recursively_collapse()
+
+    @property
+    def relevance_sorting_value(self) -> Tuple[int, ...]:
+        """Value to use for the comment with the "relevance" comment sorting method.
+
+        Returns a tuple, which allows sorting the comments into "tiers" and then still
+        supporting further sorting inside those tiers when it's useful. For example,
+        comments tagged as offtopic can be sorted below all non-offtopic comments, but
+        then still sorted by votes relative to other offtopic comments.
+        """
+        if self.is_removed:
+            return (-100,)
+
+        if self.is_tag_active("noise"):
+            return (-2, self.num_votes)
+
+        if self.is_tag_active("offtopic"):
+            return (-1, self.num_votes)
+
+        if self.is_tag_active("joke"):
+            return (self.num_votes // 2,)
+
+        return (self.num_votes,)

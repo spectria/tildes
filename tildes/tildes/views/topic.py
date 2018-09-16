@@ -243,7 +243,7 @@ def get_new_topic_form(request: Request) -> dict:
 
 
 @view_config(route_name="topic", renderer="topic.jinja2")
-@use_kwargs({"comment_order": Enum(CommentSortOption, missing="votes")})
+@use_kwargs({"comment_order": Enum(CommentSortOption, missing="relevance")})
 def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
     """View a single topic."""
     topic = request.context

@@ -20,6 +20,7 @@ class CommentSortOption(enum.Enum):
     VOTES = enum.auto()
     NEWEST = enum.auto()
     POSTED = enum.auto()
+    RELEVANCE = enum.auto()
 
     @property
     def description(self) -> str:
@@ -28,6 +29,8 @@ class CommentSortOption(enum.Enum):
             return "newest first"
         elif self.name == "POSTED":
             return "order posted"
+        elif self.name == "RELEVANCE":
+            return "relevance"
 
         return "most {}".format(self.name.lower())
 
