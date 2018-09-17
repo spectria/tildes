@@ -132,12 +132,16 @@
   padding: 0.2rem;
   height: auto;
   min-width: 3rem;
+  font-weight: normal;
 
   &.btn-used {
-    background-color: darken($violet, 3%);
     border-color: darken($violet, 8%);
     border-style: solid;
-    color: #fff;
+    border-width: 0 0 0 2px;
+
+    .topic-voting-votes {
+      font-weight: bold;
+    }
 
     &:hover {
       background-color: darken($blue, 3%);
@@ -147,13 +151,13 @@
 }
 
 .topic-voting-votes {
-  font-size: 0.8rem;
-  font-weight: bold;
+  font-size: 0.9rem;
+  line-height: 1.1rem;
 }
 
 .topic-voting-label {
-  font-size: 0.5rem;
-  line-height: 0.5rem;
+  font-size: 0.6rem;
+  line-height: 0.6rem;
 }
 
 .topic-text-excerpt {
