@@ -135,9 +135,7 @@
   font-weight: normal;
 
   &.btn-used {
-    border-color: darken($violet, 8%);
-    border-style: solid;
-    border-width: 0 0 0 2px;
+    border-color: transparent;
 
     .topic-voting-votes {
       font-weight: bold;
