@@ -4,8 +4,9 @@
 """Contains the CommentTag class."""
 
 from datetime import datetime
+from typing import Optional
 
-from sqlalchemy import Column, ForeignKey, Integer, REAL, TIMESTAMP
+from sqlalchemy import Column, ForeignKey, Integer, REAL, Text, TIMESTAMP
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy.sql.expression import text
@@ -34,18 +35,26 @@ class CommentTag(DatabaseModel):
         TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")
     )
     weight: float = Column(REAL, nullable=False, server_default=text("1.0"))
+    reason: Optional[str] = Column(Text)
 
     comment: Comment = relationship(Comment, backref=backref("tags", lazy=False))
     user: User = relationship(User, lazy=False, innerjoin=True)
 
     def __init__(
-        self, comment: Comment, user: User, tag: CommentTagOption, weight: float
+        self,
+        comment: Comment,
+        user: User,
+        tag: CommentTagOption,
+        weight: float,
+        reason: Optional[str] = None,
     ) -> None:
         """Add a new tag to a comment."""
+        # pylint: disable=too-many-arguments
         self.comment_id = comment.comment_id
         self.user_id = user.user_id
         self.tag = tag
         self.weight = weight
+        self.reason = reason
 
     @property
     def name(self) -> str:

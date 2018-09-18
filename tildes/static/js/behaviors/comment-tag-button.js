@@ -31,14 +31,29 @@ $.onmount('[data-js-comment-tag-button]', function() {
                 tagOptionActive = true;
             }
 
+            var tagPrompt = tag.getAttribute("data-js-reason-prompt");
+
             if (tagOptionActive) {
                 tag.className += " btn btn-used";
                 tag.setAttribute('data-ic-delete-from', tagURL + tagName);
+
+                // if the tag requires a prompt, confirm that they want to remove it
+                // (since we don't want to accidentally lose the reason they typed in)
+                if (tagPrompt) {
+                    tag.setAttribute("data-ic-confirm", "Remove your "+tagName+" tag?");
+                }
+
                 $(tag).on('after.success.ic', function(evt) {
                     Tildes.removeUserTag(commentID, evt.target.textContent);
                 });
             } else {
                 tag.setAttribute('data-ic-put-to', tagURL + tagName);
+
+                if (tagPrompt) {
+                    tag.setAttribute("data-ic-prompt", tagPrompt);
+                    tag.setAttribute("data-ic-prompt-name", "reason");
+                }
+
                 $(tag).on('after.success.ic', function(evt) {
                     Tildes.addUserTag(commentID, evt.target.textContent);
                 });

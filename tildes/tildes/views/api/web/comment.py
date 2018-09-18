@@ -253,7 +253,8 @@ def delete_vote_comment(request: Request) -> dict:
     renderer="comment_contents.jinja2",
 )
 @use_kwargs(CommentTagSchema(only=("name",)), locations=("matchdict",))
-def put_tag_comment(request: Request, name: CommentTagOption) -> Response:
+@use_kwargs(CommentTagSchema(only=("reason",)))
+def put_tag_comment(request: Request, name: CommentTagOption, reason: str) -> Response:
     """Add a tag to a comment."""
     comment = request.context
 
@@ -263,7 +264,7 @@ def put_tag_comment(request: Request, name: CommentTagOption) -> Response:
     if weight is None:
         weight = request.registry.settings["tildes.default_user_comment_tag_weight"]
 
-    tag = CommentTag(comment, request.user, name, weight)
+    tag = CommentTag(comment, request.user, name, weight, reason)
     request.db_session.add(tag)
 
     try:

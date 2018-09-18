@@ -3,6 +3,8 @@
 
 """Contains Enum classes."""
 
+from typing import Optional
+
 import enum
 
 
@@ -42,6 +44,14 @@ class CommentTagOption(enum.Enum):
     NOISE = enum.auto()
     OFFTOPIC = enum.auto()
     MALICE = enum.auto()
+
+    @property
+    def reason_prompt(self) -> Optional[str]:
+        """Return the reason prompt for this tag, if any."""
+        if self.name == "MALICE":
+            return "Why is this malicious? (required, will only be visible to admins)"
+
+        return None
 
 
 class LogEventType(enum.Enum):
