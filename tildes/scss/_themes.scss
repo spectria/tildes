@@ -121,8 +121,7 @@
     .label-comment-tag-joke { @include specialtag($comment-tag-joke-color, $is-light); }
     .label-comment-tag-noise { @include specialtag($comment-tag-noise-color, $is-light); }
     .label-comment-tag-offtopic { @include specialtag($comment-tag-offtopic-color, $is-light); }
-    .label-comment-tag-troll { @include specialtag($comment-tag-troll-color, $is-light); }
-    .label-comment-tag-flame { @include specialtag($comment-tag-flame-color, $is-light); }
+    .label-comment-tag-malice { @include specialtag($comment-tag-malice-color, $is-light); }
   }
 
   %collapsed-theme {

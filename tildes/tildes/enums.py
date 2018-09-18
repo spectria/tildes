@@ -41,8 +41,7 @@ class CommentTagOption(enum.Enum):
     JOKE = enum.auto()
     NOISE = enum.auto()
     OFFTOPIC = enum.auto()
-    TROLL = enum.auto()
-    FLAME = enum.auto()
+    MALICE = enum.auto()
 
 
 class LogEventType(enum.Enum):

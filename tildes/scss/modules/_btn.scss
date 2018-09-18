@@ -113,10 +113,6 @@
   @include tagbutton($comment-tag-offtopic-color);
 }
 
-.btn-comment-tag-troll {
-  @include tagbutton($comment-tag-troll-color);
-}
-
-.btn-comment-tag-flame {
-  @include tagbutton($comment-tag-flame-color);
+.btn-comment-tag-malice {
+  @include tagbutton($comment-tag-malice-color);
 }
