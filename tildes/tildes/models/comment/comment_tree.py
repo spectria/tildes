@@ -210,22 +210,19 @@ class CommentTree:
 
     def finalize_collapsing_maximized(self) -> None:
         """Finish collapsing comments, collapsing as much as possible."""
-        # whether the collapsed state of all top-level comments starts out unknown
-        all_top_unknown_initially = all(
-            [comment.collapsed_state is None for comment in self.tree]
-        )
+        # whether the collapsed state of each top-level comment starts out unknown
+        top_unknown_initial = [comment.collapsed_state is None for comment in self.tree]
 
         for comment in self.tree:
             comment.recursively_collapse()
 
-        # if all the top-level comments were initially uncertain but end up
-        # fully collapsed, uncollapse them all instead (so we don't have a
+        # if all the top-level comments end up fully collapsed,
+        # uncollapse the ones we just collapsed (so we don't have a
         # comment page that's all collapsed comments)
-        if all_top_unknown_initially and all(
-            [comment.collapsed_state == "full" for comment in self.tree]
-        ):
-            for comment in self.tree:
-                comment.collapsed_state = None
+        if all([comment.collapsed_state == "full" for comment in self.tree]):
+            for comment, was_unknown in zip(self.tree, top_unknown_initial):
+                if was_unknown:
+                    comment.collapsed_state = None
 
 
 class CommentInTree(ObjectProxy):
