@@ -41,8 +41,8 @@ class CommentTagOption(enum.Enum):
     """Enum for the (site-wide) comment tag options."""
 
     JOKE = enum.auto()
-    NOISE = enum.auto()
     OFFTOPIC = enum.auto()
+    NOISE = enum.auto()
     MALICE = enum.auto()
 
     @property
