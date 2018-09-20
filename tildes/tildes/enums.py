@@ -40,6 +40,7 @@ class CommentSortOption(enum.Enum):
 class CommentTagOption(enum.Enum):
     """Enum for the (site-wide) comment tag options."""
 
+    EXEMPLARY = enum.auto()
     JOKE = enum.auto()
     OFFTOPIC = enum.auto()
     NOISE = enum.auto()
@@ -48,6 +49,11 @@ class CommentTagOption(enum.Enum):
     @property
     def reason_prompt(self) -> Optional[str]:
         """Return the reason prompt for this tag, if any."""
+        if self.name == "EXEMPLARY":
+            return (
+                "What makes this comment exemplary? "
+                "(required, visible to the comment's author anonymously)"
+            )
         if self.name == "MALICE":
             return "Why is this malicious? (required, will only be visible to admins)"
 

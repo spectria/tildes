@@ -117,12 +117,11 @@
     color: $text-secondary-color;
   }
 
-  .comment-tags {
-    .label-comment-tag-joke { @include specialtag($comment-tag-joke-color, $is-light); }
-    .label-comment-tag-noise { @include specialtag($comment-tag-noise-color, $is-light); }
-    .label-comment-tag-offtopic { @include specialtag($comment-tag-offtopic-color, $is-light); }
-    .label-comment-tag-malice { @include specialtag($comment-tag-malice-color, $is-light); }
-  }
+  .label-comment-tag-exemplary { @include specialtag($comment-tag-exemplary-color, $is-light); }
+  .label-comment-tag-joke { @include specialtag($comment-tag-joke-color, $is-light); }
+  .label-comment-tag-noise { @include specialtag($comment-tag-noise-color, $is-light); }
+  .label-comment-tag-offtopic { @include specialtag($comment-tag-offtopic-color, $is-light); }
+  .label-comment-tag-malice { @include specialtag($comment-tag-malice-color, $is-light); }
 
   %collapsed-theme {
     header {

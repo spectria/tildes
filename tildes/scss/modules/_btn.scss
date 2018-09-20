@@ -101,6 +101,10 @@
   }
 }
 
+.btn-comment-tag-exemplary {
+  @include tagbutton($comment-tag-exemplary-color);
+}
+
 .btn-comment-tag-joke {
   @include tagbutton($comment-tag-joke-color);
 }

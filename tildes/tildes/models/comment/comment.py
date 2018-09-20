@@ -156,6 +156,10 @@ class Comment(DatabaseModel):
 
         acl.append((Allow, Everyone, "view"))
 
+        # view exemplary reasons:
+        #  - only author gets shown the reasons (admins can see as well with all tags)
+        acl.append((Allow, self.user_id, "view_exemplary_reasons"))
+
         # vote:
         #  - removed comments can't be voted on by anyone
         #  - otherwise, logged-in users except the author can vote

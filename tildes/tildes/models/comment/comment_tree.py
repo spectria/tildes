@@ -291,4 +291,10 @@ class CommentInTree(ObjectProxy):
         if self.is_tag_active("joke"):
             return (self.num_votes // 2,)
 
+        # Exemplary comments add 1.0 to the the total weight of the exemplary tags, and
+        # multiply the vote count by that. At minimum (weight 1.0), votes are doubled.
+        if self.is_tag_active("exemplary"):
+            multiplier = self.tag_weights["exemplary"] + 1.0
+            return (round(multiplier * self.num_votes),)
+
         return (self.num_votes,)

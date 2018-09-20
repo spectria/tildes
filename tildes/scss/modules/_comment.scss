@@ -57,6 +57,22 @@
   margin-right: 0.4rem;
 }
 
+.comment-exemplary-reasons {
+  display: inline-block;
+  margin: 0.2rem 0.4rem;
+  font-size: 0.6rem;
+
+  &[open] {
+    border-bottom: 1px dashed;
+  }
+
+  ul {
+    list-style-type: circle;
+    margin-top: 0;
+    margin-left: 2rem;
+  }
+}
+
 .comment-nav-link {
   font-size: 0.6rem;
   margin-left: 0.4rem;
@@ -112,7 +128,7 @@
 .comment-votes {
   font-size: 0.6rem;
   font-weight: bold;
-  margin: 0 0.4rem;
+  margin: 0.2rem 0.4rem;
 }
 
 .is-comment-by-op {
@@ -189,5 +205,12 @@
   & > .comment-itself {
     margin-left: -2px;
     border-left: 3px solid $orange !important;
+  }
+}
+
+.is-comment-exemplary {
+  & > .comment-itself {
+    margin-left: -2px;
+    border-left: 3px solid $comment-tag-exemplary-color !important;
   }
 }

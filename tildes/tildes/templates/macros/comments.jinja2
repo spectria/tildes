@@ -87,13 +87,27 @@
     {% if request.has_permission('view', comment) %}
       {# Show votes at the top only if it's your own comment #}
       {% if request.user == comment.user and comment.num_votes > 0 %}
-        <span class="comment-votes">{{ comment.num_votes }}
+        <div class="comment-votes">{{ comment.num_votes }}
           {% trans num_votes=comment.num_votes %}
           vote
           {% pluralize %}
           votes
           {% endtrans %}
-        </span>
+        </div>
+      {% endif %}
+
+      {% if (request.has_permission("view_exemplary_reasons", comment)
+              and comment.is_tag_active("exemplary")) %}
+        <details class="comment-exemplary-reasons">
+          <summary><span class="label label-comment-tag label-comment-tag-exemplary">Exemplary</span>
+            <span class="comment-tag-count">x{{ comment.tag_counts["exemplary"] }}</span>
+          </summary>
+          <ul>
+          {% for tag in comment.tags if tag.name == "exemplary" %}
+            <li>"{{ tag.reason }}"</li>
+          {% endfor %}
+          </ul>
+        </details>
       {% endif %}
 
       {% if comment.tag_counts and request.has_permission("view_tags", comment) %}
@@ -221,6 +235,10 @@
       {% do classes.append('is-comment-new') %}
     {% elif request.has_permission('view_author', comment.topic) and comment.user == comment.topic.user %}
       {% do classes.append('is-comment-by-op') %}
+    {% endif %}
+
+    {% if request.has_permission('view', comment) and comment.is_tag_active("exemplary") %}
+      {% do classes.append("is-comment-exemplary") %}
     {% endif %}
 
     {% if comment.collapsed_state == "full" %}
