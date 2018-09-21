@@ -5,6 +5,7 @@
 
 import re
 from typing import (
+    Any,
     Callable,
     Dict,
     Iterator,
@@ -50,25 +51,21 @@ from .cmark import (
 def allow_syntax_highlighting_classes(tag: str, name: str, value: str) -> bool:
     """Allow all CSS classes from Pygments.
 
-    These classes always begin with 'syntax_'. We need to allow
-    .highlight class as well, as Pygments use it to group syntax
-    highlighting classes.
+    Pygments will add a <code class="highlight">, as well as many <span> tags around
+    elements of the code, with classes all starting with "syntax-".
     """
-    return (" " not in value) and (
-        (value.startswith("syntax_") and tag == "span")
-        or (value == "highlight" and tag == "div")
-    )
+    if tag not in ("span", "code"):
+        raise ValueError("This method only sanitizes <span> and <code> tags")
 
+    if tag == "span":
+        # allow class attribute with a single class starting with "syntax-"
+        return name == "class" and " " not in value and value.startswith("syntax-")
 
-def allow_language_info_string(tag: str, name: str, value: str) -> bool:
-    """Allow language info strings on code tag.
+    if tag == "code":
+        # allow class attribute with a single class of exactly "highlight"
+        return name == "class" and value == "highlight"
 
-    Info string is the thing that you write after ``` markdown.
-    For example in ```csharp the info string will be 'csharp'.
-    The class is 'language-<language', for example 'language-csharp'.
-    """
-
-    return (" " not in value) and (tag == "code" and value.startswith("language-"))
+    return False
 
 
 HTML_TAG_WHITELIST = (
@@ -78,7 +75,6 @@ HTML_TAG_WHITELIST = (
     "br",
     "code",
     "del",
-    "div",
     "em",
     "h1",
     "h2",
@@ -110,8 +106,7 @@ HTML_ATTRIBUTE_WHITELIST = {
     "ol": ["start"],
     "td": ["align"],
     "th": ["align"],
-    "code": allow_language_info_string,
-    "div": allow_syntax_highlighting_classes,
+    "code": allow_syntax_highlighting_classes,
     "span": allow_syntax_highlighting_classes,
 }
 PROTOCOL_WHITELIST = ("http", "https")
@@ -222,6 +217,22 @@ def postprocess_markdown_html(html: str) -> str:
     return html
 
 
+class CodeHtmlFormatter(HtmlFormatter):
+    """Custom Pygments HtmlFormatter to use a <code> tag.
+
+    The default HtmlFormatter in Pygments outputs the code inside a
+    <div class="highlight"><pre>...</pre></div> structure. This changes that to
+    <code class="highlight">...</code> instead (assumes a <pre> is already present).
+    """
+
+    def wrap(self, source: Any, outfile: Any) -> Iterator[Tuple[int, str]]:
+        """Wrap the highlighted tokens with the <code> tag."""
+        # pylint: disable=unused-argument
+        yield (0, '<code class="highlight">')
+        yield from source
+        yield (0, "</code>")
+
+
 def apply_syntax_highlighting(html: str) -> str:
     """Get all code blocks with defined info string in class and highlight them."""
     soup = BeautifulSoup(html, features="html5lib")
@@ -229,21 +240,17 @@ def apply_syntax_highlighting(html: str) -> str:
     # Get all code blocks and for every code block that has info string
     code_blocks = soup.find_all("code", class_=re.compile("^language-"))
     for code_block in code_blocks:
-        # Apply Pygments
         language = code_block["class"][0].replace("language-", "")
+
         try:
             lexer = get_lexer_by_name(language)
         except ClassNotFound:
             continue
+
         highlighted = highlight(
-            code_block.text,
-            lexer,
-            HtmlFormatter(
-                classprefix="syntax_"  # All highlight classes will be
-                # prefixed with 'syntax_'
-            ),
+            code_block.text, lexer, CodeHtmlFormatter(classprefix="syntax-")
         )
-        html = html.replace(str(code_block.parent), highlighted, 1)
+        html = html.replace(str(code_block), highlighted, 1)
 
     return html
 
