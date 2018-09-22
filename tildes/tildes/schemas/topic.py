@@ -16,6 +16,7 @@ from tildes.schemas.group import GroupSchema
 from tildes.schemas.user import UserSchema
 
 TITLE_MAX_LENGTH = 200
+TAG_SYNONYMS = {"spoiler": ["spoilers"]}
 
 
 class TopicSchema(Schema):
@@ -56,6 +57,11 @@ class TopicSchema(Schema):
             # drop any empty tags
             if not tag or tag.isspace():
                 continue
+
+            # handle synonyms
+            for name, synonyms in TAG_SYNONYMS.items():
+                if tag in synonyms:
+                    tag = name
 
             # skip any duplicate tags
             if tag in tags:

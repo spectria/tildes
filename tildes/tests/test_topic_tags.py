@@ -36,3 +36,9 @@ def test_tags_lowercased(text_topic):
     """Ensure tags get converted to lowercase."""
     text_topic.tags = ["ONE", "Two", "thRee"]
     assert text_topic.tags == ["one", "two", "three"]
+
+
+def test_tags_synonyms(text_topic):
+    """ Ensure synonyms are replaced."""
+    text_topic.tags = ["spoilers"]
+    assert text_topic.tags == ["spoiler"]
