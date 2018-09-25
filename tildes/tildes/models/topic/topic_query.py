@@ -134,14 +134,15 @@ class TopicQuery(PaginatedQuery):
         return self.filter(Topic.created_time > start_time)
 
     def has_tag(self, tag: Ltree) -> "TopicQuery":
-        """Restrict the topics to ones with a specific tag (generative)."""
-        # casting tag to string really shouldn't be necessary, but some kind of strange
-        # interaction seems to be happening with the ArrayOfLtree class, this will need
-        # some investigation
-        tag = str(tag)
+        """Restrict the topics to ones with a specific tag (generative).
+
+        Note that this method searches for topics that have any tag that either starts
+        or ends with the specified tag, not only exact/full matches.
+        """
+        queries = [f"{tag}.*", f"*.{tag}"]
 
         # pylint: disable=protected-access
-        return self.filter(Topic._tags.descendant_of(tag))  # type: ignore
+        return self.filter(Topic._tags.lquery(queries))  # type: ignore
 
     def search(self, query: str) -> "TopicQuery":
         """Restrict the topics to ones that match a search query (generative)."""

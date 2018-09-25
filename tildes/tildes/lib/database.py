@@ -14,6 +14,7 @@ from sqlalchemy.engine.interfaces import Dialect
 from sqlalchemy.orm.session import Session
 from sqlalchemy.types import UserDefinedType
 from sqlalchemy_utils import LtreeType
+from sqlalchemy_utils.types.ltree import LQUERY
 
 
 # https://www.postgresql.org/docs/current/static/errcodes-appendix.html
@@ -128,8 +129,8 @@ class ArrayOfLtree(ARRAY):  # pylint: disable=too-many-ancestors
     class comparator_factory(ARRAY.comparator_factory):
         """Add custom comparison functions.
 
-        The ancestor_of and descendant_of functions are supported by LtreeType, so this
-        duplicates them here so they can be used on ArrayOfLtree too.
+        The ancestor_of, descendant_of, and lquery functions are supported by LtreeType,
+        so this duplicates them here so they can be used on ArrayOfLtree too.
         """
 
         def ancestor_of(self, other):  # type: ignore
@@ -139,3 +140,10 @@ class ArrayOfLtree(ARRAY):  # pylint: disable=too-many-ancestors
         def descendant_of(self, other):  # type: ignore
             """Return whether the array contains any descendant of `other`."""
             return self.op("<@")(other)
+
+        def lquery(self, other):  # type: ignore
+            """Return whether the array matches the lquery/lqueries in `other`."""
+            if isinstance(other, list):
+                return self.op("?")(cast(other, ARRAY(LQUERY)))
+            else:
+                return self.op("~")(other)
