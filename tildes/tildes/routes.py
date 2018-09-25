@@ -134,7 +134,9 @@ def add_intercooler_routes(config: Configurator) -> None:
         "comment_vote", "/comments/{comment_id36}/vote", factory=comment_by_id36
     )
     add_ic_route(
-        "comment_tag", "/comments/{comment_id36}/tags/{name}", factory=comment_by_id36
+        "comment_label",
+        "/comments/{comment_id36}/labels/{name}",
+        factory=comment_by_id36,
     )
     add_ic_route(
         "comment_mark_read",

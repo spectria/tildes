@@ -7,7 +7,7 @@ from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.sql.expression import desc
 
-from tildes.enums import CommentTagOption
+from tildes.enums import CommentLabelOption
 from tildes.models.comment import CommentNotification
 
 
@@ -31,7 +31,7 @@ def get_user_unread_notifications(request: Request) -> dict:
         for notification in notifications:
             notification.is_unread = False
 
-    return {"notifications": notifications, "comment_tag_options": CommentTagOption}
+    return {"notifications": notifications, "comment_label_options": CommentLabelOption}
 
 
 @view_config(route_name="notifications", renderer="notifications.jinja2")
@@ -49,4 +49,4 @@ def get_user_notifications(request: Request) -> dict:
         .all()
     )
 
-    return {"notifications": notifications, "comment_tag_options": CommentTagOption}
+    return {"notifications": notifications, "comment_label_options": CommentLabelOption}

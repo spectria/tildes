@@ -172,14 +172,14 @@ class CommentTree:
             order=self.sort.name,
         )
 
-    def collapse_from_tags(self) -> None:
-        """Collapse comments based on how they've been tagged."""
+    def collapse_from_labels(self) -> None:
+        """Collapse comments based on how they've been labeled."""
         for comment in self.comments:
             # never affect the viewer's own comments
             if comment.user == self.viewer:
                 continue
 
-            if comment.is_tag_active("noise"):
+            if comment.is_label_active("noise"):
                 comment.collapsed_state = "full"
 
     def uncollapse_new_comments(self, threshold: datetime) -> None:
@@ -276,25 +276,25 @@ class CommentInTree(ObjectProxy):
 
         Returns a tuple, which allows sorting the comments into "tiers" and then still
         supporting further sorting inside those tiers when it's useful. For example,
-        comments tagged as offtopic can be sorted below all non-offtopic comments, but
+        comments labeled as offtopic can be sorted below all non-offtopic comments, but
         then still sorted by votes relative to other offtopic comments.
         """
         if self.is_removed:
             return (-100,)
 
-        if self.is_tag_active("noise"):
+        if self.is_label_active("noise"):
             return (-2, self.num_votes)
 
-        if self.is_tag_active("offtopic"):
+        if self.is_label_active("offtopic"):
             return (-1, self.num_votes)
 
-        if self.is_tag_active("joke"):
+        if self.is_label_active("joke"):
             return (self.num_votes // 2,)
 
-        # Exemplary comments add 1.0 to the the total weight of the exemplary tags, and
-        # multiply the vote count by that. At minimum (weight 1.0), votes are doubled.
-        if self.is_tag_active("exemplary"):
-            multiplier = self.tag_weights["exemplary"] + 1.0
+        # Exemplary comments add 1.0 to the the total weight of the exemplary labels,
+        # and multiply the vote count by that. Minimum (weight 1.0), votes are doubled.
+        if self.is_label_active("exemplary"):
+            multiplier = self.label_weights["exemplary"] + 1.0
             return (round(multiplier * self.num_votes),)
 
         return (self.num_votes,)

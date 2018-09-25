@@ -5,7 +5,7 @@
 
 from marshmallow import Schema
 
-from tildes.enums import CommentTagOption
+from tildes.enums import CommentLabelOption
 from tildes.schemas.fields import Enum, ID36, Markdown, SimpleString
 
 
@@ -21,10 +21,10 @@ class CommentSchema(Schema):
         strict = True
 
 
-class CommentTagSchema(Schema):
-    """Marshmallow schema for comment tags."""
+class CommentLabelSchema(Schema):
+    """Marshmallow schema for comment labels."""
 
-    name = Enum(CommentTagOption)
+    name = Enum(CommentLabelOption)
     reason = SimpleString(missing=None)
 
     class Meta:

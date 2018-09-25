@@ -87,7 +87,7 @@
   }
 }
 
-.comment-tags {
+.comment-labels {
   margin: 0 0 0 0.4rem;
   list-style-type: none;
 
@@ -97,7 +97,7 @@
   }
 }
 
-.comment-tag-buttons {
+.comment-label-buttons {
   display: flex;
   margin: 0;
   padding: 0 1rem;
@@ -109,7 +109,7 @@
   }
 }
 
-.comment-tag-count {
+.comment-label-count {
   font-size: 0.6rem;
 }
 
@@ -144,11 +144,11 @@
 
 %collapsed {
   .comment-edited-time,
+  .comment-label-buttons,
+  .comment-labels,
   .comment-nav-link,
   .comment-posted-time,
   .comment-replies,
-  .comment-tag-buttons,
-  .comment-tags,
   .comment-text,
   .comment-votes,
   .post-buttons {
@@ -211,6 +211,6 @@
 .is-comment-exemplary {
   & > .comment-itself {
     margin-left: -2px;
-    border-left: 3px solid $comment-tag-exemplary-color !important;
+    border-left: 3px solid $comment-label-exemplary-color !important;
   }
 }

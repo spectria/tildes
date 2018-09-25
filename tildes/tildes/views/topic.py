@@ -18,9 +18,9 @@ from webargs.pyramidparser import use_kwargs
 from zope.sqlalchemy import mark_changed
 
 from tildes.enums import (
+    CommentLabelOption,
     CommentNotificationType,
     CommentSortOption,
-    CommentTagOption,
     LogEventType,
     TopicSortOption,
 )
@@ -277,7 +277,7 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
         .all()
     )
 
-    tree.collapse_from_tags()
+    tree.collapse_from_labels()
 
     # if the user has the "mark new comments" feature enabled
     if request.user and request.user.track_comment_visits:
@@ -298,7 +298,7 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
         "comments": tree,
         "comment_order": comment_order,
         "comment_order_options": CommentSortOption,
-        "comment_tag_options": CommentTagOption,
+        "comment_label_options": CommentLabelOption,
     }
 
 

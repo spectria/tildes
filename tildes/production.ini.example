@@ -20,7 +20,7 @@ redis.sessions.timeout = 3600
 
 sqlalchemy.url = postgresql+psycopg2://tildes:@:6432/tildes
 
-tildes.default_user_comment_tag_weight = 1.0
+tildes.default_user_comment_label_weight = 1.0
 tildes.welcome_message_sender = Deimos
 
 webassets.auto_build = false

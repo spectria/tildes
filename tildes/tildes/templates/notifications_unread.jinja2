@@ -3,7 +3,7 @@
 
 {% extends 'base_user_menu.jinja2' %}
 
-{% from 'macros/comments.jinja2' import comment_tag_options_template, render_single_comment with context %}
+{% from 'macros/comments.jinja2' import comment_label_options_template, render_single_comment with context %}
 {% from 'macros/links.jinja2' import group_linked, username_linked %}
 
 {% block title %}Unread notifications{% endblock %}
@@ -57,5 +57,5 @@
   <p><a href="/notifications">Go to previously read notifications</a></p>
 {% endif %}
 
-{{ comment_tag_options_template(comment_tag_options) }}
+{{ comment_label_options_template(comment_label_options) }}
 {% endblock %}

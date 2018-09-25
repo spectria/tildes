@@ -12,7 +12,7 @@ from pyramid.view import view_config
 from sqlalchemy.sql.expression import desc
 from webargs.pyramidparser import use_kwargs
 
-from tildes.enums import CommentTagOption
+from tildes.enums import CommentLabelOption
 from tildes.models.comment import Comment
 from tildes.models.topic import Topic
 from tildes.models.user import User, UserInviteCode
@@ -109,7 +109,7 @@ def get_user(
         "user": user,
         "posts": posts,
         "post_type": post_type,
-        "comment_tag_options": CommentTagOption,
+        "comment_label_options": CommentLabelOption,
     }
 
 

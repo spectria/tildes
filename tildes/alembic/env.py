@@ -12,7 +12,12 @@ config = context.config
 fileConfig(config.config_file_name)
 
 # import all DatabaseModel subclasses here for autogenerate support
-from tildes.models.comment import Comment, CommentNotification, CommentTag, CommentVote
+from tildes.models.comment import (
+    Comment,
+    CommentLabel,
+    CommentNotification,
+    CommentVote,
+)
 from tildes.models.group import Group, GroupSubscription
 from tildes.models.log import Log
 from tildes.models.message import MessageConversation, MessageReply

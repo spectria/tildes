@@ -19,8 +19,8 @@
         data-comment-depth="{{ loop.depth0 }}"
       {% endif %}
 
-      {% if request.has_permission("tag", comment) %}
-        data-comment-user-tags="{{ comment.tags_by_user(request.user)|join(' ') }}"
+      {% if request.has_permission("label", comment) %}
+        data-comment-user-labels="{{ comment.labels_by_user(request.user)|join(' ') }}"
       {% endif %}
     >
       {{ render_comment_contents(comment, is_individual_comment) }}
@@ -97,28 +97,28 @@
       {% endif %}
 
       {% if (request.has_permission("view_exemplary_reasons", comment)
-              and comment.is_tag_active("exemplary")) %}
+              and comment.is_label_active("exemplary")) %}
         <details class="comment-exemplary-reasons">
-          <summary><span class="label label-comment-tag label-comment-tag-exemplary">Exemplary</span>
-            <span class="comment-tag-count">x{{ comment.tag_counts["exemplary"] }}</span>
+          <summary><span class="label label-comment label-comment-exemplary">Exemplary</span>
+            <span class="comment-label-count">x{{ comment.label_counts["exemplary"] }}</span>
           </summary>
           <ul>
-          {% for tag in comment.tags if tag.name == "exemplary" %}
-            <li>"{{ tag.reason }}"</li>
+          {% for label in comment.labels if label.name == "exemplary" %}
+            <li>"{{ label.reason }}"</li>
           {% endfor %}
           </ul>
         </details>
       {% endif %}
 
-      {% if comment.tag_counts and request.has_permission("view_tags", comment) %}
-        <ul class="comment-tags">
-          {% for tag_name, weight in comment.tag_weights.most_common() %}
+      {% if comment.label_counts and request.has_permission("view_labels", comment) %}
+        <ul class="comment-labels">
+          {% for label_name, weight in comment.label_weights.most_common() %}
             <li>
-              <span class="label label-comment-tag label-comment-tag-{{ tag_name|lower }}">{{ tag_name }}</span>
-              <span class="comment-tag-count">
+              <span class="label label-comment label-comment-{{ label_name|lower }}">{{ label_name }}</span>
+              <span class="comment-label-count">
                 {{ weight }}:
-                {% for tag in comment.tags if tag.name == tag_name %}
-                  {{ username_linked(tag.user.username) }} ({{ tag.weight }}{{ ' "%s"' % tag.reason if tag.reason else '' }})
+                {% for label in comment.labels if label.name == label_name %}
+                  {{ username_linked(label.user.username) }} ({{ label.weight }}{{ ' "%s"' % label.reason if label.reason else '' }})
                 {% endfor %}
               </span>
             </li>
@@ -165,8 +165,8 @@
           </a></li>
         {% endif %}
 
-        {% if request.has_permission('tag', comment) %}
-          <li><a class="post-button" name="tag" data-js-comment-tag-button>Tag</a></li>
+        {% if request.has_permission('label', comment) %}
+          <li><a class="post-button" name="label" data-js-comment-label-button>Label</a></li>
         {% endif %}
 
         {% if request.has_permission('edit', comment) %}
@@ -237,7 +237,7 @@
       {% do classes.append('is-comment-by-op') %}
     {% endif %}
 
-    {% if request.has_permission('view', comment) and comment.is_tag_active("exemplary") %}
+    {% if request.has_permission('view', comment) and comment.is_label_active("exemplary") %}
       {% do classes.append("is-comment-exemplary") %}
     {% endif %}
 
@@ -251,16 +251,16 @@
   {{ classes|join(' ') }}
 {% endmacro %}
 
-{% macro comment_tag_options_template(options) %}
-  <template id="comment-tag-options">
-    <menu class="comment-tag-buttons">
-      {% for tag in options %}
+{% macro comment_label_options_template(options) %}
+  <template id="comment-label-options">
+    <menu class="comment-label-buttons">
+      {% for label in options %}
         <li>
-          <a class="btn-comment-tag btn-comment-tag-{{ tag.name|lower }}"
-            {% if tag.reason_prompt %}
-              data-js-reason-prompt="{{ tag.reason_prompt }}"
+          <a class="btn-comment-label btn-comment-label-{{ label.name|lower }}"
+            {% if label.reason_prompt %}
+              data-js-reason-prompt="{{ label.reason_prompt }}"
             {% endif %}
-          >{{ tag.name|lower }}</a>
+          >{{ label.name|lower }}</a>
         </li>
       {% endfor %}
     </ul>

@@ -157,7 +157,7 @@ class Comment(DatabaseModel):
         acl.append((Allow, Everyone, "view"))
 
         # view exemplary reasons:
-        #  - only author gets shown the reasons (admins can see as well with all tags)
+        #  - only author gets shown the reasons (admins can see as well with all labels)
         acl.append((Allow, self.user_id, "view_exemplary_reasons"))
 
         # vote:
@@ -169,14 +169,14 @@ class Comment(DatabaseModel):
         acl.append((Deny, self.user_id, "vote"))
         acl.append((Allow, Authenticated, "vote"))
 
-        # tag:
-        #  - removed comments can't be tagged by anyone
-        #  - otherwise, people with the "comment.tag" permission other than the author
+        # label:
+        #  - removed comments can't be labeled by anyone
+        #  - otherwise, people with the "comment.label" permission other than the author
         if self.is_removed:
-            acl.append((Deny, Everyone, "tag"))
+            acl.append((Deny, Everyone, "label"))
 
-        acl.append((Deny, self.user_id, "tag"))
-        acl.append((Allow, "comment.tag", "tag"))
+        acl.append((Deny, self.user_id, "label"))
+        acl.append((Allow, "comment.label", "label"))
 
         # reply:
         #  - removed comments can't be replied to by anyone
@@ -205,7 +205,7 @@ class Comment(DatabaseModel):
 
         # tools that require specifically granted permissions
         acl.append((Allow, "admin", "remove"))
-        acl.append((Allow, "admin", "view_tags"))
+        acl.append((Allow, "admin", "view_labels"))
 
         acl.append(DENY_ALL)
 
@@ -238,34 +238,34 @@ class Comment(DatabaseModel):
         return f"{self.topic.permalink}#comment-{self.parent_comment_id36}"
 
     @property
-    def tag_counts(self) -> Counter:
-        """Counter for number of times each tag is on this comment."""
-        return Counter([tag.name for tag in self.tags])
+    def label_counts(self) -> Counter:
+        """Counter for number of times each label is on this comment."""
+        return Counter([label.name for label in self.labels])
 
     @property
-    def tag_weights(self) -> Counter:
-        """Counter with cumulative weights of each tag on this comment."""
+    def label_weights(self) -> Counter:
+        """Counter with cumulative weights of each label on this comment."""
         weights: Counter = Counter()
-        for tag in self.tags:
-            weights[tag.name] += tag.weight
+        for label in self.labels:
+            weights[label.name] += label.weight
 
         return weights
 
-    def tags_by_user(self, user: User) -> Sequence[str]:
-        """Return list of tag names that a user has applied to this comment."""
-        return [tag.name for tag in self.tags if tag.user_id == user.user_id]
+    def labels_by_user(self, user: User) -> Sequence[str]:
+        """Return list of label names that a user has applied to this comment."""
+        return [label.name for label in self.labels if label.user_id == user.user_id]
 
-    def is_tag_active(self, tag_name: str) -> bool:
-        """Return whether a tag has been applied enough to be considered "active"."""
-        tag_weight = self.tag_weights[tag_name]
+    def is_label_active(self, label_name: str) -> bool:
+        """Return whether a label has been applied enough to be considered "active"."""
+        label_weight = self.label_weights[label_name]
 
-        # all tags must have at least 1.0 weight
-        if tag_weight < 1.0:
+        # all labels must have at least 1.0 weight
+        if label_weight < 1.0:
             return False
 
         # for "noise", weight must be more than 1/5 of the vote count (5 votes
-        # effectively override 1.0 of tag weight)
-        if tag_name == "noise" and self.num_votes >= tag_weight * 5:
+        # effectively override 1.0 of label weight)
+        if label_name == "noise" and self.num_votes >= label_weight * 5:
             return False
 
         return True

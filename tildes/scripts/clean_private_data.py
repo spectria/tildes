@@ -5,7 +5,7 @@
 
 Other things that should probably be added here eventually:
     - Delete individual votes on comments/topics after voting has been closed
-    - Delete which users tagged comments after tagging has been closed
+    - Delete which users labeled comments after labeling has been closed
     - Delete old used invite codes (30 days after used?)
 """
 

@@ -3,7 +3,7 @@
 
 {% extends 'base.jinja2' %}
 
-{% from 'macros/comments.jinja2' import comment_tag_options_template, render_comment_tree with context %}
+{% from 'macros/comments.jinja2' import comment_label_options_template, render_comment_tree with context %}
 {% from 'macros/datetime.jinja2' import time_ago, time_ago_abbreviated, time_ago_responsive %}
 {% from 'macros/forms.jinja2' import markdown_textarea %}
 {% from 'macros/links.jinja2' import group_linked, username_linked %}
@@ -236,7 +236,7 @@
 
 </article>
 
-{{ comment_tag_options_template(comment_tag_options) }}
+{{ comment_label_options_template(comment_label_options) }}
 {% endblock content %}
 
 {% block sidebar %}

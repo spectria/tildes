@@ -101,7 +101,7 @@ class User(DatabaseModel):
     _filtered_topic_tags: List[Ltree] = Column(
         "filtered_topic_tags", ArrayOfLtree, nullable=False, server_default="{}"
     )
-    comment_tag_weight: Optional[float] = Column(REAL)
+    comment_label_weight: Optional[float] = Column(REAL)
 
     @hybrid_property
     def filtered_topic_tags(self) -> List[str]:
@@ -228,9 +228,9 @@ class User(DatabaseModel):
         else:
             raise ValueError("Unknown permissions format")
 
-        # give the user the "comment.tag" permission if they're over a week old
+        # give the user the "comment.label" permission if they're over a week old
         if utc_now() - self.created_time > timedelta(days=7):
-            principals.append("comment.tag")
+            principals.append("comment.label")
 
         return principals
 

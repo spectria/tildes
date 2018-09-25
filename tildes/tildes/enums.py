@@ -37,8 +37,8 @@ class CommentSortOption(enum.Enum):
         return "most {}".format(self.name.lower())
 
 
-class CommentTagOption(enum.Enum):
-    """Enum for the (site-wide) comment tag options."""
+class CommentLabelOption(enum.Enum):
+    """Enum for the (site-wide) comment label options."""
 
     EXEMPLARY = enum.auto()
     JOKE = enum.auto()
@@ -48,7 +48,7 @@ class CommentTagOption(enum.Enum):
 
     @property
     def reason_prompt(self) -> Optional[str]:
-        """Return the reason prompt for this tag, if any."""
+        """Return the reason prompt for this label, if any."""
         if self.name == "EXEMPLARY":
             return (
                 "What makes this comment exemplary? "

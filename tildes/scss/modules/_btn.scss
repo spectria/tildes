@@ -66,7 +66,7 @@
   }
 }
 
-.btn-comment-tag {
+.btn-comment-label {
   display: inline-flex;
   align-items: center;
   margin: 0.4rem;
@@ -87,7 +87,7 @@
   }
 }
 
-@mixin tagbutton($color) {
+@mixin labelbutton($color) {
   color: $color;
   border-color: $color;
 
@@ -101,22 +101,22 @@
   }
 }
 
-.btn-comment-tag-exemplary {
-  @include tagbutton($comment-tag-exemplary-color);
+.btn-comment-label-exemplary {
+  @include labelbutton($comment-label-exemplary-color);
 }
 
-.btn-comment-tag-joke {
-  @include tagbutton($comment-tag-joke-color);
+.btn-comment-label-joke {
+  @include labelbutton($comment-label-joke-color);
 }
 
-.btn-comment-tag-noise {
-  @include tagbutton($comment-tag-noise-color);
+.btn-comment-label-noise {
+  @include labelbutton($comment-label-noise-color);
 }
 
-.btn-comment-tag-offtopic {
-  @include tagbutton($comment-tag-offtopic-color);
+.btn-comment-label-offtopic {
+  @include labelbutton($comment-label-offtopic-color);
 }
 
-.btn-comment-tag-malice {
-  @include tagbutton($comment-tag-malice-color);
+.btn-comment-label-malice {
+  @include labelbutton($comment-label-malice-color);
 }

@@ -13,12 +13,17 @@ from sqlalchemy.orm.exc import FlushError
 from webargs.pyramidparser import use_kwargs
 from zope.sqlalchemy import mark_changed
 
-from tildes.enums import CommentNotificationType, CommentTagOption, LogEventType
+from tildes.enums import CommentNotificationType, CommentLabelOption, LogEventType
 from tildes.lib.datetime import utc_now
-from tildes.models.comment import Comment, CommentNotification, CommentTag, CommentVote
+from tildes.models.comment import (
+    Comment,
+    CommentLabel,
+    CommentNotification,
+    CommentVote,
+)
 from tildes.models.log import LogComment
 from tildes.models.topic import TopicVisit
-from tildes.schemas.comment import CommentSchema, CommentTagSchema
+from tildes.schemas.comment import CommentSchema, CommentLabelSchema
 from tildes.views import IC_NOOP
 from tildes.views.decorators import ic_view_config, rate_limit_view
 
@@ -247,25 +252,27 @@ def delete_vote_comment(request: Request) -> dict:
 
 
 @ic_view_config(
-    route_name="comment_tag",
+    route_name="comment_label",
     request_method="PUT",
-    permission="tag",
+    permission="label",
     renderer="comment_contents.jinja2",
 )
-@use_kwargs(CommentTagSchema(only=("name",)), locations=("matchdict",))
-@use_kwargs(CommentTagSchema(only=("reason",)))
-def put_tag_comment(request: Request, name: CommentTagOption, reason: str) -> Response:
-    """Add a tag to a comment."""
+@use_kwargs(CommentLabelSchema(only=("name",)), locations=("matchdict",))
+@use_kwargs(CommentLabelSchema(only=("reason",)))
+def put_label_comment(
+    request: Request, name: CommentLabelOption, reason: str
+) -> Response:
+    """Add a label to a comment."""
     comment = request.context
 
     savepoint = request.tm.savepoint()
 
-    weight = request.user.comment_tag_weight
+    weight = request.user.comment_label_weight
     if weight is None:
-        weight = request.registry.settings["tildes.default_user_comment_tag_weight"]
+        weight = request.registry.settings["tildes.default_user_comment_label_weight"]
 
-    tag = CommentTag(comment, request.user, name, weight, reason)
-    request.db_session.add(tag)
+    label = CommentLabel(comment, request.user, name, weight, reason)
+    request.db_session.add(label)
 
     try:
         # manually flush before attempting to commit, to avoid having all objects
@@ -287,20 +294,20 @@ def put_tag_comment(request: Request, name: CommentTagOption, reason: str) -> Re
 
 
 @ic_view_config(
-    route_name="comment_tag",
+    route_name="comment_label",
     request_method="DELETE",
-    permission="tag",
+    permission="label",
     renderer="comment_contents.jinja2",
 )
-@use_kwargs(CommentTagSchema(only=("name",)), locations=("matchdict",))
-def delete_tag_comment(request: Request, name: CommentTagOption) -> Response:
-    """Remove a tag (that the user previously added) from a comment."""
+@use_kwargs(CommentLabelSchema(only=("name",)), locations=("matchdict",))
+def delete_label_comment(request: Request, name: CommentLabelOption) -> Response:
+    """Remove a label (that the user previously added) from a comment."""
     comment = request.context
 
-    request.query(CommentTag).filter(
-        CommentTag.comment_id == comment.comment_id,
-        CommentTag.user_id == request.user.user_id,
-        CommentTag.tag == name,
+    request.query(CommentLabel).filter(
+        CommentLabel.comment_id == comment.comment_id,
+        CommentLabel.user_id == request.user.user_id,
+        CommentLabel.label == name,
     ).delete(synchronize_session=False)
 
     # commit and then re-query the comment to get complete data
