@@ -248,6 +248,6 @@ class User(DatabaseModel):
             if not self.last_exemplary_label_time:
                 return True
 
-            return utc_now() - self.last_exemplary_label_time > timedelta(hours=24)
+            return utc_now() - self.last_exemplary_label_time > timedelta(hours=8)
 
         return True
