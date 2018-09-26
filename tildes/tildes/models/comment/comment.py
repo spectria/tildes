@@ -259,8 +259,14 @@ class Comment(DatabaseModel):
         """Return whether a label has been applied enough to be considered "active"."""
         label_weight = self.label_weights[label_name]
 
-        # all labels must have at least 1.0 weight
-        if label_weight < 1.0:
+        # Exemplary labels become "active" at 0.5 weight, all others at 1.0
+        # Would be best to use the default_user_comment_label_weight value if possible
+        if label_name == "exemplary":
+            min_weight = 0.5
+        else:
+            min_weight = 1.0
+
+        if label_weight < min_weight:
             return False
 
         # for "noise", weight must be more than 1/5 of the vote count (5 votes

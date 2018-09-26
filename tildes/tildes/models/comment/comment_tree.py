@@ -292,7 +292,7 @@ class CommentInTree(ObjectProxy):
             return (self.num_votes // 2,)
 
         # Exemplary comments add 1.0 to the the total weight of the exemplary labels,
-        # and multiply the vote count by that. Minimum (weight 1.0), votes are doubled.
+        # and multiply the vote count by that. For example, weight 1.0 = votes doubled.
         if self.is_label_active("exemplary"):
             multiplier = self.label_weights["exemplary"] + 1.0
             return (round(multiplier * self.num_votes),)
