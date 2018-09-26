@@ -55,7 +55,17 @@ $.onmount('[data-js-comment-label-button]', function() {
                 }
 
                 $(label).on('after.success.ic', function(evt) {
-                    Tildes.addUserLabel(commentID, evt.target.textContent);
+                    var labelName = evt.target.textContent;
+                    Tildes.addUserLabel(commentID, labelName);
+
+                    // if the applied label was Exemplary, remove the button from the
+                    // template since they can't use it again anyway
+                    if (labelName === "exemplary") {
+                        var exemplaryButton = labeltemplate.content.querySelector('.btn-comment-label-exemplary');
+                        if (exemplaryButton) {
+                            exemplaryButton.parentElement.remove();
+                        }
+                    }
                 });
             }
 

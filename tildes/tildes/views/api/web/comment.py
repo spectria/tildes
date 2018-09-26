@@ -4,6 +4,7 @@
 """Web API endpoints related to comments."""
 
 from marshmallow.fields import Boolean
+from pyramid.httpexceptions import HTTPUnprocessableEntity
 from pyramid.request import Request
 from pyramid.response import Response
 from sqlalchemy.dialects.postgresql import insert
@@ -264,6 +265,9 @@ def put_label_comment(
 ) -> Response:
     """Add a label to a comment."""
     comment = request.context
+
+    if not request.user.is_label_available(name):
+        raise HTTPUnprocessableEntity("That label is not available.")
 
     savepoint = request.tm.savepoint()
 

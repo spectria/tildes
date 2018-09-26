@@ -32,7 +32,7 @@ from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import text
 from sqlalchemy_utils import Ltree
 
-from tildes.enums import TopicSortOption
+from tildes.enums import CommentLabelOption, TopicSortOption
 from tildes.lib.database import ArrayOfLtree, CIText
 from tildes.lib.datetime import utc_now
 from tildes.lib.hash import hash_string, is_match_for_hash
@@ -49,6 +49,8 @@ class User(DatabaseModel):
           deletions, and updates to is_unread in comment_notifications.
         - num_unread_messages will be incremented and decremented by insertions,
           deletions, and updates to unread_user_ids in message_conversations.
+        - last_exemplary_label_time will be set when a row for an exemplary label is
+          inserted into comment_labels.
     """
 
     schema_class = UserSchema
@@ -102,6 +104,7 @@ class User(DatabaseModel):
         "filtered_topic_tags", ArrayOfLtree, nullable=False, server_default="{}"
     )
     comment_label_weight: Optional[float] = Column(REAL)
+    last_exemplary_label_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
 
     @hybrid_property
     def filtered_topic_tags(self) -> List[str]:
@@ -238,3 +241,13 @@ class User(DatabaseModel):
     def is_admin(self) -> bool:
         """Return whether the user has admin permissions."""
         return "admin" in self.auth_principals
+
+    def is_label_available(self, label: CommentLabelOption) -> bool:
+        """Return whether the user has a particular label available."""
+        if label == CommentLabelOption.EXEMPLARY:
+            if not self.last_exemplary_label_time:
+                return True
+
+            return utc_now() - self.last_exemplary_label_time > timedelta(hours=24)
+
+        return True

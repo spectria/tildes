@@ -18,7 +18,13 @@ from .comment import Comment
 
 
 class CommentLabel(DatabaseModel):
-    """Model for the labels attached to comments by users."""
+    """Model for the labels attached to comments by users.
+
+    Trigger behavior:
+      Outgoing:
+        - Inserting a row for an exemplary label will set last_exemplary_label_time for
+          the relevant user.
+    """
 
     __tablename__ = "comment_labels"
 

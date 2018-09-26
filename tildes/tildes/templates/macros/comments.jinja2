@@ -254,13 +254,16 @@
 {% macro comment_label_options_template(options) %}
   <template id="comment-label-options">
     <menu class="comment-label-buttons">
-      {% for label in options %}
+      {% for label in options if request.user.is_label_available(label) %}
         <li>
           <a class="btn-comment-label btn-comment-label-{{ label.name|lower }}"
             {% if label.reason_prompt %}
               data-js-reason-prompt="{{ label.reason_prompt }}"
             {% endif %}
           >{{ label.name|lower }}</a>
+          {% if label.name == "EXEMPLARY" %}
+            <div class="comment-label-note">One per day</div>
+          {% endif %}
         </li>
       {% endfor %}
     </ul>
