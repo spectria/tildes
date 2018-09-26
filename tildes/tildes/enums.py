@@ -41,8 +41,8 @@ class CommentLabelOption(enum.Enum):
     """Enum for the (site-wide) comment label options."""
 
     EXEMPLARY = enum.auto()
-    JOKE = enum.auto()
     OFFTOPIC = enum.auto()
+    JOKE = enum.auto()
     NOISE = enum.auto()
     MALICE = enum.auto()
 
