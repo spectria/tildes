@@ -30,6 +30,7 @@ base:
   'prod':
     - nginx.static-sites-config
     - raven
+    - prod-config
   'monitoring':
     - nginx
     - self-signed-cert
