@@ -11,21 +11,10 @@ config = context.config
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
 
-# import all DatabaseModel subclasses here for autogenerate support
-from tildes.models.comment import (
-    Comment,
-    CommentLabel,
-    CommentNotification,
-    CommentVote,
-)
-from tildes.models.group import Group, GroupSubscription
-from tildes.models.log import Log
-from tildes.models.message import MessageConversation, MessageReply
-from tildes.models.scraper import ScraperResult
-from tildes.models.topic import Topic, TopicVisit, TopicVote
-from tildes.models.user import User, UserGroupSettings, UserInviteCode
 
+from tildes.database_models import *
 from tildes.models import DatabaseModel
+
 
 target_metadata = DatabaseModel.metadata
 

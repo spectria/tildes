@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 """Script for doing the initial setup of database tables."""
-# pylint: disable=wrong-import-order
+# pylint: disable=unused-wildcard-import,wildcard-import,wrong-import-order
 
 import os
 import subprocess
@@ -12,6 +12,7 @@ from alembic import command
 from alembic.config import Config
 from sqlalchemy.engine import Connectable, Engine
 
+from tildes.database_models import *  # noqa
 from tildes.lib.database import get_session_from_config
 from tildes.models import DatabaseModel
 from tildes.models.group import Group
