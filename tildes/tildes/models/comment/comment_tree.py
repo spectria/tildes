@@ -295,6 +295,6 @@ class CommentInTree(ObjectProxy):
         # and multiply the vote count by that. For example, weight 1.0 = votes doubled.
         if self.is_label_active("exemplary"):
             multiplier = self.label_weights["exemplary"] + 1.0
-            return (round(multiplier * self.num_votes),)
+            return (multiplier * self.num_votes,)
 
         return (self.num_votes,)
