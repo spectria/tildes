@@ -99,6 +99,8 @@
 
 .comment-label-buttons {
   display: flex;
+  flex-wrap: wrap;
+
   margin: 0;
   padding: 0 1rem;
   justify-content: space-between;
@@ -110,12 +112,6 @@
 
 .comment-label-count {
   font-size: 0.6rem;
-}
-
-.comment-label-note {
-  font-size: 0.5rem;
-  font-style: italic;
-  text-align: center;
 }
 
 .comment-text {

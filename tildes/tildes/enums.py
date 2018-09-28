@@ -51,8 +51,9 @@ class CommentLabelOption(enum.Enum):
         """Return the reason prompt for this label, if any."""
         if self.name == "EXEMPLARY":
             return (
-                "What makes this comment exemplary? "
-                "(required, visible to the comment's author anonymously)"
+                "Write a short message to say thanks or explain why you appreciated "
+                "this comment (required, visible to the comment's author anonymously)"
+                "\n\nYou will not be able to use this label again for 8 hours."
             )
         if self.name == "MALICE":
             return "Why is this malicious? (required, will only be visible to admins)"

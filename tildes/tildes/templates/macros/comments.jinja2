@@ -260,10 +260,9 @@
             {% if label.reason_prompt %}
               data-js-reason-prompt="{{ label.reason_prompt }}"
             {% endif %}
-          >{{ label.name|lower }}</a>
-          {% if label.name == "EXEMPLARY" %}
-            <div class="comment-label-note">One per 8 hours</div>
-          {% endif %}
+          >
+            {{ label.name|lower }}{% if label.reason_prompt %}...{% endif %}
+          </a>
         </li>
       {% endfor %}
     </ul>

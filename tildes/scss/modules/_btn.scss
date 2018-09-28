@@ -67,6 +67,8 @@
 }
 
 .btn-comment-label {
+  @include min-touch-size;
+
   display: inline-flex;
   align-items: center;
   margin: 0 0.4rem;
