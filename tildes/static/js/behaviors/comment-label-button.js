@@ -24,7 +24,7 @@ $.onmount('[data-js-comment-label-button]', function() {
 
         for (i = 0; i < options.length; i++) {
             var label = options[i];
-            var labelName = label.textContent;
+            var labelName = label.getAttribute("data-js-label-name");
 
             var labelOptionActive = false;
             if (userLabels.indexOf(labelName) !== -1) {
@@ -44,7 +44,8 @@ $.onmount('[data-js-comment-label-button]', function() {
                 }
 
                 $(label).on('after.success.ic', function(evt) {
-                    Tildes.removeUserLabel(commentID, evt.target.textContent);
+                    var labelName = evt.target.getAttribute("data-js-label-name");
+                    Tildes.removeUserLabel(commentID, labelName);
                 });
             } else {
                 label.setAttribute('data-ic-put-to', labelURL + labelName);
@@ -55,7 +56,7 @@ $.onmount('[data-js-comment-label-button]', function() {
                 }
 
                 $(label).on('after.success.ic', function(evt) {
-                    var labelName = evt.target.textContent;
+                    var labelName = evt.target.getAttribute("data-js-label-name");
                     Tildes.addUserLabel(commentID, labelName);
 
                     // if the applied label was Exemplary, remove the button from the

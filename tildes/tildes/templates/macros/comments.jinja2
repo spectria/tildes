@@ -257,12 +257,11 @@
       {% for label in options if request.user.is_label_available(label) %}
         <li>
           <a class="btn-comment-label btn-comment-label-{{ label.name|lower }}"
+            data-js-label-name="{{ label.name|lower }}"
             {% if label.reason_prompt %}
               data-js-reason-prompt="{{ label.reason_prompt }}"
             {% endif %}
-          >
-            {{ label.name|lower }}{% if label.reason_prompt %}...{% endif %}
-          </a>
+          >{{ label.name|lower }}{% if label.reason_prompt %}...{% endif %}</a>
         </li>
       {% endfor %}
     </ul>
