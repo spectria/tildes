@@ -1,0 +1,17 @@
+{% from 'common.jinja2' import app_dir, app_username, bin_dir -%}
+[Unit]
+Description=Site Icon Downloader (Queue Consumer)
+Requires=rabbitmq-server.service
+After=rabbitmq-server.service
+PartOf=rabbitmq-server.service
+
+[Service]
+User={{ app_username }}
+WorkingDirectory={{ app_dir }}/consumers
+Environment="INI_FILE={{ app_dir }}/{{ pillar['ini_file'] }}"
+ExecStart={{ bin_dir }}/python site_icon_downloader.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
