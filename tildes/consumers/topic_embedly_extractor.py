@@ -9,7 +9,7 @@ from typing import Sequence
 
 from amqpy import Message
 from pyramid.paster import bootstrap
-from requests.exceptions import HTTPError
+from requests.exceptions import HTTPError, Timeout
 from sqlalchemy import cast, desc, func
 from sqlalchemy.dialects.postgresql import JSONB
 
@@ -61,7 +61,7 @@ class TopicEmbedlyExtractor(PgsqlQueueConsumer):
         if not result:
             try:
                 result = self.scraper.scrape_url(topic.link)
-            except HTTPError:
+            except (HTTPError, Timeout):
                 return
 
             self.db_session.add(result)

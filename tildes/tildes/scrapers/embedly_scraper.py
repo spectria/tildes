@@ -23,7 +23,9 @@ class EmbedlyScraper:
         """Scrape a url and return the result."""
         params: Dict[str, Any] = {"key": self.api_key, "format": "json", "url": url}
 
-        response = requests.get("https://api.embedly.com/1/extract", params=params)
+        response = requests.get(
+            "https://api.embedly.com/1/extract", params=params, timeout=5
+        )
         response.raise_for_status()
 
         return ScraperResult(url, ScraperType.EMBEDLY, response.json())
