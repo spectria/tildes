@@ -59,7 +59,7 @@ class SiteIconDownloader(PgsqlQueueConsumer):
 
         try:
             response = requests.get(favicon_url, timeout=5)
-        except requests.exeptions.Timeout:
+        except requests.exceptions.RequestException:
             return
 
         if response.status_code != 200:
@@ -72,7 +72,10 @@ class SiteIconDownloader(PgsqlQueueConsumer):
     @staticmethod
     def _get_icon_from_response(response: requests.Response) -> Optional[Image.Image]:
         """Return a properly-sized icon Image extracted from a Response."""
-        favicon = Image.open(BytesIO(response.content))
+        try:
+            favicon = Image.open(BytesIO(response.content))
+        except (OSError, ValueError):
+            return None
 
         if favicon.format == "ICO":
             # get the 32x32 size if it's present, otherwise resize the largest one
