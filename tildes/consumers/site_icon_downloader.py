@@ -84,14 +84,14 @@ class SiteIconDownloader(PgsqlQueueConsumer):
 
             image = favicon.ico.getimage(max(favicon.ico.sizes()))
             return image.resize((32, 32))
-        elif favicon.format == "PNG":
+        elif favicon.format in ("JPEG", "PNG"):
             image = favicon
             if image.size != (32, 32):
                 image = image.resize((32, 32))
 
             return image
 
-        # formats other than ICO or PNG aren't handled
+        # any other formats aren't handled
         return None
 
 
