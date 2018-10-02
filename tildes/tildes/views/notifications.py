@@ -10,7 +10,7 @@ from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import CommentLabelOption
 from tildes.models.comment import CommentNotification
-from tildes.schemas.topic_listing import TopicListingSchema
+from tildes.schemas.listing import PaginatedListingSchema
 
 
 @view_config(route_name="notifications_unread", renderer="notifications_unread.jinja2")
@@ -37,7 +37,7 @@ def get_user_unread_notifications(request: Request) -> dict:
 
 
 @view_config(route_name="notifications", renderer="notifications.jinja2")
-@use_kwargs(TopicListingSchema(only=("after", "before", "per_page")))
+@use_kwargs(PaginatedListingSchema())
 def get_user_notifications(
     request: Request, after: str, before: str, per_page: int
 ) -> dict:

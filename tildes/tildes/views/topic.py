@@ -33,8 +33,8 @@ from tildes.models.topic import Topic, TopicVisit
 from tildes.models.user import UserGroupSettings
 from tildes.schemas.comment import CommentSchema
 from tildes.schemas.fields import Enum, ShortTimePeriod
+from tildes.schemas.listing import TopicListingSchema
 from tildes.schemas.topic import TopicSchema
-from tildes.schemas.topic_listing import TopicListingSchema
 from tildes.views.decorators import rate_limit_view
 
 

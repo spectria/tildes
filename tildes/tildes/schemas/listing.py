@@ -11,25 +11,33 @@ from tildes.enums import TopicSortOption
 from tildes.schemas.fields import Enum, ID36, Ltree, ShortTimePeriod
 
 
-class TopicListingSchema(Schema):
-    """Marshmallow schema to validate arguments for a topic listing page."""
+class PaginatedListingSchema(Schema):
+    """Marshmallow schema to validate arguments for a paginated listing page."""
 
-    DEFAULT_TOPICS_PER_PAGE = 50
-
-    order = Enum(TopicSortOption)
-    period = ShortTimePeriod(allow_none=True)
     after = ID36()
     before = ID36()
-    per_page = Integer(validate=Range(min=1, max=100), missing=DEFAULT_TOPICS_PER_PAGE)
-    rank_start = Integer(load_from="n", validate=Range(min=1), missing=None)
-    tag = Ltree(missing=None)
-    unfiltered = Boolean(missing=False)
+    per_page = Integer(validate=Range(min=1, max=100), missing=50)
 
     @validates_schema
     def either_after_or_before(self, data: dict) -> None:
         """Fail validation if both after and before were specified."""
         if data.get("after") and data.get("before"):
             raise ValidationError("Can't specify both after and before.")
+
+    class Meta:
+        """Always use strict checking so error handlers are invoked."""
+
+        strict = True
+
+
+class TopicListingSchema(PaginatedListingSchema):
+    """Marshmallow schema to validate arguments for a topic listing page."""
+
+    period = ShortTimePeriod(allow_none=True)
+    order = Enum(TopicSortOption)
+    tag = Ltree(missing=None)
+    unfiltered = Boolean(missing=False)
+    rank_start = Integer(load_from="n", validate=Range(min=1), missing=None)
 
     @pre_load
     def reset_rank_start_on_first_page(self, data: dict) -> dict:
@@ -38,8 +46,3 @@ class TopicListingSchema(Schema):
             data["rank_start"] = 1
 
         return data
-
-    class Meta:
-        """Always use strict checking so error handlers are invoked."""
-
-        strict = True

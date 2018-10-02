@@ -16,7 +16,7 @@ from tildes.enums import CommentLabelOption
 from tildes.models.comment import Comment
 from tildes.models.topic import Topic
 from tildes.models.user import User, UserInviteCode
-from tildes.schemas.topic_listing import TopicListingSchema
+from tildes.schemas.listing import PaginatedListingSchema
 
 
 def _get_user_recent_activity(
@@ -66,7 +66,7 @@ def _get_user_recent_activity(
 
 
 @view_config(route_name="user", renderer="user.jinja2")
-@use_kwargs(TopicListingSchema(only=("after", "before", "per_page")))
+@use_kwargs(PaginatedListingSchema())
 @use_kwargs(
     {"post_type": String(load_from="type", validate=OneOf(("topic", "comment")))}
 )
