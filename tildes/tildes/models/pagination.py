@@ -20,9 +20,6 @@ class PaginatedQuery(ModelQuery):
 
     def __init__(self, model_cls: Any, request: Request) -> None:
         """Initialize a PaginatedQuery for the specified model and request."""
-        if len(model_cls.__table__.primary_key) > 1:
-            raise TypeError("Only single-col primary key tables are supported")
-
         super().__init__(model_cls, request)
 
         # default to sorting by created_time descending (newest first)
@@ -118,13 +115,7 @@ class PaginatedQuery(ModelQuery):
             # an upper bound if the sort order is *ascending*
             is_anchor_upper_bound = not self.sort_desc
 
-        # create a subquery to get comparison values for the anchor item
-        id_column = list(self.model_cls.__table__.primary_key)[0]
-        subquery = (
-            self.request.db_session.query(*self.sorting_columns)
-            .filter(id_column == anchor_id)
-            .subquery()
-        )
+        subquery = self._anchor_subquery(anchor_id)
 
         # restrict the results to items on the right "side" of the anchor item
         if is_anchor_upper_bound:
@@ -133,6 +124,18 @@ class PaginatedQuery(ModelQuery):
             query = query.filter(func.row(*self.sorting_columns) > subquery)
 
         return query
+
+    def _anchor_subquery(self, anchor_id: int) -> Any:
+        """Return a subquery to get comparison values for the anchor item."""
+        if len(self.model_cls.__table__.primary_key) > 1:
+            raise TypeError("Only single-col primary key tables are supported")
+
+        id_column = list(self.model_cls.__table__.primary_key)[0]
+        return (
+            self.request.db_session.query(*self.sorting_columns)
+            .filter(id_column == anchor_id)
+            .subquery()
+        )
 
     def _finalize(self) -> "PaginatedQuery":
         """Finalize the query before execution."""

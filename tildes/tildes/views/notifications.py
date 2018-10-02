@@ -6,9 +6,11 @@
 from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.sql.expression import desc
+from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import CommentLabelOption
 from tildes.models.comment import CommentNotification
+from tildes.schemas.topic_listing import TopicListingSchema
 
 
 @view_config(route_name="notifications_unread", renderer="notifications_unread.jinja2")
@@ -35,9 +37,12 @@ def get_user_unread_notifications(request: Request) -> dict:
 
 
 @view_config(route_name="notifications", renderer="notifications.jinja2")
-def get_user_notifications(request: Request) -> dict:
-    """Show the most recent 100 of the logged-in user's read notifications."""
-    notifications = (
+@use_kwargs(TopicListingSchema(only=("after", "before", "per_page")))
+def get_user_notifications(
+    request: Request, after: str, before: str, per_page: int
+) -> dict:
+    """Show the logged-in user's previously-read notifications."""
+    query = (
         request.query(CommentNotification)
         .join_all_relationships()
         .filter(
@@ -45,8 +50,14 @@ def get_user_notifications(request: Request) -> dict:
             CommentNotification.is_unread == False,  # noqa
         )
         .order_by(desc(CommentNotification.created_time))
-        .limit(100)
-        .all()
     )
+
+    if before:
+        query = query.before_id36(before)
+
+    if after:
+        query = query.after_id36(after)
+
+    notifications = query.get_page(per_page)
 
     return {"notifications": notifications, "comment_label_options": CommentLabelOption}

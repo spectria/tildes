@@ -8,17 +8,28 @@ from typing import Any
 from pyramid.request import Request
 from sqlalchemy.orm import joinedload
 
-from tildes.models import ModelQuery
+from tildes.lib.id import id_to_id36
+from tildes.models.pagination import PaginatedQuery, PaginatedResults
 from .comment_notification import CommentNotification
 from .comment_vote import CommentVote
 
 
-class CommentNotificationQuery(ModelQuery):
-    """Specialized ModelQuery for CommentNotifications."""
+class CommentNotificationQuery(PaginatedQuery):
+    """Specialized query class for CommentNotifications."""
 
     def __init__(self, request: Request) -> None:
         """Initialize a CommentNotificationQuery for the request."""
         super().__init__(CommentNotification, request)
+
+    def _anchor_subquery(self, anchor_id: int) -> Any:
+        return (
+            self.request.db_session.query(*self.sorting_columns)
+            .filter(
+                CommentNotification.user == self.request.user,
+                CommentNotification.comment_id == anchor_id,
+            )
+            .subquery()
+        )
 
     def _attach_extra_data(self) -> "CommentNotificationQuery":
         """Attach the user's comment votes to the query."""
@@ -56,3 +67,27 @@ class CommentNotificationQuery(ModelQuery):
             notification.comment.user_voted = result.user_voted
 
         return notification
+
+    def get_page(self, per_page: int) -> "CommentNotificationResults":
+        """Get a page worth of results from the query (`per page` items)."""
+        return CommentNotificationResults(self, per_page)
+
+
+class CommentNotificationResults(PaginatedResults):
+    """Specialized results class for CommentNotifications."""
+
+    @property
+    def next_page_after_id36(self) -> str:
+        """Return "after" ID36 that should be used to fetch the next page."""
+        if not self.has_next_page:
+            raise AttributeError
+
+        return id_to_id36(self.results[-1].comment_id)
+
+    @property
+    def prev_page_before_id36(self) -> str:
+        """Return "before" ID36 that should be used to fetch the prev page."""
+        if not self.has_prev_page:
+            raise AttributeError
+
+        return id_to_id36(self.results[0].comment_id)

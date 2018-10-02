@@ -179,6 +179,7 @@ def current_listing_normal_url(
     normal_vars_by_route: Dict[str, Tuple[str, ...]] = {
         "group": ("order", "period", "per_page"),
         "home": ("order", "period", "per_page"),
+        "notifications": ("per_page",),
         "search": ("order", "period", "per_page", "q"),
         "user": ("per_page",),
     }
