@@ -113,6 +113,22 @@
 </div>
 {% endif %}
 
+{% if topics.has_prev_page %}
+  <div class="pagination">
+    {% if topics.has_prev_page %}
+      <a class="page-item btn" id="prev-page-top"
+        href="{{ request.current_listing_base_url({'before': topics.prev_page_before_id36}) }}"
+      >Prev</a>
+    {% endif %}
+
+    {% if topics.has_next_page %}
+      <a class="page-item btn" id="next-page-top"
+        href="{{ request.current_listing_base_url({'after': topics.next_page_after_id36}) }}"
+      >Next</a>
+    {% endif %}
+  </div>
+{% endif %}
+
 {% if not topics %}
   <div class="empty">
     {% if period %}
@@ -161,13 +177,13 @@
 {% if topics.has_prev_page or topics.has_next_page %}
   <div class="pagination">
     {% if topics.has_prev_page %}
-      <a class="page-item btn" id="prev-page"
+      <a class="page-item btn" id="prev-page-bottom"
         href="{{ request.current_listing_base_url({'before': topics.prev_page_before_id36}) }}"
       >Prev</a>
     {% endif %}
 
     {% if topics.has_next_page %}
-      <a class="page-item btn" id="next-page"
+      <a class="page-item btn" id="next-page-bottom"
         href="{{ request.current_listing_base_url({'after': topics.next_page_after_id36}) }}"
       >Next</a>
     {% endif %}
