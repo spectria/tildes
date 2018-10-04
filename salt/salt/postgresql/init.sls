@@ -34,6 +34,12 @@ set-idle-in-transaction-timeout:
     - pattern: '^#?idle_in_transaction_session_timeout = (?!600000).*$'
     - repl: 'idle_in_transaction_session_timeout = 600000'
 
+set-timezone:
+  file.replace:
+    - name: /etc/postgresql/{{ pillar['postgresql_version'] }}/main/postgresql.conf
+    - pattern: '^#?timezone = (?!''UTC'').*$'
+    - repl: 'timezone = ''UTC'''
+
 enable-pg-stat-statements:
   file.replace:
     - name: /etc/postgresql/{{ pillar['postgresql_version'] }}/main/postgresql.conf
