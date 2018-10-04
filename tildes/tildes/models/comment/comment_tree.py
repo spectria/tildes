@@ -192,16 +192,13 @@ class CommentTree:
             if comment.is_deleted or comment.is_removed:
                 continue
 
-            # don't override any other collapsing decisions
-            if comment.collapsed_state:
-                continue
-
             # don't apply to the viewer's own comments
             if comment.user == self.viewer:
                 continue
 
-            # uncollapse the comment
-            comment.collapsed_state = "uncollapsed"
+            # uncollapse the comment (as long as it hasn't already had its state set)
+            if not comment.collapsed_state:
+                comment.collapsed_state = "uncollapsed"
 
             # fetch its direct parent and uncollapse it as well
             if comment.parent_comment_id:
