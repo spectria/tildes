@@ -97,7 +97,11 @@ def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
 
     A time of less than a second returns "a moment ago".
     """
-    seconds_ago = (utc_now() - target).total_seconds()
+    # the ago library doesn't deal with timezones properly, so we need to calculate the
+    # timedelta ourselves and only ever call human() using a timedelta
+    delta = utc_now() - target
+
+    seconds_ago = delta.total_seconds()
     if seconds_ago < 1:
         return "a moment ago"
 
@@ -107,7 +111,7 @@ def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
         precision = 1
     else:
         # try a precision=2 version, and check the units it ends up with
-        result = human(target, precision=2)
+        result = human(delta, precision=2)
 
         units = ("year", "day", "hour", "minute", "second")
         unit_indices = [i for (i, unit) in enumerate(units) if unit in result]
@@ -119,7 +123,7 @@ def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
             # otherwise, drop back down to precision=1
             precision = 1
 
-    result = human(target, precision, abbreviate=abbreviate)
+    result = human(delta, precision, abbreviate=abbreviate)
 
     # remove commas if abbreviating ("3d 2h ago", not "3d, 2h ago")
     if abbreviate:
