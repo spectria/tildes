@@ -48,7 +48,7 @@
             {% if request.matched_route.name in ('home', 'group') %}
               {{ topic_tag(tag, request.current_listing_normal_url({'tag': tag.replace(' ', '_')})) }}
             {% else %}
-              {{ topic_tag(tag) }}
+              {{ topic_tag(tag, request.route_url('home', _query=[('tag', tag.replace(' ', '_'))])) }}
             {% endif %}
           {% endfor %}
         </ul>
