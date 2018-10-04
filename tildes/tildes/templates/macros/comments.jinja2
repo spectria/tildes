@@ -240,12 +240,12 @@
     {% if request.has_permission('view', comment) and comment.is_label_active("exemplary") %}
       {% do classes.append("is-comment-exemplary") %}
     {% endif %}
+  {% endif %}
 
-    {% if comment.collapsed_state == "full" %}
-      {% do classes.append("is-comment-collapsed") %}
-    {% elif comment.collapsed_state == "individual" %}
-      {% do classes.append("is-comment-collapsed-individual") %}
-    {% endif %}
+  {% if comment.collapsed_state == "full" %}
+    {% do classes.append("is-comment-collapsed") %}
+  {% elif comment.collapsed_state == "individual" %}
+    {% do classes.append("is-comment-collapsed-individual") %}
   {% endif %}
 
   {{ classes|join(' ') }}
