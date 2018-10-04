@@ -3,7 +3,7 @@
 
 <p>Two-factor authentication is enabled on this account. Please enter the code from your authenticator app below. If you do not have access to your authenticator device, enter a backup code.</p>
 
-<form class="form-narrow" method="post" action="/login_two_factor" data-ic-post-to="/login_two_factor">
+<form class="form-narrow" method="post" autocomplete="off" action="/login_two_factor" data-ic-post-to="/login_two_factor">
   <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
   {% if keep %}
   <input type="hidden" name="keep" value="on">
