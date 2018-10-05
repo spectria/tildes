@@ -147,6 +147,6 @@ class Ltree(Field):
     def _deserialize(self, value: str, attr: str, data: dict) -> sqlalchemy_utils.Ltree:
         """Deserialize a string path to an Ltree object."""
         try:
-            return sqlalchemy_utils.Ltree(value)
+            return sqlalchemy_utils.Ltree(value.lower())
         except (TypeError, ValueError):
             raise ValidationError("Invalid path")

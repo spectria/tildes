@@ -80,7 +80,7 @@ class TopicSchema(Schema):
         group_schema = GroupSchema(partial=True)
         for tag in value:
             try:
-                group_schema.validate({"path": tag})
+                group_schema.validate({"path": str(tag)})
             except ValidationError:
                 raise ValidationError("Tag %s is invalid" % tag)
 

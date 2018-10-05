@@ -39,10 +39,9 @@ def test_middle_element_end_with_underscore():
     assert not is_valid_group_path("x.y_.z")
 
 
-def test_uppercase_letters_invalid():
-    """Ensure a group path can't contain uppercase chars."""
-    assert is_valid_group_path("comp.lang.c")
-    assert not is_valid_group_path("comp.lang.C")
+def test_uppercase_letters_fixed():
+    """Ensure a group path gets uppercase letters converted to lowercase."""
+    assert Group("Comp.Lang.C").path == "comp.lang.c"
 
 
 def test_paths_with_invalid_characters():

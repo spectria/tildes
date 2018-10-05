@@ -67,7 +67,7 @@ class Group(DatabaseModel):
 
     def __init__(self, path: str, short_desc: Optional[str] = None) -> None:
         """Create a new group."""
-        self.path = Ltree(path)
+        self.path = path
         self.short_description = short_desc
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
