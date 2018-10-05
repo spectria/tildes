@@ -15,7 +15,8 @@
 .label-topic-tag {
   background-color: transparent;
   margin: 0 0.4rem 0 0;
-  white-space: nowrap;
+  word-wrap: break-word;
+  max-width: 100%;
 }
 
 .label-topic-tag-nsfw,
