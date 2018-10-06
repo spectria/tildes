@@ -25,6 +25,11 @@ $.onmount('[data-js-comment-reply-button]', function() {
         var postURL = '/api/web/comments/' + parentCommentID + '/replies';
         var markdownID = 'markdown-reply-' + parentCommentID;
 
+        if ($('#' + markdownID).length > 0) {
+            $('#' + markdownID).focus();
+            return;
+        }
+
         var replyForm = document.createElement('form');
         replyForm.setAttribute('method', 'post');
         replyForm.setAttribute('autocomplete', 'off');
