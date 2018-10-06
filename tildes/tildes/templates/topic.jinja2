@@ -82,9 +82,9 @@
           'ic_topic_tags',
           topic_id36=topic.topic_id36,
         ) }}"
-        data-ic-swap-style="append"
-        data-ic-target=".topic-full .post-buttons:first"
-      >Tag</a>
+        data-ic-swap-style="replace"
+        data-ic-target=".topic-full .post-buttons:first + .post-buttons-settings"
+      >Tag</a></li>
     {% endif %}
 
     {% if request.has_permission('delete', topic) %}
@@ -103,8 +103,8 @@
           'ic_topic_group',
           topic_id36=topic.topic_id36,
         ) }}"
-        data-ic-swap-style="append"
-        data-ic-target=".topic-full .post-buttons:first"
+        data-ic-swap-style="replace"
+        data-ic-target=".topic-full .post-buttons:first + .post-buttons-settings"
       >Move</a>
     {% endif %}
 
@@ -114,8 +114,8 @@
           'ic_topic_title',
           topic_id36=topic.topic_id36,
         ) }}"
-        data-ic-swap-style="append"
-        data-ic-target=".topic-full .post-buttons:first"
+        data-ic-swap-style="replace"
+        data-ic-target=".topic-full .post-buttons:first + .post-buttons-settings"
       >Edit title</a>
     {% endif %}
 
@@ -167,6 +167,7 @@
       </li>
     {% endif %}
   </menu>
+  <div class="post-buttons-settings"></div>
 {% endif %}
 
 {% if topic.is_locked %}
