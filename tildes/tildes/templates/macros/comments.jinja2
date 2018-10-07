@@ -10,6 +10,7 @@
 
 {% macro render_comment_tree(comments, mark_newer_than=None, is_individual_comment=False) %}
   {% for comment in comments recursive %}
+    {% if not is_individual_comment %}<li class="comment-tree-item">{% endif %}
     <article id="comment-{{ comment.comment_id36 }}"
       class="{{ comment_classes(comment, mark_newer_than)|trim }}"
       data-comment-id36="{{ comment.comment_id36 }}"
@@ -26,12 +27,13 @@
       {{ render_comment_contents(comment, is_individual_comment) }}
 
       {% if comment.replies is defined and comment.replies %}
-        <div class="comment-replies">
+        <ol class="comment-tree comment-tree-replies">
           {# Recursively display reply comments #}
           {{ loop(comment.replies) }}
-        </div>
+        </ol>
       {% endif %}
     </article>
+    {% if not is_individual_comment %}</li>{% endif %}
   {% endfor %}
 {% endmacro %}
 

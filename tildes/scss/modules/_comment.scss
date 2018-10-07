@@ -78,13 +78,24 @@
   margin-left: 0.4rem;
 }
 
-.comment-replies {
-  margin-left: 0.4rem;
+.comment-tree {
+  margin: 0;
   padding-top: 0.4rem;
+  list-style-type: none;
+}
+
+.comment-tree-replies {
+  margin-left: 0.4rem;
 
   @media (min-width: $size-md) {
     margin-left: 1rem;
   }
+}
+
+.comment-tree-item {
+  margin: 0;
+  padding: 0;
+  max-width: none;
 }
 
 .comment-labels {
@@ -150,7 +161,7 @@
   .comment-labels,
   .comment-nav-link,
   .comment-posted-time,
-  .comment-replies,
+  .comment-tree-replies,
   .comment-text,
   .comment-votes,
   .post-buttons {

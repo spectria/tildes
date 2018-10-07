@@ -10,13 +10,13 @@ $.onmount('[data-js-comment-reply-button]', function() {
 
         var $comment = $(this).parents('.comment').first();
 
-        // get the replies div, or create one if it doesn't already exist
-        var $replies = $comment.children('.comment-replies');
+        // get the replies list, or create one if it doesn't already exist
+        var $replies = $comment.children('.comment-tree-replies');
         if (!$replies.length) {
-            var repliesDiv = document.createElement('div');
-            repliesDiv.setAttribute('class', 'comment-replies');
-            $comment.append(repliesDiv);
-            $replies = $(repliesDiv);
+            var repliesList = document.createElement('ol');
+            repliesList.setAttribute('class', 'comment-tree comment-tree-replies');
+            $comment.append(repliesList);
+            $replies = $(repliesList);
         }
 
         var $parentComment = $(this).parents('article.comment:first');
