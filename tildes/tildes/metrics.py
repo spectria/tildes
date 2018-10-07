@@ -32,13 +32,13 @@ _HISTOGRAMS = {
     "markdown_processing": Histogram(
         "tildes_markdown_processing_seconds",
         "Markdown processing",
-        buckets=[.001, .0025, .005, .01, 0.025, .05, .1, .5, 1.0],
+        buckets=[0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.5, 1.0],
     ),
     "comment_tree_sorting": Histogram(
         "tildes_comment_tree_sorting_seconds",
         "Comment tree sorting time",
         labelnames=["num_comments_range", "order"],
-        buckets=[.00001, .0001, .001, .01, .05, .1, .5, 1.0],
+        buckets=[0.00001, 0.0001, 0.001, 0.01, 0.05, 0.1, 0.5, 1.0],
     ),
 }
 

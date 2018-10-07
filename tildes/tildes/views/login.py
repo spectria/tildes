@@ -39,7 +39,7 @@ def finish_login(request: Request, user: User) -> None:
     if request.params.get("keep"):
         request.session.adjust_timeout_for_session(31_536_000)
     else:
-        request.session.adjust_timeout_for_session(86_400)
+        request.session.adjust_timeout_for_session(86400)
 
     # set request.user before logging so the user is associated with the event
     request.user = user

@@ -40,7 +40,7 @@ def test_changing_max_length():
 def test_long_string():
     """Ensure a long string fails validation."""
     with raises(ValidationError):
-        process_string("A" * 10_000)
+        process_string("A" * 10000)
 
 
 def test_empty_string():

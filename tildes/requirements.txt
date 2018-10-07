@@ -8,12 +8,12 @@ atomicwrites==1.2.1
 attrs==18.2.0
 backcall==0.1.0
 beautifulsoup4==4.6.3
-black==18.6b4
+black==18.9b0
 bleach==2.1.4
 certifi==2018.8.24
 cffi==1.11.5
 chardet==3.0.4
-click==6.7
+Click==7.0
 cornice==3.4.0
 decorator==4.3.0
 dodgy==0.1.9
@@ -90,7 +90,7 @@ stripe==2.8.1
 testing.common.database==2.0.3
 testing.redis==1.1.1
 titlecase==0.12.0
-toml==0.9.6
+toml==0.10.0
 traitlets==4.3.2
 transaction==2.2.1
 translationstring==1.3

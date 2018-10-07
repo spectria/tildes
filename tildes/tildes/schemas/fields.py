@@ -81,7 +81,7 @@ class ShortTimePeriod(Field):
 class Markdown(Field):
     """Field for markdown strings (comments, text topic, messages, etc.)."""
 
-    DEFAULT_MAX_LENGTH = 50_000
+    DEFAULT_MAX_LENGTH = 50000
 
     def __init__(self, max_length: Optional[int] = None, **kwargs: Any) -> None:
         """Initialize the field with a length validator."""
