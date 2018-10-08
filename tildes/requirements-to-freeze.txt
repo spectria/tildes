@@ -16,7 +16,7 @@ Pillow
 prometheus-client
 prospector
 psycopg2
-publicsuffix2
+publicsuffix2==2.20160818
 Pygments
 pyotp
 pyramid
