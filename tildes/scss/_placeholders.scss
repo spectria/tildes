@@ -4,12 +4,11 @@
 // sets up (nested) lists specifically for text content
 %lists-text {
   ol, ul {
-    list-style-position: inside;
-    margin: 0 0 0.4rem 1rem;
+    margin: 0 0 0.4rem 2rem;
 
     li {
       margin-top: 0.2rem;
-      max-width: $paragraph-max-width - 1rem;
+      max-width: $paragraph-max-width - 2rem; // subtract left margin
     }
 
     &:last-child {
