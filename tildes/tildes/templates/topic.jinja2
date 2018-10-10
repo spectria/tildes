@@ -210,7 +210,7 @@
     </header>
   {% endif %}
 
-  <ol class="comment-tree">
+  <ol class="comment-tree" id="comments">
     {{ render_comment_tree(comments, mark_newer_than=topic.last_visit_time) }}
   </ol>
 </section>
@@ -222,7 +222,7 @@
       method="post"
       data-ic-post-to="{{ request.route_url('ic_topic_comments', topic_id36=topic.topic_id36) }}"
       data-ic-swap-style="append"
-      data-ic-target=".comment-tree"
+      data-ic-target="#comments"
       autocomplete="off"
       data-js-prevent-double-submit
       data-js-confirm-leave-page-unsaved
