@@ -1,0 +1,27 @@
+// Copyright (c) 2018 Tildes contributors <code@tildes.net>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+// sets up (nested) lists specifically for text content
+%lists-text {
+  ol, ul {
+    list-style-position: inside;
+    margin: 0 0 0.4rem 1rem;
+
+    li {
+      margin-top: 0.2rem;
+      max-width: $paragraph-max-width - 1rem;
+    }
+
+    &:last-child {
+      margin-bottom: 0.2rem;
+    }
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+}

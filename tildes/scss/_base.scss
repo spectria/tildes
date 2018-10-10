@@ -156,17 +156,15 @@ menu {
   list-style-type: none;
 }
 
-ol {
-  list-style-position: outside;
-  margin: 0 0 1rem 2rem;
+// We'll use lists for their semantic value sometimes, so we don't want them to
+// have the normal list numbering/etc. by default. We'll specifically add that
+// back in for text-based lists in places where it's needed.
+ol, ul {
+  list-style: none;
+  margin: 0;
 
-  li {
-    margin-top: 0.2rem;
-    max-width: $paragraph-max-width - 2rem;
-  }
-
-  &:last-child {
-    margin-bottom: 0.2rem;
+  ol, ul {
+    list-style: none;
   }
 }
 
@@ -209,14 +207,4 @@ td, th {
 
 th {
   border-bottom-width: $border-width-lg;
-}
-
-ul {
-  list-style-position: outside;
-  margin: 0.4rem 0 0.4rem 1rem;
-
-  li {
-    margin-top: 0.2rem;
-    max-width: $paragraph-max-width - 1rem;
-  }
 }

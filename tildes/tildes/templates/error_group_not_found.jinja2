@@ -15,7 +15,7 @@ Group not found
   <h2 class="empty-title">No group named '{{ supplied_name }}'</h2>
   {% if group_suggestions %}
     <p class="empty-subtitle">Did you mean one of these groups instead?</p>
-    <ul class="empty-list">
+    <ul>
     {% for group in group_suggestions %}
       <li>{{ group_linked(group) }}</li>
     {% endfor %}

@@ -14,6 +14,10 @@
     justify-content: left;
   }
 
+  li {
+    margin-top: 0;
+  }
+
   // Combined with flex-wrap: wrap, this should put any form on its own line
   form {
     min-width: 100%;

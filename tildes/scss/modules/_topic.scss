@@ -1,15 +1,8 @@
 // Copyright (c) 2018 Tildes contributors <code@tildes.net>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-.topic-listing {
-  list-style-type: none;
-  margin: 0;
-
-  & > li {
-    margin: 0;
-    margin-bottom: 0.2rem;
-    max-width: none;
-  }
+.topic-listing > li {
+  margin: 0 0 0.2rem 0;
 }
 
 .topic-listing-filter {
@@ -159,6 +152,8 @@
 }
 
 .topic-text-excerpt {
+  @extend %lists-text;
+
   display: none;
   @media (min-width: $size-md) {
     display: block;
@@ -170,10 +165,6 @@
 
   h1 {
     margin: 0 0 0.4rem 0;
-  }
-
-  ol {
-    list-style-type: decimal;
   }
 
   summary {
@@ -247,6 +238,8 @@
 }
 
 .topic-full-text {
+  @extend %lists-text;
+
   overflow: auto;
 }
 
