@@ -30,7 +30,7 @@ class ScraperResult(DatabaseModel):
     )
     data: Any = Column(JSONB(none_as_null=True))
 
-    def __init__(self, url: str, scraper_type: ScraperType, data: Any) -> None:
+    def __init__(self, url: str, scraper_type: ScraperType, data: Any):
         """Create a new ScraperResult."""
         self.url = url
         self.scraper_type = scraper_type

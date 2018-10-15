@@ -42,7 +42,7 @@ class GroupSubscription(DatabaseModel):
     user: User = relationship("User", innerjoin=True, backref="subscriptions")
     group: Group = relationship("Group", innerjoin=True, lazy=False)
 
-    def __init__(self, user: User, group: Group) -> None:
+    def __init__(self, user: User, group: Group):
         """Create a new subscription to a group."""
         self.user = user
         self.group = group

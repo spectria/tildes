@@ -42,7 +42,7 @@ class UserInviteCode(DatabaseModel):
         """Format the code into a more easily readable version."""
         return separate_string(self.code, "-", 5)
 
-    def __init__(self, user: User) -> None:
+    def __init__(self, user: User):
         """Create a new (random) invite code owned by the user.
 
         Note that uniqueness is not confirmed here, so there is the potential to create

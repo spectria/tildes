@@ -18,7 +18,7 @@ ModelType = TypeVar("ModelType")
 class ModelQuery(Query):
     """Class for querying models via request.query()."""
 
-    def __init__(self, model_cls: Any, request: Request) -> None:
+    def __init__(self, model_cls: Any, request: Request):
         """Initialize a ModelQuery for the specified model and request."""
         super().__init__(model_cls, session=request.db_session)
 

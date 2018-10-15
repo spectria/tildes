@@ -18,7 +18,7 @@ ModelType = TypeVar("ModelType")
 class PaginatedQuery(ModelQuery):
     """ModelQuery subclass that supports being split into pages."""
 
-    def __init__(self, model_cls: Any, request: Request) -> None:
+    def __init__(self, model_cls: Any, request: Request):
         """Initialize a PaginatedQuery for the specified model and request."""
         super().__init__(model_cls, request)
 
@@ -168,7 +168,7 @@ class PaginatedResults:
     Has a few extra attributes that give info about the pagination.
     """
 
-    def __init__(self, query: PaginatedQuery, per_page: int) -> None:
+    def __init__(self, query: PaginatedQuery, per_page: int):
         """Fetch results from a PaginatedQuery."""
         self.per_page = per_page
 

@@ -23,7 +23,7 @@ class CommentTree:
         comments: Sequence[Comment],
         sort: CommentSortOption,
         viewer: Optional[User] = None,
-    ) -> None:
+    ):
         """Create a sorted CommentTree from a flat list of Comments."""
         self.tree: List[CommentInTree] = []
         self.sort = sort
@@ -225,7 +225,7 @@ class CommentTree:
 class CommentInTree(ObjectProxy):
     """Wrapper for Comments inside a CommentTree that adds some methods/properties."""
 
-    def __init__(self, comment: Comment) -> None:
+    def __init__(self, comment: Comment):
         """Wrap a comment and add the new attributes needed by CommentTree."""
         super().__init__(comment)
 

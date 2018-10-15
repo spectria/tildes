@@ -28,9 +28,7 @@ RESCRAPE_DELAY = timedelta(hours=24)
 class TopicEmbedlyExtractor(PgsqlQueueConsumer):
     """Consumer that fetches data from Embedly's Extract API for link topics."""
 
-    def __init__(
-        self, api_key: str, queue_name: str, routing_keys: Sequence[str]
-    ) -> None:
+    def __init__(self, api_key: str, queue_name: str, routing_keys: Sequence[str]):
         """Initialize the consumer, including creating a scraper instance."""
         super().__init__(queue_name, routing_keys)
 

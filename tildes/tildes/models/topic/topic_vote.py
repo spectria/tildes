@@ -42,7 +42,7 @@ class TopicVote(DatabaseModel):
     user: User = relationship("User", innerjoin=True)
     topic: Topic = relationship("Topic", innerjoin=True)
 
-    def __init__(self, user: User, topic: Topic) -> None:
+    def __init__(self, user: User, topic: Topic):
         """Create a new vote on a topic."""
         self.user = user
         self.topic = topic

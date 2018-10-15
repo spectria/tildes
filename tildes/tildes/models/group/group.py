@@ -65,7 +65,7 @@ class Group(DatabaseModel):
         """Order groups by their string representation."""
         return str(self) < str(other)
 
-    def __init__(self, path: str, short_desc: Optional[str] = None) -> None:
+    def __init__(self, path: str, short_desc: Optional[str] = None):
         """Create a new group."""
         self.path = path
         self.short_description = short_desc

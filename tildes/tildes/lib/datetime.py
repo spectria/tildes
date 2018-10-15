@@ -15,7 +15,7 @@ class SimpleHoursPeriod:
 
     _SHORT_FORM_REGEX = re.compile(r"\d+[hd]", re.IGNORECASE)
 
-    def __init__(self, hours: int) -> None:
+    def __init__(self, hours: int):
         """Initialize a SimpleHoursPeriod from a number of hours."""
         if hours <= 0:
             raise ValueError("Period must be at least 1 hour.")

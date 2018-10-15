@@ -109,9 +109,7 @@ class MessageConversation(DatabaseModel):
         ),
     )
 
-    def __init__(
-        self, sender: User, recipient: User, subject: str, markdown: str
-    ) -> None:
+    def __init__(self, sender: User, recipient: User, subject: str, markdown: str):
         """Create a new message conversation between two users."""
         self.sender_id = sender.user_id
         self.recipient_id = recipient.user_id
@@ -235,9 +233,7 @@ class MessageReply(DatabaseModel):
 
     sender: User = relationship("User", lazy=False, innerjoin=True)
 
-    def __init__(
-        self, conversation: MessageConversation, sender: User, markdown: str
-    ) -> None:
+    def __init__(self, conversation: MessageConversation, sender: User, markdown: str):
         """Add a new reply to a message conversation."""
         self.conversation_id = conversation.conversation_id
         self.sender_id = sender.user_id

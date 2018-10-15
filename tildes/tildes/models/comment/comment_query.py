@@ -15,7 +15,7 @@ from .comment_vote import CommentVote
 class CommentQuery(PaginatedQuery):
     """Specialized ModelQuery for Comments."""
 
-    def __init__(self, request: Request) -> None:
+    def __init__(self, request: Request):
         """Initialize a CommentQuery for the request.
 
         If the user is logged in, additional user-specific data will be fetched along

@@ -298,7 +298,7 @@ class LinkifyFilter(Filter):
 
     def __init__(
         self, source: NonRecursiveTreeWalker, skip_tags: Optional[List[str]] = None
-    ) -> None:
+    ):
         """Initialize a linkification filter to apply to HTML.
 
         The skip_tags argument can be a list of tag names, and the contents of any of

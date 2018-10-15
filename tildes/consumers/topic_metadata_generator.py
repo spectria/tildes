@@ -19,7 +19,7 @@ from tildes.models.topic import Topic
 class TopicMetadataGenerator(PgsqlQueueConsumer):
     """Consumer that generates content_metadata for topics."""
 
-    def __init__(self, queue_name: str, routing_keys: Sequence[str]) -> None:
+    def __init__(self, queue_name: str, routing_keys: Sequence[str]):
         """Initialize the consumer, including the public suffix list."""
         super().__init__(queue_name, routing_keys)
 

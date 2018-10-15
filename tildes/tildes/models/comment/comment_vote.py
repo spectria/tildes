@@ -42,7 +42,7 @@ class CommentVote(DatabaseModel):
     user: User = relationship("User", innerjoin=True)
     comment: Comment = relationship("Comment", innerjoin=True)
 
-    def __init__(self, user: User, comment: Comment) -> None:
+    def __init__(self, user: User, comment: Comment):
         """Create a new vote on a comment."""
         self.user = user
         self.comment = comment

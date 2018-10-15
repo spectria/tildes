@@ -23,7 +23,7 @@ class SiteIconDownloader(PgsqlQueueConsumer):
 
     ICON_FOLDER = "/var/lib/site-icons-spriter/site-icons"
 
-    def __init__(self, queue_name: str, routing_keys: Sequence[str]) -> None:
+    def __init__(self, queue_name: str, routing_keys: Sequence[str]):
         """Initialize the consumer, including the public suffix list."""
         super().__init__(queue_name, routing_keys)
 

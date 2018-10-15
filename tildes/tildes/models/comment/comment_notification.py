@@ -52,7 +52,7 @@ class CommentNotification(DatabaseModel):
 
     def __init__(
         self, user: User, comment: Comment, notification_type: CommentNotificationType
-    ) -> None:
+    ):
         """Create a new notification for a user from a comment."""
         self.user = user
         self.comment = comment

@@ -30,7 +30,7 @@ class PgsqlQueueConsumer(AbstractConsumer):
 
     def __init__(
         self, queue_name: str, routing_keys: Sequence[str], uses_db: bool = True
-    ) -> None:
+    ):
         """Initialize a new queue, bindings, and consumer for it."""
         self.connection = Connection()
         self.channel = self.connection.channel()

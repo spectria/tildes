@@ -123,7 +123,7 @@ class User(DatabaseModel):
         """Use the username for the string representation."""
         return self.username
 
-    def __init__(self, username: str, password: str) -> None:
+    def __init__(self, username: str, password: str):
         """Create a new user account."""
         self.username = username
         self.password = password

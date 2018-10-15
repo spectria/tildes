@@ -15,7 +15,7 @@ from tildes.models.scraper import ScraperResult
 class EmbedlyScraper:
     """Scraper that uses Embedly's "Extract" API."""
 
-    def __init__(self, api_key: str) -> None:
+    def __init__(self, api_key: str):
         """Create a new scraper using the specified Embedly API key."""
         self.api_key = api_key
 

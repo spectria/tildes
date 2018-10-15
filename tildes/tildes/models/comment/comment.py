@@ -125,7 +125,7 @@ class Comment(DatabaseModel):
         author: User,
         markdown: str,
         parent_comment: Optional["Comment"] = None,
-    ) -> None:
+    ):
         """Create a new comment."""
         self.topic = topic
         self.user_id = author.user_id

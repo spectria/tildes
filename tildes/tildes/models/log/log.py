@@ -77,7 +77,7 @@ class Log(DatabaseModel, BaseLog):
         event_type: LogEventType,
         request: Request,
         info: Optional[Dict[str, Any]] = None,
-    ) -> None:
+    ):
         """Create a new log entry.
 
         User and IP address info is extracted from the Request object. `info` is an
@@ -108,7 +108,7 @@ class LogComment(DatabaseModel, BaseLog):
         request: Request,
         comment: Comment,
         info: Optional[Dict[str, Any]] = None,
-    ) -> None:
+    ):
         """Create a new log entry related to a specific comment."""
         # pylint: disable=non-parent-init-called
         Log.__init__(self, event_type, request, info)
@@ -137,7 +137,7 @@ class LogTopic(DatabaseModel, BaseLog):
         request: Request,
         topic: Topic,
         info: Optional[Dict[str, Any]] = None,
-    ) -> None:
+    ):
         """Create a new log entry related to a specific topic."""
         # pylint: disable=non-parent-init-called
         Log.__init__(self, event_type, request, info)

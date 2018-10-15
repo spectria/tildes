@@ -26,7 +26,7 @@ class DefaultRootFactory:
 
     __acl__ = ((Allow, Everyone, "view"),)
 
-    def __init__(self, request: Request) -> None:
+    def __init__(self, request: Request):
         """Root factory constructor - must take a request argument."""
         pass
 

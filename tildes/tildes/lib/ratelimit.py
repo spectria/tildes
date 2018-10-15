@@ -33,7 +33,7 @@ class RateLimitResult:
         remaining_limit: int,
         time_until_max: timedelta,
         time_until_retry: Optional[timedelta] = None,
-    ) -> None:
+    ):
         """Initialize a RateLimitResult."""
         # pylint: disable=too-many-arguments
         if is_allowed and time_until_retry is not None:
@@ -171,7 +171,7 @@ class RateLimitedAction:
         by_user: bool = True,
         by_ip: bool = True,
         redis: Optional[StrictRedis] = None,
-    ) -> None:
+    ):
         """Initialize the limits on a particular action.
 
         The action will be limited to a maximum of `limit` calls over the time period

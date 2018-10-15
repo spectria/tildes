@@ -17,7 +17,7 @@ from .comment_vote import CommentVote
 class CommentNotificationQuery(PaginatedQuery):
     """Specialized query class for CommentNotifications."""
 
-    def __init__(self, request: Request) -> None:
+    def __init__(self, request: Request):
         """Initialize a CommentNotificationQuery for the request."""
         super().__init__(CommentNotification, request)
 

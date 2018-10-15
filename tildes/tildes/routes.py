@@ -176,6 +176,6 @@ class LoggedInFactory:
 
     __acl__ = ((Allow, Authenticated, "view"),)
 
-    def __init__(self, request: Request) -> None:
+    def __init__(self, request: Request):
         """Initialize - no-op, but needs to take the request as an arg."""
         pass

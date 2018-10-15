@@ -15,7 +15,7 @@ from .group_subscription import GroupSubscription
 class GroupQuery(ModelQuery):
     """Specialized ModelQuery for Groups."""
 
-    def __init__(self, request: Request) -> None:
+    def __init__(self, request: Request):
         """Initialize a GroupQuery for the request.
 
         If the user is logged in, additional user-specific data will be fetched along

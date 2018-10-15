@@ -39,7 +39,7 @@ def clean_all_data(config_path: str) -> None:
 class DataCleaner:
     """Container class for all methods related to cleaning up old data."""
 
-    def __init__(self, db_session: Session, retention_period: timedelta) -> None:
+    def __init__(self, db_session: Session, retention_period: timedelta):
         """Create a new DataCleaner."""
         self.db_session = db_session
         self.retention_cutoff = datetime.now() - retention_period

@@ -15,7 +15,7 @@ class APIv0(Service):
     name_prefix = "apiv0_"
     base_path = "/api/v0"
 
-    def __init__(self, name: str, path: str, **kwargs: Any) -> None:
+    def __init__(self, name: str, path: str, **kwargs: Any):
         """Create a new service."""
         name = self.name_prefix + name
         path = self.base_path + path
