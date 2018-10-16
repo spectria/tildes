@@ -17,10 +17,23 @@ CREATE TRIGGER delete_topic_set_deleted_time_update
     EXECUTE PROCEDURE set_topic_deleted_time();
 
 
+CREATE OR REPLACE FUNCTION update_topic_search_tsv() RETURNS TRIGGER AS $$
+BEGIN
+    NEW.search_tsv :=
+        to_tsvector(NEW.title) ||
+        to_tsvector(coalesce(NEW.markdown, '')) ||
+        -- convert tags to space-separated string and replace periods with spaces
+        to_tsvector(replace(array_to_string(NEW.tags, ' '), '.', ' '));
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
 CREATE TRIGGER topic_update_search_tsv_insert
     BEFORE INSERT ON topics
     FOR EACH ROW
-    EXECUTE PROCEDURE tsvector_update_trigger(search_tsv, 'pg_catalog.english', title, markdown);
+    EXECUTE PROCEDURE update_topic_search_tsv();
 
 CREATE TRIGGER topic_update_search_tsv_update
     BEFORE UPDATE ON topics
@@ -28,5 +41,6 @@ CREATE TRIGGER topic_update_search_tsv_update
     WHEN (
         (OLD.title IS DISTINCT FROM NEW.title)
         OR (OLD.markdown IS DISTINCT FROM NEW.markdown)
+        OR (OLD.tags IS DISTINCT FROM NEW.tags)
     )
-    EXECUTE PROCEDURE tsvector_update_trigger(search_tsv, 'pg_catalog.english', title, markdown);
+    EXECUTE PROCEDURE update_topic_search_tsv();
