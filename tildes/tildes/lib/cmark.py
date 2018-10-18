@@ -5,7 +5,7 @@ from ctypes import CDLL, c_char_p, c_int, c_size_t, c_void_p
 
 
 CMARK_DLL = CDLL("/usr/local/lib/libcmark-gfm.so")
-CMARK_EXT_DLL = CDLL("/usr/local/lib/libcmark-gfmextensions.so")
+CMARK_EXT_DLL = CDLL("/usr/local/lib/libcmark-gfm-extensions.so")
 
 # enables the --hardbreaks option for cmark
 # (can I import this? it's defined in cmark.h as CMARK_OPT_HARDBREAKS)
@@ -49,7 +49,7 @@ cmark_render_html = CMARK_DLL.cmark_render_html
 cmark_render_html.restype = c_char_p
 cmark_render_html.argtypes = (c_void_p, c_int, c_void_p)
 
-register = CMARK_EXT_DLL.core_extensions_ensure_registered
+register = CMARK_EXT_DLL.cmark_gfm_core_extensions_ensure_registered
 register.restype = None
 register.argtypes = ()
 register()
