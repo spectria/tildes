@@ -3,8 +3,8 @@ unpack-cmark-gfm:
     - name: /tmp/cmark-gfm
     - source:
       - salt://cmark-gfm.tar.gz
-      - https://github.com/github/cmark-gfm/archive/0.28.3.gfm.17.tar.gz
-    - source_hash: sha256=101ccfcd4f0fd8b05c20994006d992f2e81d6f96655afee4c66742ccc21f1f7d
+      - https://github.com/github/cmark-gfm/archive/0.28.3.gfm.19.tar.gz
+    - source_hash: sha256=d2c8cb255e227d07533a32cfd4a052e189f697e2a9681d8b17d15654259e2e4b
     - if_missing: /usr/local/lib/libcmark-gfm.so
     - options: --strip-components=1
     - enforce_toplevel: False
