@@ -321,10 +321,6 @@ $theme-black: map-merge($theme-base, (
     header {
       color: $foreground-secondary;
       background-color: $background-primary;
-
-      .link-user {
-        color: $foreground-secondary;
-      }
     }
   }
 
