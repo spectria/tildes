@@ -236,12 +236,6 @@ $theme-black: map-merge($theme-base, (
     & > .comment-itself {
       @extend %collapsed-theme;
     }
-
-    &:hover {
-      color: #fff;
-      background-color: $blue;
-      border-color: $blue;
-    }
   }
 
   .comment {
