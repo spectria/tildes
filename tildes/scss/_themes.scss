@@ -317,13 +317,6 @@ $theme-black: map-merge($theme-base, (
     color: $red;
   }
 
-  .is-comment-collapsed {
-    header {
-      color: $foreground-secondary;
-      background-color: $background-primary;
-    }
-  }
-
   .label-topic-tag {
     color: $foreground-middle;
 
