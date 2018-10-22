@@ -68,37 +68,3 @@
     border: 1px solid;
   }
 }
-
-@mixin labelbutton($color) {
-  color: $color;
-  border-color: $color;
-
-  &:hover {
-    color: $color;
-  }
-
-  &.btn-used:hover {
-    background-color: $color;
-    color: #fff;
-  }
-}
-
-.btn-comment-label-exemplary {
-  @include labelbutton($comment-label-exemplary-color);
-}
-
-.btn-comment-label-joke {
-  @include labelbutton($comment-label-joke-color);
-}
-
-.btn-comment-label-noise {
-  @include labelbutton($comment-label-noise-color);
-}
-
-.btn-comment-label-offtopic {
-  @include labelbutton($comment-label-offtopic-color);
-}
-
-.btn-comment-label-malice {
-  @include labelbutton($comment-label-malice-color);
-}

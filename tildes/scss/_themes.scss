@@ -208,6 +208,26 @@ $theme-black: map-merge($theme-base, (
     }
   }
 
+  .btn-comment-label-exemplary {
+    @include labelbutton($comment-label-exemplary-color);
+  }
+
+  .btn-comment-label-joke {
+    @include labelbutton($comment-label-joke-color);
+  }
+
+  .btn-comment-label-noise {
+    @include labelbutton($comment-label-noise-color);
+  }
+
+  .btn-comment-label-offtopic {
+    @include labelbutton($comment-label-offtopic-color);
+  }
+
+  .btn-comment-label-malice {
+    @include labelbutton($comment-label-malice-color);
+  }
+
   .comment-branch-counter {
     color: $foreground-secondary;
   }
@@ -528,6 +548,20 @@ $theme-black: map-merge($theme-base, (
     a {
       color: $color;
     }
+  }
+}
+
+@mixin labelbutton($color) {
+  color: $color;
+  border-color: $color;
+
+  &:hover {
+    color: $color;
+  }
+
+  &.btn-used:hover {
+    background-color: $color;
+    color: #fff;
   }
 }
 
