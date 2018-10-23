@@ -1,0 +1,15 @@
+$theme-black: (
+  'foreground-primary': #ccc,
+  'foreground-secondary': #888,
+  'foreground-highlight': #ddd,
+  'foreground-middle': #aaa,
+  'foreground-extreme': #fff,
+  'background-primary': #000,
+  'background-secondary': #222,
+  'background-input': #000,
+  'border-primary': #444,
+);
+
+body.theme-black {
+  @include use-theme($theme-black);
+}

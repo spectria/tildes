@@ -1,0 +1,15 @@
+$theme-dark: (
+  'foreground-primary': $fg-light,
+  'foreground-secondary': $fg-darkest,
+  'foreground-highlight': $fg-lightest,
+  'foreground-middle': #6e8186,
+  'foreground-extreme': #fff,
+  'background-primary': $bg-darkest,
+  'background-secondary': $bg-dark,
+  'background-input': #001f27,
+  'border-primary': #33555e,
+);
+
+body.theme-dark {
+  @include use-theme($theme-dark);
+}

@@ -1,70 +1,21 @@
 // Copyright (c) 2018 Tildes contributors <code@tildes.net>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-// This file should only contain rules that need to differ between the
+// This file should only contain rules that need to be affected by all the
 // different themes, defined inside the `use-theme` mixin below.
 // Note that all rules inside the mixin will be included in the compiled CSS
 // once for each theme, so they should be kept as minimal as possible.
 
-// Each theme is defined by a SCSS map and a `body.theme-<abc>` selector.
-// The `use-theme` mixin is called inside the body.theme and takes the theme's
-// map as its only argument, applying each defined color available in the map.
-// If a color variable is left undefined in a map, it will use the default's
-// `$theme-base` for it instead.
-
-$theme-base: (
-  'foreground-primary': #333,
-  'foreground-secondary': #999,
-  'foreground-highlight': #222,
-  'foreground-middle': #666,
-  'foreground-extreme': #000,
-  'background-primary': #fff,
-  'background-secondary': #eee,
-  'background-input': #f7f7f7,
-  'border-primary': #ccc,
-  'anchor-normal': $blue,
-  'anchor-normal-hover': darken($blue, 5%),
-  'anchor-normal-visited': $violet,
-);
-
-$theme-white: $theme-base;
-
-$theme-light: map-merge($theme-base, (
-  'foreground-primary': $fg-dark,
-  'foreground-secondary': $fg-lightest,
-  'foreground-highlight': $fg-darkest,
-  'foreground-middle': #7c8e92,
-  'background-primary': $bg-lightest,
-  'background-secondary': $bg-light,
-  'background-input': #fefbf1,
-  'border-primary': #cbc5b6,
-));
-
-$theme-dark: map-merge($theme-base, (
-  'foreground-primary': $fg-light,
-  'foreground-secondary': $fg-darkest,
-  'foreground-highlight': $fg-lightest,
-  'foreground-middle': #6e8186,
-  'foreground-extreme': #fff,
-  'background-primary': $bg-darkest,
-  'background-secondary': $bg-dark,
-  'background-input': #001f27,
-  'border-primary': #33555e,
-));
-
-$theme-black: map-merge($theme-base, (
-  'foreground-primary': #ccc,
-  'foreground-secondary': #888,
-  'foreground-highlight': #ddd,
-  'foreground-middle': #aaa,
-  'foreground-extreme': #fff,
-  'background-primary': #000,
-  'background-secondary': #222,
-  'background-input': #000,
-  'border-primary': #444,
-));
+// Each theme should be defined in its own SCSS file, and consist of a SCSS map
+// and a unique `body.theme-<name>` selector.
+// The `use-theme` mixin is called inside the body.theme-<name> block and takes
+// the theme's map as its only argument, applying each defined color available
+// in the map. If a color variable is left undefined in the theme's map, it
+// will fall back to the default value from `$theme-base` instead.
 
 @mixin use-theme($theme) {
+  $theme: init-theme($theme);
+
   $foreground-primary: map-get($theme, 'foreground-primary');
   $foreground-secondary: map-get($theme, 'foreground-secondary');
   $foreground-highlight: map-get($theme, 'foreground-highlight');
@@ -700,21 +651,26 @@ $theme-black: map-merge($theme-base, (
   }
 }
 
+@function init-theme($theme-map) {
+  @return map-merge($theme-base, $theme-map);
+}
+
+$theme-base: (
+  'foreground-primary': #333,
+  'foreground-secondary': #999,
+  'foreground-highlight': #222,
+  'foreground-middle': #666,
+  'foreground-extreme': #000,
+  'background-primary': #fff,
+  'background-secondary': #eee,
+  'background-input': #f7f7f7,
+  'border-primary': #ccc,
+  'anchor-normal': $blue,
+  'anchor-normal-hover': darken($blue, 5%),
+  'anchor-normal-visited': $violet,
+);
+
+// define the default theme using the base values
 body {
-  @include use-theme($theme-white);
+  @include use-theme($theme-base);
 }
-
-body.theme-light {
-  @include use-theme($theme-light);
-}
-
-body.theme-dark {
-  @include use-theme($theme-dark);
-}
-
-body.theme-black {
-  @include use-theme($theme-black);
-}
-
-// Note: if you add a new theme, you may also want to add a new theme-color
-// meta tag inside the base.jinja2 template, so mobile browsers can match
