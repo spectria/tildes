@@ -233,6 +233,6 @@
 .is-comment-exemplary {
   & > .comment-itself {
     margin-left: -2px;
-    border-left: 3px solid $comment-label-exemplary-color !important;
+    border-left: 3px solid;
   }
 }

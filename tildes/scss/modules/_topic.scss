@@ -84,7 +84,7 @@
   flex-shrink: 0;
   margin-top: 2px;
   margin-right: 0.2rem;
-  border: 1px dashed $blue;
+  border: 1px dashed;
 }
 
 .topic-log {
@@ -132,11 +132,6 @@
 
     .topic-voting-votes {
       font-weight: bold;
-    }
-
-    &:hover {
-      background-color: darken($blue, 3%);
-      border-color: darken($blue, 8%);
     }
   }
 }

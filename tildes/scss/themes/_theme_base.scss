@@ -16,49 +16,48 @@
 @mixin use-theme($theme) {
   $theme: init-theme($theme);
 
-  $foreground-primary: map-get($theme, 'foreground-primary');
-  $foreground-secondary: map-get($theme, 'foreground-secondary');
-  $foreground-highlight: map-get($theme, 'foreground-highlight');
-  $foreground-middle: map-get($theme, 'foreground-middle');
-  $foreground-extreme: map-get($theme, 'foreground-extreme');
-  $background-primary: map-get($theme, 'background-primary');
-  $background-secondary: map-get($theme, 'background-secondary');
-  $background-input: map-get($theme, 'background-input');
-  $border-primary: map-get($theme, 'border-primary');
-  $anchor-normal: map-get($theme, 'anchor-normal');
-  $anchor-normal-hover: map-get($theme, 'anchor-normal-hover');
-  $anchor-normal-visited: map-get($theme, 'anchor-normal-visited');
-
-  color: $foreground-primary;
-  background-color: $background-secondary;
+  color: map-get($theme, "foreground-primary");
+  background-color: map-get($theme, "background-secondary");
 
   // set $is-light as a bool for whether $background-color seems light or dark
-  $is-light: lightness($background-primary) > 50;
+  $is-light: lightness(map-get($theme, "background-primary")) > 50;
 
   a {
-    color: $anchor-normal;
+    color: map-get($theme, "link");
 
     &:hover {
-      color: $anchor-normal-hover;
+      color: map-get($theme, "link-hover");
     }
 
     &:visited {
-      color: $anchor-normal-visited;
+      color: map-get($theme, "link-visited");
+    }
+
+    code {
+      color: map-get($theme, "link");
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &:visited code {
+      color: map-get($theme, "link-visited");
     }
   }
 
   a.link-user,
   a.link-group {
     &:visited {
-      color: $anchor-normal;
+      color: map-get($theme, "link");
     }
   }
 
   a.logged-in-user-alert {
-    color: $orange;
+    color: map-get($theme, "alert");
 
     &:visited {
-      color: $orange;
+      color: map-get($theme, "alert");
     }
   }
 
@@ -71,76 +70,76 @@
   @include syntax-highlighting($is-light);
 
   blockquote {
-    border-color: $foreground-highlight;
-    background-color: $background-secondary;
+    border-color: map-get($theme, "foreground-highlight");
+    background-color: map-get($theme, "background-secondary");
   }
 
   code, pre {
-    color: $foreground-highlight;
-    background-color: $background-secondary;
+    color: map-get($theme, "foreground-highlight");
+    background-color: map-get($theme, "background-secondary");
   }
 
   fieldset {
-    border-color: $border-primary;
+    border-color: map-get($theme, "border");
   }
 
   figure {
-    border-color: $border-primary;
+    border-color: map-get($theme, "border");
   }
 
   main {
-    background-color: $background-primary;
+    background-color: map-get($theme, "background-primary");
   }
 
   section {
-    border-color: $border-primary;
+    border-color: map-get($theme, "border");
   }
 
   tbody tr:nth-of-type(2n+1) {
-    background-color: $background-secondary;
+    background-color: map-get($theme, "background-secondary");
   }
 
   td {
-    border-color: $border-primary;
+    border-color: map-get($theme, "border");
   }
 
   th {
-    border-color: $foreground-highlight;
+    border-color: map-get($theme, "foreground-highlight");
   }
 
   .btn {
-    color: $blue;
+    color: map-get($theme, "button");
     background-color: transparent;
-    border-color: $blue;
+    border-color: map-get($theme, "button");
 
     &:hover {
-      background-color: rgba($blue, 0.2);
+      background-color: rgba(map-get($theme, "button"), 0.2);
     }
   }
 
   .btn-comment-collapse {
-    color: $foreground-secondary;
-    border-color: $border-primary;
+    color: map-get($theme, "foreground-secondary");
+    border-color: map-get($theme, "border");
 
     &:hover {
-      color: $anchor-normal;
+      color: map-get($theme, "link");
     }
   }
 
-  .btn-link {
-    color: $blue;
+  .btn.btn-link {
+    color: map-get($theme, "button");
     background-color: transparent;
     border-color: transparent;
   }
 
-  .btn-primary {
+  .btn.btn-primary {
     color: #fff;
-    background-color: $blue;
-    border-color: $blue;
+    background-color: map-get($theme, "button");
+    border-color: map-get($theme, "button");
 
     &:hover {
-      background-color: darken($blue, 10%);
-      border-color: darken($blue, 10%);
+      background-color: darken(map-get($theme, "button"), 10%);
+      border-color: darken(map-get($theme, "button"), 10%);
     }
 
     &:visited {
@@ -149,53 +148,67 @@
   }
 
   .btn-used {
-    color: $violet;
-    border-color: darken($violet, 3%);
+    color: map-get($theme, "button-used");
+    border-color: darken(map-get($theme, "button-used"), 3%);
 
     &:hover {
-      background-color: darken($violet, 3%);
-      border-color: darken($violet, 8%);
+      background-color: darken(map-get($theme, "button-used"), 3%);
+      border-color: darken(map-get($theme, "button-used"), 8%);
       color: #fff;
     }
   }
 
   .btn-comment-label-exemplary {
-    @include labelbutton($comment-label-exemplary-color);
+    @include labelbutton(map-get($theme, "comment-label-exemplary"));
   }
 
   .btn-comment-label-joke {
-    @include labelbutton($comment-label-joke-color);
+    @include labelbutton(map-get($theme, "comment-label-joke"));
   }
 
   .btn-comment-label-noise {
-    @include labelbutton($comment-label-noise-color);
+    @include labelbutton(map-get($theme, "comment-label-noise"));
   }
 
   .btn-comment-label-offtopic {
-    @include labelbutton($comment-label-offtopic-color);
+    @include labelbutton(map-get($theme, "comment-label-offtopic"));
   }
 
   .btn-comment-label-malice {
-    @include labelbutton($comment-label-malice-color);
+    @include labelbutton(map-get($theme, "comment-label-malice"));
   }
 
   .comment-branch-counter {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
   }
 
   .comment-nav-link, .comment-nav-link:visited {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
   }
 
-  .label-comment-exemplary { @include theme-special-label($comment-label-exemplary-color, $is-light); }
-  .label-comment-joke { @include theme-special-label($comment-label-joke-color, $is-light); }
-  .label-comment-noise { @include theme-special-label($comment-label-noise-color, $is-light); }
-  .label-comment-offtopic { @include theme-special-label($comment-label-offtopic-color, $is-light); }
-  .label-comment-malice { @include theme-special-label($comment-label-malice-color, $is-light); }
+  .label-comment-exemplary {
+    @include theme-special-label(map-get($theme, "comment-label-exemplary"), $is-light);
+  }
+
+  .label-comment-joke {
+    @include theme-special-label(map-get($theme, "comment-label-joke"), $is-light);
+  }
+
+  .label-comment-noise {
+    @include theme-special-label(map-get($theme, "comment-label-noise"), $is-light);
+  }
+
+  .label-comment-offtopic {
+    @include theme-special-label(map-get($theme, "comment-label-offtopic"), $is-light);
+  }
+
+  .label-comment-malice {
+    @include theme-special-label(map-get($theme, "comment-label-malice"), $is-light);
+  }
 
   %collapsed-theme {
     header {
-      background-color: $background-primary;
+      background-color: map-get($theme, "background-primary");
     }
   }
 
@@ -210,216 +223,228 @@
   }
 
   .comment {
-    border-color: $border-primary;
+    border-color: map-get($theme, "border");
 
     header {
-      color: $foreground-highlight;
-      background-color: $background-secondary;
+      color: map-get($theme, "foreground-highlight");
+      background-color: map-get($theme, "background-secondary");
     }
 
     &[data-comment-depth="0"] {
-      border-color: $border-primary;
+      border-color: map-get($theme, "border");
     }
   }
 
   .comment:target > .comment-itself {
-    border-left-color: $yellow;
+    border-left-color: map-get($theme, "stripe-target");
   }
 
   .comment-nav-link {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
   }
 
   .divider {
-    border-color: $border-primary;
+    border-color: map-get($theme, "border");
 
     &[data-content]::after {
-      color: $foreground-primary;
-      background-color: $background-primary;
+      color: map-get($theme, "foreground-primary");
+      background-color: map-get($theme, "background-primary");
     }
   }
 
   .empty-subtitle {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
   }
 
   .foreground-secondary {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
   }
 
   .form-input {
-    color: $foreground-primary;
-    background-color: $background-input;
+    color: map-get($theme, "foreground-primary");
+    background-color: map-get($theme, "background-input");
   }
 
   .form-input:not(:focus) {
-    border-color: $border-primary;
+    border-color: map-get($theme, "border");
   }
 
   .form-select {
-    border-color: $border-primary;
+    border-color: map-get($theme, "border");
 
     &:not([multiple]):not([size]) {
-      background-color: $background-input;
+      background-color: map-get($theme, "background-input");
     }
   }
 
   .form-status-error {
-    color: $red;
+    color: map-get($theme, "error");
   }
 
   .label-topic-tag {
-    color: $foreground-middle;
+    color: map-get($theme, "foreground-middle");
 
     a,
     a:hover,
     a:visited {
-      color: $foreground-middle;
+      color: map-get($theme, "foreground-middle");
     }
   }
 
   .label-topic-tag-nsfw {
-    @include theme-special-label($topic-tag-nsfw-color, $is-light);
+    @include theme-special-label(map-get($theme, "topic-tag-nsfw"), $is-light);
   }
 
   .label-topic-tag-spoiler {
-    @include theme-special-label($topic-tag-spoiler-color, $is-light);
+    @include theme-special-label(map-get($theme, "topic-tag-spoiler"), $is-light);
   }
 
   .logged-in-user-username {
-    color: $foreground-primary;
+    color: map-get($theme, "foreground-primary");
   }
 
   .message {
-    border-color: $border-primary;
+    border-color: map-get($theme, "border");
 
     header {
-      color: $foreground-highlight;
-      background-color: $background-secondary;
+      color: map-get($theme, "foreground-highlight");
+      background-color: map-get($theme, "background-secondary");
     }
   }
 
   .nav .nav-item {
     a {
-      color: $anchor-normal;
+      color: map-get($theme, "link");
 
       &:hover {
-        color: $anchor-normal-hover;
+        color: map-get($theme, "link-hover");
       }
     }
 
     &.active a {
-      color: $anchor-normal;
+      color: map-get($theme, "link");
     }
   }
 
   .post-button {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
 
     &:hover {
-      color: $foreground-extreme;
+      color: map-get($theme, "foreground-extreme");
     }
   }
 
   .post-button-used {
-    color: $violet;
+    color: map-get($theme, "button-used");
   }
 
   .sidebar-controls {
-    background-color: $background-secondary;
+    background-color: map-get($theme, "background-secondary");
   }
 
   #sidebar {
-    background-color: $background-primary;
+    background-color: map-get($theme, "background-primary");
   }
 
   .site-header-context,
   .site-header-username {
-    color: $foreground-primary;
+    color: map-get($theme, "foreground-primary");
   }
 
   .site-header-logo {
-    color: $foreground-highlight;
+    color: map-get($theme, "foreground-highlight");
   }
 
   .site-header-sidebar-button.badge[data-badge]::after {
-    background-color: $orange;
+    background-color: map-get($theme, "alert");
   }
 
   .tab-listing-order {
-    border-color: $border-primary;
+    border-color: map-get($theme, "border");
   }
 
   .tab .tab-item {
     a {
-      color: $foreground-primary;
+      color: map-get($theme, "foreground-primary");
     }
 
     &.active a {
-      color: $anchor-normal;
+      color: map-get($theme, "link");
     }
   }
 
   .text-secondary {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
+  }
+
+  .text-warning {
+    color: map-get($theme, "warning");
   }
 
   .toast {
-    color: $foreground-highlight;
-    border-color: $border-primary;
-    background-color: $background-secondary;
+    color: map-get($theme, "foreground-highlight");
+    border-color: map-get($theme, "border");
+    background-color: map-get($theme, "background-secondary");
   }
 
   // Toasts should have colored border + text for dark themes, instead of a
   // brightly colored background
   @if ($is-light == false) {
     .toast-warning {
-      border-color: $orange;
-      color: $orange;
+      border-color: map-get($theme, "warning");
+      color: map-get($theme, "warning");
       background-color: transparent;
+    }
+  } @else {
+    .toast-warning {
+      background-color: map-get($theme, "warning");
     }
   }
 
   .topic {
-    border-color: $border-primary;
+    border-color: map-get($theme, "border");
   }
 
   .topic-listing {
     & > li:nth-of-type(2n) {
-      color: mix($foreground-primary, $foreground-highlight);
-      background-color: mix($background-primary, $background-secondary);
+      color: mix(map-get($theme, "foreground-primary"), map-get($theme, "foreground-highlight"));
+      background-color: mix(map-get($theme, "background-primary"), map-get($theme, "background-secondary"));
     }
   }
 
   .topic-content-metadata {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
   }
 
   .topic-full-byline {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
+  }
+
+  .topic-icon {
+    border-color: map-get($theme, "link");
   }
 
   .topic-info {
-    color: $foreground-middle;
+    color: map-get($theme, "foreground-middle");
   }
 
   .topic-info-comments-new {
-    color: $orange;
+    color: map-get($theme, "alert");
   }
 
   .topic-log-entry-time {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
   }
 
   .topic-text-excerpt {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
 
     summary::after {
-      color: $foreground-secondary;
+      color: map-get($theme, "foreground-secondary");
     }
 
     &[open] {
-      color: $foreground-primary;
+      color: map-get($theme, "foreground-primary");
     }
   }
 
@@ -427,46 +452,46 @@
     border-color: transparent;
 
     &:hover {
-      background-color: darken($blue, 3%);
-      border-color: darken($blue, 8%);
+      background-color: darken(map-get($theme, "button"), 3%);
+      border-color: darken(map-get($theme, "button"), 8%);
     }
   }
 
   .is-comment-deleted, .is-comment-removed {
-    color: $foreground-secondary;
+    color: map-get($theme, "foreground-secondary");
   }
 
   .is-comment-mine > .comment-itself {
-    border-left-color: $violet;
+    border-left-color: map-get($theme, "stripe-mine");
   }
 
   .is-comment-new {
     & > .comment-itself {
-      border-left-color: $orange;
+      border-left-color: map-get($theme, "alert");
     }
 
     .comment-text {
-      color: $foreground-highlight;
+      color: map-get($theme, "foreground-highlight");
     }
   }
 
   .is-comment-exemplary {
     & > .comment-itself {
-      border-left-color: $comment-label-exemplary-color;
+      border-left-color: map-get($theme, "comment-label-exemplary");
     }
   }
 
   .is-message-mine,
   .is-topic-mine {
-    border-left-color: $violet;
+    border-left-color: map-get($theme, "stripe-mine");
   }
 
   .is-topic-official {
-    border-left-color: $orange;
+    border-left-color: map-get($theme, "alert");
 
     h1 {
       a, a:visited {
-        color: $orange;
+        color: map-get($theme, "alert");
       }
     }
   }
@@ -477,7 +502,7 @@
     background-color: $color;
     color: #fff;
 
-    a {
+    a, a:hover, a:visited {
       color: #fff;
     }
   }
@@ -486,7 +511,7 @@
     color: $color;
     border: 1px solid $color;
 
-    a {
+    a, a:hover, a:visited {
       color: $color;
     }
   }
@@ -656,33 +681,63 @@
   $theme: map-merge($theme-base, $theme-map);
 
   // set $is-light as a bool for whether background-primary seems light or dark
-  $is-light: lightness(map-get($theme, 'background-primary')) > 50;
+  $is-light: lightness(map-get($theme, "background-primary")) > 50;
+
+  // button: if not defined, use link color
+  $button: map-get($theme, "button");
+  $button: map-get($theme, "link") !default;
+
+  // button-used: if not defined, use link-visited color
+  $button-used: map-get($theme, "button-used");
+  $button-used: map-get($theme, "link-visited") !default;
 
   // foreground-middle: if not defined, mix foreground-primary and foreground-secondary
-  $foreground-middle: map-get($theme, 'foreground-middle');
-  $foreground-middle: mix(map-get($theme, 'foreground-primary'), map-get($theme, 'foreground-secondary')) !default;
+  $foreground-middle: map-get($theme, "foreground-middle");
+  $foreground-middle: mix(map-get($theme, "foreground-primary"), map-get($theme, "foreground-secondary")) !default;
 
   // foreground-extreme: if not defined, use white on a dark background and black on a light one
-  $foreground-extreme: map-get($theme, 'foreground-extreme');
+  $foreground-extreme: map-get($theme, "foreground-extreme");
   $foreground-extreme: if($is-light, #000, #fff) !default;
 
+  // link-hover: if not defined, darken the link color slightly
+  $link-hover: map-get($theme, "link-hover");
+  $link-hover: darken(map-get($theme, "link"), 5%) !default;
+
+  // warning: if not defined, use alert color
+  $warning: map-get($theme, "warning");
+  $warning: map-get($theme, "alert") !default;
+
   @return map-merge($theme, (
-    'foreground-extreme': $foreground-extreme,
-    'foreground-middle': $foreground-middle,
+    "button": $button,
+    "button-used": $button-used,
+    "foreground-extreme": $foreground-extreme,
+    "foreground-middle": $foreground-middle,
+    "link-hover": $link-hover,
+    "warning": $warning,
   ));
 }
 
 $theme-base: (
-  'foreground-primary': #333,
-  'foreground-secondary': #999,
-  'foreground-highlight': #222,
-  'background-primary': #fff,
-  'background-secondary': #eee,
-  'background-input': #f7f7f7,
-  'border-primary': #ccc,
-  'anchor-normal': $blue,
-  'anchor-normal-hover': darken($blue, 5%),
-  'anchor-normal-visited': $violet,
+  "alert": #cb4b16,  // Solarized
+  "background-input": #fff,
+  "background-primary": #fff,
+  "background-secondary": #eee,
+  "border": #ccc,
+  "comment-label-exemplary": #268bd2,  // Solarized
+  "comment-label-joke": #859900,  // Solarized
+  "comment-label-noise": #b58900,  // Solarized
+  "comment-label-offtopic": #2aa198,  // Solarized
+  "comment-label-malice": #dc322f,  // Solarized
+  "error": #f00,
+  "foreground-highlight": #222,
+  "foreground-primary": #333,
+  "foreground-secondary": #999,
+  "link": #268bd2,  // Solarized
+  "link-visited": #6c71c4,  // Solarized
+  "stripe-mine": #6c71c4,  // Solarized
+  "stripe-target": #b58900,  // Solarized
+  "topic-tag-nsfw": #dc322f,  // Solarized
+  "topic-tag-spoiler": #b58900,  // Solarized
 );
 
 // define the default theme using the base values

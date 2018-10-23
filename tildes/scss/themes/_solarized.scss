@@ -1,0 +1,78 @@
+// Color palette is Ethan Schoonover's "Solarized"
+// (http://ethanschoonover.com/solarized)
+
+// "Official" color names from Solarized
+$base03: #002b36;
+$base02: #073642;
+$base01: #586e75;
+$base00: #657b83;
+$base0: #839496;
+$base1: #93a1a1;
+$base2: #eee8d5;
+$base3: #fdf6e3;
+
+$blue: #268bd2;
+$cyan: #2aa198;
+$green: #859900;
+$magenta: #d33682;
+$orange: #cb4b16;
+$red: #dc322f;
+$violet: #6c71c4;
+$yellow: #b58900;
+
+// More usable color names for monotone colors
+$bg-darkest: $base03;
+$bg-dark: $base02;
+$bg-light: $base2;
+$bg-lightest: $base3;
+
+$fg-darkest: $base01;
+$fg-dark: $base00;
+$fg-light: $base0;
+$fg-lightest: $base1;
+
+// Actual themes below:
+
+$solarized-base: (
+  "alert": $orange,
+  "comment-label-exemplary": $blue,
+  "comment-label-joke": $green,
+  "comment-label-noise": $yellow,
+  "comment-label-offtopic": $cyan,
+  "comment-label-malice": $red,
+  "error": $red,
+  "link": $blue,
+  "link-visited": $violet,
+  "stripe-mine": $violet,
+  "stripe-target": $yellow,
+  "topic-tag-nsfw": $red,
+  "topic-tag-spoiler": $yellow,
+);
+
+$theme-dark: map-merge($solarized-base, (
+  "background-input": #001f27,
+  "background-primary": $bg-darkest,
+  "background-secondary": $bg-dark,
+  "border": #33555e,
+  "foreground-highlight": $fg-lightest,
+  "foreground-primary": $fg-light,
+  "foreground-secondary": $fg-darkest,
+));
+
+body.theme-dark {
+  @include use-theme($theme-dark);
+}
+
+$theme-light: map-merge($solarized-base, (
+  "background-input": #fefbf1,
+  "background-primary": $bg-lightest,
+  "background-secondary": $bg-light,
+  "border": #cbc5b6,
+  "foreground-highlight": $fg-darkest,
+  "foreground-primary": $fg-dark,
+  "foreground-secondary": $fg-lightest,
+));
+
+body.theme-light {
+  @include use-theme($theme-light);
+}

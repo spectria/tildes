@@ -12,23 +12,6 @@ a {
   text-decoration: none;
 }
 
-// this is probably unnecessary, but I'm running into specificity conflicts
-// with the <code> colors being set in the theme - `body code` is overriding
-// `a code` and not styling <code> elements inside <a> as links.
-body a {
-  code {
-    color: $blue;
-  }
-
-  &:visited code {
-    color: $violet;
-  }
-
-  &:hover code {
-    text-decoration: underline;
-  }
-}
-
 blockquote {
   margin-left: 1rem;
   max-width: $paragraph-max-width - 1rem; // subtract the left margin
