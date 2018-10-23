@@ -475,6 +475,7 @@
 @mixin theme-special-label($color, $is-light) {
   @if $is-light {
     background-color: $color;
+    color: #fff;
 
     a {
       color: #fff;
