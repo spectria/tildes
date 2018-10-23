@@ -652,15 +652,29 @@
 }
 
 @function init-theme($theme-map) {
-  @return map-merge($theme-base, $theme-map);
+  $theme: map-merge($theme-base, $theme-map);
+
+  // set $is-light as a bool for whether background-primary seems light or dark
+  $is-light: lightness(map-get($theme, 'background-primary')) > 50;
+
+  // foreground-middle: if not defined, mix foreground-primary and foreground-secondary
+  $foreground-middle: map-get($theme, 'foreground-middle');
+  $foreground-middle: mix(map-get($theme, 'foreground-primary'), map-get($theme, 'foreground-secondary')) !default;
+
+  // foreground-extreme: if not defined, use white on a dark background and black on a light one
+  $foreground-extreme: map-get($theme, 'foreground-extreme');
+  $foreground-extreme: if($is-light, #000, #fff) !default;
+
+  @return map-merge($theme, (
+    'foreground-extreme': $foreground-extreme,
+    'foreground-middle': $foreground-middle,
+  ));
 }
 
 $theme-base: (
   'foreground-primary': #333,
   'foreground-secondary': #999,
   'foreground-highlight': #222,
-  'foreground-middle': #666,
-  'foreground-extreme': #000,
   'background-primary': #fff,
   'background-secondary': #eee,
   'background-input': #f7f7f7,
