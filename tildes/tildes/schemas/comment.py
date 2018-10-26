@@ -25,7 +25,7 @@ class CommentLabelSchema(Schema):
     """Marshmallow schema for comment labels."""
 
     name = Enum(CommentLabelOption)
-    reason = SimpleString(missing=None)
+    reason = SimpleString(max_length=1000, missing=None)
 
     class Meta:
         """Always use strict checking so error handlers are invoked."""
