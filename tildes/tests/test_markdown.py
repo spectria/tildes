@@ -174,14 +174,31 @@ def test_other_protocol_urls_not_linkified():
 
 
 def test_html_attr_whitelist_violation():
-    """Ensure using non-whitelisted HTML attributes removes the tag."""
+    """Ensure non-whitelisted HTML attributes are removed."""
     markdown = (
         '<a href="example.com" title="example" target="_blank" '
         'referrerpolicy="unsafe-url">test link</a>'
     )
     processed = convert_markdown_to_safe_html(markdown)
 
-    assert processed == "<p>test link</p>\n"
+    assert processed == '<p><a href="example.com" title="example">test link</a></p>\n'
+
+
+def test_html_lookalike_not_closed():
+    """Ensure text that looks like an HTML tag isn't "fixed" by adding a closing tag."""
+    markdown = "I can't believe it's not <blank>!"
+    processed = convert_markdown_to_safe_html(markdown)
+
+    assert "&lt;blank&gt;" in processed
+    assert "&lt;/blank&gt;" not in processed
+
+
+def test_html_lookalike_closing_not_removed():
+    """Ensure text that looks like an HTML close tag isn't removed without an opener."""
+    markdown = "Well, that's just great.</sarcasm>"
+    processed = convert_markdown_to_safe_html(markdown)
+
+    assert "&lt;/sarcasm&gt;" in processed
 
 
 def test_a_href_protocol_violation():

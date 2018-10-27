@@ -9,7 +9,7 @@ attrs==18.2.0
 backcall==0.1.0
 beautifulsoup4==4.6.3
 black==18.9b0
-bleach==2.1.4
+bleach==3.0.2
 certifi==2018.10.15
 cffi==1.11.5
 chardet==3.0.4

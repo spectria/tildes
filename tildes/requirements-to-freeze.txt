@@ -3,7 +3,7 @@ alembic
 amqpy
 argon2_cffi
 black
-bleach<3.0  # bleach 3.0.0 has issues, can't upgrade yet
+bleach
 click
 cornice
 freezegun
