@@ -25,6 +25,8 @@ class CommentQuery(PaginatedQuery):
         """
         super().__init__(Comment, request)
 
+        self._only_bookmarked = False
+
     def _attach_extra_data(self) -> "CommentQuery":
         """Attach the extra user data to the query."""
         # pylint: disable=protected-access
@@ -48,12 +50,13 @@ class CommentQuery(PaginatedQuery):
 
     def _attach_bookmark_data(self) -> "CommentQuery":
         """Join the data related to whether the user has bookmarked the comment."""
-        query = self.outerjoin(
+        query = self.join(
             CommentBookmark,
             and_(
                 CommentBookmark.comment_id == Comment.comment_id,
                 CommentBookmark.user == self.request.user,
             ),
+            isouter=(not self._only_bookmarked),
         )
         query = query.add_columns(CommentBookmark.created_time)
 
@@ -74,3 +77,8 @@ class CommentQuery(PaginatedQuery):
             comment.bookmark_created_time = result.created_time
 
         return comment
+
+    def only_bookmarked(self) -> "CommentQuery":
+        """Restrict the comments to ones that the user has bookmarked (generative)."""
+        self._only_bookmarked = True
+        return self

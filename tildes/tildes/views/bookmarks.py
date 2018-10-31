@@ -6,8 +6,7 @@ from marshmallow.fields import String
 from marshmallow.validate import OneOf
 from pyramid.request import Request
 from pyramid.view import view_config
-from sqlalchemy.sql import exists, desc
-from sqlalchemy.sql.expression import and_
+from sqlalchemy.sql import desc
 from webargs.pyramidparser import use_kwargs
 
 from tildes.models.comment import Comment, CommentBookmark
@@ -28,6 +27,7 @@ def get_bookmarks(
     post_type: Optional[str] = None,
 ) -> dict:
     """Generate the bookmarks page."""
+    # pylint: disable=unused-argument
     user = request.user
 
     bookmark_cls: Union[Type[CommentBookmark], Type[TopicBookmark]]
@@ -41,18 +41,7 @@ def get_bookmarks(
 
     query = (
         request.query(post_cls)
-        .filter(
-            exists()
-            .where(
-                and_(
-                    bookmark_cls.user == user,
-                    bookmark_cls.topic_id == post_cls.topic_id
-                    if post_cls == Topic
-                    else bookmark_cls.comment_id == post_cls.comment_id,
-                )
-            )
-            .correlate(bookmark_cls)
-        )
+        .only_bookmarked()
         .order_by(desc(bookmark_cls.created_time))
     )
 
@@ -64,6 +53,6 @@ def get_bookmarks(
 
     query = query.join_all_relationships()
 
-    posts = query.get_page(per_page)
+    posts = query.all()
 
     return {"user": user, "posts": posts, "post_type": post_type}

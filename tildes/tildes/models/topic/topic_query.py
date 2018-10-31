@@ -33,6 +33,8 @@ class TopicQuery(PaginatedQuery):
         """
         super().__init__(Topic, request)
 
+        self._only_bookmarked = False
+
     def _attach_extra_data(self) -> "TopicQuery":
         """Attach the extra user data to the query."""
         if not self.request.user:
@@ -56,12 +58,13 @@ class TopicQuery(PaginatedQuery):
 
     def _attach_bookmark_data(self) -> "TopicQuery":
         """Join the data related to whether the user has bookmarked the topic."""
-        query = self.outerjoin(
+        query = self.join(
             TopicBookmark,
             and_(
                 TopicBookmark.topic_id == Topic.topic_id,
                 TopicBookmark.user == self.request.user,
             ),
+            isouter=(not self._only_bookmarked),
         )
         query = query.add_columns(TopicBookmark.created_time)
 
@@ -164,3 +167,8 @@ class TopicQuery(PaginatedQuery):
     def search(self, query: str) -> "TopicQuery":
         """Restrict the topics to ones that match a search query (generative)."""
         return self.filter(Topic.search_tsv.op("@@")(func.plainto_tsquery(query)))
+
+    def only_bookmarked(self) -> "TopicQuery":
+        """Restrict the topics to ones that the user has bookmarked (generative)."""
+        self._only_bookmarked = True
+        return self
