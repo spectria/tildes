@@ -24,6 +24,7 @@ $.onmount('[data-js-comment-reply-button]', function() {
         var parentCommentAuthor = $parentComment.find('header:first .link-user').text();
         var postURL = '/api/web/comments/' + parentCommentID + '/replies';
         var markdownID = 'markdown-reply-' + parentCommentID;
+        var previewID = markdownID + '-preview';
 
         if ($('#' + markdownID).length > 0) {
             $('#' + markdownID).focus();
@@ -38,6 +39,12 @@ $.onmount('[data-js-comment-reply-button]', function() {
         clone.querySelector('label').setAttribute('for', markdownID);
         clone.querySelector('span').innerHTML = 'Replying to ' + parentCommentAuthor;
         clone.querySelector('textarea').setAttribute('id', markdownID);
+
+        var preview = clone.querySelector('[data-js-markdown-preview]');
+        preview.setAttribute('id', previewID);
+
+        clone.querySelector('[data-js-markdown-preview-tab] .btn')
+            .setAttribute('data-ic-target', '#' + previewID);
 
         var cancelButton = clone.querySelector('[data-js-cancel-button]');
         $(cancelButton).on('click', function (event) {

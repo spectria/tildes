@@ -1,14 +1,26 @@
 // Copyright (c) 2018 Tildes contributors <code@tildes.net>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+.tab {
+  font-size: 0.6rem;
+}
+
+.tab-item {
+  &.active .btn {
+    border-bottom: 2px solid;
+  }
+
+  .btn {
+    font-weight: normal;
+  }
+}
+
 .tab-listing-order {
   flex-wrap: nowrap;
   padding-left: 0;
   margin-top: 0;
 
   justify-content: space-around;
-
-  font-size: 0.6rem;
 
   // have the tabs span the full width at small sizes
   width: 100%;
@@ -30,4 +42,8 @@
       margin-right: 0;
     }
   }
+}
+
+.tab-markdown-mode {
+  display: inline-flex;
 }

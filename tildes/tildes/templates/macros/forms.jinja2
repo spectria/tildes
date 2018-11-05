@@ -6,14 +6,31 @@
     <span>{{ caption }}</span>
     <a href="https://docs.tildes.net/text-formatting" target="_blank" tabindex="-1">Formatting help</a>
   </label>
-  <textarea
-    class="form-input"
-    id="{{ id }}"
-    name="markdown"
-    placeholder="Text (Markdown)"
-    data-js-ctrl-enter-submit-form
-    {% if auto_focus %}data-js-auto-focus{% endif %}
-  >{% if text %}{{ text }}{% endif %}</textarea>
+  <div class="form-markdown">
+    <menu class="tab tab-markdown-mode">
+      <li class="tab-item active" data-js-tab data-js-markdown-edit-tab>
+        <button type="button" class="btn btn-link">Edit</button>
+      </li>
+      <li class="tab-item" data-js-tab data-js-markdown-preview-tab>
+        <button
+          type="button"
+          class="btn btn-link"
+          data-ic-post-to="/api/web/markdown_preview"
+          data-ic-target="#{{ id }}-preview"
+          data-ic-replace-target="false"
+        >Preview</button>
+      </li>
+    </menu>
+    <textarea
+      class="form-input"
+      id="{{ id }}"
+      name="markdown"
+      placeholder="Text (Markdown)"
+      data-js-ctrl-enter-submit-form
+      {% if auto_focus %}data-js-auto-focus{% endif %}
+    >{% if text %}{{ text }}{% endif %}</textarea>
+    <div id="{{ id }}-preview" class="d-none" data-js-markdown-preview></div>
+  </div>
 {% endmacro %}
 
 {% macro topic_tagging(value=None, auto_focus=False, autocomplete_options=None) %}

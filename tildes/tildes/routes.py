@@ -154,6 +154,8 @@ def add_intercooler_routes(config: Configurator) -> None:
         )
         add_ic_route("user_ban", "/ban", factory=user_by_username)
 
+    add_ic_route("markdown_preview", "/markdown_preview", factory=LoggedInFactory)
+
 
 class LoggedInFactory:
     """Simple class to use as `factory` to restrict routes to logged-in users.
