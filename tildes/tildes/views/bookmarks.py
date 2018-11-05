@@ -17,7 +17,11 @@ from tildes.schemas.listing import PaginatedListingSchema
 @view_config(route_name="bookmarks", renderer="bookmarks.jinja2")
 @use_kwargs(PaginatedListingSchema)
 @use_kwargs(
-    {"post_type": String(load_from="type", validate=OneOf(("topic", "comment")))}
+    {
+        "post_type": String(
+            load_from="type", validate=OneOf(("topic", "comment")), missing="topic"
+        )
+    }
 )
 def get_bookmarks(
     request: Request,
@@ -35,7 +39,7 @@ def get_bookmarks(
     if post_type == "comment":
         post_cls = Comment
         bookmark_cls = CommentBookmark
-    else:
+    elif post_type == "topic":
         post_cls = Topic
         bookmark_cls = TopicBookmark
 

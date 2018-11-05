@@ -12,10 +12,10 @@
 
 <div class="listing-options">
   <menu class="tab tab-listing-order">
-    <li class="tab-item{{' active' if (post_type == 'topic' or not post_type) else ''}}">
+    <li class="tab-item{{ ' active' if post_type == 'topic' }}">
       <a href="{{ request.current_listing_normal_url({'type': 'topic'}) }}">Topics</a>
     </li>
-    <li class="tab-item{{ ' active' if post_type == 'comment' else ''}}">
+    <li class="tab-item{{ ' active' if post_type == 'comment' }}">
       <a href="{{ request.current_listing_normal_url({'type': 'comment'}) }}">Comments</a>
     </li>
   </menu>
@@ -35,7 +35,7 @@
   {% endfor %}
   </ol>
 
-  {% if post_type and (posts.has_prev_page or posts.has_next_page) %}
+  {% if posts.has_prev_page or posts.has_next_page %}
     <div class="pagination">
       {% if posts.has_prev_page %}
         <a class="page-item btn" id="prev-page"
@@ -52,7 +52,13 @@
   {% endif %}
 {% else %}
   <div class="empty">
-    <h2 class="empty-title">You haven't bookmarked any posts</h2>
+    <h2 class="empty-title">
+      {% if post_type == 'topic' %}
+        You haven't bookmarked any topics
+      {% elif post_type == 'comment' %}
+        You haven't bookmarked any comments
+      {% endif %}
+    </h2>
   </div>
 {% endif %}
 
