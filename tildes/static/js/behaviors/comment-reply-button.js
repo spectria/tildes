@@ -30,56 +30,22 @@ $.onmount('[data-js-comment-reply-button]', function() {
             return;
         }
 
-        var replyForm = document.createElement('form');
-        replyForm.setAttribute('method', 'post');
-        replyForm.setAttribute('autocomplete', 'off');
-        replyForm.setAttribute('data-ic-post-to', postURL);
-        replyForm.setAttribute('data-ic-replace-target', 'true');
-        replyForm.setAttribute('data-js-confirm-cancel', 'Discard your reply?');
-        replyForm.setAttribute('data-js-prevent-double-submit', '');
-        replyForm.setAttribute('data-js-confirm-leave-page-unsaved', '');
+        // clone and populate the 'comment-reply' template
+        var template = document.getElementById('comment-reply');
+        var clone = document.importNode(template.content, true);
 
-        var label = document.createElement('label');
-        label.setAttribute('class', 'form-label');
-        label.setAttribute('for', markdownID);
-        label.innerHTML = '<span>Replying to ' + parentCommentAuthor + '</span>' +
-            '<a href="https://docs.tildes.net/text-formatting" target="_blank">' +
-            'Formatting help</a>';
+        clone.querySelector('form').setAttribute('data-ic-post-to', postURL);
+        clone.querySelector('label').setAttribute('for', markdownID);
+        clone.querySelector('span').innerHTML = 'Replying to ' + parentCommentAuthor;
+        clone.querySelector('textarea').setAttribute('id', markdownID);
 
-        var textarea = document.createElement('textarea');
-        textarea.setAttribute('id', markdownID);
-        textarea.setAttribute('name', 'markdown');
-        textarea.setAttribute('class', 'form-input');
-        textarea.setAttribute('placeholder', 'Comment text (Markdown)');
-        textarea.setAttribute('data-js-ctrl-enter-submit-form', '');
-        textarea.setAttribute('data-js-auto-focus', '');
-
-        var buttonDiv = document.createElement('div');
-        buttonDiv.setAttribute('class', 'form-buttons');
-
-        var postButton = document.createElement('button');
-        postButton.setAttribute('type', 'submit');
-        postButton.setAttribute('class', 'btn btn-primary');
-        postButton.innerHTML = 'Post comment';
-        buttonDiv.appendChild(postButton);
-
-        var cancelButton = document.createElement('button');
-        cancelButton.setAttribute('type', 'button');
-        cancelButton.setAttribute('class', 'btn btn-link');
-        cancelButton.setAttribute('data-js-cancel-button', '');
-        cancelButton.innerHTML = 'Cancel';
-
+        var cancelButton = clone.querySelector('[data-js-cancel-button]');
         $(cancelButton).on('click', function (event) {
             // re-enable click/hover events on the reply button
             $(this).parents('.comment').first()
                 .find('.btn-post-action[name=reply]').first()
                 .css('pointer-events', 'auto');
         });
-        buttonDiv.appendChild(cancelButton);
-
-        replyForm.appendChild(label);
-        replyForm.appendChild(textarea);
-        replyForm.appendChild(buttonDiv);
 
         // If the user has text selected inside a comment when they click the reply
         // button, start the comment form off with that text inside a blockquote
@@ -103,9 +69,9 @@ $.onmount('[data-js-comment-reply-button]', function() {
         }
 
         // update Intercooler so it knows about this new form
-        Intercooler.processNodes(replyForm);
+        Intercooler.processNodes(clone);
 
-        $replies.prepend(replyForm);
+        $replies.prepend(clone);
         $.onmount();
     });
 });

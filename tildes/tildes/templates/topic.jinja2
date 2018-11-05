@@ -11,6 +11,25 @@
 
 {% block title %}{{ topic.title }} - ~{{ topic.group.path }}{% endblock %}
 
+{% block templates %}
+<template id="comment-reply">
+  <form
+    method="post"
+    autocomplete="off"
+    data-js-confirm-cancel="Discard your reply?"
+    data-js-prevent-double-submit
+    data-js-confirm-leave-page-unsaved
+    data-ic-replace-target="true"
+  >
+    {{ markdown_textarea(auto_focus=True) }}
+    <div class="form-buttons">
+      <button type="submit" class="btn btn-primary">Post comment</button>
+      <button type="button" class="btn btn-link" data-js-cancel-button>Cancel</button>
+    </div>
+  </form>
+</template>
+{% endblock %}
+
 {% block header_context_link %}
 <a class="site-header-context" href="/~{{ topic.group.path }}">~{{ topic.group.path }}</a>
 {% endblock %}
