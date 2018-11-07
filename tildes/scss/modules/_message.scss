@@ -24,6 +24,8 @@
 }
 
 .message-text {
+  @extend %lists-text;
+
   margin-left: 0.2rem;
   overflow: auto;
   padding: 0.2rem;
