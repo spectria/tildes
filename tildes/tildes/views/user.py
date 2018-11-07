@@ -5,8 +5,6 @@
 
 from typing import List, Optional, Union
 
-from marshmallow.fields import String
-from marshmallow.validate import OneOf
 from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.sql.expression import desc
@@ -16,6 +14,7 @@ from tildes.enums import CommentLabelOption
 from tildes.models.comment import Comment
 from tildes.models.topic import Topic
 from tildes.models.user import User, UserInviteCode
+from tildes.schemas.fields import PostType
 from tildes.schemas.listing import PaginatedListingSchema
 
 
@@ -67,9 +66,7 @@ def _get_user_recent_activity(
 
 @view_config(route_name="user", renderer="user.jinja2")
 @use_kwargs(PaginatedListingSchema())
-@use_kwargs(
-    {"post_type": String(load_from="type", validate=OneOf(("topic", "comment")))}
-)
+@use_kwargs({"post_type": PostType(load_from="type")})
 def get_user(
     request: Request,
     after: str,

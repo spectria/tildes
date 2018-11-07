@@ -1,9 +1,7 @@
 """Views relating to bookmarks."""
 
-from typing import Optional, Type, Union
+from typing import Type, Union
 
-from marshmallow.fields import String
-from marshmallow.validate import OneOf
 from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.sql import desc
@@ -11,24 +9,15 @@ from webargs.pyramidparser import use_kwargs
 
 from tildes.models.comment import Comment, CommentBookmark
 from tildes.models.topic import Topic, TopicBookmark
+from tildes.schemas.fields import PostType
 from tildes.schemas.listing import PaginatedListingSchema
 
 
 @view_config(route_name="bookmarks", renderer="bookmarks.jinja2")
 @use_kwargs(PaginatedListingSchema)
-@use_kwargs(
-    {
-        "post_type": String(
-            load_from="type", validate=OneOf(("topic", "comment")), missing="topic"
-        )
-    }
-)
+@use_kwargs({"post_type": PostType(load_from="type", missing="topic")})
 def get_bookmarks(
-    request: Request,
-    after: str,
-    before: str,
-    per_page: int,
-    post_type: Optional[str] = None,
+    request: Request, after: str, before: str, per_page: int, post_type: str
 ) -> dict:
     """Generate the bookmarks page."""
     # pylint: disable=unused-argument

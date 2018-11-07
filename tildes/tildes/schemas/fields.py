@@ -8,7 +8,7 @@ from typing import Any, Optional, Type
 
 from marshmallow.exceptions import ValidationError
 from marshmallow.fields import Field, String
-from marshmallow.validate import Length, Regexp
+from marshmallow.validate import Length, OneOf, Regexp
 import sqlalchemy_utils
 
 from tildes.lib.datetime import SimpleHoursPeriod
@@ -148,3 +148,11 @@ class Ltree(Field):
             return sqlalchemy_utils.Ltree(value.lower())
         except (TypeError, ValueError):
             raise ValidationError("Invalid path")
+
+
+class PostType(String):
+    """Field for selecting a type of post (topic or comment)."""
+
+    def __init__(self, **kwargs: Any):
+        """Initialize the field with a "one of" validator."""
+        super().__init__(validate=OneOf(("topic", "comment")), **kwargs)
