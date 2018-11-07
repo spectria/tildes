@@ -38,6 +38,8 @@ body {
 code {
   display: inline-block;
   line-height: 1rem;
+  -moz-tab-size: 4;
+  tab-size: 4;
 }
 
 // Fixes a Chrome bug that seems to treat children of <details> as having
