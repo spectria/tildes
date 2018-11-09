@@ -14,7 +14,8 @@ $.onmount('[data-js-theme-selector]', function() {
 
         // persist the new theme for the user in their cookie
         document.cookie = 'theme=' + new_theme + ';' +
-            'path=/;max-age=315360000;secure';
+            'path=/;max-age=315360000;secure;domain=' +
+            document.location.hostname;
 
         // remove any theme classes currently on the body
         $body = $('body').first();
