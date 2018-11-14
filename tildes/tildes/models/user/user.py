@@ -137,9 +137,11 @@ class User(DatabaseModel):
         acl.append((Allow, Everyone, "view"))
 
         # message:
-        #  - anyone can message a user except themself
-        acl.append((Deny, self.user_id, "message"))
-        acl.append((Allow, Authenticated, "message"))
+        #  - banned users can't be messaged
+        #  - otherwise, anyone can message a user except themself
+        if not self.is_banned:
+            acl.append((Deny, self.user_id, "message"))
+            acl.append((Allow, Authenticated, "message"))
 
         # grant the user all other permissions on themself
         acl.append((Allow, self.user_id, ALL_PERMISSIONS))
