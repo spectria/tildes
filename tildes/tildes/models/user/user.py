@@ -51,6 +51,8 @@ class User(DatabaseModel):
           deletions, and updates to unread_user_ids in message_conversations.
         - last_exemplary_label_time will be set when a row for an exemplary label is
           inserted into comment_labels.
+      Internal:
+        - deleted_time will be set when is_deleted is set to true
     """
 
     schema_class = UserSchema
@@ -96,6 +98,10 @@ class User(DatabaseModel):
     )
     open_new_tab_text: bool = Column(Boolean, nullable=False, server_default="false")
     theme_default: str = Column(Text)
+    is_deleted: bool = Column(
+        Boolean, nullable=False, server_default="false", index=True
+    )
+    deleted_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     is_banned: bool = Column(Boolean, nullable=False, server_default="false")
     permissions: Any = Column(JSONB(none_as_null=True))
     home_default_order: Optional[TopicSortOption] = Column(ENUM(TopicSortOption))
@@ -137,11 +143,13 @@ class User(DatabaseModel):
         acl.append((Allow, Everyone, "view"))
 
         # message:
-        #  - banned users can't be messaged
-        #  - otherwise, anyone can message a user except themself
-        if not self.is_banned:
-            acl.append((Deny, self.user_id, "message"))
-            acl.append((Allow, Authenticated, "message"))
+        #  - deleted and banned users can't be messaged
+        #  - otherwise, logged-in users can message anyone except themselves
+        if self.is_banned or self.is_deleted:
+            acl.append((Deny, Everyone, "message"))
+
+        acl.append((Deny, self.user_id, "message"))
+        acl.append((Allow, Authenticated, "message"))
 
         # grant the user all other permissions on themself
         acl.append((Allow, self.user_id, ALL_PERMISSIONS))

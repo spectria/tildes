@@ -51,8 +51,9 @@ def auth_callback(user_id: int, request: Request) -> Optional[Sequence[str]]:
     if not request.user:
         return None
 
-    # if the user is banned, log them out - is there a better place to do this?
-    if request.user.is_banned:
+    # if the user is deleted or banned, log them out
+    # (is there a better place to do this?)
+    if request.user.is_banned or request.user.is_deleted:
         request.session.invalidate()
         raise HTTPFound("/")
 

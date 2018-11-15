@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from marshmallow.exceptions import ValidationError
+from pyramid.security import principals_allowed_by_permission
 from pytest import raises
 from sqlalchemy.exc import IntegrityError
 
@@ -115,3 +116,21 @@ def test_change_password_to_username(session_user):
     """Ensure users can't change password to the same as their username."""
     with raises(ValidationError):
         session_user.change_password("session user password", session_user.username)
+
+
+def test_deleted_user_no_message_permission():
+    """Ensure nobody can message a deleted user."""
+    deleted_user = User("Deleted_User", "password")
+    deleted_user.is_deleted = True
+
+    principals = principals_allowed_by_permission(deleted_user, "message")
+    assert not principals
+
+
+def test_banned_user_no_message_permission():
+    """Ensure nobody can message a banned user."""
+    banned_user = User("Banned_User", "password")
+    banned_user.is_banned = True
+
+    principals = principals_allowed_by_permission(banned_user, "message")
+    assert not principals
