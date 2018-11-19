@@ -32,6 +32,7 @@ from tildes.lib.id import id_to_id36
 from tildes.lib.markdown import convert_markdown_to_safe_html
 from tildes.lib.string import convert_to_url_slug
 from tildes.lib.url import get_domain_from_url, is_tweet
+from tildes.lib.url_transform import apply_url_transformations
 from tildes.metrics import incr_counter
 from tildes.models import DatabaseModel
 from tildes.models.group import Group
@@ -207,7 +208,7 @@ class Topic(DatabaseModel):
         """Create a new link topic."""
         new_topic = cls._create_base_topic(group, author, title)
         new_topic.topic_type = TopicType.LINK
-        new_topic.link = link
+        new_topic.link = apply_url_transformations(link)
         new_topic.original_url = link
 
         incr_counter("topics", type="link")
