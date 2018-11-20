@@ -7,7 +7,7 @@ import os
 from pyramid import testing
 from pyramid.paster import get_app, get_appsettings
 from pytest import fixture
-from redis import StrictRedis
+from redis import Redis
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import make_url
 from sqlalchemy.orm import sessionmaker
@@ -118,7 +118,7 @@ def overall_redis_session():
     redis_modules = ["/opt/redis-cell/libredis_cell.so"]
 
     with RedisServer() as temp_redis_server:
-        redis = StrictRedis(**temp_redis_server.dsn())
+        redis = Redis(**temp_redis_server.dsn())
 
         for module in redis_modules:
             redis.execute_command("MODULE LOAD", module)

@@ -10,7 +10,7 @@ from pyramid.config import Configurator
 from pyramid.httpexceptions import HTTPTooManyRequests
 from pyramid.registry import Registry
 from pyramid.request import Request
-from redis import StrictRedis
+from redis import Redis
 from webassets import Bundle
 
 from tildes.lib.ratelimit import RATE_LIMITED_ACTIONS, RateLimitResult
@@ -90,10 +90,10 @@ def http_method_tween_factory(handler: Callable, registry: Registry) -> Callable
     return method_override_tween
 
 
-def get_redis_connection(request: Request) -> StrictRedis:
-    """Return a StrictRedis connection to the Redis server."""
+def get_redis_connection(request: Request) -> Redis:
+    """Return a connection to the Redis server."""
     socket = request.registry.settings["redis.unix_socket_path"]
-    return StrictRedis(unix_socket_path=socket)
+    return Redis(unix_socket_path=socket)
 
 
 def is_safe_request_method(request: Request) -> bool:

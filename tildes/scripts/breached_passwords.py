@@ -30,7 +30,7 @@ import subprocess
 from typing import Any
 
 import click
-from redis import ResponseError, StrictRedis
+from redis import Redis, ResponseError
 
 from tildes.lib.password import (
     BREACHED_PASSWORDS_BF_KEY,
@@ -38,7 +38,7 @@ from tildes.lib.password import (
 )
 
 
-REDIS = StrictRedis(unix_socket_path=BREACHED_PASSWORDS_REDIS_SOCKET)
+REDIS = Redis(unix_socket_path=BREACHED_PASSWORDS_REDIS_SOCKET)
 
 
 def generate_redis_protocol(*elements: Any) -> str:

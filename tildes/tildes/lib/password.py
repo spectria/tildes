@@ -5,7 +5,7 @@
 
 from hashlib import sha1
 
-from redis import ConnectionError, ResponseError, StrictRedis  # noqa
+from redis import ConnectionError, Redis, ResponseError  # noqa
 
 # unix socket path for redis server with the breached passwords bloom filter
 BREACHED_PASSWORDS_REDIS_SOCKET = "/run/redis_breached_passwords/socket"
@@ -16,7 +16,7 @@ BREACHED_PASSWORDS_BF_KEY = "breached_passwords_bloom"
 
 def is_breached_password(password: str) -> bool:
     """Return whether the password is in the breached-passwords list."""
-    redis = StrictRedis(unix_socket_path=BREACHED_PASSWORDS_REDIS_SOCKET)
+    redis = Redis(unix_socket_path=BREACHED_PASSWORDS_REDIS_SOCKET)
 
     hashed = sha1(password.encode("utf-8")).hexdigest()
 

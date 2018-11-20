@@ -8,7 +8,7 @@ from ipaddress import ip_address
 from typing import Any, List, Optional, Sequence
 
 from pyramid.response import Response
-from redis import StrictRedis
+from redis import Redis
 
 from tildes.lib.datetime import utc_now
 
@@ -170,7 +170,7 @@ class RateLimitedAction:
         max_burst: Optional[int] = None,
         by_user: bool = True,
         by_ip: bool = True,
-        redis: Optional[StrictRedis] = None,
+        redis: Optional[Redis] = None,
     ):
         """Initialize the limits on a particular action.
 
@@ -207,7 +207,7 @@ class RateLimitedAction:
         self._redis = redis
 
     @property
-    def redis(self) -> StrictRedis:
+    def redis(self) -> Redis:
         """Return the redis connection."""
         if not self._redis:
             raise RateLimitError("No redis connection set")
@@ -215,7 +215,7 @@ class RateLimitedAction:
         return self._redis
 
     @redis.setter
-    def redis(self, redis_connection: StrictRedis) -> None:
+    def redis(self, redis_connection: Redis) -> None:
         """Set the redis connection."""
         self._redis = redis_connection
 
