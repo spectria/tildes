@@ -31,57 +31,50 @@ def includeme(config: Configurator) -> None:
     config.add_route("register", "/register")
 
     config.add_route("group", "/~{group_path}", factory=group_by_path)
-    config.add_route("new_topic", "/~{group_path}/new_topic", factory=group_by_path)
+    with config.route_prefix_context("/~{group_path}"):
+        config.add_route("new_topic", "/new_topic", factory=group_by_path)
 
-    config.add_route("group_topics", "/~{group_path}/topics", factory=group_by_path)
+        config.add_route("group_topics", "/topics", factory=group_by_path)
 
-    config.add_route(
-        "topic", "/~{group_path}/{topic_id36}*title", factory=topic_by_id36
-    )
+        config.add_route("topic", "/{topic_id36}*title", factory=topic_by_id36)
 
     config.add_route("user", "/user/{username}", factory=user_by_username)
+    with config.route_prefix_context("/user/{username}"):
+        config.add_route("new_message", "/new_message", factory=user_by_username)
+        config.add_route("user_messages", "/messages", factory=user_by_username)
 
     config.add_route("notifications", "/notifications", factory=LoggedInFactory)
-    config.add_route(
-        "notifications_unread", "/notifications/unread", factory=LoggedInFactory
-    )
+    with config.route_prefix_context("/notifications"):
+        config.add_route("notifications_unread", "/unread", factory=LoggedInFactory)
 
     config.add_route("messages", "/messages", factory=LoggedInFactory)
-    config.add_route("messages_sent", "/messages/sent", factory=LoggedInFactory)
-    config.add_route("messages_unread", "/messages/unread", factory=LoggedInFactory)
-    config.add_route(
-        "message_conversation",
-        "/messages/conversations/{conversation_id36}",
-        factory=message_conversation_by_id36,
-    )
-    config.add_route(
-        "new_message", "/user/{username}/new_message", factory=user_by_username
-    )
-    config.add_route(
-        "user_messages", "/user/{username}/messages", factory=user_by_username
-    )
+    with config.route_prefix_context("/messages"):
+        config.add_route("messages_sent", "/sent", factory=LoggedInFactory)
+        config.add_route("messages_unread", "/unread", factory=LoggedInFactory)
+        config.add_route(
+            "message_conversation",
+            "/conversations/{conversation_id36}",
+            factory=message_conversation_by_id36,
+        )
 
     config.add_route("settings", "/settings", factory=LoggedInFactory)
-    config.add_route(
-        "settings_account_recovery",
-        "/settings/account_recovery",
-        factory=LoggedInFactory,
-    )
-    config.add_route(
-        "settings_two_factor", "/settings/two_factor", factory=LoggedInFactory
-    )
-    config.add_route(
-        "settings_two_factor_qr_code",
-        "/settings/two_factor/qr_code",
-        factory=LoggedInFactory,
-    )
-    config.add_route(
-        "settings_comment_visits", "/settings/comment_visits", factory=LoggedInFactory
-    )
-    config.add_route("settings_filters", "/settings/filters", factory=LoggedInFactory)
-    config.add_route(
-        "settings_password_change", "/settings/password_change", factory=LoggedInFactory
-    )
+    with config.route_prefix_context("/settings"):
+        config.add_route(
+            "settings_account_recovery", "/account_recovery", factory=LoggedInFactory
+        )
+        config.add_route("settings_two_factor", "/two_factor", factory=LoggedInFactory)
+        config.add_route(
+            "settings_two_factor_qr_code",
+            "/two_factor/qr_code",
+            factory=LoggedInFactory,
+        )
+        config.add_route(
+            "settings_comment_visits", "/comment_visits", factory=LoggedInFactory
+        )
+        config.add_route("settings_filters", "/filters", factory=LoggedInFactory)
+        config.add_route(
+            "settings_password_change", "/password_change", factory=LoggedInFactory
+        )
 
     config.add_route("bookmarks", "/bookmarks", factory=LoggedInFactory)
 
@@ -93,64 +86,44 @@ def includeme(config: Configurator) -> None:
     # Route for Stripe donation processing page (POSTed to from docs site)
     config.add_route("donate_stripe", "/donate_stripe")
 
-    add_intercooler_routes(config)
+    # Add all intercooler routes under the /api/web path
+    with config.route_prefix_context("/api/web"):
+        add_intercooler_routes(config)
 
 
 def add_intercooler_routes(config: Configurator) -> None:
     """Set up all routes for the (internal-use) Intercooler API endpoints."""
 
     def add_ic_route(name: str, path: str, **kwargs: Any) -> None:
-        """Add route with intercooler name prefix, base path, header check."""
+        """Add route with intercooler name prefix and header check."""
         name = "ic_" + name
-        path = "/api/web" + path
         config.add_route(name, path, header="X-IC-Request:true", **kwargs)
 
-    add_ic_route(
-        "group_subscribe", "/group/{group_path}/subscribe", factory=group_by_path
-    )
-    add_ic_route(
-        "group_user_settings",
-        "/group/{group_path}/user_settings",
-        factory=group_by_path,
-    )
+    with config.route_prefix_context("/group/{group_path}"):
+        add_ic_route("group_subscribe", "/subscribe", factory=group_by_path)
+        add_ic_route("group_user_settings", "/user_settings", factory=group_by_path)
 
     add_ic_route("topic", "/topics/{topic_id36}", factory=topic_by_id36)
-    add_ic_route(
-        "topic_comments", "/topics/{topic_id36}/comments", factory=topic_by_id36
-    )
-    add_ic_route("topic_group", "/topics/{topic_id36}/group", factory=topic_by_id36)
-    add_ic_route("topic_lock", "/topics/{topic_id36}/lock", factory=topic_by_id36)
-    add_ic_route("topic_remove", "/topics/{topic_id36}/remove", factory=topic_by_id36)
-    add_ic_route("topic_title", "/topics/{topic_id36}/title", factory=topic_by_id36)
-    add_ic_route("topic_vote", "/topics/{topic_id36}/vote", factory=topic_by_id36)
-    add_ic_route("topic_tags", "/topics/{topic_id36}/tags", factory=topic_by_id36)
-    add_ic_route(
-        "topic_bookmark", "/topics/{topic_id36}/bookmark", factory=topic_by_id36
-    )
+    with config.route_prefix_context("/topics/{topic_id36}"):
+        add_ic_route("topic_comments", "/comments", factory=topic_by_id36)
+        add_ic_route("topic_group", "/group", factory=topic_by_id36)
+        add_ic_route("topic_lock", "/lock", factory=topic_by_id36)
+        add_ic_route("topic_remove", "/remove", factory=topic_by_id36)
+        add_ic_route("topic_title", "/title", factory=topic_by_id36)
+        add_ic_route("topic_vote", "/vote", factory=topic_by_id36)
+        add_ic_route("topic_tags", "/tags", factory=topic_by_id36)
+        add_ic_route("topic_bookmark", "/bookmark", factory=topic_by_id36)
 
     add_ic_route("comment", "/comments/{comment_id36}", factory=comment_by_id36)
-    add_ic_route(
-        "comment_remove", "/comments/{comment_id36}/remove", factory=comment_by_id36
-    )
-    add_ic_route(
-        "comment_replies", "/comments/{comment_id36}/replies", factory=comment_by_id36
-    )
-    add_ic_route(
-        "comment_vote", "/comments/{comment_id36}/vote", factory=comment_by_id36
-    )
-    add_ic_route(
-        "comment_label",
-        "/comments/{comment_id36}/labels/{name}",
-        factory=comment_by_id36,
-    )
-    add_ic_route(
-        "comment_bookmark", "/comments/{comment_id36}/bookmark", factory=comment_by_id36
-    )
-    add_ic_route(
-        "comment_mark_read",
-        "/comments/{comment_id36}/mark_read",
-        factory=notification_by_comment_id36,
-    )
+    with config.route_prefix_context("/comments/{comment_id36}"):
+        add_ic_route("comment_remove", "/remove", factory=comment_by_id36)
+        add_ic_route("comment_replies", "/replies", factory=comment_by_id36)
+        add_ic_route("comment_vote", "/vote", factory=comment_by_id36)
+        add_ic_route("comment_label", "/labels/{name}", factory=comment_by_id36)
+        add_ic_route("comment_bookmark", "/bookmark", factory=comment_by_id36)
+        add_ic_route(
+            "comment_mark_read", "/mark_read", factory=notification_by_comment_id36
+        )
 
     add_ic_route(
         "message_conversation_replies",
@@ -159,19 +132,16 @@ def add_intercooler_routes(config: Configurator) -> None:
     )
 
     add_ic_route("user", "/user/{username}", factory=user_by_username)
-    add_ic_route(
-        "user_filtered_topic_tags",
-        "/user/{username}/filtered_topic_tags",
-        factory=user_by_username,
-    )
-    add_ic_route(
-        "user_invite_code", "/user/{username}/invite_code", factory=user_by_username
-    )
-    add_ic_route(
-        "user_default_listing_options",
-        "/user/{username}/default_listing_options",
-        factory=user_by_username,
-    )
+    with config.route_prefix_context("/user/{username}"):
+        add_ic_route(
+            "user_filtered_topic_tags", "/filtered_topic_tags", factory=user_by_username
+        )
+        add_ic_route("user_invite_code", "/invite_code", factory=user_by_username)
+        add_ic_route(
+            "user_default_listing_options",
+            "/default_listing_options",
+            factory=user_by_username,
+        )
 
 
 class LoggedInFactory:
