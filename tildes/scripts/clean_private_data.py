@@ -91,7 +91,13 @@ class DataCleaner:
                 Comment.user_id != 0,
             )
             .update(
-                {"user_id": 0, "markdown": "", "rendered_html": ""},
+                {
+                    "user_id": 0,
+                    "last_edited_time": None,
+                    "markdown": "",
+                    "rendered_html": "",
+                    "excerpt": "",
+                },
                 synchronize_session=False,
             )
         )
@@ -113,11 +119,13 @@ class DataCleaner:
             .update(
                 {
                     "user_id": 0,
+                    "last_edited_time": None,
                     "title": "",
                     "topic_type": "TEXT",
                     "markdown": None,
                     "rendered_html": None,
                     "link": None,
+                    "original_url": None,
                     "content_metadata": None,
                     "_tags": [],
                 },
