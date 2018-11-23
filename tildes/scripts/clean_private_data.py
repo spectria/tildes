@@ -87,6 +87,7 @@ class DataCleaner:
         updated = (
             self.db_session.query(Comment)
             .filter(
+                Comment.is_deleted == True,  # noqa
                 Comment.deleted_time <= self.retention_cutoff,  # type: ignore
                 Comment.user_id != 0,
             )
@@ -113,6 +114,7 @@ class DataCleaner:
         updated = (
             self.db_session.query(Topic)
             .filter(
+                Topic.is_deleted == True,  # noqa
                 Topic.deleted_time <= self.retention_cutoff,  # type: ignore
                 Topic.user_id != 0,
             )
