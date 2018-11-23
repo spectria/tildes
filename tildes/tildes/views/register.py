@@ -25,11 +25,12 @@ from tildes.views.decorators import not_logged_in, rate_limit_view
 @view_config(
     route_name="register", renderer="register.jinja2", permission=NO_PERMISSION_REQUIRED
 )
+@use_kwargs({"code": String(missing="")})
 @not_logged_in
-def get_register(request: Request) -> dict:
+def get_register(request: Request, code: str) -> dict:
     """Display the registration form."""
     # pylint: disable=unused-argument
-    return {}
+    return {"code": code}
 
 
 def user_schema_check_breaches(request: Request) -> UserSchema:

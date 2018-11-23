@@ -23,7 +23,7 @@
 <div class="code-gen-btn">
   {% if request.user.invite_codes_remaining > 0 %}
     <button
-      class="btn btn-primary"
+      class="btn btn-primary mb-2"
       data-ic-get-from="{{ request.route_url(
         'ic_user_invite_code',
         username=request.user.username,
@@ -32,14 +32,14 @@
       data-ic-target=".code-gen-btn"
     >Generate new code ({{ request.user.invite_codes_remaining }} left)</button>
   {% else %}
-    <p>You don't currently have any invite codes available.</p>
+    <p>You aren't able to generate more invite links right now.</p>
   {% endif %}
 
 {% if codes %}
-    <p>You have the following invite codes active that have not been used yet:</p>
+    <p>You have the following invite links active that have not been used yet:</p>
   </div>
   {% for code in codes %}
-    <input class="form-input input-lg input-invite-code" type="text" value="{{ code }}" readonly data-js-autoselect-input>
+    <input class="form-input input-invite-code" type="text" value="{{ request.route_url("register", _query={"code": code}) }}" readonly data-js-autoselect-input>
   {% endfor %}
 {% else %}
   </div>
