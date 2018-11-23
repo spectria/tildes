@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 import logging
 
 from sqlalchemy.orm.session import Session
+from sqlalchemy.sql.expression import text
 
 from tildes.lib.database import get_session_from_config
 from tildes.models.comment import Comment
@@ -22,6 +23,9 @@ from tildes.models.topic import Topic, TopicVisit
 
 # sensitive data older than this should be removed
 RETENTION_PERIOD = timedelta(days=30)
+
+# used to set a column back to its default value
+DEFAULT = text("DEFAULT")
 
 
 def clean_all_data(config_path: str) -> None:
@@ -94,7 +98,7 @@ class DataCleaner:
             .update(
                 {
                     "user_id": 0,
-                    "last_edited_time": None,
+                    "last_edited_time": DEFAULT,
                     "markdown": "",
                     "rendered_html": "",
                     "excerpt": "",
@@ -121,15 +125,15 @@ class DataCleaner:
             .update(
                 {
                     "user_id": 0,
-                    "last_edited_time": None,
+                    "last_edited_time": DEFAULT,
                     "title": "",
-                    "topic_type": "TEXT",
-                    "markdown": None,
-                    "rendered_html": None,
-                    "link": None,
-                    "original_url": None,
-                    "content_metadata": None,
-                    "_tags": [],
+                    "topic_type": DEFAULT,
+                    "markdown": DEFAULT,
+                    "rendered_html": DEFAULT,
+                    "link": DEFAULT,
+                    "original_url": DEFAULT,
+                    "content_metadata": DEFAULT,
+                    "_tags": DEFAULT,
                 },
                 synchronize_session=False,
             )
