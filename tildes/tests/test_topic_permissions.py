@@ -46,10 +46,10 @@ def test_topic_view_author_permission(text_topic):
 
 
 def test_removed_topic_view_author_permission(topic):
-    """Ensure only admins and the author can view a removed topic's author."""
+    """Ensure only a removed topic's author can only be viewed by certain users."""
     topic.is_removed = True
     principals = principals_allowed_by_permission(topic, "view_author")
-    assert principals == {"admin", topic.user_id}
+    assert principals == {"admin", topic.user_id, "topic.remove"}
 
 
 def test_topic_view_content_permission(text_topic):
@@ -59,10 +59,10 @@ def test_topic_view_content_permission(text_topic):
 
 
 def test_removed_topic_view_content_permission(topic):
-    """Ensure only admins and the author can view a removed topic's content."""
+    """Ensure a removed topic's content can only be viewed by certain users."""
     topic.is_removed = True
     principals = principals_allowed_by_permission(topic, "view_content")
-    assert principals == {"admin", topic.user_id}
+    assert principals == {"admin", topic.user_id, "topic.remove"}
 
 
 def test_topic_comment_permission(text_topic):

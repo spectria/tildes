@@ -83,10 +83,10 @@ def test_deleted_comment_permissions_removed(comment):
 
 
 def test_removed_comment_view_permission(comment):
-    """Ensure a removed comment can only be viewed by its author and admins."""
+    """Ensure a removed comment can only be viewed by certain users."""
     comment.is_removed = True
     principals = principals_allowed_by_permission(comment, "view")
-    assert principals == {"admin", comment.user_id}
+    assert principals == {"admin", comment.user_id, "comment.remove"}
 
 
 def test_edit_grace_period(comment):

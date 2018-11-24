@@ -147,11 +147,13 @@ class Comment(DatabaseModel):
             acl.append(DENY_ALL)
 
         # view:
-        #  - removed comments can only be viewed by admins and the author
+        #  - removed comments can only be viewed by admins, the author, and users with
+        #    remove permission
         #  - otherwise, everyone can view
         if self.is_removed:
             acl.append((Allow, "admin", "view"))
             acl.append((Allow, self.user_id, "view"))
+            acl.append((Allow, "comment.remove", "view"))
             acl.append((Deny, Everyone, "view"))
 
         acl.append((Allow, Everyone, "view"))
@@ -209,6 +211,8 @@ class Comment(DatabaseModel):
 
         # tools that require specifically granted permissions
         acl.append((Allow, "admin", "remove"))
+        acl.append((Allow, "comment.remove", "remove"))
+
         acl.append((Allow, "admin", "view_labels"))
 
         acl.append(DENY_ALL)

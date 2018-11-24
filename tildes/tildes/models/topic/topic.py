@@ -230,21 +230,25 @@ class Topic(DatabaseModel):
         acl.append((Allow, Everyone, "view"))
 
         # view_author:
-        #  - removed topics' author is only visible to the author and admins
+        #  - removed topics' author is only visible to the author, admins, and users
+        #    with remove permission
         #  - otherwise, everyone can view the author
         if self.is_removed:
             acl.append((Allow, "admin", "view_author"))
             acl.append((Allow, self.user_id, "view_author"))
+            acl.append((Allow, "topic.remove", "view_author"))
             acl.append((Deny, Everyone, "view_author"))
 
         acl.append((Allow, Everyone, "view_author"))
 
         # view_content:
-        #  - removed topics' content is only visible to the author and admins
+        #  - removed topics' content is only visible to the author, admins and users
+        #    with remove permissions
         #  - otherwise, everyone can view the content
         if self.is_removed:
             acl.append((Allow, "admin", "view_content"))
             acl.append((Allow, self.user_id, "view_content"))
+            acl.append((Allow, "topic.remove", "view_content"))
             acl.append((Deny, Everyone, "view_content"))
 
         acl.append((Allow, Everyone, "view_content"))
@@ -289,8 +293,10 @@ class Topic(DatabaseModel):
 
         # tools that require specifically granted permissions
         acl.append((Allow, "admin", "lock"))
+        acl.append((Allow, "topic.lock", "lock"))
 
         acl.append((Allow, "admin", "remove"))
+        acl.append((Allow, "topic.remove", "remove"))
 
         acl.append((Allow, "admin", "move"))
         acl.append((Allow, "topic.move", "move"))
