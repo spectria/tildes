@@ -130,14 +130,6 @@ def test_https_link_linkified():
     assert '<a href="https://example.com">' in processed
 
 
-def test_bare_domain_linkified():
-    """Ensure that a bare domain results in a link."""
-    markdown = "I can just write example.com too."
-    processed = convert_markdown_to_safe_html(markdown)
-
-    assert '<a href="http://example.com">' in processed
-
-
 def test_link_with_path_linkified():
     """Ensure a link with a path results in a link."""
     markdown = "So http://example.com/a/b_c_d/e too?"
@@ -148,18 +140,10 @@ def test_link_with_path_linkified():
 
 def test_link_with_query_string_linkified():
     """Ensure a link with a query string results in a link."""
-    markdown = "Also http://example.com?something=true works?"
+    markdown = "Also http://example.com?something=true&test=yes works?"
     processed = convert_markdown_to_safe_html(markdown)
 
-    assert '<a href="http://example.com?something=true">' in processed
-
-
-def test_email_address_not_linkified():
-    """Ensure that an email address does not get linkified."""
-    markdown = "Please contact somebody@example.com about that."
-    processed = convert_markdown_to_safe_html(markdown)
-
-    assert "<a" not in processed
+    assert '<a href="http://example.com?something=true&amp;test=yes">' in processed
 
 
 def test_other_protocol_urls_not_linkified():
@@ -170,7 +154,7 @@ def test_other_protocol_urls_not_linkified():
         markdown = f"Testing {protocol}://example.com for linking"
         processed = convert_markdown_to_safe_html(markdown)
 
-        assert "<a" not in processed
+        assert "href" not in processed
 
 
 def test_html_attr_whitelist_violation():

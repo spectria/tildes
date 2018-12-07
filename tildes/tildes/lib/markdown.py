@@ -5,19 +5,7 @@
 
 from functools import partial
 import re
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Iterator,
-    List,
-    Match,
-    Optional,
-    Pattern,
-    Tuple,
-    Union,
-)
-from urllib.parse import urlparse
+from typing import Any, Callable, Iterator, List, Match, Optional, Pattern, Tuple
 
 from bs4 import BeautifulSoup
 import bleach
@@ -116,29 +104,6 @@ BAD_ORDERED_LIST_REGEX = re.compile(
     r"(?!1\.)\d+)"  # A number that isn't "1"
     r"\.\s"  # Followed by a period and a space
 )
-
-# Type alias for the "namespaced attr dict" used inside bleach.linkify callbacks. This
-# looks pretty ridiculous, but it's a dict where the keys are namespaced attr names,
-# like `(None, 'href')`, and there's also a `_text` key for getting the innerText of the
-# <a> tag.
-NamespacedAttrDict = Dict[Union[Tuple[Optional[str], str], str], str]
-
-
-def linkify_protocol_whitelist(
-    attrs: NamespacedAttrDict, new: bool = False
-) -> Optional[NamespacedAttrDict]:
-    """bleach.linkify callback: prevent links to non-whitelisted protocols."""
-    # pylint: disable=unused-argument
-    href = attrs.get((None, "href"))
-    if not href:
-        return attrs
-
-    parsed = urlparse(href)
-
-    if parsed.scheme not in PROTOCOL_WHITELIST:
-        return None
-
-    return attrs
 
 
 @histogram_timer("markdown_processing")
@@ -444,17 +409,12 @@ def linkify_and_sanitize_html(html: str) -> str:
     # list of tag names to exclude from linkification
     linkify_skipped_tags = ["code", "pre"]
 
-    bleach_linkifier = partial(
-        bleach.linkifier.LinkifyFilter,
-        callbacks=[linkify_protocol_whitelist],
-        skip_tags=linkify_skipped_tags,
-    )
     tildes_linkifier = partial(LinkifyFilter, skip_tags=linkify_skipped_tags)
 
     cleaner = bleach.Cleaner(
         tags=HTML_TAG_WHITELIST,
         attributes=HTML_ATTRIBUTE_WHITELIST,
         protocols=PROTOCOL_WHITELIST,
-        filters=[bleach_linkifier, tildes_linkifier],
+        filters=[tildes_linkifier],
     )
     return cleaner.clean(html)

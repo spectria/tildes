@@ -13,7 +13,7 @@ CMARK_EXT_DLL = CDLL("/usr/local/lib/libcmark-gfm-extensions.so")
 # CMARK_OPT_UNSAFE (1 << 17)
 CMARK_OPTS = (1 << 2) | (1 << 17)
 
-CMARK_EXTENSIONS = (b"strikethrough", b"table")
+CMARK_EXTENSIONS = (b"autolink", b"strikethrough", b"table")
 
 cmark_parser_new = CMARK_DLL.cmark_parser_new
 cmark_parser_new.restype = c_void_p
