@@ -53,7 +53,10 @@
       <div class="topic-icon topic-icon-{{ topic.link_domain.replace('.', '_') }}"></div>
       <a
         href="{{ topic.link }}"
-        {% if request.user.open_new_tab_external %}target="_blank"{% endif %}
+        {% if request.user.open_new_tab_external %}
+          target="_blank"
+          rel="noopener"
+        {% endif %}
       >{{ topic.link }}</a>
     </div>
 

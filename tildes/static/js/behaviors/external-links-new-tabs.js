@@ -6,6 +6,7 @@ $.onmount('[data-js-external-links-new-tabs]', function() {
     $(this).find('a').each(function() {
         if (this.host !== window.location.host) {
           $(this).attr('target', '_blank');
+          $(this).attr('rel', 'noopener');
         }
     });
 });

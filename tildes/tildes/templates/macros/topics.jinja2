@@ -21,7 +21,10 @@
           {% elif topic.is_link_type %}
             <a
               href="{{ topic.link }}"
-              {% if request.user.open_new_tab_external %}target="_blank"{% endif %}
+              {% if request.user.open_new_tab_external %}
+                target="_blank"
+                rel="noopener"
+              {% endif %}
             >{{ topic.title }}</a>
           {% endif %}
         </h1>
