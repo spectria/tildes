@@ -161,10 +161,7 @@ def current_listing_base_url(
     if query:
         query_vars.update(query)
 
-    url = request.current_route_url(_query=query_vars)
-
-    # Pyramid seems to %-encode tilde characters unnecessarily, fix that
-    return url.replace("%7E", "~")
+    return request.current_route_url(_query=query_vars)
 
 
 def current_listing_normal_url(
@@ -197,7 +194,4 @@ def current_listing_normal_url(
     if query:
         query_vars.update(query)
 
-    url = request.current_route_url(_query=query_vars)
-
-    # Pyramid seems to %-encode tilde characters unnecessarily, fix that
-    return url.replace("%7E", "~")
+    return request.current_route_url(_query=query_vars)
