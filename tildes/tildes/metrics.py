@@ -10,7 +10,6 @@
 from typing import Callable
 
 from prometheus_client import Counter, Histogram
-from prometheus_client.core import _LabelWrapper
 
 
 _COUNTERS = {
@@ -50,7 +49,7 @@ def incr_counter(name: str, amount: int = 1, **labels: str) -> None:
     except KeyError:
         raise ValueError("Invalid counter name")
 
-    if isinstance(counter, _LabelWrapper):
+    if labels:
         counter = counter.labels(**labels)
 
     counter.inc(amount)
@@ -63,7 +62,7 @@ def get_histogram(name: str, **labels: str) -> Histogram:
     except KeyError:
         raise ValueError("Invalid histogram name")
 
-    if isinstance(hist, _LabelWrapper):
+    if labels:
         hist = hist.labels(**labels)
 
     return hist
