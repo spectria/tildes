@@ -6,16 +6,15 @@
 # Salt seems to use the deprecated pyvenv script, manual for now
 site-icons-venv-setup:
   cmd.run:
-    - name: /usr/local/pyenv/versions/{{ python_version }}/bin/python -m venv {{ site_icons_venv_dir }}
+    - name: python{{ python_version }} -m venv {{ site_icons_venv_dir }}
     - creates: {{ site_icons_venv_dir }}
     - require:
-      - pkg: python3-venv
-      - pyenv: {{ python_version }}
+      - pkg: python{{ python_version }}-venv
 
 site-icons-pip-installs:
   cmd.run:
     - name: {{ site_icons_venv_dir }}/bin/pip install glue
-    - unless: ls {{ site_icons_venv_dir }}/lib/python3.6/site-packages/glue
+    - unless: ls {{ site_icons_venv_dir }}/lib/python{{ python_version }}/site-packages/glue
 
 site-icons-output-placeholder:
   file.managed:

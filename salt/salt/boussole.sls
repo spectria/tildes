@@ -5,16 +5,15 @@
 # Salt seems to use the deprecated pyvenv script, manual for now
 boussole-venv-setup:
   cmd.run:
-    - name: /usr/local/pyenv/versions/{{ python_version }}/bin/python -m venv {{ boussole_venv_dir }}
+    - name: python{{ python_version }} -m venv {{ boussole_venv_dir }}
     - creates: {{ boussole_venv_dir }}
     - require:
-      - pkg: python3-venv
-      - pyenv: {{ python_version }}
+      - pkg: python{{ python_version }}-venv
 
 boussole-pip-installs:
   cmd.run:
     - name: {{ boussole_venv_dir }}/bin/pip install boussole
-    - unless: ls {{ boussole_venv_dir }}/lib/python3.6/site-packages/boussole
+    - unless: ls {{ boussole_venv_dir }}/lib/python{{ python_version }}/site-packages/boussole
 
 /etc/systemd/system/boussole.service:
   file.managed:

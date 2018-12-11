@@ -1,28 +1,11 @@
 {% from 'common.jinja2' import app_dir, bin_dir, python_version, venv_dir %}
 
-pyenv-deps:
+deadsnakes:
+  pkgrepo.managed:
+    - ppa: deadsnakes/ppa
   pkg.installed:
-    - pkgs:
-      - build-essential
-      - curl
-      - libbz2-dev
-      - libncurses5-dev
-      - libncursesw5-dev
-      - libreadline-dev
-      - libsqlite3-dev
-      - libssl-dev
-      - llvm
-      - make
-      - wget
-      - xz-utils
-      - zlib1g-dev
-
-python-3.6:
-  pyenv.installed:
-    - name: {{ python_version }}
-    - default: True
-    - require:
-      - pkg: pyenv-deps
+    - name: python{{ python_version }}
+    - refresh: True
 
 delete-obsolete-venv:
   file.absent:
@@ -32,13 +15,12 @@ delete-obsolete-venv:
 # Salt seems to use the deprecated pyvenv script, manual for now
 venv-setup:
   pkg.installed:
-    - name: python3-venv
+    - name: python{{ python_version }}-venv
   cmd.run:
-    - name: /usr/local/pyenv/versions/{{ python_version }}/bin/python -m venv {{ venv_dir }}
+    - name: python{{ python_version }} -m venv {{ venv_dir }}
     - creates: {{ venv_dir }}
     - require:
-      - pkg: python3-venv
-      - pyenv: {{ python_version }}
+      - pkg: python{{ python_version }}-venv
 
 pip-installs:
   pip.installed:
@@ -55,4 +37,4 @@ self-install:
       - {{ app_dir }}
     - require:
       - cmd: venv-setup
-    - unless: ls {{ venv_dir }}/lib/python3.6/site-packages/tildes.egg-link
+    - unless: ls {{ venv_dir }}/lib/python{{ python_version }}/site-packages/tildes.egg-link
