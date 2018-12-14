@@ -144,8 +144,11 @@ class Ltree(Field):
 
     def _deserialize(self, value: str, attr: str, data: dict) -> sqlalchemy_utils.Ltree:
         """Deserialize a string path to an Ltree object."""
+        # convert to lowercase and replace spaces with underscores
+        value = value.lower().replace(" ", "_")
+
         try:
-            return sqlalchemy_utils.Ltree(value.lower())
+            return sqlalchemy_utils.Ltree(value)
         except (TypeError, ValueError):
             raise ValidationError("Invalid path")
 

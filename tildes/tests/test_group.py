@@ -46,7 +46,7 @@ def test_uppercase_letters_fixed():
 
 def test_paths_with_invalid_characters():
     """Ensure that paths can't include some characters (not comprehensive)."""
-    invalid_chars = ' ~!@#$%^&*()+={}[]|\\:;"<>,?/'
+    invalid_chars = '~!@#$%^&*()+={}[]|\\:;"<>,?/'
 
     for char in invalid_chars:
         path = f"abc{char}xyz"
