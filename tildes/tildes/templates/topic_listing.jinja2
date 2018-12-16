@@ -115,14 +115,18 @@
 
 {% if not topics %}
   <div class="empty">
-    <h2 class="empty-title">No topics in the selected time period</h2>
-    {% if is_single_group and request.has_permission('post_topic', group) %}
-      <p class="empty-subtitle">Choose a longer time period, or break the silence by posting one yourself.</p>
-      <div class="empty-action">
-        <a href="/~{{ group.path }}/new_topic" class="btn btn-primary">Post a new topic</a>
-      </div>
+    {% if period %}
+      <h2 class="empty-title">No topics in the selected time period</h2>
+      {% if is_single_group and request.has_permission('post_topic', group) %}
+        <p class="empty-subtitle">Try choosing a longer time period, or break the silence by posting one yourself.</p>
+        <div class="empty-action">
+          <a href="/~{{ group.path }}/new_topic" class="btn btn-primary">Post a new topic</a>
+        </div>
+      {% else %}
+        <p class="empty-subtitle">Try choosing a longer time period to find some.</p>
+      {% endif %}
     {% else %}
-      <p class="empty-subtitle">Choose a longer time period to find some.</p>
+      <h2 class="empty-title">No topics found</h2>
     {% endif %}
   </div>
 {% endif %}
