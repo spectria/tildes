@@ -20,10 +20,10 @@ def get_shortener(request: Request) -> Response:
 @view_config(route_name="shortener_group", permission=NO_PERMISSION_REQUIRED)
 def get_shortener_group(request: Request) -> HTTPFound:
     """Redirect to the base path of a group."""
-    raise HTTPFound(location=f"/~{request.context.path}")
+    raise HTTPFound(location=f"https://tildes.net/~{request.context.path}")
 
 
 @view_config(route_name="shortener_topic", permission=NO_PERMISSION_REQUIRED)
 def get_shortener_topic(request: Request) -> HTTPFound:
     """Redirect to the full permalink for a topic."""
-    raise HTTPFound(location=request.context.permalink)
+    raise HTTPFound(location=f"https://tildes.net{request.context.permalink}")
