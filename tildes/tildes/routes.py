@@ -91,7 +91,9 @@ def includeme(config: Configurator) -> None:
         add_intercooler_routes(config)
 
     # Add routes for the link-shortener under the /shortener path
-    config.add_route("shortener", "/shortener")
+    # The trailing slash is required for the base /shortener/ path because of the way
+    # nginx's proxy_pass will forward the urls from the shortener
+    config.add_route("shortener", "/shortener/")
     with config.route_prefix_context("/shortener"):
         config.add_route("shortener_group", "/~{group_path}", factory=group_by_path)
         config.add_route("shortener_topic", "/{topic_id36}", factory=topic_by_id36)
