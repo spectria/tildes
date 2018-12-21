@@ -271,6 +271,17 @@
 {% block sidebar %}
 <h2>Topic info</h2>
 <dl>
+  <dt>Short link</dt>
+  <dd>
+    <input
+      type="text"
+      class="form-input input-sm"
+      value="https://tild.es/{{ topic.topic_id36 }}"
+      readonly
+      data-js-autoselect-input
+    >
+  </dd>
+
   <dt>Tags</dt>
   <dd>
     {% include 'includes/topic_tags.jinja2' %}
