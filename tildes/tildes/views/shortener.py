@@ -3,7 +3,8 @@
 
 """Views related to the link shortener."""
 
-from pyramid.httpexceptions import HTTPFound
+from mypy_extensions import NoReturn
+from pyramid.httpexceptions import HTTPMovedPermanently
 from pyramid.request import Request
 from pyramid.response import Response
 from pyramid.security import NO_PERMISSION_REQUIRED
@@ -18,12 +19,14 @@ def get_shortener(request: Request) -> Response:
 
 
 @view_config(route_name="shortener_group", permission=NO_PERMISSION_REQUIRED)
-def get_shortener_group(request: Request) -> HTTPFound:
+def get_shortener_group(request: Request) -> NoReturn:
     """Redirect to the base path of a group."""
-    raise HTTPFound(location=f"https://tildes.net/~{request.context.path}")
+    destination = f"https://tildes.net/~{request.context.path}"
+    raise HTTPMovedPermanently(location=destination)
 
 
 @view_config(route_name="shortener_topic", permission=NO_PERMISSION_REQUIRED)
-def get_shortener_topic(request: Request) -> HTTPFound:
+def get_shortener_topic(request: Request) -> NoReturn:
     """Redirect to the full permalink for a topic."""
-    raise HTTPFound(location=f"https://tildes.net{request.context.permalink}")
+    destination = f"https://tildes.net{request.context.permalink}"
+    raise HTTPMovedPermanently(location=destination)
