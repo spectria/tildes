@@ -130,3 +130,24 @@ def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
         result = result.replace(",", "")
 
     return result
+
+
+def adaptive_date(target: datetime, abbreviate: bool = False) -> str:
+    """Return a date string that switches from relative to absolute past a threshold."""
+    threshold = timedelta(days=7)
+
+    # if the date is more recent than threshold, return the relative "ago"-style string
+    if utc_now() - target < threshold:
+        return descriptive_timedelta(target, abbreviate)
+
+    # if abbreviating, use the short version of month name ("Dec" instead of "December")
+    if abbreviate:
+        format_str = "%b %-d"
+    else:
+        format_str = "%B %-d"
+
+    # only append the year if it's not the current year
+    if target.year != utc_now().year:
+        format_str += ", %Y"
+
+    return target.strftime(format_str)

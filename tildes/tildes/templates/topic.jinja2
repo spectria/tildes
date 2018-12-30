@@ -4,7 +4,7 @@
 {% extends 'base.jinja2' %}
 
 {% from 'macros/comments.jinja2' import comment_label_options_template, render_comment_tree with context %}
-{% from 'macros/datetime.jinja2' import time_ago, time_ago_abbreviated, time_ago_responsive %}
+{% from 'macros/datetime.jinja2' import adaptive_date_responsive, time_ago %}
 {% from 'macros/forms.jinja2' import markdown_textarea %}
 {% from 'macros/links.jinja2' import group_linked, username_linked %}
 {% from 'macros/topics.jinja2' import topic_voting with context %}
@@ -20,7 +20,7 @@
 <header>
   {{ topic_voting(topic) }}
   <h1>{{ topic.title }}</h1>
-  <div class="topic-full-byline">Posted {{ time_ago_responsive(topic.created_time) }} by
+  <div class="topic-full-byline">Posted {{ adaptive_date_responsive(topic.created_time) }} by
     {% if request.has_permission('view_author', topic) %}
       {{ username_linked(topic.user.username) }}
     {% else %}
@@ -29,7 +29,7 @@
 
     {% if topic.last_edited_time %}
       <span class="text-italic">
-        (edited {{ time_ago_responsive(topic.last_edited_time) }})
+        (edited {{ adaptive_date_responsive(topic.last_edited_time) }})
       </span>
     {% endif %}
   </div>
@@ -306,7 +306,7 @@
     <dt>Last comment posted</dt>
     <dd>
       <a href="{{ comments.most_recent_comment.permalink }}" data-js-hide-sidebar-no-preventdefault>
-        {{ time_ago(topic.last_activity_time) }}
+        {{ adaptive_date_responsive(topic.last_activity_time) }}
       </a>
     </dd>
   {% else %}
@@ -326,7 +326,7 @@
               {{ username_linked(entry.user) }}
             {% endif %}
             {{ entry }}
-            <span class="topic-log-entry-time">({{ time_ago_abbreviated(entry.event_time) }})</span>
+            <span class="topic-log-entry-time">({{ time_ago(entry.event_time, abbreviate=True) }})</span>
           </li>
         {% endfor %}
         </ol>

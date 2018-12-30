@@ -1,7 +1,7 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% from 'datetime.jinja2' import time_ago_responsive %}
+{% from 'datetime.jinja2' import adaptive_date_responsive %}
 {% from 'links.jinja2' import username_linked %}
 
 {% macro render_single_comment(comment) %}
@@ -57,11 +57,11 @@
           </span>
         {% endif %}
 
-        {{ time_ago_responsive(comment.created_time, class_="comment-posted-time") }}
+        {{ adaptive_date_responsive(comment.created_time, class_="comment-posted-time") }}
 
         {% if comment.last_edited_time %}
           <span class="comment-edited-time">
-            (edited {{ time_ago_responsive(comment.last_edited_time) }})
+            (edited {{ adaptive_date_responsive(comment.last_edited_time) }})
           </span>
         {% endif %}
       {% else %}

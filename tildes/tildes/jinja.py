@@ -7,7 +7,7 @@ from typing import Any
 
 from pyramid.config import Configurator
 
-from tildes.lib.datetime import descriptive_timedelta
+from tildes.lib.datetime import adaptive_date, descriptive_timedelta
 from tildes.models.comment import Comment
 from tildes.models.group import Group
 from tildes.models.topic import Topic
@@ -36,7 +36,10 @@ def includeme(config: Configurator) -> None:
     settings["jinja2.trim_blocks"] = True
 
     # add custom jinja filters
-    settings["jinja2.filters"] = {"ago": descriptive_timedelta}
+    settings["jinja2.filters"] = {
+        "adaptive_date": adaptive_date,
+        "ago": descriptive_timedelta,
+    }
 
     # add custom jinja tests
     settings["jinja2.tests"] = {

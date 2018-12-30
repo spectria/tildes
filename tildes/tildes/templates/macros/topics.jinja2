@@ -1,7 +1,7 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% from 'macros/datetime.jinja2' import time_ago_responsive %}
+{% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
 {% from 'macros/links.jinja2' import group_linked, username_linked %}
 
 {% macro render_topic_for_listing(topic, show_group=False, rank=None) %}
@@ -78,7 +78,7 @@
 
       <div aria-label="Posted by">{{ username_linked(topic.user.username) }}</div>
 
-      <div aria-label="Post time">{{ time_ago_responsive(topic.created_time) }}</div>
+      <div aria-label="Post time">{{ adaptive_date_responsive(topic.created_time) }}</div>
     </footer>
 
     {{ topic_voting(topic) }}

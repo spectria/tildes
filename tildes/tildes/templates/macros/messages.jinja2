@@ -1,7 +1,7 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% from 'macros/datetime.jinja2' import time_ago %}
+{% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
 {% from 'macros/links.jinja2' import username_linked %}
 
 {% macro render_message(message) %}
@@ -13,7 +13,7 @@
 
     <header>
       {{ username_linked(message.sender.username) }}
-      {{ time_ago(message.created_time) }}
+      {{ adaptive_date_responsive(message.created_time) }}
     </header>
 
     <div class="message-text"
