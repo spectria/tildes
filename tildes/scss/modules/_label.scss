@@ -18,7 +18,7 @@
   max-width: 100%;
 }
 
-.label-topic-tag-nsfw,
-.label-topic-tag-spoiler {
+.label-topic-tag[class*='label-topic-tag-nsfw'],
+.label-topic-tag[class*='label-topic-tag-spoiler'] {
   font-weight: bold;
 }
