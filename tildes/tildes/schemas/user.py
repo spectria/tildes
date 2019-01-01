@@ -90,7 +90,7 @@ class UserSchema(Schema):
             return
 
         if is_breached_password(value):
-            raise ValidationError("That password exists in a data breach")
+            raise ValidationError("That password exists in a data breach (see sidebar)")
 
     @pre_load
     def prepare_email_address(self, data: dict) -> dict:
