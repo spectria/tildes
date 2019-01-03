@@ -5,6 +5,7 @@
 
 {% from 'macros/forms.jinja2' import search_form %}
 {% from 'macros/groups.jinja2' import render_group_subscription_box with context %}
+{% from 'macros/links.jinja2' import group_linked %}
 {% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
 
 {% block title %}Topics in ~{{ group.path }}{% endblock %}
@@ -101,8 +102,20 @@
 {% if search is not defined %}
 <div class="topic-listing-filter">
 {% if tag %}
-  Showing only topics with the tag "{{ tag|replace('_', ' ') }}".
-  <a href="{{ request.current_listing_normal_url() }}">Back to normal view</a>
+  {% if is_single_group %}
+    Showing only topics in {{ group_linked(group.path) }} with the tag "{{ tag|replace('_', ' ') }}".
+    <a href="{{ request.current_listing_normal_url() }}">Back to normal view</a> /
+    <a href="{{ request.route_url("home", _query={"tag": tag}) }}">
+      {% if request.user %}
+        Search your subscribed groups
+      {% else %}
+        Search all groups
+      {% endif %}
+    </a>
+  {% else %}
+    Showing only topics with the tag "{{ tag|replace('_', ' ') }}".
+    <a href="{{ request.current_listing_normal_url() }}">Back to normal view</a>
+  {% endif %}
 {% elif unfiltered %}
   Showing unfiltered topic list.
   <a href="{{ request.current_listing_normal_url() }}">Back to normal view</a>
