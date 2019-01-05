@@ -129,3 +129,22 @@ class TwitterMobileConverter(UrlTransformer):
     def apply_transformation(cls, parsed_url: ParseResult) -> ParseResult:
         """Apply the actual transformation process to the url."""
         return parsed_url._replace(netloc="twitter.com")
+
+
+class RedditTrackingRemover(UrlTransformer):
+    """Remove Reddit's "share tracking" query parameters (st and sh)."""
+
+    @classmethod
+    def is_applicable(cls, parsed_url: ParseResult) -> bool:
+        """Return whether this transformation should be applied to the url."""
+        return parsed_url.hostname == "www.reddit.com"
+
+    @classmethod
+    def apply_transformation(cls, parsed_url: ParseResult) -> ParseResult:
+        """Apply the actual transformation process to the url."""
+        query_params = parse_qs(parsed_url.query)
+
+        query_params.pop("st", None)
+        query_params.pop("sh", None)
+
+        return parsed_url._replace(query=urlencode(query_params, doseq=True))

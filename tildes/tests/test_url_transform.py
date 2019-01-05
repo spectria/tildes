@@ -34,3 +34,11 @@ def test_other_mobile_subdomain_not_removed():
     cleaned_url = apply_url_transformations(url)
 
     assert cleaned_url == url
+
+
+def test_reddit_tracking_removed():
+    """Ensure that Reddit's "share tracking" query params are removed."""
+    url = "https://www.reddit.com/r/tildes/comments/8k14is/_/?sort=new&st=abcdefgh&sh=1234asd"
+    cleaned_url = apply_url_transformations(url)
+
+    assert cleaned_url == "https://www.reddit.com/r/tildes/comments/8k14is/_/?sort=new"
