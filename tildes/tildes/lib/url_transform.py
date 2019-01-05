@@ -69,6 +69,11 @@ def _apply_all_transformations(parsed_url: ParseResult) -> ParseResult:
     return parsed_url
 
 
+def has_path(parsed_url: ParseResult) -> bool:
+    """Whether a parsed url has a path component (and not just a trailing slash)."""
+    return parsed_url.path not in ("", "/")
+
+
 class UrlTransformer(ABC):
     """Abstract base class for url transformers.
 
@@ -148,3 +153,18 @@ class RedditTrackingRemover(UrlTransformer):
         query_params.pop("sh", None)
 
         return parsed_url._replace(query=urlencode(query_params, doseq=True))
+
+
+class WikipediaMobileConverter(UrlTransformer):
+    """Convert links to Wikipedia mobile version to the standard version."""
+
+    @classmethod
+    def is_applicable(cls, parsed_url: ParseResult) -> bool:
+        """Return whether this transformation should be applied to the url."""
+        return parsed_url.hostname.endswith(".m.wikipedia.org") and has_path(parsed_url)
+
+    @classmethod
+    def apply_transformation(cls, parsed_url: ParseResult) -> ParseResult:
+        """Apply the actual transformation process to the url."""
+        new_domain = parsed_url.hostname.replace(".m.wikipedia.org", ".wikipedia.org")
+        return parsed_url._replace(netloc=new_domain)

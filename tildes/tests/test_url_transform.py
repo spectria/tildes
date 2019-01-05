@@ -42,3 +42,20 @@ def test_reddit_tracking_removed():
     cleaned_url = apply_url_transformations(url)
 
     assert cleaned_url == "https://www.reddit.com/r/tildes/comments/8k14is/_/?sort=new"
+
+
+def test_wikipedia_mobile_conversion():
+    """Ensure that links to a Wikipedia page's mobile version are converted."""
+    url = "https://en.m.wikipedia.org/wiki/Tilde"
+    transformed_url = apply_url_transformations(url)
+
+    assert transformed_url == "https://en.wikipedia.org/wiki/Tilde"
+
+
+def test_wikipedia_mobile_homepage_not_converted():
+    """Ensure that a link to the homepage of mobile Wikipedia doesn't get converted."""
+    url = "https://en.m.wikipedia.org"
+
+    # check both with and without a trailing slash
+    for test_url in (url, url + "/"):
+        assert apply_url_transformations(test_url) == test_url
