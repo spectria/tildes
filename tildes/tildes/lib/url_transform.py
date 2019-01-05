@@ -115,3 +115,17 @@ class UtmQueryParamRemover(UrlTransformer):
         }
 
         return parsed_url._replace(query=urlencode(cleaned_params, doseq=True))
+
+
+class TwitterMobileConverter(UrlTransformer):
+    """Convert links to Twitter mobile version to the bare domain."""
+
+    @classmethod
+    def is_applicable(cls, parsed_url: ParseResult) -> bool:
+        """Return whether this transformation should be applied to the url."""
+        return parsed_url.hostname == "mobile.twitter.com"
+
+    @classmethod
+    def apply_transformation(cls, parsed_url: ParseResult) -> ParseResult:
+        """Apply the actual transformation process to the url."""
+        return parsed_url._replace(netloc="twitter.com")

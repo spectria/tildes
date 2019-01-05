@@ -18,3 +18,19 @@ def test_non_utm_params_unaffected():
     cleaned_url = apply_url_transformations(url)
 
     assert cleaned_url == url
+
+
+def test_twitter_mobile_conversion():
+    """Ensure that links to the Twitter mobile version are converted."""
+    url = "https://mobile.twitter.com/acarboni/status/976545648391553024"
+    cleaned_url = apply_url_transformations(url)
+
+    assert cleaned_url == "https://twitter.com/acarboni/status/976545648391553024"
+
+
+def test_other_mobile_subdomain_not_removed():
+    """Ensure that the Twitter mobile conversion isn't hitting other domains."""
+    url = "http://mobile.example.com/something"
+    cleaned_url = apply_url_transformations(url)
+
+    assert cleaned_url == url
