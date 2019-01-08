@@ -59,3 +59,11 @@ def test_wikipedia_mobile_homepage_not_converted():
     # check both with and without a trailing slash
     for test_url in (url, url + "/"):
         assert apply_url_transformations(test_url) == test_url
+
+
+def test_youtube_unshortened():
+    """Ensure that a youtu.be link is converted to a youtube.com one."""
+    url = "https://youtu.be/YbJOTdZBX1g?t=1"
+    transformed_url = apply_url_transformations(url)
+
+    assert transformed_url == "https://www.youtube.com/watch?v=YbJOTdZBX1g&t=1"

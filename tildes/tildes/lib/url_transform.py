@@ -6,7 +6,14 @@
 from abc import ABC, abstractmethod
 from collections import Counter
 import logging
-from urllib.parse import ParseResult, parse_qs, urlencode, urlparse, urlunparse
+from urllib.parse import (
+    ParseResult,
+    parse_qs,
+    parse_qsl,
+    urlencode,
+    urlparse,
+    urlunparse,
+)
 
 
 class UrlTransformationLoopError(Exception):
@@ -168,3 +175,29 @@ class WikipediaMobileConverter(UrlTransformer):
         """Apply the actual transformation process to the url."""
         new_domain = parsed_url.hostname.replace(".m.wikipedia.org", ".wikipedia.org")
         return parsed_url._replace(netloc=new_domain)
+
+
+class YoutubeUnshortener(UrlTransformer):
+    """Converts youtu.be links into youtube.com ones."""
+
+    @classmethod
+    def is_applicable(cls, parsed_url: ParseResult) -> bool:
+        """Return whether this transformation should be applied to the url."""
+        return parsed_url.hostname == "youtu.be" and has_path(parsed_url)
+
+    @classmethod
+    def apply_transformation(cls, parsed_url: ParseResult) -> ParseResult:
+        """Apply the actual transformation process to the url.
+
+        This converts a url like https://youtu.be/asdf to
+        https://www.youtube.com/watch?v=asdf (and retains any other query params).
+        """
+        video_id = parsed_url.path.strip("/")
+
+        # use parse_qsl() and insert() here so the v= is always the first query param
+        query_params = parse_qsl(parsed_url.query)
+        query_params.insert(0, ("v", video_id))
+
+        return parsed_url._replace(
+            netloc="www.youtube.com", path="/watch", query=urlencode(query_params)
+        )
