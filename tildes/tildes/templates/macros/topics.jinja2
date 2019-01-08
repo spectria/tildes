@@ -40,13 +40,11 @@
       {% if topic.tags %}
         <ul class="topic-tags">
           {% for tag in topic.tags %}
-            <li class="label label-topic-tag label-topic-tag-{{ tag.replace(' ', '_') }}">
-              {% if request.matched_route.name in ('home', 'group') %}
-                <a href="{{ request.current_listing_normal_url({'tag': tag.replace(' ', '_')}) }}">{{ tag }}</a>
-              {% else %}
-                {{ tag }}
-              {% endif %}
-            </li>
+            {% if request.matched_route_name in ('home', 'group') %}
+              {{ topic_tag(tag, request.current_listing_normal_url({'tag': tag.replace(' ', '_')})) }}
+            {% else %}
+              {{ topic_tag(tag) }}
+            {% endif %}
           {% endfor %}
         </ul>
       {% endif %}
@@ -170,4 +168,14 @@
   {% endif %}
 
   {{ classes|join(' ') }}
+{% endmacro %}
+
+{% macro topic_tag(tag, link=None) %}
+  <li class="label label-topic-tag label-topic-tag-{{ tag.replace(' ', '_').replace('.', '-') }}">
+    {% if link %}
+      <a href="{{ link }}">{{ tag }}</a>
+    {% else %}
+      {{ tag }}
+    {% endif %}
+  </li>
 {% endmacro %}
