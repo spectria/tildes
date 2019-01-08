@@ -35,7 +35,7 @@ SQLAlchemy-Utils
 stripe
 testing.redis
 titlecase
-webargs
+webargs<5.0  # 5.0.0 breaks many views, will require significant updates
 webtest
 wrapt
 zope.sqlalchemy
