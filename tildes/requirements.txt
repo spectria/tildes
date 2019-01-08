@@ -7,7 +7,7 @@ astroid==2.0.4
 atomicwrites==1.2.1
 attrs==18.2.0
 backcall==0.1.0
-beautifulsoup4==4.7.0
+beautifulsoup4==4.7.1
 black==18.9b0
 bleach==3.0.2
 certifi==2018.11.29
@@ -40,7 +40,7 @@ PasteDeploy==2.0.1
 pep8-naming==0.4.1
 pexpect==4.6.0
 pickleshare==0.7.5
-Pillow==5.4.0
+Pillow==5.4.1
 plaster==1.0
 plaster-pastedeploy==0.6
 pluggy==0.8.0
@@ -70,7 +70,7 @@ pyramid-mako==1.0.2
 pyramid-session-redis==1.4.1
 pyramid-tm==2.2.1
 pyramid-webassets==0.10
-pytest==4.0.2
+pytest==4.1.0
 pytest-mock==1.10.0
 python-dateutil==2.7.5
 python-editor==1.0.3
@@ -84,7 +84,7 @@ setoptconf==0.2.0
 simplejson==3.16.0
 six==1.12.0
 snowballstemmer==1.2.1
-soupsieve==1.6.1
+soupsieve==1.6.2
 SQLAlchemy==1.2.15
 SQLAlchemy-Utils==0.33.10
 stripe==2.17.0
@@ -100,12 +100,12 @@ urllib3==1.24.1
 venusian==1.1.0
 waitress==1.1.0
 wcwidth==0.1.7
-webargs==4.3.1
+webargs==4.4.1
 webassets==0.12.1
 webencodings==0.5.1
-WebOb==1.8.4
+WebOb==1.8.5
 WebTest==2.0.32
 wrapt==1.10.11
 zope.deprecation==4.4.0
 zope.interface==4.6.0
-zope.sqlalchemy==1.0
+zope.sqlalchemy==1.1
