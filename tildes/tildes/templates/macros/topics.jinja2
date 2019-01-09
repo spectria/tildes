@@ -40,7 +40,7 @@
       {% if topic.tags %}
         <ul class="topic-tags">
           {% for tag in topic.tags %}
-            {% if request.matched_route_name in ('home', 'group') %}
+            {% if request.matched_route.name in ('home', 'group') %}
               {{ topic_tag(tag, request.current_listing_normal_url({'tag': tag.replace(' ', '_')})) }}
             {% else %}
               {{ topic_tag(tag) }}
