@@ -4,18 +4,17 @@
 """Views related to the link shortener."""
 
 from mypy_extensions import NoReturn
-from pyramid.httpexceptions import HTTPMovedPermanently
+from pyramid.httpexceptions import HTTPFound, HTTPMovedPermanently
 from pyramid.request import Request
-from pyramid.response import Response
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 
 
 @view_config(route_name="shortener", permission=NO_PERMISSION_REQUIRED)
-def get_shortener(request: Request) -> Response:
-    """Display a message if someone just visits the base shortener domain."""
+def get_shortener(request: Request) -> NoReturn:
+    """Redirect to the site if someone just visits the base shortener domain."""
     # pylint: disable=unused-argument
-    return Response("Link-shortener for tildes.net")
+    raise HTTPFound(location="https://tildes.net")
 
 
 @view_config(route_name="shortener_group", permission=NO_PERMISSION_REQUIRED)
