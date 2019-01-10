@@ -118,7 +118,7 @@ class UtmQueryParamRemover(UrlTransformer):
     @classmethod
     def apply_transformation(cls, parsed_url: ParseResult) -> ParseResult:
         """Apply the actual transformation process to the url."""
-        query_params = parse_qs(parsed_url.query)
+        query_params = parse_qs(parsed_url.query, keep_blank_values=True)
 
         cleaned_params = {
             param: value
@@ -154,7 +154,7 @@ class RedditTrackingRemover(UrlTransformer):
     @classmethod
     def apply_transformation(cls, parsed_url: ParseResult) -> ParseResult:
         """Apply the actual transformation process to the url."""
-        query_params = parse_qs(parsed_url.query)
+        query_params = parse_qs(parsed_url.query, keep_blank_values=True)
 
         query_params.pop("st", None)
         query_params.pop("sh", None)
@@ -195,7 +195,7 @@ class YoutubeUnshortener(UrlTransformer):
         video_id = parsed_url.path.strip("/")
 
         # use parse_qsl() and insert() here so the v= is always the first query param
-        query_params = parse_qsl(parsed_url.query)
+        query_params = parse_qsl(parsed_url.query, keep_blank_values=True)
         query_params.insert(0, ("v", video_id))
 
         return parsed_url._replace(

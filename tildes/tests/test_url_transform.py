@@ -4,6 +4,18 @@
 from tildes.lib.url_transform import apply_url_transformations
 
 
+def test_blank_query_params_kept():
+    """Ensure that query params with no value make it through the process.
+
+    Some sites treat the presence of blank params different from their absence, so
+    we don't want to remove them (which urllib's parse_qs and parse_qsl do by default).
+    """
+    url = "http://example.com/path?one=1&two=2&blank=&three=3"
+    transformed_url = apply_url_transformations(url)
+
+    assert transformed_url == url
+
+
 def test_remove_utm_query_params():
     """Ensure that utm query params are removed but others are left."""
     url = "http://example.com/path?utm_source=tildes&utm_campaign=test&something=ok"
