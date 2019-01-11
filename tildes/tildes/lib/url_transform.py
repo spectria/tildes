@@ -30,6 +30,9 @@ def apply_url_transformations(url: str) -> str:
     """
     parsed_url = urlparse(url)
 
+    if _is_exempt_from_transformations(parsed_url):
+        return url
+
     try:
         parsed_url = _apply_all_transformations(parsed_url)
     except UrlTransformationLoopError:
@@ -37,6 +40,16 @@ def apply_url_transformations(url: str) -> str:
         logging.error(f"Transformations went into a loop on url {url}")
 
     return urlunparse(parsed_url)
+
+
+def _is_exempt_from_transformations(parsed_url: ParseResult) -> bool:
+    """Return whether this url should be exempt from the transformation process."""
+
+    # Paradox forums use an invalid url scheme that will break if processed
+    if parsed_url.hostname == "forum.paradoxplaza.com":
+        return True
+
+    return False
 
 
 def _apply_all_transformations(parsed_url: ParseResult) -> ParseResult:

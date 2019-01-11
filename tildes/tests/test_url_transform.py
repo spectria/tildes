@@ -79,3 +79,10 @@ def test_youtube_unshortened():
     transformed_url = apply_url_transformations(url)
 
     assert transformed_url == "https://www.youtube.com/watch?v=YbJOTdZBX1g&t=1"
+
+
+def test_exempt_url_not_transformed():
+    """Ensure that an exempt url doesn't get transformed."""
+    url = "https://forum.paradoxplaza.com/forum/index.php?forums/518/"
+
+    assert apply_url_transformations(url) == url
