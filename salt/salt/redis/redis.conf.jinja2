@@ -43,9 +43,11 @@
 # loadmodule /path/to/my_module.so
 # loadmodule /path/to/other_module.so
 
+{% if accumulator is defined %}
 {% for line in accumulator['redis_loadmodule_lines'] -%}
 {{ line }}
 {% endfor %}
+{% endif %}
 
 ################################## NETWORK #####################################
 
