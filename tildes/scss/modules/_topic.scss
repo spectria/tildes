@@ -147,6 +147,7 @@
 }
 
 .topic-text-excerpt {
+  @extend %links-text;
   @extend %lists-text;
 
   display: none;
@@ -232,6 +233,7 @@
 }
 
 .topic-full-text {
+  @extend %links-text;
   @extend %lists-text;
 
   overflow: auto;

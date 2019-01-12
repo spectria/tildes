@@ -1,6 +1,17 @@
 // Copyright (c) 2018 Tildes contributors <code@tildes.net>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+// sets up links specifically for text content
+%links-text {
+  a {
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
 // sets up (nested) lists specifically for text content
 %lists-text {
   ol, ul {

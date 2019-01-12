@@ -126,6 +126,7 @@
 }
 
 .comment-text {
+  @extend %links-text;
   @extend %lists-text;
 
   padding: 0.2rem;
