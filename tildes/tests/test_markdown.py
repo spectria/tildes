@@ -1,6 +1,8 @@
 # Copyright (c) 2018 Tildes contributors <code@tildes.net>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+from bs4 import BeautifulSoup
+
 from tildes.lib.markdown import convert_markdown_to_safe_html
 
 
@@ -201,7 +203,8 @@ def test_group_reference_linkified():
     markdown = "Yeah, I saw that in ~books.fantasy yesterday."
     processed = convert_markdown_to_safe_html(markdown)
 
-    assert '<a href="/~books.fantasy">' in processed
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert soup.find("a", href="/~books.fantasy")
 
 
 def test_multiple_group_references_linkified():
@@ -214,7 +217,8 @@ def test_multiple_group_references_linkified():
     )
     processed = convert_markdown_to_safe_html(markdown)
 
-    assert processed.count("<a") == 3
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert len(soup.find_all("a")) == 3
 
 
 def test_invalid_group_reference_not_linkified():
@@ -241,7 +245,8 @@ def test_uppercase_group_ref_links_correctly():
     markdown = "That was in ~Music.Metal.Progressive"
     processed = convert_markdown_to_safe_html(markdown)
 
-    assert '<a href="/~music.metal.progressive' in processed
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert soup.find("a", href="/~music.metal.progressive")
 
 
 def test_existing_link_group_ref_not_replaced():
@@ -280,7 +285,8 @@ def test_group_ref_inside_other_tags_linkified():
     markdown = "> Here is **a ~group.reference inside** other stuff"
     processed = convert_markdown_to_safe_html(markdown)
 
-    assert '<a href="/~group.reference">' in processed
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert soup.find("a", href="/~group.reference")
 
 
 def test_username_reference_linkified():
@@ -288,7 +294,8 @@ def test_username_reference_linkified():
     markdown = "Hey @SomeUser, what do you think of this?"
     processed = convert_markdown_to_safe_html(markdown)
 
-    assert '<a href="/user/SomeUser">@SomeUser</a>' in processed
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert soup.find("a", href="/user/SomeUser")
 
 
 def test_u_style_username_ref_linked():
@@ -296,7 +303,8 @@ def test_u_style_username_ref_linked():
     markdown = "Hey /u/SomeUser, what do you think of this?"
     processed = convert_markdown_to_safe_html(markdown)
 
-    assert '<a href="/user/SomeUser">/u/SomeUser</a>' in processed
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert soup.find("a", href="/user/SomeUser")
 
 
 def test_u_alt_style_username_ref_linked():
@@ -304,7 +312,8 @@ def test_u_alt_style_username_ref_linked():
     markdown = "Hey u/SomeUser, what do you think of this?"
     processed = convert_markdown_to_safe_html(markdown)
 
-    assert '<a href="/user/SomeUser">u/SomeUser</a>' in processed
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert soup.find("a", href="/user/SomeUser")
 
 
 def test_accidental_u_alt_style_not_linked():
@@ -320,8 +329,9 @@ def test_username_and_group_refs_linked():
     markdown = "@SomeUser makes the best posts in ~some.group for sure"
     processed = convert_markdown_to_safe_html(markdown)
 
-    assert '<a href="/user/SomeUser">@SomeUser</a>' in processed
-    assert '<a href="/~some.group">~some.group</a>' in processed
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert soup.find("a", href="/user/SomeUser")
+    assert soup.find("a", href="/~some.group")
 
 
 def test_invalid_username_not_linkified():

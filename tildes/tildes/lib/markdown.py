@@ -376,7 +376,10 @@ class LinkifyFilter(Filter):
                 {
                     "type": "StartTag",
                     "name": "a",
-                    "data": {(None, "href"): f"/~{group_path}"},
+                    "data": {
+                        (None, "class"): "link-group",
+                        (None, "href"): f"/~{group_path}",
+                    },
                 },
                 {"type": "Characters", "data": match[0]},
                 {"type": "EndTag", "name": "a"},
@@ -394,7 +397,10 @@ class LinkifyFilter(Filter):
                 {
                     "type": "StartTag",
                     "name": "a",
-                    "data": {(None, "href"): f"/user/{match[1]}"},
+                    "data": {
+                        (None, "class"): "link-user",
+                        (None, "href"): f"/user/{match[1]}",
+                    },
                 },
                 {"type": "Characters", "data": match[0]},
                 {"type": "EndTag", "name": "a"},

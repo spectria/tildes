@@ -3,4 +3,9 @@
 
 a.link-user, a.link-group {
   white-space: nowrap;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
