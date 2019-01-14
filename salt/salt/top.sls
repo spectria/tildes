@@ -30,7 +30,6 @@ base:
   'prod':
     - nginx.shortener-config
     - nginx.static-sites-config
-    - raven
     - prod-config
   'monitoring':
     - nginx
