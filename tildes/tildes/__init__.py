@@ -11,6 +11,8 @@ from pyramid.httpexceptions import HTTPTooManyRequests
 from pyramid.registry import Registry
 from pyramid.request import Request
 from redis import Redis
+import sentry_sdk
+from sentry_sdk.integrations.pyramid import PyramidIntegration
 from webassets import Bundle
 
 from tildes.lib.ratelimit import RATE_LIMITED_ACTIONS, RateLimitResult
@@ -58,6 +60,9 @@ def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
 
     config.add_request_method(current_listing_base_url, "current_listing_base_url")
     config.add_request_method(current_listing_normal_url, "current_listing_normal_url")
+
+    if settings.get("sentry_dsn"):
+        sentry_sdk.init(dsn=settings["sentry_dsn"], integrations=[PyramidIntegration()])
 
     app = config.make_wsgi_app()
 

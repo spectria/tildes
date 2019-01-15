@@ -18,6 +18,9 @@ redis.sessions.timeout_trigger = 0
 # set session timeout to 1 hour by default, we'll extend it when people log in
 redis.sessions.timeout = 3600
 
+# this should only be set if you have a Sentry instance you want to send errors to
+sentry_dsn = https://key@sentry.io/project
+
 sqlalchemy.url = postgresql+psycopg2://tildes:@:6432/tildes
 
 tildes.default_user_comment_label_weight = 1.0
