@@ -6,9 +6,9 @@ unpack-redis-exporter:
   archive.extracted:
     - name: /opt/prometheus_redis_exporter
     - source:
-      - salt://prometheus/exporters/redis_exporter-v0.10.7.linux-amd64.tar.gz
-      - https://github.com/oliver006/redis_exporter/releases/download/v0.10.7/redis_exporter-v0.10.7.linux-amd64.tar.gz
-    - source_hash: sha256=b9b48f321a201f3b424f1710d2cac1bca03272d67001812d8b2fb6305099fb09
+      - salt://prometheus/exporters/redis_exporter-v0.26.0.linux-amd64.tar.gz
+      - https://github.com/oliver006/redis_exporter/releases/download/v0.26.0/redis_exporter-v0.26.0.linux-amd64.tar.gz
+    - source_hash: sha256=39354c57b9d02b455c584baf46a2df6ed3d1ac190c88e3ec0fa0c23b49ccc2bb
     - if_missing: /opt/prometheus_redis_exporter
     - user: prometheus
     - group: prometheus
