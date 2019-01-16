@@ -2,18 +2,19 @@
 include:
   - prometheus.user
 
-postgres-exporter:
-  file.managed:
-    - name: /opt/prometheus_postgres_exporter/postgres_exporter
+unpack-postgres-exporter:
+  archive.extracted:
+    - name: /opt/prometheus_postgres_exporter
     - source:
-      - salt://prometheus/exporters/postgres_exporter
-      - https://github.com/wrouesnel/postgres_exporter/releases/download/v0.3.0/postgres_exporter
-    - source_hash: sha256=44654860e3122acf183e8cad504bddc3bf9dd717910cddc99b589a3463d2ec6f
+      - salt://prometheus/exporters/postgres_exporter_v0.4.7_linux-amd64.tar.gz
+      - https://github.com/wrouesnel/postgres_exporter/releases/download/v0.4.7/postgres_exporter_v0.4.7_linux-amd64.tar.gz
+    - source_hash: sha256=c34d61bb4deba8efae06fd3c9979b96dae3f3c757698ce3384c80fff586c667b
+    - if_missing: /opt/prometheus_postgres_exporter
     - user: postgres
     - group: postgres
     - mode: 774
-    - makedirs: True
-    - unless: ls /opt/prometheus_postgres_exporter/postgres_exporter
+    - options: --strip-components=1
+    - enforce_toplevel: False
 
 /etc/systemd/system/prometheus_postgres_exporter.service:
   file.managed:
