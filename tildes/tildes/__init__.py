@@ -5,6 +5,7 @@
 
 from typing import Any, Callable, Dict, Optional, Tuple
 
+from marshmallow.exceptions import ValidationError
 from paste.deploy.config import PrefixMiddleware
 from pyramid.config import Configurator
 from pyramid.httpexceptions import HTTPTooManyRequests
@@ -62,7 +63,11 @@ def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
     config.add_request_method(current_listing_normal_url, "current_listing_normal_url")
 
     if settings.get("sentry_dsn"):
-        sentry_sdk.init(dsn=settings["sentry_dsn"], integrations=[PyramidIntegration()])
+        sentry_sdk.init(
+            dsn=settings["sentry_dsn"],
+            integrations=[PyramidIntegration()],
+            ignore_errors=[ValidationError],
+        )
 
     app = config.make_wsgi_app()
 
