@@ -38,6 +38,7 @@ select.form-select:not([multiple]) {
 
   button {
     margin-left: 0.4rem;
+    flex-shrink: 0;
   }
 }
 
