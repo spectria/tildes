@@ -34,6 +34,11 @@ pip-install:
     - name: sentry
     - bin_env: {{ sentry_venv_dir }}
 
+pip-install-plugins:
+  pip.installed:
+    - name: sentry-plugins
+    - bin_env: {{ sentry_venv_dir }}
+
 init-sentry:
   cmd.run:
     - name: {{ sentry_bin_dir }}/sentry init {{ sentry_cfg_dir }}
