@@ -3,14 +3,17 @@
 
 """Configure and initialize the Pyramid app."""
 
+from time import time
 from typing import Any, Callable, Dict, Optional, Tuple
 
 from marshmallow.exceptions import ValidationError
 from paste.deploy.config import PrefixMiddleware
+from prometheus_client import Histogram
 from pyramid.config import Configurator
 from pyramid.httpexceptions import HTTPTooManyRequests
 from pyramid.registry import Registry
 from pyramid.request import Request
+from pyramid.response import Response
 from redis import Redis
 import sentry_sdk
 from sentry_sdk.integrations.pyramid import PyramidIntegration
@@ -42,6 +45,7 @@ def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
     config.scan("tildes.views")
 
     config.add_tween("tildes.http_method_tween_factory")
+    config.add_tween("tildes.metrics_tween_factory")
 
     config.add_request_method(is_safe_request_method, "is_safe_method", reify=True)
 
@@ -98,6 +102,33 @@ def http_method_tween_factory(handler: Callable, registry: Registry) -> Callable
         return handler(request)
 
     return method_override_tween
+
+
+def metrics_tween_factory(handler: Callable, registry: Registry) -> Callable:
+    # pylint: disable=unused-argument
+    """Return a tween function that gathers metrics for Prometheus."""
+
+    request_histogram = Histogram(
+        "tildes_pyramid_requests_seconds",
+        "Request processing times",
+        labelnames=["route", "status_code", "method"],
+    )
+
+    def metrics_tween(request: Request) -> Response:
+        """Gather metrics for each request."""
+        start_time = time()
+        response = handler(request)
+        duration = time() - start_time
+
+        request_histogram.labels(
+            route=request.matched_route.name,
+            status_code=response.status_code,
+            method=request.method,
+        ).observe(duration)
+
+        return response
+
+    return metrics_tween
 
 
 def get_redis_connection(request: Request) -> Redis:
