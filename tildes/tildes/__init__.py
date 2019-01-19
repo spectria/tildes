@@ -120,6 +120,10 @@ def metrics_tween_factory(handler: Callable, registry: Registry) -> Callable:
         response = handler(request)
         duration = time() - start_time
 
+        # ignore requests for invalid addresses
+        if not request.matched_route:
+            return response
+
         request_histogram.labels(
             route=request.matched_route.name,
             status_code=response.status_code,
