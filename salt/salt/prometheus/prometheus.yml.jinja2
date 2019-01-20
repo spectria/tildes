@@ -5,23 +5,25 @@ global:
 scrape_configs:
   - job_name: "node"
     static_configs:
-      - targets: ['localhost:9100']
+      - targets: ['{{ pillar['site_hostname'] }}:9100']
 
   - job_name: "rabbitmq"
     static_configs:
-      - targets: ['localhost:9419']
+      - targets: ['{{ pillar['site_hostname'] }}:9419']
 
   - job_name: "redis"
     static_configs:
-      - targets: ['localhost:9121']
+      - targets: ['{{ pillar['site_hostname'] }}:9121']
 
   - job_name: "postgres"
     static_configs:
-      - targets: ['localhost:9187']
+      - targets: ['{{ pillar['site_hostname'] }}:9187']
 
   - job_name: "tildes"
     scheme: https
     static_configs:
-      - targets: ['localhost:443']
+      - targets: ['{{ pillar['site_hostname'] }}:443']
+    {% if grains['id'] == 'dev' %}
     tls_config:
       insecure_skip_verify: true
+    {% endif %}

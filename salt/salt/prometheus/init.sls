@@ -31,7 +31,8 @@ prometheus-service:
 
 /opt/prometheus/prometheus.yml:
   file.managed:
-    - source: salt://prometheus/prometheus.yml
+    - source: salt://prometheus/prometheus.yml.jinja2
+    - template: jinja
     - user: prometheus
     - group: prometheus
     - mode: 664
