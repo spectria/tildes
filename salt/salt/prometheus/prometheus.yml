@@ -7,6 +7,10 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9100']
 
+  - job_name: "rabbitmq"
+    static_configs:
+      - targets: ['localhost:9419']
+
   - job_name: "redis"
     static_configs:
       - targets: ['localhost:9121']

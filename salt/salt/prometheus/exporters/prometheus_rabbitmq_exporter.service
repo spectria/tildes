@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus RabbitMQ Exporter
+After=syslog.target network.target
+
+[Service]
+Type=simple
+RemainAfterExit=no
+WorkingDirectory=/opt/prometheus_rabbitmq_exporter
+User=prometheus
+Group=prometheus
+ExecStart=/opt/prometheus_rabbitmq_exporter/rabbitmq_exporter
+
+[Install]
+WantedBy=multi-user.target
