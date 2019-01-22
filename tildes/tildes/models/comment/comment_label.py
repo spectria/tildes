@@ -12,6 +12,7 @@ from sqlalchemy.orm import backref, relationship
 from sqlalchemy.sql.expression import text
 
 from tildes.enums import CommentLabelOption
+from tildes.metrics import incr_counter
 from tildes.models import DatabaseModel
 from tildes.models.user import User
 from .comment import Comment
@@ -61,6 +62,8 @@ class CommentLabel(DatabaseModel):
         self.label = label
         self.weight = weight
         self.reason = reason
+
+        incr_counter("comment_labels", label=label.name)
 
     @property
     def name(self) -> str:

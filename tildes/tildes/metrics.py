@@ -15,6 +15,9 @@ from prometheus_client import Counter, Histogram
 _COUNTERS = {
     "votes": Counter("tildes_votes_total", "Votes", labelnames=["target_type"]),
     "comments": Counter("tildes_comments_total", "Comments"),
+    "comment_labels": Counter(
+        "tildes_comment_labels_total", "Comment Labels", labelnames=["label"]
+    ),
     "invite_code_failures": Counter(
         "tildes_invite_code_failures_total", "Invite Code Failures"
     ),
