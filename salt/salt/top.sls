@@ -8,6 +8,7 @@ base:
     - postgresql.pgbouncer
     - python
     - redis
+    - redis.breached-passwords
     - redis.modules.rebloom
     - redis.modules.redis-cell
     - rabbitmq
