@@ -223,6 +223,7 @@ class CommentTree:
 
 
 class CommentInTree(ObjectProxy):
+    # pylint: disable=abstract-method
     """Wrapper for Comments inside a CommentTree that adds some methods/properties."""
 
     def __init__(self, comment: Comment):
