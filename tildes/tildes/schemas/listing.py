@@ -8,7 +8,7 @@ from marshmallow.fields import Boolean, Integer
 from marshmallow.validate import Range
 
 from tildes.enums import TopicSortOption
-from tildes.schemas.fields import Enum, ID36, Ltree, ShortTimePeriod
+from tildes.schemas.fields import Enum, ID36, Ltree, PostType, ShortTimePeriod
 
 
 class PaginatedListingSchema(Schema):
@@ -44,5 +44,44 @@ class TopicListingSchema(PaginatedListingSchema):
         """Reset rank_start to 1 if this is a first page (no before/after)."""
         if not (data.get("before") or data.get("after")):
             data["rank_start"] = 1
+
+        return data
+
+
+class MixedListingSchema(PaginatedListingSchema):
+    """Marshmallow schema to validate arguments for a "mixed" listing page.
+
+    By "mixed", this means that the listing can contain topics and/or comments, instead
+    of just one or the other.
+    """
+
+    anchor_type = PostType()
+
+    @pre_load
+    def set_anchor_type_from_before_or_after(self, data: dict) -> dict:
+        """Set the anchor_type if before or after has a special value indicating type.
+
+        For example, if after or before looks like "t-123" that means it is referring
+        to the topic with ID36 "123". "c-123" also works, for comments.
+        """
+        keys = ("after", "before")
+
+        for key in keys:
+            value = data.get(key)
+            if not value:
+                continue
+
+            type_char, _, id36 = value.partition("-")
+            if not id36:
+                continue
+
+            if type_char == "c":
+                data["anchor_type"] = "comment"
+            elif type_char == "t":
+                data["anchor_type"] = "topic"
+            else:
+                continue
+
+            data[key] = id36
 
         return data

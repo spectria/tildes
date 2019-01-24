@@ -15,7 +15,7 @@
 
 {# Only show the heading if they can't see the type tabs and the user isn't deleted #}
 {% block main_heading %}
-  {% if not user.is_deleted and not request.has_permission('view_types', user) %}
+  {% if not user.is_deleted and not request.has_permission("view_history", user) %}
     {{ user.username }}'s recent activity
   {% endif %}
 {% endblock %}
@@ -27,11 +27,11 @@
     <div class="empty-action"><a href="/" class="btn btn-primary">Back to the home page</a></div>
   </div>
 {% else %}
-  {% if request.has_permission('view_types', user) %}
+  {% if request.has_permission("view_history", user) %}
     <div class="listing-options">
       <menu class="tab tab-listing-order">
         <li class="tab-item{{' active' if not post_type else ''}}">
-          <a href="{{ request.current_listing_normal_url() }}">Recent activity</a>
+          <a href="{{ request.current_listing_normal_url() }}">All activity</a>
         </li>
         <li class="tab-item{{' active' if post_type == 'topic' else ''}}">
           <a href="{{ request.current_listing_normal_url({'type': 'topic'}) }}">Topics</a>
@@ -57,7 +57,7 @@
     {% endfor %}
     </ol>
 
-    {% if post_type and (posts.has_prev_page or posts.has_next_page) %}
+    {% if request.has_permission("view_history", user) and (posts.has_prev_page or posts.has_next_page) %}
       <div class="pagination">
         {% if posts.has_prev_page %}
           <a class="page-item btn" id="prev-page"

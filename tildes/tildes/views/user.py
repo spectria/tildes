@@ -3,7 +3,7 @@
 
 """Views related to a specific user."""
 
-from typing import List, Optional, Union
+from typing import List, Optional, Type, Union
 
 from pyramid.request import Request
 from pyramid.view import view_config
@@ -12,79 +12,51 @@ from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import CommentLabelOption
 from tildes.models.comment import Comment
+from tildes.models.pagination import MixedPaginatedResults
 from tildes.models.topic import Topic
-from tildes.models.user import User, UserInviteCode
+from tildes.models.user import UserInviteCode
 from tildes.schemas.fields import PostType
-from tildes.schemas.listing import PaginatedListingSchema
-
-
-def _get_user_recent_activity(
-    request: Request, user: User
-) -> List[Union[Comment, Topic]]:
-    page_size = 20
-
-    # Since we don't know how many comments or topics will be needed to make up a page,
-    # we'll fetch the full page size of both types, merge them, and then trim down to
-    # the size afterwards
-    query = (
-        request.query(Comment)
-        .filter(Comment.user == user)
-        .order_by(desc(Comment.created_time))
-        .limit(page_size)
-        .join_all_relationships()
-    )
-
-    # include removed comments if the user's looking at their own page or is an admin
-    if user == request.user or request.user.is_admin:
-        query = query.include_removed()
-
-    comments = query.all()
-
-    query = (
-        request.query(Topic)
-        .filter(Topic.user == user)
-        .order_by(desc(Topic.created_time))
-        .limit(page_size)
-        .join_all_relationships()
-    )
-
-    # include removed topics if the user's looking at their own page or is an admin
-    if user == request.user or request.user.is_admin:
-        query = query.include_removed()
-
-    topics = query.all()
-
-    merged_posts = sorted(
-        comments + topics,  # this order so topic comes first when times match
-        key=lambda post: post.created_time,
-        reverse=True,
-    )
-    merged_posts = merged_posts[:page_size]
-
-    return merged_posts
+from tildes.schemas.listing import MixedListingSchema
 
 
 @view_config(route_name="user", renderer="user.jinja2")
-@use_kwargs(PaginatedListingSchema())
+@use_kwargs(MixedListingSchema())
 @use_kwargs({"post_type": PostType(load_from="type")})
 def get_user(
     request: Request,
-    after: str,
-    before: str,
+    after: Optional[str],
+    before: Optional[str],
     per_page: int,
+    anchor_type: Optional[str],
     post_type: Optional[str] = None,
 ) -> dict:
+    # pylint: disable=too-many-arguments
     """Generate the main user history page."""
     user = request.context
 
-    if not request.has_permission("view_types", user):
+    if not request.has_permission("view_history", user):
         post_type = None
+        after = None
+        before = None
+        anchor_type = None
+        per_page = 20
 
-    if post_type:
-        if post_type == "topic":
-            query = request.query(Topic).filter(Topic.user == user)
-        elif post_type == "comment":
-            query = request.query(Comment).filter(Comment.user == user)
+    types_to_query: List[Union[Type[Topic], Type[Comment]]]
+    if post_type == "topic":
+        types_to_query = [Topic]
+    elif post_type == "comment":
+        types_to_query = [Comment]
+    else:
+        # the order here is important so items are in the right order when the results
+        # are merged at the end (we want topics to come first when times match)
+        types_to_query = [Comment, Topic]
+
+    result_sets = []
+    for type_to_query in types_to_query:
+        query = request.query(type_to_query).filter(type_to_query.user == user)
+
+        if anchor_type:
+            query = query.anchor_type(anchor_type)
 
         if before:
             query = query.before_id36(before)
@@ -98,9 +70,12 @@ def get_user(
         if user == request.user or request.user.is_admin:
             query = query.include_removed()
 
-        posts = query.get_page(per_page)
+        result_sets.append(query.get_page(per_page))
+
+    if len(result_sets) == 1:
+        posts = result_sets[0]
     else:
-        posts = _get_user_recent_activity(request, user)
+        posts = MixedPaginatedResults(result_sets)
 
     return {
         "user": user,
