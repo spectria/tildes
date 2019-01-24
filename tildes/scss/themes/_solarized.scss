@@ -47,6 +47,7 @@ $solarized-base: (
   "stripe-target": $yellow,
   "topic-tag-nsfw": $red,
   "topic-tag-spoiler": $yellow,
+  "warning": $yellow,
 );
 
 $theme-dark: map-merge($solarized-base, (

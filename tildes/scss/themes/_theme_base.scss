@@ -397,7 +397,9 @@
     }
   } @else {
     .toast-warning {
-      background-color: map-get($theme, "warning");
+      background-color: rgba(map-get($theme, "warning"), 0.9);
+      border-color: map-get($theme, "warning");
+      color: map-get($theme, "foreground-extreme");
     }
   }
 
