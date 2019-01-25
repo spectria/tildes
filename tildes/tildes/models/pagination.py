@@ -273,6 +273,10 @@ class MixedPaginatedResults(PaginatedResults):
         if any([r.query.sort_desc != reverse_sort for r in paginated_results]):
             raise ValueError("All results must by sorted in the same direction.")
 
+        is_query_reversed = paginated_results[0].query.is_reversed
+        if any([r.query.is_reversed != is_query_reversed for r in paginated_results]):
+            raise ValueError("All results must have the same directionality.")
+
         # merge all the results into one list and sort it
         self.results = sorted(
             chain.from_iterable(paginated_results),
@@ -282,13 +286,16 @@ class MixedPaginatedResults(PaginatedResults):
 
         self.per_page = min([r.per_page for r in paginated_results])
 
-        if len(self.results) > self.per_page:
-            self.has_next_page = True
-            self.results = self.results[: self.per_page]
-        else:
-            self.has_next_page = any([r.has_next_page for r in paginated_results])
-
         self.has_prev_page = any([r.has_prev_page for r in paginated_results])
+        self.has_next_page = any([r.has_next_page for r in paginated_results])
+
+        if len(self.results) > self.per_page:
+            if is_query_reversed:
+                self.results = self.results[-self.per_page :]
+                self.has_prev_page = True
+            else:
+                self.results = self.results[: self.per_page]
+                self.has_next_page = True
 
     @property
     def next_page_after_id36(self) -> str:
