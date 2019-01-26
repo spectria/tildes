@@ -88,6 +88,7 @@ class ScraperType(enum.Enum):
     """Enum for the types of scrapers available."""
 
     EMBEDLY = enum.auto()
+    YOUTUBE = enum.auto()
 
 
 class TopicSortOption(enum.Enum):

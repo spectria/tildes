@@ -35,6 +35,7 @@ webassets.manifest = json
 # API keys for external APIs
 api_keys.embedly = embedlykeygoeshere
 api_keys.stripe = sk_live_ActualKeyShouldGoHere
+api_keys.youtube = youtubekeygoeshere
 
 [server:main]
 use = egg:gunicorn#main

@@ -35,6 +35,18 @@ consumer-topic_embedly_extractor.service:
   service.running:
     - enable: True
 
+/etc/systemd/system/consumer-topic_youtube_scraper.service:
+  file.managed:
+    - source: salt://consumers/topic_youtube_scraper.service.jinja2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: 644
+
+consumer-topic_youtube_scraper.service:
+  service.running:
+    - enable: True
+
 /etc/systemd/system/consumer-site_icon_downloader.service:
   file.managed:
     - source: salt://consumers/site_icon_downloader.service.jinja2
