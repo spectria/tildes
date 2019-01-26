@@ -300,29 +300,15 @@ class MixedPaginatedResults(PaginatedResults):
     @property
     def next_page_after_id36(self) -> str:
         """Return "after" ID36 that should be used to fetch the next page."""
-        if not self.has_next_page:
-            raise AttributeError
-
-        item = self.results[-1]
-
-        next_id = inspect(item).identity[0]
-        next_id36 = id_to_id36(next_id)
-
-        type_char = item.__class__.__name__.lower()[0]
+        next_id36 = super().next_page_after_id36
+        type_char = self.results[-1].__class__.__name__.lower()[0]
 
         return f"{type_char}-{next_id36}"
 
     @property
     def prev_page_before_id36(self) -> str:
         """Return "before" ID36 that should be used to fetch the prev page."""
-        if not self.has_prev_page:
-            raise AttributeError
-
-        item = self.results[0]
-
-        prev_id = inspect(item).identity[0]
-        prev_id36 = id_to_id36(prev_id)
-
-        type_char = item.__class__.__name__.lower()[0]
+        prev_id36 = super().prev_page_before_id36
+        type_char = self.results[0].__class__.__name__.lower()[0]
 
         return f"{type_char}-{prev_id36}"
