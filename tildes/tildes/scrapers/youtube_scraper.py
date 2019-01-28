@@ -115,9 +115,6 @@ class YoutubeScraper:
                 seconds=duration_components["seconds"],
             )
 
-            # string version of timedelta always has hours, strip it off when it's zero
-            duration = str(delta).lstrip("0:")
-
-            metadata["duration"] = duration
+            metadata["duration"] = int(delta.total_seconds())
 
         return metadata
