@@ -13,6 +13,7 @@ import requests
 
 from tildes.enums import ScraperType
 from tildes.models.scraper import ScraperResult
+from .exceptions import ScraperError
 
 
 # Only parses the subset of ISO8601 durations that YouTube uses
@@ -67,7 +68,12 @@ class YoutubeScraper:
         )
         response.raise_for_status()
 
-        return ScraperResult(url, ScraperType.YOUTUBE, response.json()["items"][0])
+        try:
+            video_data = response.json()["items"][0]
+        except (KeyError, IndexError):
+            raise ScraperError(f"No data returned for video with ID {video_id}")
+
+        return ScraperResult(url, ScraperType.YOUTUBE, video_data)
 
     @staticmethod
     def get_metadata_from_result(result: ScraperResult) -> Dict[str, Any]:

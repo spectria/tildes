@@ -18,7 +18,7 @@ from tildes.lib.amqp import PgsqlQueueConsumer
 from tildes.lib.datetime import utc_now
 from tildes.models.scraper import ScraperResult
 from tildes.models.topic import Topic
-from tildes.scrapers import YoutubeScraper
+from tildes.scrapers import ScraperError, YoutubeScraper
 
 
 # don't rescrape the same url inside this time period
@@ -62,7 +62,7 @@ class TopicYoutubeScraper(PgsqlQueueConsumer):
         if not result:
             try:
                 result = self.scraper.scrape_url(topic.link)
-            except (HTTPError, Timeout):
+            except (HTTPError, ScraperError, Timeout):
                 return
 
             self.db_session.add(result)
