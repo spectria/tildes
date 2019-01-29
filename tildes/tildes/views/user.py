@@ -34,6 +34,8 @@ def get_user(
     """Generate the main user history page."""
     user = request.context
 
+    # if the viewer doesn't have permission to view history, clear all the variables
+    # related to pagination (in case they set them manually in query vars)
     if not request.has_permission("view_history", user):
         post_type = None
         after = None
