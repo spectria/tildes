@@ -50,7 +50,13 @@
       {% if post is topic %}
         {{ render_topic_for_listing(post, show_group=True) }}
       {% elif post is comment %}
-        <h2>Comment on <a href="{{ post.topic.permalink }}">{{ post.topic.title }}</a> in {{ group_linked(post.topic.group.path) }}</h2>
+        <h2>Comment on <a href="{{ post.topic.permalink }}">
+          {% if post.topic.is_deleted and not post.topic.title %}
+            &lt;deleted topic&gt;
+          {% else %}
+            {{ post.topic.title }}
+          {% endif %}
+        </a> in {{ group_linked(post.topic.group.path) }}</h2>
         {{ render_single_comment(post) }}
       {% endif %}
       </li>
