@@ -20,6 +20,7 @@ from .exceptions import ScraperError
 # fmt: off
 YOUTUBE_DURATION_REGEX = re.compile(
     "P"
+    r"(?:(?P<weeks>\d+)W)?"
     r"(?:(?P<days>\d+)D)?"
     "T"
     r"(?:(?P<hours>\d+)H)?"
@@ -75,8 +76,8 @@ class YoutubeScraper:
 
         return ScraperResult(url, ScraperType.YOUTUBE, video_data)
 
-    @staticmethod
-    def get_metadata_from_result(result: ScraperResult) -> Dict[str, Any]:
+    @classmethod
+    def get_metadata_from_result(cls, result: ScraperResult) -> Dict[str, Any]:
         """Get the metadata that we're interested in out of a scrape result."""
         if result.scraper_type != ScraperType.YOUTUBE:
             raise ValueError("Can't process a result from a different scraper.")
@@ -101,26 +102,35 @@ class YoutubeScraper:
         content_details = result.data.get("contentDetails")
 
         if content_details.get("duration"):
-            match = YOUTUBE_DURATION_REGEX.match(content_details["duration"])
-            if not match:
-                raise ValueError("Unable to parse duration")
-
-            duration_components = {}
-
-            # convert None to zero and all strings to integers
-            for key, value in match.groupdict().items():
-                if value is None:
-                    duration_components[key] = 0
-                else:
-                    duration_components[key] = int(value)
-
-            delta = timedelta(
-                days=duration_components["days"],
-                hours=duration_components["hours"],
-                minutes=duration_components["minutes"],
-                seconds=duration_components["seconds"],
-            )
-
-            metadata["duration"] = int(delta.total_seconds())
+            try:
+                metadata["duration"] = cls.parse_duration(content_details["duration"])
+            except ValueError:
+                pass
 
         return metadata
+
+    @classmethod
+    def parse_duration(cls, duration: str) -> int:
+        """Convert a YouTube duration (subset of ISO8601 duration) to seconds."""
+        match = YOUTUBE_DURATION_REGEX.match(duration)
+        if not match:
+            raise ValueError("Unable to parse duration")
+
+        duration_components = {}
+
+        # convert None to zero and all strings to integers
+        for key, value in match.groupdict().items():
+            if value is None:
+                duration_components[key] = 0
+            else:
+                duration_components[key] = int(value)
+
+        delta = timedelta(
+            weeks=duration_components["weeks"],
+            days=duration_components["days"],
+            hours=duration_components["hours"],
+            minutes=duration_components["minutes"],
+            seconds=duration_components["seconds"],
+        )
+
+        return int(delta.total_seconds())
