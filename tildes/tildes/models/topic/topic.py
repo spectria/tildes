@@ -395,6 +395,12 @@ class Topic(DatabaseModel):
                 if self.created_time - published > timedelta(days=3):
                     metadata_strings.append(published.strftime("%b %-d %Y"))
 
+            # display the duration if we have it
+            duration = self.get_content_metadata("duration")
+            if duration:
+                duration_delta = timedelta(seconds=duration)
+                metadata_strings.append(str(duration_delta).lstrip("0:"))
+
         return ", ".join(metadata_strings)
 
     @property
