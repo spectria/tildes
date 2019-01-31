@@ -28,7 +28,9 @@
             >{{ topic.title }}</a>
           {% endif %}
         </h1>
-        <span class="topic-content-metadata">({{ topic.content_metadata_for_display }})</span>
+        {% if topic.content_metadata_for_display %}
+          <span class="topic-content-metadata">({{ topic.content_metadata_for_display }})</span>
+        {% endif %}
       </div>
     </header>
 
@@ -74,7 +76,11 @@
         </a>
       </div>
 
-      <div aria-label="Posted by">{{ username_linked(topic.user.username) }}</div>
+      {% if topic.is_text_type %}
+        <div aria-label="Posted by">{{ username_linked(topic.user.username) }}</div>
+      {% elif topic.is_link_type %}
+        <div aria-label="Link domain">{{ topic.link_domain }}</div>
+      {% endif %}
 
       <div aria-label="Post time">{{ adaptive_date_responsive(topic.created_time) }}</div>
     </footer>

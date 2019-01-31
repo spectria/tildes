@@ -193,11 +193,10 @@
 
 .topic-info {
   display: grid;
-  grid-auto-columns: 1fr;
-  grid-auto-flow: column;
+  grid-template-columns: 1fr 1.2fr 1fr;
   grid-column-gap: 0.4rem;
 
-  max-width: 30rem;
+  max-width: 32rem;
   margin-top: 0.2rem;
   white-space: nowrap;
 

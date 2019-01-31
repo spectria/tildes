@@ -379,16 +379,15 @@ class Topic(DatabaseModel):
         # pylint: disable=too-many-branches
         metadata_strings = []
 
-        if self.is_text_type:
-            word_count = self.get_content_metadata("word_count")
-            if word_count is not None:
-                if word_count == 1:
-                    metadata_strings.append("1 word")
-                else:
-                    metadata_strings.append(f"{word_count} words")
-        elif self.is_link_type:
-            metadata_strings.append(f"{self.link_domain}")
+        # display word count (if we have it) with either type of topic
+        word_count = self.get_content_metadata("word_count")
+        if word_count is not None:
+            if word_count == 1:
+                metadata_strings.append("1 word")
+            else:
+                metadata_strings.append(f"{word_count} words")
 
+        if self.is_link_type:
             # display the published date if it's more than 3 days before the topic
             published_timestamp = self.get_content_metadata("published")
             if published_timestamp:
