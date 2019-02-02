@@ -85,7 +85,7 @@
         <div aria-label="Link domain">{{ topic.link_domain }}</div>
       {% endif %}
 
-      <div aria-label="Post time">{{ adaptive_date_responsive(topic.created_time) }}</div>
+      <div aria-label="Post time">{{ adaptive_date_responsive(topic.created_time, precision=1) }}</div>
     </footer>
 
     {{ topic_voting(topic) }}

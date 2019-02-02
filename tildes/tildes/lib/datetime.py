@@ -5,7 +5,7 @@
 
 from datetime import datetime, timedelta, timezone
 import re
-from typing import Any
+from typing import Any, Optional
 
 from ago import human
 
@@ -84,7 +84,9 @@ def utc_from_timestamp(timestamp: int) -> datetime:
     return datetime.fromtimestamp(timestamp, timezone.utc)
 
 
-def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
+def descriptive_timedelta(
+    target: datetime, abbreviate: bool = False, precision: Optional[int] = None
+) -> str:
     """Return a descriptive string for how long ago a datetime was.
 
     The returned string will be of a format like "4 hours ago" or "3 hours, 21 minutes
@@ -105,23 +107,24 @@ def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
     if seconds_ago < 1:
         return "a moment ago"
 
-    # determine whether one or two precision levels is appropriate
-    if seconds_ago < 3600:
-        # if it's less than an hour, we always want only one precision level
-        precision = 1
-    else:
-        # try a precision=2 version, and check the units it ends up with
-        result = human(delta, precision=2)
-
-        units = ("year", "day", "hour", "minute", "second")
-        unit_indices = [i for (i, unit) in enumerate(units) if unit in result]
-
-        # if there was only one unit in it, or they're adjacent, this is fine
-        if len(unit_indices) < 2 or unit_indices[1] - unit_indices[0] == 1:
-            precision = 2
-        else:
-            # otherwise, drop back down to precision=1
+    if not precision:
+        # determine whether one or two precision levels is appropriate
+        if seconds_ago < 3600:
+            # if it's less than an hour, we always want only one precision level
             precision = 1
+        else:
+            # try a precision=2 version, and check the units it ends up with
+            result = human(delta, precision=2)
+
+            units = ("year", "day", "hour", "minute", "second")
+            unit_indices = [i for (i, unit) in enumerate(units) if unit in result]
+
+            # if there was only one unit in it, or they're adjacent, this is fine
+            if len(unit_indices) < 2 or unit_indices[1] - unit_indices[0] == 1:
+                precision = 2
+            else:
+                # otherwise, drop back down to precision=1
+                precision = 1
 
     result = human(delta, precision, abbreviate=abbreviate)
 
@@ -132,13 +135,15 @@ def descriptive_timedelta(target: datetime, abbreviate: bool = False) -> str:
     return result
 
 
-def adaptive_date(target: datetime, abbreviate: bool = False) -> str:
+def adaptive_date(
+    target: datetime, abbreviate: bool = False, precision: Optional[int] = None
+) -> str:
     """Return a date string that switches from relative to absolute past a threshold."""
     threshold = timedelta(days=7)
 
     # if the date is more recent than threshold, return the relative "ago"-style string
     if utc_now() - target < threshold:
-        return descriptive_timedelta(target, abbreviate)
+        return descriptive_timedelta(target, abbreviate, precision)
 
     # if abbreviating, use the short version of month name ("Dec" instead of "December")
     if abbreviate:

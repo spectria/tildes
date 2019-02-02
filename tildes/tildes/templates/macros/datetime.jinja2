@@ -5,11 +5,11 @@
 <time datetime="{{ datetime.strftime('%Y-%m-%dT%H:%M:%SZ') }}" title="{{ datetime.strftime('%Y-%m-%d %H:%M:%S UTC') }}">{{ datetime|ago(abbreviate) }}</time>
 {%- endmacro %}
 
-{% macro adaptive_date_responsive(datetime, class_=None) -%}
+{% macro adaptive_date_responsive(datetime, class_=None, precision=None) -%}
 <time
   class="time-responsive{{ ' '+class_ if class_ else '' }}"
   datetime="{{ datetime.strftime('%Y-%m-%dT%H:%M:%SZ') }}"
   title="{{ datetime.strftime('%Y-%m-%d %H:%M:%S UTC') }}"
-  data-abbreviated="{{ datetime|adaptive_date(abbreviate=True) }}"
-><span class="time-responsive-full">{{ datetime|adaptive_date(abbreviate=False) }}</span></time>
+  data-abbreviated="{{ datetime|adaptive_date(abbreviate=True, precision=precision) }}"
+><span class="time-responsive-full">{{ datetime|adaptive_date(abbreviate=False, precision=precision) }}</span></time>
 {%- endmacro %}
