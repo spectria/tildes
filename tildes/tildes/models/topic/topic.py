@@ -388,18 +388,18 @@ class Topic(DatabaseModel):
                 metadata_strings.append(f"{word_count} words")
 
         if self.is_link_type:
+            # display the duration if we have it
+            duration = self.get_content_metadata("duration")
+            if duration:
+                duration_delta = timedelta(seconds=duration)
+                metadata_strings.append(str(duration_delta).lstrip("0:"))
+
             # display the published date if it's more than 3 days before the topic
             published_timestamp = self.get_content_metadata("published")
             if published_timestamp:
                 published = utc_from_timestamp(published_timestamp)
                 if self.created_time - published > timedelta(days=3):
                     metadata_strings.append(published.strftime("%b %-d %Y"))
-
-            # display the duration if we have it
-            duration = self.get_content_metadata("duration")
-            if duration:
-                duration_delta = timedelta(seconds=duration)
-                metadata_strings.append(str(duration_delta).lstrip("0:"))
 
         return ", ".join(metadata_strings)
 
