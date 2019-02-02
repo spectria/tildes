@@ -5,7 +5,10 @@
 {% from 'macros/links.jinja2' import group_linked, username_linked %}
 
 {% macro render_topic_for_listing(topic, show_group=False, rank=None) %}
-  <article id="topic-{{ topic.topic_id36 }}" class="{{ topic_classes(topic)|trim }}">
+  <article id="topic-{{ topic.topic_id36 }}"
+    class="{{ topic_classes(topic)|trim }}"
+    data-topic-posted-by="{{ topic.user.username }}"
+  >
     <header>
       {% if topic.is_link_type %}
         <div class="topic-icon topic-icon-{{ topic.link_domain.replace('.', '_') }}"></div>
