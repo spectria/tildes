@@ -93,6 +93,17 @@ class UserSchema(Schema):
             raise ValidationError("That password exists in a data breach (see sidebar)")
 
     @pre_load
+    def prepare_username(self, data: dict) -> dict:
+        """Prepare the username value before it's validated."""
+        if "username" not in data:
+            return data
+
+        # strip any leading/trailing whitespace
+        data["username"] = data["username"].strip()
+
+        return data
+
+    @pre_load
     def prepare_email_address(self, data: dict) -> dict:
         """Prepare the email address value before it's validated."""
         if "email_address" not in data:
