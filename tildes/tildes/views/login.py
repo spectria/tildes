@@ -49,7 +49,11 @@ def finish_login(request: Request, user: User) -> None:
 @view_config(
     route_name="login", request_method="POST", permission=NO_PERMISSION_REQUIRED
 )
-@use_kwargs(UserSchema(only=("username", "password"), strict=True))
+@use_kwargs(
+    UserSchema(
+        only=("username", "password"), context={"username_trim_whitespace": True}
+    )
+)
 @not_logged_in
 @rate_limit_view("login")
 def post_login(request: Request, username: str, password: str) -> HTTPFound:

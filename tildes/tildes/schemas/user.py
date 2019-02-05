@@ -93,12 +93,17 @@ class UserSchema(Schema):
             raise ValidationError("That password exists in a data breach (see sidebar)")
 
     @pre_load
-    def prepare_username(self, data: dict) -> dict:
-        """Prepare the username value before it's validated."""
+    def username_trim_whitespace(self, data: dict) -> dict:
+        """Trim leading/trailing whitespace around the username.
+
+        Requires username_trim_whitespace be True in the schema's context.
+        """
+        if not self.context.get("username_trim_whitespace"):
+            return data
+
         if "username" not in data:
             return data
 
-        # strip any leading/trailing whitespace
         data["username"] = data["username"].strip()
 
         return data
