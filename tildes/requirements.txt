@@ -35,7 +35,7 @@ mccabe==0.6.1
 more-itertools==5.0.0
 mypy==0.660
 mypy-extensions==0.4.1
-parso==0.3.2
+parso==0.3.3
 PasteDeploy==2.0.1
 pep8-naming==0.4.1
 pexpect==4.6.0
@@ -71,8 +71,8 @@ pyramid-session-redis==1.4.1
 pyramid-tm==2.2.1
 pyramid-webassets==0.10
 pytest==4.2.0
-pytest-mock==1.10.0
-python-dateutil==2.7.5
+pytest-mock==1.10.1
+python-dateutil==2.8.0
 python-editor==1.0.4
 PyYAML==3.13
 qrcode==6.1
@@ -80,7 +80,7 @@ redis==3.1.0
 repoze.lru==0.7
 requests==2.21.0
 requirements-detector==0.6
-sentry-sdk==0.6.9
+sentry-sdk==0.7.1
 setoptconf==0.2.0
 simplejson==3.16.0
 six==1.12.0
