@@ -9,6 +9,7 @@ WorkingDirectory=/opt/prometheus_postgres_exporter
 User=postgres
 Group=postgres
 Environment="DATA_SOURCE_NAME=user=postgres host=/run/postgresql/ sslmode=disable"
+Environment="PG_EXPORTER_EXTEND_QUERY_PATH=/opt/prometheus_postgres_exporter/queries.yaml"
 ExecStart=/opt/prometheus_postgres_exporter/postgres_exporter
 
 [Install]

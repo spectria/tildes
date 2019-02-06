@@ -1,0 +1,6 @@
+pg_txid:
+  query: "SELECT max(age(datfrozenxid)) AS max_txid_age from pg_database"
+  metrics:
+    - max_txid_age:
+        usage: "GAUGE"
+        description: "Highest transaction ID age (wraparound at 2 billion)"

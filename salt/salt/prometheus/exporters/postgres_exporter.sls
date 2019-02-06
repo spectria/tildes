@@ -16,6 +16,13 @@ unpack-postgres-exporter:
     - options: --strip-components=1
     - enforce_toplevel: False
 
+/opt/prometheus_postgres_exporter/queries.yaml:
+  file.managed:
+    - source: salt://prometheus/exporters/queries.yaml
+    - user: postgres
+    - group: postgres
+    - mode: 644
+
 /etc/systemd/system/prometheus_postgres_exporter.service:
   file.managed:
     - source: salt://prometheus/exporters/prometheus_postgres_exporter.service
