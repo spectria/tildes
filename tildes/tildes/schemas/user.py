@@ -114,6 +114,9 @@ class UserSchema(Schema):
         if "email_address" not in data:
             return data
 
+        # remove any leading/trailing whitespace
+        data["email_address"] = data["email_address"].strip()
+
         # if the value is empty, convert it to None
         if not data["email_address"] or data["email_address"].isspace():
             data["email_address"] = None
