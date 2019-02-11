@@ -30,4 +30,16 @@
       text-decoration: underline;
     }
   }
+
+  .nav-item .btn-link {
+    height: auto;
+    font-size: 0.8rem;
+    font-weight: normal;
+    padding: 0.2rem 0.4rem;
+    border: 0;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }

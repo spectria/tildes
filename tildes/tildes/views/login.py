@@ -124,8 +124,8 @@ def post_login_two_factor(request: Request, code: str) -> Response:
         raise HTTPUnauthorized(body="Invalid code, please try again.")
 
 
-@view_config(route_name="logout")
-def get_logout(request: Request) -> HTTPFound:
+@view_config(route_name="logout", request_method="POST")
+def post_logout(request: Request) -> HTTPFound:
     """Process a log out request."""
     request.session.invalidate()
     request.db_session.add(Log(LogEventType.USER_LOG_OUT, request))

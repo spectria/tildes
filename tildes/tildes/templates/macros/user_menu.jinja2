@@ -71,7 +71,12 @@
           Settings
         </a>
       </li>
-      <li class="nav-item"><a href="/logout">Log out</a></li>
+      <li class="nav-item">
+        <form action="/logout" method="post">
+          <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
+          <button type="submit" class="btn btn-link">Log out</button>
+        </form>
+      </li>
     </ul>
   </ul>
 {% endmacro %}
