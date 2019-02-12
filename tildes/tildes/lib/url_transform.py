@@ -156,6 +156,19 @@ class TwitterMobileConverter(UrlTransformer):
         return parsed_url._replace(netloc="twitter.com")
 
 
+class FacebookTrackingRemover(UrlTransformer):
+    """Remove Facebook's "click tracking" query parameter (fbclid)."""
+
+    @classmethod
+    def apply_transformation(cls, parsed_url: ParseResult) -> ParseResult:
+        """Apply the actual transformation process to the url."""
+        query_params = parse_qs(parsed_url.query, keep_blank_values=True)
+
+        query_params.pop("fbclid", None)
+
+        return parsed_url._replace(query=urlencode(query_params, doseq=True))
+
+
 class RedditTrackingRemover(UrlTransformer):
     """Remove Reddit's "share tracking" query parameters (st and sh)."""
 

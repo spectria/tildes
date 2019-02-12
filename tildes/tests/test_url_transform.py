@@ -48,6 +48,14 @@ def test_other_mobile_subdomain_not_removed():
     assert cleaned_url == url
 
 
+def test_facebook_tracking_removed():
+    """Ensure that Facebook's "click tracking" query param is removed."""
+    url = "https://example.com/?fbclid=qwertyuiopasdfghjkl"
+    cleaned_url = apply_url_transformations(url)
+
+    assert cleaned_url == "https://example.com/"
+
+
 def test_reddit_tracking_removed():
     """Ensure that Reddit's "share tracking" query params are removed."""
     url = "https://www.reddit.com/r/tildes/comments/8k14is/_/?sort=new&st=abcdefgh&sh=1234asd"
