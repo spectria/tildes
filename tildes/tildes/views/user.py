@@ -69,7 +69,7 @@ def get_user(
         query = query.join_all_relationships()
 
         # include removed posts if the user's looking at their own page or is an admin
-        if user == request.user or request.user.is_admin:
+        if request.user and (user == request.user or request.user.is_admin):
             query = query.include_removed()
 
         result_sets.append(query.get_page(per_page))

@@ -10,7 +10,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from pyramid.httpexceptions import HTTPFound
 from pyramid.request import Request
-from pyramid.security import ACLDenied, ACLPermitsResult, Allow, Authenticated, Everyone
+from pyramid.security import Allow, Everyone
 
 from tildes.models.user import User
 
@@ -72,11 +72,7 @@ def includeme(config: Configurator) -> None:
     # default permission
     config.set_root_factory(DefaultRootFactory)
 
-    # Set the authorization policy to a custom one that always returns a "denied" result
-    # if the user isn't logged in. When overall site access is no longer being
-    # restricted, the AuthorizedOnlyPolicy class can just be replaced with the standard
-    # ACLAuthorizationPolicy
-    config.set_authorization_policy(AuthorizedOnlyPolicy())
+    config.set_authorization_policy(ACLAuthorizationPolicy())
 
     config.set_authentication_policy(
         SessionAuthenticationPolicy(callback=auth_callback)
@@ -90,25 +86,6 @@ def includeme(config: Configurator) -> None:
 
     # add has_any_permission method for easily checking multiple permissions
     config.add_request_method(has_any_permission, "has_any_permission")
-
-
-class AuthorizedOnlyPolicy(ACLAuthorizationPolicy):
-    """ACLAuthorizationPolicy override that always denies logged-out users."""
-
-    def permits(
-        self, context: Any, principals: Sequence[Any], permission: str
-    ) -> ACLPermitsResult:
-        """Deny logged-out users, otherwise pass up to normal policy."""
-        if Authenticated not in principals:
-            return ACLDenied(
-                "<authorized only>",
-                "<no ACLs checked yet>",
-                permission,
-                principals,
-                context,
-            )
-
-        return super().permits(context, principals, permission)
 
 
 def has_any_permission(

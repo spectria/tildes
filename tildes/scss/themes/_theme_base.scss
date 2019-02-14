@@ -61,12 +61,6 @@
     }
   }
 
-  a.logged-in-user-username:visited,
-  a.site-header-context:visited,
-  a.site-header-logo:visited {
-    color: unset;
-  }
-
   @include syntax-highlighting($is-light);
 
   blockquote {
@@ -299,7 +293,7 @@
     @include theme-special-label(map-get($theme, "topic-tag-spoiler"), $is-light);
   }
 
-  .logged-in-user-username {
+  .logged-in-user-username, .logged-in-user-username:visited {
     color: map-get($theme, "foreground-primary");
   }
 
@@ -346,12 +340,11 @@
     background-color: map-get($theme, "background-primary");
   }
 
-  .site-header-context,
-  .site-header-username {
+  .site-header-context, .site-header-context:visited {
     color: map-get($theme, "foreground-primary");
   }
 
-  .site-header-logo {
+  .site-header-logo, .site-header-logo:visited {
     color: map-get($theme, "foreground-highlight");
   }
 

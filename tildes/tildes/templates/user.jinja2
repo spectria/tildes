@@ -85,7 +85,7 @@
   {% endif %}
 {% endif %}
 
-{{ comment_label_options_template(comment_label_options) }}
+{% if request.user %}{{ comment_label_options_template(comment_label_options) }}{% endif %}
 
 {% endblock %}
 

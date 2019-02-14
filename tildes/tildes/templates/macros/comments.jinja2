@@ -150,6 +150,17 @@
         {{ comment.rendered_html|safe }}
       </div>
 
+      {# Show votes at the bottom only if the viewer is logged out #}
+      {% if not request.user and comment.num_votes > 0 %}
+        <div class="comment-votes">{{ comment.num_votes }}
+          {% trans num_votes=comment.num_votes %}
+          vote
+          {% pluralize %}
+          votes
+          {% endtrans %}
+        </div>
+      {% endif %}
+
       <menu class="post-buttons">
         {% if request.has_permission('vote', comment) %}
           {% if comment.user_voted is defined and comment.user_voted %}

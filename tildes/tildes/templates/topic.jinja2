@@ -265,7 +265,7 @@
 
 </article>
 
-{{ comment_label_options_template(comment_label_options) }}
+{% if request.user %}{{ comment_label_options_template(comment_label_options) }}{% endif %}
 {% endblock content %}
 
 {% block sidebar %}

@@ -90,6 +90,26 @@
 </aside>
 
 <footer id="site-footer" data-js-hide-sidebar-if-open>
+  {# Show the theme-selection dropdown if the user isn't logged in #}
+  {% if not request.user %}
+    <div class="site-footer-theme-selection">
+      <label for="theme">Theme:</label>
+      <select class="form-select" name="theme" id="theme" data-js-theme-selector>
+        {% for (theme, description) in (
+            ("white", "White"),
+            ("light", "Solarized Light"),
+            ("dark", "Solarized Dark"),
+            ("black", "Black")) %}
+        <option value="{{ theme }}"
+          {{ 'selected' if theme == request.cookies.get("theme", "white") else '' }}
+        >
+          {{ description }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+  {% endif %}
+
   <p>Tildes is a non-profit site that respects its users and prioritizes quality content.</p>
   <p>It has no advertising, no investors, and is supported by <a href="https://docs.tildes.net/donate">your donations</a>.</p>
   <ul class="site-footer-links">

@@ -73,5 +73,5 @@
   <p><a href="/notifications">Go to previously read notifications</a></p>
 {% endif %}
 
-{{ comment_label_options_template(comment_label_options) }}
+{% if request.user %}{{ comment_label_options_template(comment_label_options) }}{% endif %}
 {% endblock %}

@@ -74,7 +74,7 @@
     </div>
   </form>
 
-  {% if is_default_view is defined and not is_default_view %}
+  {% if request.user and is_default_view is defined and not is_default_view %}
     <form
       {% if is_single_group %}
         data-ic-patch-to="{{ request.route_url(

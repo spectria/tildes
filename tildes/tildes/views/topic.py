@@ -86,7 +86,7 @@ def post_group_topics(
     raise HTTPFound(location=new_topic.permalink)
 
 
-@view_config(route_name="home", renderer="home.jinja2")
+@view_config(route_name="home", renderer="home.jinja2")  # noqa
 @view_config(route_name="group", renderer="topic_listing.jinja2")
 @use_kwargs(TopicListingSchema())
 def get_group_topics(
@@ -104,7 +104,13 @@ def get_group_topics(
     # pylint: disable=too-many-arguments
     if request.matched_route.name == "home":
         # on the home page, include topics from the user's subscribed groups
-        groups = [sub.group for sub in request.user.subscriptions]
+        # (or all groups, if logged-out)
+        if request.user:
+            groups = [sub.group for sub in request.user.subscriptions]
+        else:
+            groups = [
+                group for group in request.query(Group).all() if group.path != "test"
+            ]
     else:
         # otherwise, just topics from the single group that we're looking at
         groups = [request.context]
@@ -141,7 +147,7 @@ def get_group_topics(
         query = query.after_id36(after)
 
     # apply topic tag filters unless they're disabled or viewing a single tag
-    if not (tag or unfiltered):
+    if request.user and not (tag or unfiltered):
         # pylint: disable=protected-access
         query = query.filter(
             ~Topic._tags.descendant_of(  # type: ignore
@@ -160,6 +166,7 @@ def get_group_topics(
 
     return {
         "group": request.context,
+        "groups": groups,
         "topics": topics,
         "order": order,
         "order_options": TopicSortOption,
@@ -323,24 +330,28 @@ def post_comment_on_topic(request: Request, markdown: str) -> HTTPFound:
     raise HTTPFound(location=topic.permalink)
 
 
-def _get_default_settings(request: Request, order: Any) -> DefaultSettings:
+def _get_default_settings(request: Request, order: Any) -> DefaultSettings:  # noqa
     if isinstance(request.context, Group):
         is_home_page = False
-        user_settings = (
-            request.query(UserGroupSettings)
-            .filter(
-                UserGroupSettings.user == request.user,
-                UserGroupSettings.group == request.context,
+
+        if request.user:
+            user_settings = (
+                request.query(UserGroupSettings)
+                .filter(
+                    UserGroupSettings.user == request.user,
+                    UserGroupSettings.group == request.context,
+                )
+                .one_or_none()
             )
-            .one_or_none()
-        )
+        else:
+            user_settings = None
     else:
         is_home_page = True
         user_settings = None
 
     if user_settings and user_settings.default_order:
         default_order = user_settings.default_order
-    elif request.user.home_default_order:
+    elif request.user and request.user.home_default_order:
         default_order = request.user.home_default_order
     else:
         default_order = TopicSortOption.ACTIVITY
@@ -353,7 +364,7 @@ def _get_default_settings(request: Request, order: Any) -> DefaultSettings:
     if user_settings and user_settings.default_period:
         user_default = user_settings.default_period
         default_period = ShortTimePeriod().deserialize(user_default)
-    elif request.user.home_default_period:
+    elif request.user and request.user.home_default_period:
         user_default = request.user.home_default_period
         default_period = ShortTimePeriod().deserialize(user_default)
     else:
