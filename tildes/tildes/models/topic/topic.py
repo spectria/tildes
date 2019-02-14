@@ -392,7 +392,15 @@ class Topic(DatabaseModel):
             duration = self.get_content_metadata("duration")
             if duration:
                 duration_delta = timedelta(seconds=duration)
-                metadata_strings.append(str(duration_delta).lstrip("0:"))
+
+                # When converted to str, timedelta always includes hours and minutes,
+                # so we want to strip off all the excess zeros and/or colons. However,
+                # if it's less than a minute we'll need to add one back.
+                duration_str = str(duration_delta).lstrip("0:")
+                if duration < 60:
+                    duration_str = f"0:{duration_str}"
+
+                metadata_strings.append(duration_str)
 
             # display the published date if it's more than 3 days before the topic
             published_timestamp = self.get_content_metadata("published")
