@@ -28,6 +28,10 @@ select.form-select:not([multiple]) {
   }
 }
 
+.form-login {
+  margin-bottom: 2rem;
+}
+
 .form-buttons {
   display: flex;
   flex-direction: row-reverse;
