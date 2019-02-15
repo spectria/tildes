@@ -8,9 +8,11 @@
 {% block main_heading %}Register a new account{% endblock %}
 
 {% block content %}
-  <p class="text-warning">
-    Registration is currently invite-only. You must have a valid invite code to be able to register.
-  </p>
+  {% if not code %}
+    <div class="toast toast-warning">
+      Registration is currently invite-only. You must have a valid invite code to be able to register.
+    </div>
+  {% endif %}
 
   <p>Please check the sidebar for information about username and password restrictions.</p>
 
