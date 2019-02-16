@@ -32,6 +32,7 @@ def get_settings(request: Request) -> dict:
         "white": "White",
         "light": "Solarized Light",
         "dark": "Solarized Dark",
+        "dracula": "Dracula",
         "black": "Black",
     }
 

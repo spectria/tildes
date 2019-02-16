@@ -127,7 +127,14 @@
   }
 
   .btn.btn-primary {
-    color: #fff;
+    $is-button-bg-light: lightness(map-get($theme, "button")) > 50;
+
+    @if ($is-button-bg-light) {
+      color: #000;
+    } @else {
+      color: #fff;
+    }
+
     background-color: map-get($theme, "button");
     border-color: map-get($theme, "button");
 
@@ -137,7 +144,11 @@
     }
 
     &:visited {
-      color: #fff;
+      @if ($is-button-bg-light) {
+        color: #000;
+      } @else {
+        color: #fff;
+      }
     }
   }
 
@@ -367,6 +378,7 @@
 
     &.active a {
       color: map-get($theme, "link");
+      border-bottom-color: map-get($theme, "link");
     }
   }
 

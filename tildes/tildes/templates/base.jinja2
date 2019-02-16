@@ -14,6 +14,8 @@
   {# Hardcoding each option isn't great, but I don't know a better method #}
   {% if request.cookies.get('theme', '') == 'dark' %}
   <meta name="theme-color" content="#073642">
+  {% elif request.cookies.get("theme", "") == "dracula" %}
+  <meta name="theme-color" content="#282a36">
   {% elif request.cookies.get('theme', '') == 'black' %}
   <meta name="theme-color" content="#222">
   {% endif %}
@@ -99,6 +101,7 @@
             ("white", "White"),
             ("light", "Solarized Light"),
             ("dark", "Solarized Dark"),
+            ("dracula", "Dracula"),
             ("black", "Black")) %}
         <option value="{{ theme }}"
           {{ 'selected' if theme == request.cookies.get("theme", "white") else '' }}
