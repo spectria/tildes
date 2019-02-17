@@ -184,7 +184,7 @@ def get_group_topics(
 
 @view_config(route_name="search", renderer="search.jinja2")
 @use_kwargs(TopicListingSchema(only=("after", "before", "order", "per_page", "period")))
-@use_kwargs({"search": String(load_from="q")})
+@use_kwargs({"search": String(load_from="q", missing="")})
 def get_search(
     request: Request,
     order: Any,
