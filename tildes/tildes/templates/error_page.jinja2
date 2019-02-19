@@ -3,12 +3,13 @@
 
 {% extends 'base_no_sidebar.jinja2' %}
 
-{% block title %}Error 403 (Forbidden){% endblock %}
+{% block title %}{{ error }}{% endblock %}
 
 {% block content %}
 <div class="empty">
-  <h2 class="empty-title">Error 403 (Forbidden)</h2>
-  <p class="empty-subtitle">You don't have access to this page.</p>
+  <h2 class="empty-title">{{ error }}</h2>
+  <p class="empty-subtitle">{{ description }}</p>
+
   <div class="empty-action"><a href="/" class="btn btn-primary">Back to the home page</a></div>
 </div>
 {% endblock %}
