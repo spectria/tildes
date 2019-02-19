@@ -3,7 +3,15 @@
 
 """Views used by Pyramid when an exception is raised."""
 
-from pyramid.httpexceptions import HTTPError, HTTPForbidden, HTTPNotFound
+from typing import Sequence
+
+from marshmallow import ValidationError
+from pyramid.httpexceptions import (
+    HTTPError,
+    HTTPForbidden,
+    HTTPNotFound,
+    HTTPUnprocessableEntity,
+)
 from pyramid.request import Request
 from pyramid.view import (
     exception_view_config,
@@ -13,6 +21,21 @@ from pyramid.view import (
 from sqlalchemy import cast, desc, func, Text
 
 from tildes.models.group import Group
+
+
+def errors_from_validationerror(validation_error: ValidationError) -> Sequence[str]:
+    """Extract errors from a marshmallow ValidationError into a displayable format."""
+    errors_by_field = validation_error.messages
+
+    error_strings = []
+    for field, errors in errors_by_field.items():
+        joined_errors = " ".join(errors)
+        if field != "_schema":
+            error_strings.append(f"{field}: {joined_errors}")
+        else:
+            error_strings.append(joined_errors)
+
+    return error_strings
 
 
 @exception_view_config(
@@ -44,6 +67,11 @@ def generic_error_page(request: Request) -> dict:
 
     if isinstance(request.exception, HTTPForbidden):
         description = "You don't have access to this page"
+    if isinstance(request.exception, HTTPUnprocessableEntity) and isinstance(
+        request.exception.__context__, ValidationError
+    ):
+        errors = errors_from_validationerror(request.exception.__context__)
+        description = " ".join(errors)
     else:
         description = request.exception.explanation
 

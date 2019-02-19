@@ -18,6 +18,7 @@ from pyramid.response import Response
 from tildes.resources.comment import comment_by_id36
 from tildes.resources.topic import topic_by_id36
 from tildes.views.decorators import ic_view_config
+from tildes.views.exceptions import errors_from_validationerror
 
 
 def _422_response_with_errors(errors: Sequence[str]) -> Response:
@@ -44,15 +45,7 @@ def unprocessable_entity(request: Request) -> Response:
     if not validation_error:
         return _422_response_with_errors([str(request.exception)])
 
-    errors_by_field = validation_error.messages
-
-    error_strings = []
-    for field, errors in errors_by_field.items():
-        joined_errors = " ".join(errors)
-        if field != "_schema":
-            error_strings.append(f"{field}: {joined_errors}")
-        else:
-            error_strings.append(joined_errors)
+    error_strings = errors_from_validationerror(validation_error)
 
     return _422_response_with_errors(error_strings)
 
