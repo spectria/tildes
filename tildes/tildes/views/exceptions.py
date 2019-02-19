@@ -3,7 +3,7 @@
 
 """Views used by Pyramid when an exception is raised."""
 
-from pyramid.httpexceptions import HTTPException, HTTPForbidden, HTTPNotFound
+from pyramid.httpexceptions import HTTPError, HTTPForbidden, HTTPNotFound
 from pyramid.request import Request
 from pyramid.view import (
     exception_view_config,
@@ -35,7 +35,7 @@ def group_not_found(request: Request) -> dict:
 
 @notfound_view_config(xhr=False, renderer="error_page.jinja2")
 @forbidden_view_config(xhr=False, renderer="error_page.jinja2")
-@exception_view_config(context=HTTPException, xhr=False, renderer="error_page.jinja2")
+@exception_view_config(context=HTTPError, xhr=False, renderer="error_page.jinja2")
 def generic_error_page(request: Request) -> dict:
     """Display a generic error page for all HTTP exceptions."""
     request.response.status_int = request.exception.status_int
