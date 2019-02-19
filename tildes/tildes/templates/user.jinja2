@@ -13,17 +13,22 @@
 <a class="site-header-context" href="/user/{{ user.username }}">{{ user.username }}</a>
 {% endblock %}
 
-{# Only show the heading if they can't see the type tabs and the user isn't deleted #}
+{# Only show the heading if they can't see the type tabs and the user isn't deleted/banned #}
 {% block main_heading %}
-  {% if not user.is_deleted and not request.has_permission("view_history", user) %}
+  {% if not (user.is_deleted or user.is_banned) and not request.has_permission("view_history", user) %}
     {{ user.username }}'s recent activity
   {% endif %}
 {% endblock %}
 
 {% block content %}
-{% if user.is_deleted %}
+{% if user.is_deleted or user.is_banned %}
   <div class="empty">
-    <h2 class="empty-title">This user has deleted their account</h2>
+    {% if user.is_banned %}
+      <h2 class="empty-title">This user is banned</h2>
+    {% elif user.is_deleted %}
+      <h2 class="empty-title">This user has deleted their account</h2>
+    {% endif %}
+
     <div class="empty-action"><a href="/" class="btn btn-primary">Back to the home page</a></div>
   </div>
 {% else %}
