@@ -13,7 +13,7 @@ from html5lib.filters.base import Filter
 from html5lib.treewalkers.base import NonRecursiveTreeWalker
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
-from pygments.lexers import get_lexer_by_name
+from pygments.lexers import get_lexer_by_name, PhpLexer
 from pygments.util import ClassNotFound
 
 from tildes.metrics import histogram_timer
@@ -207,6 +207,11 @@ def apply_syntax_highlighting(html: str) -> str:
 
         try:
             lexer = get_lexer_by_name(language)
+            # If target language is PHP, override default lexer construction
+            # and set startinline to True, so even code that is not enclosed
+            # inside <?php ... ?> will get highlighted.
+            if isinstance(lexer, PhpLexer):
+                lexer = PhpLexer(startinline=True)
         except ClassNotFound:
             continue
 
