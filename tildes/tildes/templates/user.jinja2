@@ -49,6 +49,22 @@
   {% endif %}
 
   {% if posts %}
+    {% if request.has_permission("view_history", user) and posts.has_prev_page %}
+      <div class="pagination">
+        {% if posts.has_prev_page %}
+          <a class="page-item btn" id="prev-page-top"
+            href="{{ request.current_listing_base_url({'before': posts.prev_page_before_id36}) }}"
+          >Prev</a>
+        {% endif %}
+
+        {% if posts.has_next_page %}
+          <a class="page-item btn" id="next-page-top"
+            href="{{ request.current_listing_base_url({'after': posts.next_page_after_id36}) }}"
+          >Next</a>
+        {% endif %}
+      </div>
+    {% endif %}
+
     <ol class="post-listing">
     {% for post in posts if request.has_permission('view', post) %}
       <li>
@@ -71,13 +87,13 @@
     {% if request.has_permission("view_history", user) and (posts.has_prev_page or posts.has_next_page) %}
       <div class="pagination">
         {% if posts.has_prev_page %}
-          <a class="page-item btn" id="prev-page"
+          <a class="page-item btn" id="prev-page-bottom"
             href="{{ request.current_listing_base_url({'before': posts.prev_page_before_id36}) }}"
           >Prev</a>
         {% endif %}
 
         {% if posts.has_next_page %}
-          <a class="page-item btn" id="next-page"
+          <a class="page-item btn" id="next-page-bottom"
             href="{{ request.current_listing_base_url({'after': posts.next_page_after_id36}) }}"
           >Next</a>
         {% endif %}
