@@ -56,13 +56,13 @@
   {% if notifications.has_prev_page or notifications.has_next_page %}
     <div class="pagination">
       {% if notifications.has_prev_page %}
-        <a class="page-item btn" id="prev-page"
+        <a class="page-item btn"
           href="{{ request.current_listing_normal_url({'before': notifications.prev_page_before_id36}) }}"
         >Prev</a>
       {% endif %}
 
       {% if notifications.has_next_page %}
-        <a class="page-item btn" id="next-page"
+        <a class="page-item btn"
           href="{{ request.current_listing_normal_url({'after': notifications.next_page_after_id36}) }}"
         >Next</a>
       {% endif %}

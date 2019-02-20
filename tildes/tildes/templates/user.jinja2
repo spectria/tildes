@@ -52,13 +52,13 @@
     {% if request.has_permission("view_history", user) and posts.has_prev_page %}
       <div class="pagination">
         {% if posts.has_prev_page %}
-          <a class="page-item btn" id="prev-page-top"
+          <a class="page-item btn"
             href="{{ request.current_listing_base_url({'before': posts.prev_page_before_id36}) }}"
           >Prev</a>
         {% endif %}
 
         {% if posts.has_next_page %}
-          <a class="page-item btn" id="next-page-top"
+          <a class="page-item btn"
             href="{{ request.current_listing_base_url({'after': posts.next_page_after_id36}) }}"
           >Next</a>
         {% endif %}
@@ -87,13 +87,13 @@
     {% if request.has_permission("view_history", user) and (posts.has_prev_page or posts.has_next_page) %}
       <div class="pagination">
         {% if posts.has_prev_page %}
-          <a class="page-item btn" id="prev-page-bottom"
+          <a class="page-item btn"
             href="{{ request.current_listing_base_url({'before': posts.prev_page_before_id36}) }}"
           >Prev</a>
         {% endif %}
 
         {% if posts.has_next_page %}
-          <a class="page-item btn" id="next-page-bottom"
+          <a class="page-item btn"
             href="{{ request.current_listing_base_url({'after': posts.next_page_after_id36}) }}"
           >Next</a>
         {% endif %}
