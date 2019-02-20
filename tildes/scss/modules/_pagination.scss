@@ -5,4 +5,8 @@
   font-size: 0.6rem;
   height: auto;
   line-height: normal;
+
+  & + & {
+    margin-left: 0.4rem;
+  }
 }
