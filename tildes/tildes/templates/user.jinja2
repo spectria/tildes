@@ -120,6 +120,13 @@
 <dl>
   <dt>Registered</dt>
   <dd>{{ user.created_time.strftime('%B %-d, %Y') }}</dd>
+
+  {% if user.bio_rendered_html %}
+    <div class="user-bio">
+      <dt>Bio</dt>
+      <dd>{{ user.bio_rendered_html|safe }}</dd>
+    </div>
+  {% endif %}
 </dl>
 
 {% if request.has_permission('message', user) %}

@@ -11,6 +11,7 @@ from marshmallow.fields import Boolean, DateTime, Email, String
 from marshmallow.validate import Length, Regexp
 
 from tildes.lib.password import is_breached_password
+from tildes.schemas.fields import Markdown
 
 
 USERNAME_MIN_LENGTH = 3
@@ -36,6 +37,8 @@ PASSWORD_MIN_LENGTH = 8
 
 EMAIL_ADDRESS_NOTE_MAX_LENGTH = 100
 
+BIO_MAX_LENGTH = 2000
+
 
 class UserSchema(Schema):
     """Marshmallow schema for users."""
@@ -54,6 +57,7 @@ class UserSchema(Schema):
     email_address_note = String(validate=Length(max=EMAIL_ADDRESS_NOTE_MAX_LENGTH))
     created_time = DateTime(dump_only=True)
     track_comment_visits = Boolean()
+    bio_markdown = Markdown(max_length=BIO_MAX_LENGTH, allow_none=True)
 
     @post_dump
     def anonymize_username(self, data: dict) -> dict:
@@ -120,6 +124,18 @@ class UserSchema(Schema):
         # if the value is empty, convert it to None
         if not data["email_address"] or data["email_address"].isspace():
             data["email_address"] = None
+
+        return data
+
+    @pre_load
+    def prepare_bio_markdown(self, data: dict) -> dict:
+        """Prepare the bio_markdown value before it's validated."""
+        if "bio_markdown" not in data:
+            return data
+
+        # if the value is empty, convert it to None
+        if not data["bio_markdown"] or data["bio_markdown"].isspace():
+            data["bio_markdown"] = None
 
         return data
 

@@ -1,0 +1,25 @@
+{# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% from 'macros/forms.jinja2' import markdown_textarea %}
+
+{% block title %}Edit your user bio{% endblock %}
+
+{% block main_heading %}Edit your user bio{% endblock %}
+
+{% block content %}
+  <form
+    method="post"
+    name="user-bio"
+    autocomplete="off"
+    data-ic-patch-to="{{ request.route_url("ic_user", username=request.user.username) }}"
+  >
+    {{ markdown_textarea('User Bio (Markdown)', text=request.user.bio_markdown) }}
+
+    <div class="form-buttons">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+{% endblock %}

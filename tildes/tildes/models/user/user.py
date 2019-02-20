@@ -36,8 +36,13 @@ from tildes.enums import CommentLabelOption, TopicSortOption
 from tildes.lib.database import ArrayOfLtree, CIText
 from tildes.lib.datetime import utc_now
 from tildes.lib.hash import hash_string, is_match_for_hash
+from tildes.lib.markdown import convert_markdown_to_safe_html
 from tildes.models import DatabaseModel
-from tildes.schemas.user import EMAIL_ADDRESS_NOTE_MAX_LENGTH, UserSchema
+from tildes.schemas.user import (
+    BIO_MAX_LENGTH,
+    EMAIL_ADDRESS_NOTE_MAX_LENGTH,
+    UserSchema,
+)
 
 
 class User(DatabaseModel):
@@ -111,6 +116,14 @@ class User(DatabaseModel):
     )
     comment_label_weight: Optional[float] = Column(REAL)
     last_exemplary_label_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
+    _bio_markdown: str = Column(
+        "bio_markdown",
+        Text,
+        CheckConstraint(
+            f"LENGTH(bio_markdown) <= {BIO_MAX_LENGTH}", name="bio_markdown_length"
+        ),
+    )
+    bio_rendered_html: str = Column(Text)
 
     @hybrid_property
     def filtered_topic_tags(self) -> List[str]:
@@ -120,6 +133,24 @@ class User(DatabaseModel):
     @filtered_topic_tags.setter  # type: ignore
     def filtered_topic_tags(self, new_tags: List[str]) -> None:
         self._filtered_topic_tags = new_tags
+
+    @hybrid_property
+    def bio_markdown(self) -> str:
+        """Return the user bio's markdown."""
+        return self._bio_markdown
+
+    @bio_markdown.setter  # type: ignore
+    def bio_markdown(self, new_markdown: str) -> None:
+        """Set the user bio's markdown and render its HTML."""
+        if new_markdown == self.bio_markdown:
+            return
+
+        self._bio_markdown = new_markdown
+
+        if self._bio_markdown is not None:
+            self.bio_rendered_html = convert_markdown_to_safe_html(new_markdown)
+        else:
+            self.bio_rendered_html = None
 
     def __repr__(self) -> str:
         """Display the user's username and ID as its repr format."""

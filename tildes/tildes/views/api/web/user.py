@@ -229,6 +229,22 @@ def patch_change_account_default_theme(request: Request) -> Response:
 
 
 @ic_view_config(
+    route_name="user",
+    request_method="PATCH",
+    request_param="ic-trigger-name=user-bio",
+    permission="edit_bio",
+)
+@use_kwargs({"markdown": String()})
+def patch_change_user_bio(request: Request, markdown: str) -> dict:
+    """Update a user's bio."""
+    user = request.context
+
+    user.bio_markdown = markdown
+
+    return IC_NOOP
+
+
+@ic_view_config(
     route_name="user_invite_code",
     request_method="GET",
     permission="view_invite_code",

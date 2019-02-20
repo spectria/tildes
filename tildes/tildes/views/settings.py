@@ -109,6 +109,13 @@ def get_settings_two_factor_qr_code(request: Request) -> Response:
     return Response(byte_io.getvalue(), cache_control="private, no-cache")
 
 
+@view_config(route_name="settings_bio", renderer="settings_bio.jinja2")
+def get_settings_bio(request: Request) -> dict:
+    """Generate the user bio settings page."""
+    # pylint: disable=unused-argument
+    return {}
+
+
 @view_config(route_name="settings_password_change", request_method="POST")
 @use_kwargs(
     {

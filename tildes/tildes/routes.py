@@ -72,6 +72,7 @@ def includeme(config: Configurator) -> None:
             "settings_comment_visits", "/comment_visits", factory=LoggedInFactory
         )
         config.add_route("settings_filters", "/filters", factory=LoggedInFactory)
+        config.add_route("settings_bio", "/bio", factory=LoggedInFactory)
         config.add_route(
             "settings_password_change", "/password_change", factory=LoggedInFactory
         )
