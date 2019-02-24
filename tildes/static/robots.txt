@@ -1,2 +1,5 @@
 User-agent: BLEXBot
 Disallow: /
+
+User-agent: dotbot
+Disallow: /
