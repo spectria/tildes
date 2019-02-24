@@ -688,70 +688,77 @@
   }
 }
 
-@function init-theme($theme-map) {
-  $theme: map-merge($theme-base, $theme-map);
+@function map-get-fallback($map, $preferred-key, $fallback-key) {
+  // map-get that will fall back to a second key if the first isn't set
+  @if (map-has-key($map, $preferred-key)) {
+    @return map-get($map, $preferred-key);
+  }
+
+  @return map-get($map, $fallback-key);
+}
+
+@function init-theme($theme) {
+  // check to make sure the theme has all of the essential colors set
+  $essential-keys:
+    "alert"
+    "background-primary"
+    "background-secondary"
+    "comment-label-exemplary"
+    "comment-label-joke"
+    "comment-label-noise"
+    "comment-label-offtopic"
+    "comment-label-malice"
+    "error"
+    "foreground-primary"
+    "foreground-secondary"
+    "link"
+    "link-visited"
+    "warning"
+  ;
+  @each $key in $essential-keys {
+    @if (not map-has-key($theme, $key)) {
+      @error "Missing essential key in theme: #{$key}";
+    }
+  }
 
   // set $is-light as a bool for whether background-primary seems light or dark
   $is-light: lightness(map-get($theme, "background-primary")) > 50;
 
-  // button: if not defined, use link color
-  $button: map-get($theme, "button");
-  $button: map-get($theme, "link") !default;
-
-  // button-used: if not defined, use link-visited color
-  $button-used: map-get($theme, "button-used");
-  $button-used: map-get($theme, "link-visited") !default;
-
-  // foreground-middle: if not defined, mix foreground-primary and foreground-secondary
-  $foreground-middle: map-get($theme, "foreground-middle");
-  $foreground-middle: mix(map-get($theme, "foreground-primary"), map-get($theme, "foreground-secondary")) !default;
+  // colors that simply fall back to another if not defined
+  $background-input: map-get-fallback($theme, "background-input", "background-primary");
+  $border: map-get-fallback($theme, "border", "foreground-secondary");
+  $button: map-get-fallback($theme, "button", "link");
+  $button-used: map-get-fallback($theme, "button-used", "link-visited");
+  $foreground-highlight: map-get-fallback($theme, "foreground-highlight", "foreground-primary");
+  $stripe-mine: map-get-fallback($theme, "stripe-mine", "link-visited");
+  $stripe-target: map-get-fallback($theme, "stripe-target", "warning");
+  $topic-tag-nsfw: map-get-fallback($theme, "topic-tag-nsfw", "error");
+  $topic-tag-spoiler: map-get-fallback($theme, "topic-tag-spoiler", "warning");
 
   // foreground-extreme: if not defined, use white on a dark background and black on a light one
   $foreground-extreme: map-get($theme, "foreground-extreme");
   $foreground-extreme: if($is-light, #000, #fff) !default;
 
+  // foreground-middle: if not defined, mix foreground-primary and foreground-secondary
+  $foreground-middle: map-get($theme, "foreground-middle");
+  $foreground-middle: mix(map-get($theme, "foreground-primary"), map-get($theme, "foreground-secondary")) !default;
+
   // link-hover: if not defined, darken the link color slightly
   $link-hover: map-get($theme, "link-hover");
   $link-hover: darken(map-get($theme, "link"), 5%) !default;
 
-  // warning: if not defined, use alert color
-  $warning: map-get($theme, "warning");
-  $warning: map-get($theme, "alert") !default;
-
   @return map-merge($theme, (
+    "background-input": $background-input,
+    "border": $border,
     "button": $button,
     "button-used": $button-used,
     "foreground-extreme": $foreground-extreme,
+    "foreground-highlight": $foreground-highlight,
     "foreground-middle": $foreground-middle,
     "link-hover": $link-hover,
-    "warning": $warning,
+    "stripe-mine": $stripe-mine,
+    "stripe-target": $stripe-target,
+    "topic-tag-nsfw": $topic-tag-nsfw,
+    "topic-tag-spoiler": $topic-tag-spoiler,
   ));
-}
-
-$theme-base: (
-  "alert": #cb4b16,  // Solarized
-  "background-input": #fff,
-  "background-primary": #fff,
-  "background-secondary": #eee,
-  "border": #ccc,
-  "comment-label-exemplary": #268bd2,  // Solarized
-  "comment-label-joke": #859900,  // Solarized
-  "comment-label-noise": #b58900,  // Solarized
-  "comment-label-offtopic": #2aa198,  // Solarized
-  "comment-label-malice": #dc322f,  // Solarized
-  "error": #f00,
-  "foreground-highlight": #222,
-  "foreground-primary": #333,
-  "foreground-secondary": #999,
-  "link": #268bd2,  // Solarized
-  "link-visited": #6c71c4,  // Solarized
-  "stripe-mine": #6c71c4,  // Solarized
-  "stripe-target": #b58900,  // Solarized
-  "topic-tag-nsfw": #dc322f,  // Solarized
-  "topic-tag-spoiler": #b58900,  // Solarized
-);
-
-// define the default theme using the base values
-body {
-  @include use-theme($theme-base);
 }

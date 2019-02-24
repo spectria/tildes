@@ -1,11 +1,20 @@
 $theme-black: (
+  "alert": #cb4b16,  // Solarized
+  "background-primary": #000,
+  "background-secondary": #222,
+  "error": red,
   "foreground-primary": #ccc,
   "foreground-secondary": #888,
   "foreground-highlight": #ddd,
-  "background-primary": #000,
-  "background-secondary": #222,
-  "background-input": #000,
   "border": #444,
+  "comment-label-exemplary": #268bd2,  // Solarized
+  "comment-label-joke": #859900,  // Solarized
+  "comment-label-noise": #b58900,  // Solarized
+  "comment-label-offtopic": #2aa198,  // Solarized
+  "comment-label-malice": #dc322f,  // Solarized
+  "link": #268bd2,  // Solarized
+  "link-visited": #6c71c4,  // Solarized
+  "warning": #b58900,  // Solarized
 );
 
 body.theme-black {

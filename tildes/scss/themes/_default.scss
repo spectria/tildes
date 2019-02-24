@@ -1,0 +1,27 @@
+// Contains the default Tildes theme
+
+$default-theme: (
+  "alert": #cb4b16,  // Solarized
+  "background-primary": #fff,
+  "background-secondary": #eee,
+  "border": #ccc,
+  "comment-label-exemplary": #268bd2,  // Solarized
+  "comment-label-joke": #859900,  // Solarized
+  "comment-label-noise": #b58900,  // Solarized
+  "comment-label-offtopic": #2aa198,  // Solarized
+  "comment-label-malice": #dc322f,  // Solarized
+  "error": #f00,
+  "foreground-highlight": #222,
+  "foreground-primary": #333,
+  "foreground-secondary": #999,
+  "link": #268bd2,  // Solarized
+  "link-visited": #6c71c4,  // Solarized
+  "stripe-mine": #6c71c4,  // Solarized
+  "topic-tag-nsfw": #dc322f,  // Solarized
+  "warning": #b58900,  // Solarized
+);
+
+// define the default theme using the base values
+body {
+  @include use-theme($default-theme);
+}
