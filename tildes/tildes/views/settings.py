@@ -33,6 +33,7 @@ def get_settings(request: Request) -> dict:
         "light": "Solarized Light",
         "dark": "Solarized Dark",
         "dracula": "Dracula",
+        "atom-one-dark": "Atom One Dark",
         "black": "Black",
     }
 

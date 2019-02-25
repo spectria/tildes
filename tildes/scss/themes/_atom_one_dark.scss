@@ -1,0 +1,39 @@
+// Colours from Atom One Dark Syntax: https://github.com/atom/atom/blob/master/packages/one-dark-syntax/styles/colors.less
+
+$background: hsl(220, 13%, 18%);
+$background-alt: #21242b;
+$foreground-alt: hsl(220, 14%, 71%);
+$foreground: lighten($foreground, 10%);
+
+$cyan: hsl(187, 47%, 55%);
+$blue: hsl(207, 82%, 66%);
+$purple: hsl(286, 60%, 67%);
+$green: hsl( 95, 38%, 62%);
+$red: hsl(355, 65%, 65%);
+$orange: hsl( 29, 54%, 61%);
+
+$theme-atom-one-dark: (
+  "alert": $orange,
+  "background-primary": $background,
+  "background-secondary": $background-alt,
+  "comment-label-exemplary": $blue,
+  "comment-label-joke": $green,
+  "comment-label-noise": $orange,
+  "comment-label-offtopic": $cyan,
+  "comment-label-malice": $red,
+  "error": $red,
+  "foreground-primary": $foreground,
+  "foreground-secondary": $foreground-alt,
+  "foreground-highlight": $foreground,
+  "link": $blue,
+  "link-visited": $purple,
+  "stripe-mine": $purple,
+  "stripe-target": $orange,
+  "topic-tag-nsfw": $red,
+  "topic-tag-spoiler": $orange,
+  "warning": $orange,
+);
+
+body.theme-atom-one-dark {
+  @include use-theme($theme-atom-one-dark);
+}

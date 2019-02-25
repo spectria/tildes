@@ -16,6 +16,8 @@
   <meta name="theme-color" content="#073642">
   {% elif request.cookies.get("theme", "") == "dracula" %}
   <meta name="theme-color" content="#282a36">
+  {% elif request.cookies.get("theme", "") == "atom-one-dark" %}
+  <meta name="theme-color" content="#282c34">
   {% elif request.cookies.get('theme', '') == 'black' %}
   <meta name="theme-color" content="#222">
   {% endif %}
@@ -102,6 +104,7 @@
             ("light", "Solarized Light"),
             ("dark", "Solarized Dark"),
             ("dracula", "Dracula"),
+            ("atom-one-dark", "Atom One Dark"),
             ("black", "Black")) %}
         <option value="{{ theme }}"
           {{ 'selected' if theme == request.cookies.get("theme", "white") else '' }}
