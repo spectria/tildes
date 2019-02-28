@@ -356,3 +356,12 @@ def test_group_ref_inside_code_ignored():
     processed = convert_markdown_to_safe_html(markdown)
 
     assert "<a" not in processed
+
+
+def test_image_syntax_ignored():
+    """Ensure inline image syntax is treated as a link."""
+    markdown = "An exclamation mark preceding a ![link](url)."
+    processed = convert_markdown_to_safe_html(markdown)
+
+    assert "!<a" in processed
+    assert "img" not in processed
