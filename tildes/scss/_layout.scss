@@ -51,19 +51,6 @@ body {
   }
 }
 
-#back-to-top-buffer {
-  // This is an invisible "buffer" for the "Back to top" button. It uses the
-  // Intersection Observer API to detect when the entire buffer has been
-  // scrolled off the screen, and will make the button visible at that point.
-  // So to have the button show up when the user has scrolled down at least two
-  // viewport heights, we set its height at 200vh.
-  height: 200vh;
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 1px;
-}
-
 #site-header {
   grid-area: header;
 

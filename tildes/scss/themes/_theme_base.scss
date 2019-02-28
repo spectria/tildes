@@ -111,14 +111,6 @@
     }
   }
 
-  .btn-back-to-top {
-    background-color: map-get($theme, "background-primary");
-
-    &:visited {
-      color: map-get($theme, "link");
-    }
-  }
-
   .btn-comment-collapse {
     color: map-get($theme, "foreground-secondary");
     border-color: map-get($theme, "border");
