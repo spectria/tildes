@@ -68,3 +68,22 @@
     border: 1px solid;
   }
 }
+
+.btn-back-to-top {
+  position: fixed;
+  bottom: 0.4rem;
+  right: 0.4rem;
+
+  font-size: 0.5rem;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s ease;
+
+  &.btn-back-to-top-visible {
+    @media (max-width: $size-md) {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
