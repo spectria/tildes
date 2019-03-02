@@ -72,7 +72,7 @@ $.onmount('[data-js-comment-reply-button]', function() {
         $(cancelButton).on('click', function (event) {
             // re-enable click/hover events on the reply button
             $(this).parents('.comment').first()
-                .find('.post-button[name=reply]').first()
+                .find('.btn-post-action[name=reply]').first()
                 .css('pointer-events', 'auto');
         });
         buttonDiv.appendChild(cancelButton);

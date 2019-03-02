@@ -76,7 +76,7 @@ $.onmount('[data-js-comment-label-button]', function() {
         // update Intercooler so it knows about these new elements
         Intercooler.processNodes(clone);
 
-        $comment.find(".post-buttons").first().after(clone);
+        $comment.find(".btn-post").first().after(clone);
     });
 });
 

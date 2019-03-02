@@ -68,3 +68,49 @@
     border: 1px solid;
   }
 }
+
+.btn-post {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0.2rem;
+
+  // The buttons don't need to be spaced widely on a desktop
+  @media (min-width: $size-md) {
+    justify-content: left;
+  }
+
+  li {
+    margin-top: 0;
+  }
+
+  // Combined with flex-wrap: wrap, this should put any form on its own line
+  form {
+    min-width: 100%;
+  }
+}
+
+.btn-post-action {
+  @include min-touch-size;
+
+  display: flex;
+  padding: 0.2rem 0.4rem;
+
+  background: none;
+  border: 0;
+
+  justify-content: center;
+  align-items: center;
+
+  font-weight: bold;
+  font-size: 0.6rem;
+  line-height: 0.6rem;
+
+  cursor: pointer;
+}
+
+.btn-post-action-used {
+  text-decoration: underline;
+}

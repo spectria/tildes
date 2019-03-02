@@ -67,81 +67,81 @@
 {% endif %}
 
 {% if request.has_any_permission(('edit', 'delete', 'tag', 'lock', 'move', 'edit_title', 'remove', 'bookmark'), topic) %}
-  <menu class="post-buttons">
+  <menu class="btn-post">
     {% if request.has_permission('edit', topic) %}
-      <li><a class="post-button" name="edit"
+      <li><button class="btn-post-action" name="edit"
         data-ic-get-from="{{ request.route_url(
           'ic_topic',
           topic_id36=topic.topic_id36,
         ) }}"
         data-ic-target=".topic-full .topic-full-text"
         data-ic-scroll-to-target="true"
-      >Edit</a></li>
+      >Edit</button></li>
     {% endif %}
 
     {% if request.has_permission('tag', topic) %}
-      <li><a class="post-button" name="tag"
+      <li><button class="btn-post-action" name="tag"
         data-ic-get-from="{{ request.route_url(
           'ic_topic_tags',
           topic_id36=topic.topic_id36,
         ) }}"
         data-ic-swap-style="replace"
-        data-ic-target=".topic-full .post-buttons:first + .post-buttons-settings"
-      >Tag</a></li>
+        data-ic-target=".topic-full .btn-post:first + .btn-post-settings"
+      >Tag</button></li>
     {% endif %}
 
     {% if request.has_permission('delete', topic) %}
-      <li><a class="post-button" name="delete"
+      <li><button class="btn-post-action" name="delete"
         data-ic-delete-from="{{ request.route_url(
           'ic_topic',
           topic_id36=topic.topic_id36,
         ) }}"
         data-ic-confirm="Delete this topic? This cannot be undone."
-      >Delete</a></li>
+      >Delete</button></li>
     {% endif %}
 
     {% if request.has_permission('move', topic) %}
-      <li><a class="post-button" name="move"
+      <li><button class="btn-post-action" name="move"
         data-ic-get-from="{{ request.route_url(
           'ic_topic_group',
           topic_id36=topic.topic_id36,
         ) }}"
         data-ic-swap-style="replace"
-        data-ic-target=".topic-full .post-buttons:first + .post-buttons-settings"
-      >Move</a>
+        data-ic-target=".topic-full .btn-post:first + .btn-post-settings"
+      >Move</button>
     {% endif %}
 
     {% if request.has_permission('edit_title', topic) %}
-      <li><a class="post-button" name="edit-title"
+      <li><button class="btn-post-action" name="edit-title"
         data-ic-get-from="{{ request.route_url(
           'ic_topic_title',
           topic_id36=topic.topic_id36,
         ) }}"
         data-ic-swap-style="replace"
-        data-ic-target=".topic-full .post-buttons:first + .post-buttons-settings"
-      >Edit title</a>
+        data-ic-target=".topic-full .btn-post:first + .btn-post-settings"
+      >Edit title</button>
     {% endif %}
 
     {% if request.has_permission('lock', topic) %}
       <li>
       {% if not topic.is_locked %}
-        <a class="post-button"
+        <button class="btn-post-action"
           data-ic-put-to="{{ request.route_url(
             'ic_topic_lock',
             topic_id36=topic.topic_id36,
           ) }}"
           data-ic-replace-target="true"
           data-ic-confirm="Lock this topic?"
-        >Lock</a>
+        >Lock</button>
       {% else %}
-        <a class="post-button"
+        <button class="btn-post-action"
           data-ic-delete-from="{{ request.route_url(
             'ic_topic_lock',
             topic_id36=topic.topic_id36,
           ) }}"
           data-ic-replace-target="true"
           data-ic-confirm="Unlock this topic?"
-        >Unlock</a>
+        >Unlock</button>
       {% endif %}
       </li>
     {% endif %}
@@ -149,21 +149,21 @@
     {% if request.has_permission('bookmark', topic) %}
       <li>
       {% if not topic.bookmark_created_time %}
-        <a class="post-button"
+        <button class="btn-post-action"
           data-ic-put-to="{{ request.route_url(
             'ic_topic_bookmark',
             topic_id36=topic.topic_id36,
           ) }}"
           data-ic-replace-target="true"
-        >Bookmark</a>
+        >Bookmark</button>
       {% else %}
-        <a class="post-button"
+        <button class="btn-post-action"
           data-ic-delete-from="{{ request.route_url(
             'ic_topic_bookmark',
             topic_id36=topic.topic_id36,
           ) }}"
           data-ic-replace-target="true"
-        >Unbookmark</a>
+        >Unbookmark</button>
       {% endif %}
       </li>
     {% endif %}
@@ -171,28 +171,28 @@
     {% if request.has_permission("remove", topic) %}
       <li>
       {% if not topic.is_removed %}
-        <a class="post-button"
+        <button class="btn-post-action"
           data-ic-put-to="{{ request.route_url(
             'ic_topic_remove',
             topic_id36=topic.topic_id36,
           ) }}"
           data-ic-replace-target="true"
           data-ic-confirm="Remove this topic?"
-        >Remove</a>
+        >Remove</button>
       {% else %}
-        <a class="post-button"
+        <button class="btn-post-action"
           data-ic-delete-from="{{ request.route_url(
             'ic_topic_remove',
             topic_id36=topic.topic_id36,
           ) }}"
           data-ic-replace-target="true"
           data-ic-confirm="Un-remove this topic?"
-        >Un-remove</a>
+        >Un-remove</button>
       {% endif %}
       </li>
     {% endif %}
   </menu>
-  <div class="post-buttons-settings"></div>
+  <div class="btn-post-settings"></div>
 {% endif %}
 
 {% if topic.is_locked %}

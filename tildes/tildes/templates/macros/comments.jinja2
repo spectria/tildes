@@ -161,10 +161,10 @@
         </div>
       {% endif %}
 
-      <menu class="post-buttons">
+      <menu class="btn-post">
         {% if request.has_permission('vote', comment) %}
           {% if comment.user_voted is defined and comment.user_voted %}
-            <li><a class="post-button post-button-used" name="unvote"
+            <li><button class="btn-post-action btn-post-action-used" name="unvote"
               data-ic-delete-from="{{ request.route_url(
                 'ic_comment_vote',
                 comment_id36=comment.comment_id36,
@@ -173,7 +173,7 @@
               data-ic-replace-target="true"
               >Voted
           {% else %}
-            <li><a class="post-button" name="vote"
+            <li><button class="btn-post-action" name="vote"
               data-ic-put-to="{{ request.route_url(
                 'ic_comment_vote',
                 comment_id36=comment.comment_id36,
@@ -185,26 +185,26 @@
           {% if comment.num_votes > 0 %}
             ({{ comment.num_votes }})
           {% endif %}
-          </a></li>
+          </button></li>
         {% endif %}
 
         {% if request.has_permission('label', comment) %}
-          <li><a class="post-button" name="label" data-js-comment-label-button>Label</a></li>
+          <li><button class="btn-post-action" name="label" data-js-comment-label-button>Label</button></li>
         {% endif %}
 
         {% if request.has_permission('edit', comment) %}
-          <li><a class="post-button" name="edit"
+          <li><button class="btn-post-action" name="edit"
             data-ic-get-from="{{ request.route_url(
               'ic_comment',
               comment_id36=comment.comment_id36,
             ) }}"
             data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first .comment-text"
             data-ic-scroll-to-target="true"
-          >Edit</a></li>
+          >Edit</button></li>
         {% endif %}
 
         {% if request.has_permission('delete', comment) %}
-          <li><a class="post-button"
+          <li><button class="btn-post-action"
             data-ic-delete-from="{{ request.route_url(
               'ic_comment',
               comment_id36=comment.comment_id36,
@@ -212,12 +212,12 @@
             data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
             data-ic-replace-target="true"
             data-ic-confirm="Delete this comment? This cannot be undone."
-          >Delete</a></li>
+          >Delete</button></li>
         {% endif %}
 
         {% if request.has_permission('bookmark', comment) %}
           {% if comment.bookmark_created_time %}
-            <li><a class="post-button post-button-used" name="unbookmark"
+            <li><button class="btn-post-action btn-post-action-used" name="unbookmark"
               data-ic-delete-from="{{ request.route_url(
                 'ic_comment_bookmark',
                 comment_id36=comment.comment_id36,
@@ -226,7 +226,7 @@
               data-ic-replace-target="true"
               >Bookmarked
           {% else %}
-            <li><a class="post-button" name="bookmark"
+            <li><button class="btn-post-action" name="bookmark"
               data-ic-put-to="{{ request.route_url(
                 'ic_comment_bookmark',
                 comment_id36=comment.comment_id36,
@@ -235,35 +235,35 @@
               data-ic-replace-target="true"
               >Bookmark
           {% endif %}
-          </a></li>
+          </button></li>
         {% endif %}
 
         {% if request.has_permission("remove", comment) %}
           <li>
           {% if not comment.is_removed %}
-            <a class="post-button"
+            <button class="btn-post-action"
               data-ic-put-to="{{ request.route_url(
                 'ic_comment_remove',
                 comment_id36=comment.comment_id36,
               ) }}"
               data-ic-replace-target="true"
               data-ic-confirm="Remove this comment?"
-            >Remove</a>
+            >Remove</button>
           {% else %}
-            <a class="post-button"
+            <button class="btn-post-action"
               data-ic-delete-from="{{ request.route_url(
                 'ic_comment_remove',
                 comment_id36=comment.comment_id36,
               ) }}"
               data-ic-replace-target="true"
               data-ic-confirm="Un-remove this comment?"
-            >Un-remove</a>
+            >Un-remove</button>
           {% endif %}
           </li>
         {% endif %}
 
         {% if request.has_permission('reply', comment) %}
-          <li><a class="post-button" name="reply" data-js-comment-reply-button>Reply</a></li>
+          <li><button class="btn-post-action" name="reply" data-js-comment-reply-button>Reply</button></li>
         {% endif %}
       </menu>
     {% endif %}

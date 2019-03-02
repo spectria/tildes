@@ -163,6 +163,18 @@
     }
   }
 
+  .btn-post-action {
+    color: map-get($theme, "foreground-secondary");
+
+    &:hover {
+      color: map-get($theme, "foreground-extreme");
+    }
+  }
+
+  .btn-post-action-used {
+    color: map-get($theme, "button-used");
+  }
+
   .btn-comment-label-exemplary {
     @include labelbutton(map-get($theme, "comment-label-exemplary"));
   }
@@ -333,18 +345,6 @@
     &.active a {
       color: map-get($theme, "link");
     }
-  }
-
-  .post-button {
-    color: map-get($theme, "foreground-secondary");
-
-    &:hover {
-      color: map-get($theme, "foreground-extreme");
-    }
-  }
-
-  .post-button-used {
-    color: map-get($theme, "button-used");
   }
 
   .sidebar-controls {
