@@ -81,6 +81,27 @@ $.onmount('[data-js-comment-reply-button]', function() {
         replyForm.appendChild(textarea);
         replyForm.appendChild(buttonDiv);
 
+        // If the user has text selected inside a comment when they click the reply
+        // button, start the comment form off with that text inside a blockquote
+        if (window.getSelection) {
+            var selectedText = "";
+
+            // only capture the selected text if it's all from the same comment
+            var selection = window.getSelection();
+            var $start = $(selection.anchorNode).closest(".comment-text");
+            var $end = $(selection.focusNode).closest(".comment-text");
+            if ($start.is($end)) {
+                selectedText = selection.toString();
+            }
+
+            if (selectedText.length > 0) {
+                selectedText = selectedText.replace(/\s+$/g, "");
+                selectedText = selectedText.replace(/^/gm, "> ");
+                textarea.value = selectedText+"\n\n";
+                textarea.scrollTop = textarea.scrollHeight;
+            }
+        }
+
         // update Intercooler so it knows about this new form
         Intercooler.processNodes(replyForm);
 
