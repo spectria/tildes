@@ -312,11 +312,13 @@
     }
   }
 
-  .label-topic-tag[class*='label-topic-tag-nsfw'] {
+  .label-topic-tag-nsfw,
+  .label-topic-tag[class*='label-topic-tag-nsfw-'] {
     @include theme-special-label(map-get($theme, "topic-tag-nsfw"), $is-light);
   }
 
-  .label-topic-tag[class*='label-topic-tag-spoiler'] {
+  .label-topic-tag-spoiler,
+  .label-topic-tag[class*='label-topic-tag-spoiler-'] {
     @include theme-special-label(map-get($theme, "topic-tag-spoiler"), $is-light);
   }
 
