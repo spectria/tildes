@@ -11,11 +11,12 @@
   <meta name="intercoolerjs:use-data-prefix" content="true">
   <meta name="csrftoken" content="{{ get_csrf_token() }}">
 
-  <meta property="og:image" content="/images/tildes-logo-144x144.png">
+  <meta property="og:image" content="{{ request.static_url("/images/tildes-logo-144x144.png") }}">
   <meta property="og:site_name" content="Tildes">
   <meta property="og:type" content="website">
   {% block meta_og_tags %}
   <meta property="og:title" content="{{ self.title() }}">
+  <meta property="og:description" content="Tildes: a non-profit community site">
   {% endblock %}
 
   {# Hardcoding each option isn't great, but I don't know a better method #}

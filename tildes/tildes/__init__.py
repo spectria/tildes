@@ -47,6 +47,8 @@ def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
     config.add_tween("tildes.http_method_tween_factory")
     config.add_tween("tildes.metrics_tween_factory")
 
+    config.add_static_view("images", "/images")
+
     config.add_request_method(is_safe_request_method, "is_safe_method", reify=True)
 
     # Add the request.redis request method to access a redis connection. This is done in
