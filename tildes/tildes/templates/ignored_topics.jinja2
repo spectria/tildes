@@ -1,0 +1,43 @@
+{% extends 'base_user_menu.jinja2' %}
+
+{% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
+
+{% block title %}Ignored Topics{% endblock %}
+
+{% block main_heading %}Ignored Topics{% endblock %}
+
+{% block content %}
+
+{% if topics %}
+  <ol class="post-listing">
+  {% for topic in topics if request.has_permission('view', topic) %}
+    <li>{{ render_topic_for_listing(topic, show_group=True) }}</li>
+  {% endfor %}
+  </ol>
+
+  {% if topics.has_prev_page or topics.has_next_page %}
+    <div class="pagination">
+      {% if topics.has_prev_page %}
+        <a class="page-item btn"
+          href="{{ request.current_listing_base_url({'before': topics.prev_page_before_id36}) }}"
+        >Prev</a>
+      {% endif %}
+
+      {% if topics.has_next_page %}
+        <a class="page-item btn"
+          href="{{ request.current_listing_base_url({'after': topics.next_page_after_id36}) }}"
+        >Next</a>
+      {% endif %}
+    </div>
+  {% endif %}
+{% else %}
+  <div class="empty">
+    <h2 class="empty-title">
+      {% block empty_message %}
+        You haven't ignored any topics
+      {% endblock %}
+    </h2>
+  </div>
+{% endif %}
+
+{% endblock %}

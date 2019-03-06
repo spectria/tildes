@@ -14,7 +14,7 @@ from webargs.pyramidparser import use_kwargs
 from tildes.enums import LogEventType
 from tildes.models.group import Group
 from tildes.models.log import LogTopic
-from tildes.models.topic import Topic, TopicBookmark, TopicVote
+from tildes.models.topic import Topic, TopicBookmark, TopicIgnore, TopicVote
 from tildes.schemas.group import GroupSchema
 from tildes.schemas.topic import TopicSchema
 from tildes.views import IC_NOOP
@@ -438,3 +438,47 @@ def delete_topic_bookmark(request: Request) -> dict:
     ).delete(synchronize_session=False)
 
     return {"name": "bookmark", "subject": topic, "is_toggled": False}
+
+
+@ic_view_config(
+    route_name="topic_ignore",
+    request_method="PUT",
+    permission="ignore",
+    renderer="post_action_toggle_button.jinja2",
+)
+def put_topic_ignore(request: Request) -> dict:
+    """Ignore a topic with Intercooler."""
+    topic = request.context
+
+    savepoint = request.tm.savepoint()
+
+    ignore = TopicIgnore(request.user, topic)
+    request.db_session.add(ignore)
+
+    try:
+        # manually flush before attempting to commit, to avoid having all
+        # objects detached from the session in case of an error
+        request.db_session.flush()
+        request.tm.commit()
+    except IntegrityError:
+        # the user has already ignored this topic
+        savepoint.rollback()
+
+    return {"name": "ignore", "subject": topic, "is_toggled": True}
+
+
+@ic_view_config(
+    route_name="topic_ignore",
+    request_method="DELETE",
+    permission="ignore",
+    renderer="post_action_toggle_button.jinja2",
+)
+def delete_topic_ignore(request: Request) -> dict:
+    """Unignore a topic with Intercooler."""
+    topic = request.context
+
+    request.query(TopicIgnore).filter(
+        TopicIgnore.user == request.user, TopicIgnore.topic == topic
+    ).delete(synchronize_session=False)
+
+    return {"name": "ignore", "subject": topic, "is_toggled": False}

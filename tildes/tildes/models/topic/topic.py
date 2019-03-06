@@ -326,6 +326,14 @@ class Topic(DatabaseModel):
         acl.append((Allow, "admin", "tag"))
         acl.append((Allow, "topic.tag", "tag"))
 
+        # bookmark:
+        #  - logged-in users can bookmark topics
+        acl.append((Allow, Authenticated, "bookmark"))
+
+        # ignore:
+        #  - logged-in users can ignore topics
+        acl.append((Allow, Authenticated, "ignore"))
+
         # edit_title:
         #  - allow admins or people with the "topic.edit_title" permission to always
         #    edit titles
@@ -349,10 +357,6 @@ class Topic(DatabaseModel):
         if self.is_link_type:
             acl.append((Allow, "admin", "edit_link"))
             acl.append((Allow, "topic.edit_link", "edit_link"))
-
-        # bookmark:
-        #  - logged-in users can bookmark topics
-        acl.append((Allow, Authenticated, "bookmark"))
 
         acl.append(DENY_ALL)
 

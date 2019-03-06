@@ -16,6 +16,7 @@ from tildes.models.pagination import PaginatedQuery
 
 from .topic import Topic
 from .topic_bookmark import TopicBookmark
+from .topic_ignore import TopicIgnore
 from .topic_visit import TopicVisit
 from .topic_vote import TopicVote
 
@@ -34,7 +35,11 @@ class TopicQuery(PaginatedQuery):
         super().__init__(Topic, request)
 
         self._only_bookmarked = False
+        self._only_ignored = False
         self._only_user_voted = False
+
+        # filter out ignored topics by default for logged-in users
+        self.filter_ignored = bool(request.user)
 
     def _attach_extra_data(self) -> "TopicQuery":
         """Attach the extra user data to the query."""
@@ -42,7 +47,21 @@ class TopicQuery(PaginatedQuery):
             return self
 
         # pylint: disable=protected-access
-        return self._attach_vote_data()._attach_visit_data()._attach_bookmark_data()
+        return (
+            self._attach_vote_data()
+            ._attach_visit_data()
+            ._attach_bookmark_data()
+            ._attach_ignored_data()
+        )
+
+    def _finalize(self) -> "TopicQuery":
+        """Finalize the query before it's executed."""
+        self = super()._finalize()
+
+        if self.filter_ignored:
+            self = self.filter(TopicIgnore.created_time == None)
+
+        return self
 
     def _attach_vote_data(self) -> "TopicQuery":
         """Join the data related to whether the user has voted on the topic."""
@@ -92,6 +111,20 @@ class TopicQuery(PaginatedQuery):
 
         return query
 
+    def _attach_ignored_data(self) -> "TopicQuery":
+        """Join the data related to whether the user has ignored the topic."""
+        query = self.join(
+            TopicIgnore,
+            and_(
+                TopicIgnore.topic_id == Topic.topic_id,
+                TopicIgnore.user == self.request.user,
+            ),
+            isouter=(not self._only_ignored),
+        )
+        query = query.add_columns(label("ignored_time", TopicIgnore.created_time))
+
+        return query
+
     @staticmethod
     def _process_result(result: Any) -> Topic:
         """Merge additional user-context data in result onto the topic."""
@@ -102,11 +135,13 @@ class TopicQuery(PaginatedQuery):
             topic.bookmark_created_time = None
             topic.last_visit_time = None
             topic.comments_since_last_visit = None
+            topic.user_ignored = False
         else:
             topic = result.Topic
 
             topic.user_voted = bool(result.voted_time)
             topic.user_bookmarked = bool(result.bookmarked_time)
+            topic.user_ignored = bool(result.ignored_time)
 
             topic.last_visit_time = result.visit_time
 
@@ -186,4 +221,17 @@ class TopicQuery(PaginatedQuery):
     def only_user_voted(self) -> "TopicQuery":
         """Restrict the topics to ones that the user has voted on (generative)."""
         self._only_user_voted = True
+        return self
+
+    def only_ignored(self) -> "TopicQuery":
+        """Restrict the topics to ones that the user has ignored (generative)."""
+        self._only_ignored = True
+        self = self.include_ignored()
+
+        return self
+
+    def include_ignored(self) -> "TopicQuery":
+        """Specify that ignored topics should be included (generative)."""
+        self.filter_ignored = False
+
         return self

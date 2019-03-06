@@ -25,6 +25,7 @@ def topic_by_id36(request: Request, topic_id36: str) -> Topic:
         request.query(Topic)
         .include_deleted()
         .include_removed()
+        .include_ignored()
         .filter_by(topic_id=topic_id)
     )
 

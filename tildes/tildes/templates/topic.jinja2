@@ -165,6 +165,10 @@
       {{ post_action_toggle_button("bookmark", topic, is_toggled=topic.user_bookmarked) }}
     {% endif %}
 
+    {% if request.has_permission("ignore", topic) %}
+      {{ post_action_toggle_button("ignore", topic, is_toggled=topic.user_ignored) }}
+    {% endif %}
+
     {% if request.has_permission("remove", topic) %}
       {{ post_action_toggle_button("remove", topic, topic.is_removed) }}
     {% endif %}

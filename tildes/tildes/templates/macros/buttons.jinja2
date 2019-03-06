@@ -12,6 +12,9 @@
   {% if name == "bookmark" %}
     {% set normal_label = "Bookmark" %}
     {% set toggled_label = "Unbookmark" %}
+  {% elif name == "ignore" %}
+    {% set normal_label = "Ignore" %}
+    {% set toggled_label = "Un-ignore" %}
   {% elif name == "lock" %}
     {% set normal_label = "Lock" %}
     {% set toggled_label = "Unlock" %}

@@ -20,6 +20,7 @@ from tildes.models.scraper import ScraperResult
 from tildes.models.topic import (
     Topic,
     TopicBookmark,
+    TopicIgnore,
     TopicSchedule,
     TopicVisit,
     TopicVote,
