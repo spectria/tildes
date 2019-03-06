@@ -94,3 +94,11 @@ class Group(DatabaseModel):
         acl.append(DENY_ALL)
 
         return acl
+
+    def is_subgroup_of(self, other: "Group") -> bool:
+        """Return whether this group is a sub-group of the other one."""
+        # descendant_of() returns True if the ltrees are equal, so avoid that
+        if self.path == other.path:
+            return False
+
+        return self.path.descendant_of(other.path)

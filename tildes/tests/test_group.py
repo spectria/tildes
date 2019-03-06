@@ -81,3 +81,30 @@ def test_duplicate_group(db):
 
     with raises(IntegrityError):
         db.commit()
+
+
+def test_is_subgroup():
+    """Ensure is_subgroup_of() works with an obvious subgroup."""
+    assert Group("test.subgroup").is_subgroup_of(Group("test"))
+
+
+def test_is_subgroup_equal():
+    """Ensure is_subgroup_of() returns False with the same groups."""
+    group = Group("testing")
+    assert not group.is_subgroup_of(group)
+
+
+def test_is_subgroup_backwards():
+    """Ensure is_subgroup_of() returns False if called "backwards"."""
+    assert not Group("test").is_subgroup_of(Group("test.subgroup"))
+
+
+def test_is_subgroup_multilevel():
+    """Ensure is_subgroup_of() works with "deeper" subgroups."""
+    path = "test.one.two.three"
+    group = Group(path)
+    path_parts = path.split(".")
+
+    # tests each of the "higher" groups (test, test.one, test.one.two)
+    for level in range(1, len(path_parts)):
+        assert group.is_subgroup_of(Group(".".join(path_parts[:level])))
