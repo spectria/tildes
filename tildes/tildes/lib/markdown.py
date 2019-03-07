@@ -107,6 +107,8 @@ BAD_ORDERED_LIST_REGEX = re.compile(
 
 STRIP_IMAGE_ELEMENTS_REGEX = re.compile(r'<img src="([^"<>]*?)" alt="([^"<>]*?)" />')
 
+SUBSEQUENT_BLOCKQUOTES_REGEX = re.compile("^>([^\n]*?)\n\n(?=>)", flags=re.MULTILINE)
+
 
 @histogram_timer("markdown_processing")
 def convert_markdown_to_safe_html(markdown: str) -> str:
@@ -143,10 +145,24 @@ def preprocess_markdown(markdown: str) -> str:
     """Pre-process markdown before passing it to CommonMark."""
     markdown = escape_accidental_ordered_lists(markdown)
 
+    markdown = merge_subsequent_blockquotes(markdown)
+
     # fix the "shrug" emoji ¯\_(ツ)_/¯ to prevent markdown mangling it
     markdown = markdown.replace(r"¯\_(ツ)_/¯", r"¯\\\_(ツ)\_/¯")
 
     return markdown
+
+
+def merge_subsequent_blockquotes(markdown: str) -> str:
+    """Merge subsequent (separated) blockquotes into a single one.
+
+    By default, if someone quotes more than one paragraph without also adding the >
+    symbol on the blank lines between them, they will be interpreted as separate
+    blockquotes. This almost never seems to be intended, so this merges them. If
+    separate quotes are wanted, they can still achieve it by using at least two
+    newlines between quoted paragraphs (or various other methods).
+    """
+    return SUBSEQUENT_BLOCKQUOTES_REGEX.sub(">\\1\n>\n", markdown)
 
 
 def escape_accidental_ordered_lists(markdown: str) -> str:

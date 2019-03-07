@@ -81,6 +81,22 @@ def test_accidental_ordered_list():
     assert "<ol" not in html
 
 
+def test_merged_blockquotes():
+    """Ensure subsequent blockquotes are merged."""
+    markdown = "> Paragraph 1\n\n> Paragraph 2"
+    html = convert_markdown_to_safe_html(markdown)
+
+    assert html.count("<blockquote") == 1
+
+
+def test_separated_blockquotes():
+    """Ensure blockquotes can be separated with an additional newline."""
+    markdown = "> Paragraph 1\n\n\n> Paragraph 2"
+    html = convert_markdown_to_safe_html(markdown)
+
+    assert html.count("<blockquote") == 2
+
+
 def test_existing_newline_not_doubled():
     """Ensure that the standard markdown line break doesn't result in two."""
     markdown = "A deliberate line  \nbreak"
