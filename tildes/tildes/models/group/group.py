@@ -47,6 +47,9 @@ class Group(DatabaseModel):
     is_admin_posting_only: bool = Column(
         Boolean, nullable=False, server_default="false"
     )
+    is_user_treated_as_topic_source: bool = Column(
+        Boolean, nullable=False, server_default="false"
+    )
 
     # Create a GiST index on path as well as the btree one that will be created by the
     # index=True/unique=True keyword args to Column above. The GiST index supports

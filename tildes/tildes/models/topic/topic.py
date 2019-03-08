@@ -452,4 +452,7 @@ class Topic(DatabaseModel):
     @property
     def is_user_treated_as_source(self) -> bool:
         """Return whether the user that posted the topic is its "source"."""
+        if self.group.is_user_treated_as_topic_source:
+            return True
+
         return self.is_text_type
