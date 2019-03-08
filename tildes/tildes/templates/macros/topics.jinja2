@@ -79,9 +79,9 @@
         </a>
       </div>
 
-      {% if topic.is_text_type %}
+      {% if topic.is_user_treated_as_source %}
         <div aria-label="Posted by">{{ username_linked(topic.user.username) }}</div>
-      {% elif topic.is_link_type %}
+      {% else %}
         <div aria-label="Link domain">{{ topic.link_domain }}</div>
       {% endif %}
 

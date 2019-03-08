@@ -448,3 +448,8 @@ class Topic(DatabaseModel):
                 return f"<cite>@{authors[0]}:</cite><blockquote>{tweet}</blockquote>"
 
         return None
+
+    @property
+    def is_user_treated_as_source(self) -> bool:
+        """Return whether the user that posted the topic is its "source"."""
+        return self.is_text_type
