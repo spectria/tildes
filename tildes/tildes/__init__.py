@@ -46,6 +46,7 @@ def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
 
     config.add_tween("tildes.http_method_tween_factory")
     config.add_tween("tildes.metrics_tween_factory")
+    config.add_tween("tildes.theme_cookie_tween_factory")
 
     config.add_static_view("images", "/images")
 
@@ -136,6 +137,38 @@ def metrics_tween_factory(handler: Callable, registry: Registry) -> Callable:
         return response
 
     return metrics_tween
+
+
+def theme_cookie_tween_factory(handler: Callable, registry: Registry) -> Callable:
+    # pylint: disable=unused-argument
+    """Return a tween function that sets the theme cookie."""
+
+    def theme_cookie_tween(request: Request) -> Response:
+        """Set the theme cookie if needed (currently always, see comment below)."""
+        response = handler(request)
+
+        current_theme = request.cookies.get("theme", "")
+        if not current_theme and request.user:
+            current_theme = request.user.theme_default
+
+        # Currently, we want to always set the theme cookie. This is because we
+        # recently started setting the domain on this cookie (to be able to apply the
+        # user's theme to the Blog/Docs sites), and all older cookies won't have a
+        # domain set. This will basically let us convert the old no-domain cookies to
+        # new ones. After a decent amount of time (maybe sometime in April 2019), we
+        # can change this to only set the cookie when it's not already present and the
+        # user has a default theme set (so their default theme will work for Blog/Docs).
+        if current_theme:
+            response.set_cookie(
+                "theme",
+                current_theme,
+                max_age=315360000,
+                secure=True,
+                domain="." + request.domain,
+            )
+        return response
+
+    return theme_cookie_tween
 
 
 def get_redis_connection(request: Request) -> Redis:
