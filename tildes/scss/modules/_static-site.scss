@@ -1,0 +1,14 @@
+// Copyright (c) 2019 Tildes contributors <code@tildes.net>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+// Rules in this file are used by the Tildes static sites (Blog, Docs), not Tildes
+// itself. In general, rules in here should be kept to the absolute minimum, and only
+// used when necessary to transfer over styling to the static sites where it's not
+// feasible to do that through the separate CSS file in the repo for those sites.
+
+body.static-site {
+  main {
+    @extend %links-text;
+    @extend %lists-text;
+  }
+}
