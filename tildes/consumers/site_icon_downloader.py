@@ -21,7 +21,7 @@ from tildes.models.scraper import ScraperResult
 class SiteIconDownloader(PgsqlQueueConsumer):
     """Consumer that generates content_metadata for topics."""
 
-    ICON_FOLDER = "/var/lib/site-icons-spriter/site-icons"
+    ICON_FOLDER = "/opt/tildes/static/images/site-icons"
 
     def __init__(self, queue_name: str, routing_keys: Sequence[str]):
         """Initialize the consumer, including the public suffix list."""

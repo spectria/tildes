@@ -6,8 +6,8 @@ data-cleanup-cronjob:
     - hour: 4
     - minute: 10
 
-generate-site-icons-cronjob:
+generate-site-icons-css-cronjob:
   cron.present:
-    - name: /usr/local/bin/generate-site-icons
+    - name: {{ bin_dir }}/python -c "from scripts.generate_site_icons_css import generate_css; generate_css()"
     - user: {{ app_username }}
     - minute: '*/5'

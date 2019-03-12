@@ -21,8 +21,3 @@ bundles:
       - css/spectre-0.5.1/spectre.css
       - css/styles.css
     output: css/tildes.css
-  site-icons-css:
-    merge: false
-    contents:
-      - /var/lib/site-icons-spriter/output/site-icons.css
-    output: css/site-icons.css

@@ -19,5 +19,5 @@ tildes/static/css/*
 tildes/static/js/third_party.js
 tildes/static/js/tildes.js
 
-# don't track the site-icons spritesheet(s)
-tildes/static/images/site-icons*
+# don't track site icon files
+tildes/static/images/site-icons/*.png

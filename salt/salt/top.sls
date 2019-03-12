@@ -19,7 +19,6 @@ base:
     - prometheus.exporters.rabbitmq_exporter
     - prometheus.exporters.redis_exporter
     - consumers
-    - site-icons-spriter
     - boussole
     - webassets
     - cronjobs
