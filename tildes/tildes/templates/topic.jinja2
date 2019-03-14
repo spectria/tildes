@@ -66,7 +66,7 @@
   {% endif %}
 {% endif %}
 
-{% if request.has_any_permission(('edit', 'delete', 'tag', 'lock', 'move', 'edit_title', 'remove', 'bookmark'), topic) %}
+{% if request.has_any_permission(('edit', 'delete', 'tag', 'lock', 'move', 'edit_link', 'edit_title', 'remove', 'bookmark'), topic) %}
   <menu class="btn-post">
     {% if request.has_permission('edit', topic) %}
       <li><button class="btn-post-action" name="edit"
@@ -120,6 +120,17 @@
         data-ic-swap-style="replace"
         data-ic-target=".topic-full .btn-post:first + .btn-post-settings"
       >Edit title</button>
+    {% endif %}
+
+    {% if request.has_permission('edit_link', topic) %}
+      <li><button class="btn-post-action" name="edit-link"
+        data-ic-get-from="{{ request.route_url(
+          'ic_topic_link',
+          topic_id36=topic.topic_id36,
+        ) }}"
+        data-ic-swap-style="replace"
+        data-ic-target=".topic-full .btn-post:first + .btn-post-settings"
+      >Edit link</button>
     {% endif %}
 
     {% if request.has_permission('lock', topic) %}

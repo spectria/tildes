@@ -304,6 +304,10 @@ class Topic(DatabaseModel):
         acl.append((Allow, "admin", "edit_title"))
         acl.append((Allow, "topic.edit_title", "edit_title"))
 
+        if self.is_link_type:
+            acl.append((Allow, "admin", "edit_link"))
+            acl.append((Allow, "topic.edit_link", "edit_link"))
+
         # bookmark:
         #  - logged-in users can bookmark topics
         acl.append((Allow, Authenticated, "bookmark"))

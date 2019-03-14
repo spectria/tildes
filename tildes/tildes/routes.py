@@ -115,6 +115,7 @@ def add_intercooler_routes(config: Configurator) -> None:
     with config.route_prefix_context("/topics/{topic_id36}"):
         add_ic_route("topic_comments", "/comments", factory=topic_by_id36)
         add_ic_route("topic_group", "/group", factory=topic_by_id36)
+        add_ic_route("topic_link", "/link", factory=topic_by_id36)
         add_ic_route("topic_lock", "/lock", factory=topic_by_id36)
         add_ic_route("topic_remove", "/remove", factory=topic_by_id36)
         add_ic_route("topic_title", "/title", factory=topic_by_id36)

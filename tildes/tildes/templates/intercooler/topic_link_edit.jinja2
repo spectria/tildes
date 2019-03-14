@@ -1,0 +1,19 @@
+{# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+<form method="post" name="topic-link-edit"
+    autocomplete="off"
+    data-ic-patch-to="{{ request.route_url(
+      'ic_topic',
+      topic_id36=topic.topic_id36,
+    ) }}"
+    data-ic-target=".topic-full-link:first"
+    data-js-remove-on-success
+>
+  <label class="form-label" for="link">Link:</label>
+  <input class="form-input" type="URL" name="link" id="link" value="{{ topic.link }}" data-js-auto-focus>
+  <div class="form-buttons">
+    <button class="btn btn-primary" type="submit">Update link</button>
+    <button type="button" class="btn btn-link" data-js-cancel-button>Cancel</button>
+  </div>
+</form>

@@ -269,6 +269,7 @@ def get_topic(request: Request, comment_order: CommentSortOption) -> dict:
 
     # check if there are any items in the log to show
     visible_events = (
+        LogEventType.TOPIC_LINK_EDIT,
         LogEventType.TOPIC_LOCK,
         LogEventType.TOPIC_MOVE,
         LogEventType.TOPIC_REMOVE,

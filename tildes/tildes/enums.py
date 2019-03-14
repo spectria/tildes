@@ -74,6 +74,7 @@ class LogEventType(enum.Enum):
     COMMENT_REMOVE = enum.auto()
     COMMENT_UNREMOVE = enum.auto()
 
+    TOPIC_LINK_EDIT = enum.auto()
     TOPIC_LOCK = enum.auto()
     TOPIC_MOVE = enum.auto()
     TOPIC_POST = enum.auto()

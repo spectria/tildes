@@ -164,6 +164,10 @@ class LogTopic(DatabaseModel, BaseLog):
             old_title = self.info["old"]
             new_title = self.info["new"]
             return f'changed title from "{old_title}" to "{new_title}"'
+        elif self.event_type == LogEventType.TOPIC_LINK_EDIT:
+            old_link = self.info["old"]
+            new_link = self.info["new"]
+            return f"changed link from {old_link} to {new_link}"
 
         return f"performed action {self.event_type.name}"
 

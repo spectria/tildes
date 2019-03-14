@@ -317,6 +317,45 @@ def patch_topic_title(request: Request, title: str) -> dict:
 
 
 @ic_view_config(
+    route_name="topic_link",
+    request_method="GET",
+    renderer="topic_link_edit.jinja2",
+    permission="edit_link",
+)
+def get_topic_link(request: Request) -> dict:
+    """Get the form for editing a topic's link with Intercooler."""
+    return {"topic": request.context}
+
+
+@ic_view_config(
+    route_name="topic",
+    request_param="ic-trigger-name=topic-link-edit",
+    request_method="PATCH",
+    permission="edit_link",
+)
+@use_kwargs(TopicSchema(only=("link",)))
+def patch_topic_link(request: Request, link: str) -> dict:
+    """Edit a topic's link with Intercooler."""
+    topic = request.context
+
+    if link == topic.link:
+        return IC_NOOP
+
+    request.db_session.add(
+        LogTopic(
+            LogEventType.TOPIC_LINK_EDIT,
+            request,
+            topic,
+            info={"old": topic.link, "new": link},
+        )
+    )
+
+    topic.link = link
+
+    return Response(f'<a href="{topic.link}">{topic.link}</a>')
+
+
+@ic_view_config(
     route_name="topic_bookmark", request_method="PUT", permission="bookmark"
 )
 def put_topic_bookmark(request: Request) -> Response:
