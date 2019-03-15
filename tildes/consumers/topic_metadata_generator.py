@@ -77,5 +77,5 @@ class TopicMetadataGenerator(PgsqlQueueConsumer):
 if __name__ == "__main__":
     TopicMetadataGenerator(
         queue_name="topic_metadata_generator.q",
-        routing_keys=["topic.created", "topic.edited"],
+        routing_keys=["topic.created", "topic.edited", "topic.link_edited"],
     ).consume_queue()

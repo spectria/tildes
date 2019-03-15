@@ -93,5 +93,5 @@ if __name__ == "__main__":
     TopicEmbedlyExtractor(
         embedly_api_key,
         queue_name="topic_embedly_extractor.q",
-        routing_keys=["topic.created"],
+        routing_keys=["topic.created", "topic.link_edited"],
     ).consume_queue()

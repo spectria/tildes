@@ -96,5 +96,5 @@ if __name__ == "__main__":
     TopicYoutubeScraper(
         youtube_api_key,
         queue_name="topic_youtube_scraper.q",
-        routing_keys=["topic.created"],
+        routing_keys=["topic.created", "topic.link_edited"],
     ).consume_queue()

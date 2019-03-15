@@ -32,3 +32,10 @@ CREATE TRIGGER send_rabbitmq_message_for_topic_edit
     FOR EACH ROW
     WHEN (OLD.markdown IS DISTINCT FROM NEW.markdown)
     EXECUTE PROCEDURE send_rabbitmq_message_for_topic('edited');
+
+
+CREATE TRIGGER send_rabbitmq_message_for_topic_link_edit
+    AFTER UPDATE ON topics
+    FOR EACH ROW
+    WHEN (OLD.link IS DISTINCT FROM NEW.link)
+    EXECUTE PROCEDURE send_rabbitmq_message_for_topic('link_edited');
