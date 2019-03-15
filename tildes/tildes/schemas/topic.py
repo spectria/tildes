@@ -11,6 +11,7 @@ from marshmallow import pre_load, Schema, validates, validates_schema, Validatio
 from marshmallow.fields import DateTime, List, Nested, String, URL
 import sqlalchemy_utils
 
+from tildes.lib.url_transform import apply_url_transformations
 from tildes.schemas.fields import Enum, ID36, Ltree, Markdown, SimpleString
 from tildes.schemas.group import GroupSchema
 from tildes.schemas.user import UserSchema
@@ -117,6 +118,9 @@ class TopicSchema(Schema):
         parsed = urlparse(data["link"])
         if not parsed.scheme:
             data["link"] = "http://" + data["link"]
+
+        # run the link through the url-transformation process
+        data["link"] = apply_url_transformations(data["link"])
 
         return data
 
