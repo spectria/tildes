@@ -8,7 +8,7 @@ import os
 from typing import Sequence
 
 from amqpy import Message
-from pyramid.paster import bootstrap
+from pyramid.paster import get_appsettings
 from requests.exceptions import HTTPError, Timeout
 from sqlalchemy import cast, desc, func
 from sqlalchemy.dialects.postgresql import JSONB
@@ -85,8 +85,8 @@ class TopicEmbedlyExtractor(PgsqlQueueConsumer):
 
 if __name__ == "__main__":
     # pylint: disable=invalid-name
-    env = bootstrap(os.environ["INI_FILE"])
-    embedly_api_key = env["registry"].settings.get("api_keys.embedly")
+    settings = get_appsettings(os.environ["INI_FILE"])
+    embedly_api_key = settings.get("api_keys.embedly")
     if not embedly_api_key:
         raise RuntimeError("No embedly API key available in INI file")
 
