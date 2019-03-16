@@ -72,6 +72,10 @@ def theme_cookie_tween_factory(handler: Callable, registry: Registry) -> Callabl
         """Set the theme cookie if needed (currently always, see comment below)."""
         response = handler(request)
 
+        # only set the cookie on GET requests
+        if request.method.upper() != "GET":
+            return response
+
         current_theme = request.cookies.get("theme", "")
         if not current_theme and request.user:
             current_theme = request.user.theme_default
