@@ -6,11 +6,10 @@
     // hidden on small screens
     display: none;
     @media (min-width: $show-sidebar-width) {
-      display: block;
+      display: flex;
     }
 
     margin-left: auto;
-    text-align: right;
   }
 }
 
