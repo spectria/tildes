@@ -18,8 +18,4 @@
 .logged-in-user-alert {
   font-weight: bold;
   font-size: 0.5rem;
-
-  @media (min-width: $size-md) {
-    margin-right: 1rem;
-  }
 }
