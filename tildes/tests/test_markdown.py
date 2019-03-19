@@ -250,7 +250,7 @@ def test_invalid_group_reference_not_linkified():
 
 def test_approximately_tilde_not_linkified():
     """Ensure a tilde in front of a number doesn't linkify."""
-    markdown = "Mix in ~2 cups of flour and ~1.5 tbsp of sugar."
+    markdown = "Mix in ~2 cups of flour and ~1.5 tbsp of sugar with ~3kg of meat."
     processed = convert_markdown_to_safe_html(markdown)
 
     assert "<a" not in processed

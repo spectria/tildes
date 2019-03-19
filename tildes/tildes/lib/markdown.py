@@ -404,14 +404,14 @@ class LinkifyFilter(Filter):
         # casing but still have it link properly
         group_path = match[1].lower()
 
-        # Even though they're technically valid paths, we don't want to linkify things
-        # like "~10" or "~4.5" since that's just going to be someone using it in the
-        # "approximately" sense. So if the path consists of only numbers and/or periods,
-        # we won't linkify it
-        is_numeric = all(char in "0123456789." for char in group_path)
+        # Even though they're technically valid paths, we don't want to linkify anything
+        # starting with a number like "~10" or "~4.5", since that's just going to be
+        # someone using it in the "approximately" sense. This will be a problem if a
+        # top-level group's name ever starts with a number, but I think that's unlikely.
+        is_ignored = group_path.startswith(tuple("0123456789"))
 
-        # if it's a valid group path and not totally numeric, convert to <a>
-        if is_valid_group_path(group_path) and not is_numeric:
+        # if it's a valid group path and not ignored by the above logic, convert to <a>
+        if is_valid_group_path(group_path) and not is_ignored:
             return [
                 {
                     "type": "StartTag",
