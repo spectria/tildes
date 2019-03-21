@@ -43,6 +43,12 @@ $solarized-base: (
   "error": $red,
   "link": $blue,
   "link-visited": $violet,
+  "syntax-builtin": $cyan,
+  "syntax-comment": $green,
+  "syntax-constant": $red,
+  "syntax-keyword": $blue,
+  "syntax-literal": $violet,
+  "syntax-string": $yellow,
   "warning": $yellow,
 );
 

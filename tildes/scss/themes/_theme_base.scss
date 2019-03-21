@@ -61,14 +61,15 @@
     }
   }
 
-  @include syntax-highlighting($is-light);
+  @include syntax-highlighting($theme);
 
   blockquote {
     border-color: map-get($theme, "foreground-highlight");
     background-color: map-get($theme, "background-secondary");
   }
 
-  code, pre {
+  code,
+  pre {
     color: map-get($theme, "foreground-highlight");
     background-color: map-get($theme, "background-secondary");
   }
@@ -89,7 +90,7 @@
     border-color: map-get($theme, "border");
   }
 
-  tbody tr:nth-of-type(2n+1) {
+  tbody tr:nth-of-type(2n + 1) {
     background-color: map-get($theme, "background-secondary");
   }
 
@@ -226,7 +227,8 @@
     color: map-get($theme, "foreground-secondary");
   }
 
-  .comment-nav-link, .comment-nav-link:visited {
+  .comment-nav-link,
+  .comment-nav-link:visited {
     color: map-get($theme, "foreground-secondary");
   }
 
@@ -344,16 +346,17 @@
   }
 
   .label-topic-tag-nsfw,
-  .label-topic-tag[class*='label-topic-tag-nsfw-'] {
+  .label-topic-tag[class*="label-topic-tag-nsfw-"] {
     @include theme-special-label(map-get($theme, "topic-tag-nsfw"), $is-light);
   }
 
   .label-topic-tag-spoiler,
-  .label-topic-tag[class*='label-topic-tag-spoiler-'] {
+  .label-topic-tag[class*="label-topic-tag-spoiler-"] {
     @include theme-special-label(map-get($theme, "topic-tag-spoiler"), $is-light);
   }
 
-  .logged-in-user-username, .logged-in-user-username:visited {
+  .logged-in-user-username,
+  .logged-in-user-username:visited {
     color: map-get($theme, "foreground-primary");
   }
 
@@ -388,11 +391,13 @@
     background-color: map-get($theme, "background-primary");
   }
 
-  .site-header-context, .site-header-context:visited {
+  .site-header-context,
+  .site-header-context:visited {
     color: map-get($theme, "foreground-primary");
   }
 
-  .site-header-logo, .site-header-logo:visited {
+  .site-header-logo,
+  .site-header-logo:visited {
     color: map-get($theme, "foreground-highlight");
   }
 
@@ -501,7 +506,8 @@
     }
   }
 
-  .is-comment-deleted, .is-comment-removed {
+  .is-comment-deleted,
+  .is-comment-removed {
     color: map-get($theme, "foreground-secondary");
   }
 
@@ -534,7 +540,8 @@
     border-left-color: map-get($theme, "alert");
 
     h1 {
-      a, a:visited {
+      a,
+      a:visited {
         color: map-get($theme, "alert");
       }
     }
@@ -546,16 +553,19 @@
     background-color: $color;
     color: #fff;
 
-    a, a:hover, a:visited {
+    a,
+    a:hover,
+    a:visited {
       color: #fff;
     }
-  }
-  @else {
+  } @else {
     background-color: transparent;
     color: $color;
     border: 1px solid $color;
 
-    a, a:hover, a:visited {
+    a,
+    a:hover,
+    a:visited {
       color: $color;
     }
   }
@@ -575,149 +585,214 @@
   }
 }
 
-@mixin syntax-highlighting($is-light) {
-  @if ($is-light) {
-    .highlight {
-      .syntax-c { color: #129b12; } // Comment
-      .syntax-err { color: #333333; } // Error
-      .syntax-g { color: #333333; } // Generic
-      .syntax-k { color: #3329c2; } // Keyword
-      .syntax-l { color: #333333; } // Literal
-      .syntax-n { color: #333333; } // Name
-      .syntax-o { color: #859900; } // Operator
-      .syntax-x { color: #cb4b16; } // Other
-      .syntax-p { color: #333333; } // Punctuation
-      .syntax-cm { color: #129b12; } // Comment.Multiline
-      .syntax-cp { color: #859900; } // Comment.Preproc
-      .syntax-c1 { color: #129b12; } // Comment.Single
-      .syntax-cs { color: #859900; } // Comment.Special
-      .syntax-gd { color: #2aa198; } // Generic.Deleted
-      .syntax-ge { color: #333333; font-style: italic; } // Generic.Emph
-      .syntax-gr { color: #dc322f; } // Generic.Error
-      .syntax-gh { color: #cb4b16; } // Generic.Heading
-      .syntax-gi { color: #859900; } // Generic.Inserted
-      .syntax-go { color: #333333; } // Generic.Output
-      .syntax-gp { color: #333333; } // Generic.Prompt
-      .syntax-gs { color: #333333; font-weight: bold; } // Generic.Strong
-      .syntax-gu { color: #cb4b16; } // Generic.Subheading
-      .syntax-gt { color: #333333; } // Generic.Traceback
-      .syntax-kc { color: #cb4b16; } // Keyword.Constant
-      .syntax-kd { color: #268bd2; } // Keyword.Declaration
-      .syntax-kn { color: #859900; } // Keyword.Namespace
-      .syntax-kp { color: #859900; } // Keyword.Pseudo
-      .syntax-kr { color: #268bd2; } // Keyword.Reserved
-      .syntax-kt { color: #3329c2; } // Keyword.Type
-      .syntax-ld { color: #333333; } // Literal.Date
-      .syntax-m { color: #2aa198; } // Literal.Number
-      .syntax-s { color: #2aa198; } // Literal.String
-      .syntax-na { color: #333333; } // Name.Attribute
-      .syntax-nb { color: #B58900; } // Name.Builtin
-      .syntax-nc { color: #268bd2; } // Name.Class
-      .syntax-no { color: #cb4b16; } // Name.Constant
-      .syntax-nd { color: #268bd2; } // Name.Decorator
-      .syntax-ni { color: #cb4b16; } // Name.Entity
-      .syntax-ne { color: #cb4b16; } // Name.Exception
-      .syntax-nf { color: #268bd2; } // Name.Function
-      .syntax-nl { color: #333333; } // Name.Label
-      .syntax-nn { color: #333333; } // Name.Namespace
-      .syntax-nx { color: #333333; } // Name.Other
-      .syntax-py { color: #333333; } // Name.Property
-      .syntax-nt { color: #268bd2; } // Name.Tag
-      .syntax-nv { color: #268bd2; } // Name.Variable
-      .syntax-ow { color: #859900; } // Operator.Word
-      .syntax-w { color: #333333; } // Text.Whitespace
-      .syntax-mf { color: #2aa198; } // Literal.Number.Float
-      .syntax-mh { color: #2aa198; } // Literal.Number.Hex
-      .syntax-mi { color: #2aa198; } // Literal.Number.Integer
-      .syntax-mo { color: #2aa198; } // Literal.Number.Oct
-      .syntax-sb { color: #129b12; } // Literal.String.Backtick
-      .syntax-sc { color: #2aa198; } // Literal.String.Char
-      .syntax-sd { color: #333333; } // Literal.String.Doc
-      .syntax-s2 { color: #2aa198; } // Literal.String.Double
-      .syntax-se { color: #cb4b16; } // Literal.String.Escape
-      .syntax-sh { color: #333333; } // Literal.String.Heredoc
-      .syntax-si { color: #2aa198; } // Literal.String.Interpol
-      .syntax-sx { color: #2aa198; } // Literal.String.Other
-      .syntax-sr { color: #dc322f; } // Literal.String.Regex
-      .syntax-s1 { color: #2aa198; } // Literal.String.Single
-      .syntax-ss { color: #2aa198; } // Literal.String.Symbol
-      .syntax-bp { color: #268bd2; } // Name.Builtin.Pseudo
-      .syntax-vc { color: #268bd2; } // Name.Variable.Class
-      .syntax-vg { color: #268bd2; } // Name.Variable.Global
-      .syntax-vi { color: #268bd2; } // Name.Variable.Instance
-      .syntax-il { color: #2aa198; } // Literal.Number.Integer.Long
-    }
-  } @else {
-    .highlight {
-      .syntax-c { color: #759299; }
-      .syntax-err { color: #93a1a1; }
-      .syntax-g { color: #93a1a1; }
-      .syntax-k { color: #859900; }
-      .syntax-l { color: #93a1a1; }
-      .syntax-n { color: #93a1a1; }
-      .syntax-o { color: #859900; }
-      .syntax-x { color: #e9662f; }
-      .syntax-p { color: #93a1a1; }
-      .syntax-cm { color: #759299; }
-      .syntax-cp { color: #859900; }
-      .syntax-c1 { color: #759299; }
-      .syntax-cs { color: #859900; }
-      .syntax-gd { color: #2aa198; }
-      .syntax-ge { color: #93a1a1; font-style: italic; }
-      .syntax-gr { color: #e8625f; }
-      .syntax-gh { color: #e9662f; }
-      .syntax-gi { color: #859900; }
-      .syntax-go { color: #93a1a1; }
-      .syntax-gp { color: #93a1a1; }
-      .syntax-gs { color: #93a1a1; font-weight: bold; }
-      .syntax-gu { color: #e9662f; }
-      .syntax-gt { color: #93a1a1; }
-      .syntax-kc { color: #e9662f; }
-      .syntax-kd { color: #3294da; }
-      .syntax-kn { color: #859900; }
-      .syntax-kp { color: #859900; }
-      .syntax-kr { color: #3294da; }
-      .syntax-kt { color: #e8625f; }
-      .syntax-ld { color: #93a1a1; }
-      .syntax-m { color: #2aa198; }
-      .syntax-s { color: #2aa198; }
-      .syntax-na { color: #93a1a1; }
-      .syntax-nb { color: #B58900; }
-      .syntax-nc { color: #3294da; }
-      .syntax-no { color: #e9662f; }
-      .syntax-nd { color: #3294da; }
-      .syntax-ni { color: #e9662f; }
-      .syntax-ne { color: #e9662f; }
-      .syntax-nf { color: #3294da; }
-      .syntax-nl { color: #93a1a1; }
-      .syntax-nn { color: #93a1a1; }
-      .syntax-nx { color: #93a1a1; }
-      .syntax-py { color: #93a1a1; }
-      .syntax-nt { color: #3294da; }
-      .syntax-nv { color: #3294da; }
-      .syntax-ow { color: #859900; }
-      .syntax-w { color: #93a1a1; }
-      .syntax-mf { color: #2aa198; }
-      .syntax-mh { color: #2aa198; }
-      .syntax-mi { color: #2aa198; }
-      .syntax-mo { color: #2aa198; }
-      .syntax-sb { color: #759299; }
-      .syntax-sc { color: #2aa198; }
-      .syntax-sd { color: #93a1a1; }
-      .syntax-s2 { color: #2aa198; }
-      .syntax-se { color: #e9662f; }
-      .syntax-sh { color: #93a1a1; }
-      .syntax-si { color: #2aa198; }
-      .syntax-sx { color: #2aa198; }
-      .syntax-sr { color: #e8625f; }
-      .syntax-s1 { color: #2aa198; }
-      .syntax-ss { color: #2aa198; }
-      .syntax-bp { color: #3294da; }
-      .syntax-vc { color: #3294da; }
-      .syntax-vg { color: #3294da; }
-      .syntax-vi { color: #3294da; }
-      .syntax-il { color: #2aa198; }
-    }
+@mixin syntax-highlighting($theme) {
+  .highlight {
+    .syntax-c {
+      color: map-get($theme, "syntax-comment");
+    } // Comment
+    .syntax-err {
+      color: map-get($theme, "foreground");
+    } // Error
+    .syntax-g {
+      color: map-get($theme, "foreground");
+    } // Generic
+    .syntax-k {
+      color: map-get($theme, "syntax-keyword");
+    } // Keyword
+    .syntax-l {
+      color: map-get($theme, "foreground");
+    } // Literal
+    .syntax-n {
+      color: map-get($theme, "foreground");
+    } // Name
+    .syntax-o {
+      color: map-get($theme, "syntax-comment");
+    } // Operator
+    .syntax-x {
+      color: map-get($theme, "syntax-constant");
+    } // Other
+    .syntax-p {
+      color: map-get($theme, "foreground");
+    } // Punctuation
+    .syntax-cm {
+      color: map-get($theme, "syntax-comment");
+    } // Comment.Multiline
+    .syntax-cp {
+      color: map-get($theme, "syntax-comment");
+    } // Comment.Preproc
+    .syntax-c1 {
+      color: map-get($theme, "syntax-comment");
+    } // Comment.Single
+    .syntax-cs {
+      color: map-get($theme, "syntax-comment");
+    } // Comment.Special
+    .syntax-gd {
+      color: map-get($theme, "syntax-comment");
+    } // Generic.Deleted
+    .syntax-ge {
+      color: map-get($theme, "foreground");
+      font-style: italic;
+    } // Generic.Emph
+    .syntax-gr {
+      color:  map-get($theme, "syntax-constant");
+    } // Generic.Error
+    .syntax-gh {
+      color: map-get($theme, "syntax-constant");
+    } // Generic.Heading
+    .syntax-gi {
+      color: map-get($theme, "syntax-comment");
+    } // Generic.Inserted
+    .syntax-go {
+      color: map-get($theme, "foreground");
+    } // Generic.Output
+    .syntax-gp {
+      color: map-get($theme, "foreground");
+    } // Generic.Prompt
+    .syntax-gs {
+      color: map-get($theme, "foreground");
+      font-weight: bold;
+    } // Generic.Strong
+    .syntax-gu {
+      color: map-get($theme, "syntax-constant");
+    } // Generic.Subheading
+    .syntax-gt {
+      color: map-get($theme, "foreground");
+    } // Generic.Traceback
+    .syntax-kc {
+      color: map-get($theme, "syntax-constant");
+    } // Keyword.Constant
+    .syntax-kd {
+      color:  map-get($theme, "syntax-keyword");
+    } // Keyword.Declaration
+    .syntax-kn {
+      color: map-get($theme, "syntax-comment");
+    } // Keyword.Namespace
+    .syntax-kp {
+      color: map-get($theme, "syntax-comment");
+    } // Keyword.Pseudo
+    .syntax-kr {
+      color:  map-get($theme, "syntax-keyword");
+    } // Keyword.Reserved
+    .syntax-kt {
+      color: map-get($theme, "syntax-keyword");
+    } // Keyword.Type
+    .syntax-ld {
+      color: map-get($theme, "foreground");
+    } // Literal.Date
+    .syntax-m {
+      color: map-get($theme, "syntax-comment");
+    } // Literal.Number
+    .syntax-s {
+      color: map-get($theme, "syntax-comment");
+    } // Literal.String
+    .syntax-na {
+      color: map-get($theme, "foreground");
+    } // Name.Attribute
+    .syntax-nb {
+      color:  map-get($theme, "syntax-builtin");
+    } // Name.Builtin
+    .syntax-nc {
+      color:  map-get($theme, "syntax-keyword");
+    } // Name.Class
+    .syntax-no {
+      color: map-get($theme, "syntax-constant");
+    } // Name.Constant
+    .syntax-nd {
+      color:  map-get($theme, "syntax-keyword");
+    } // Name.Decorator
+    .syntax-ni {
+      color: map-get($theme, "syntax-builtin");
+    } // Name.Entity
+    .syntax-ne {
+      color: map-get($theme, "syntax-builtin");
+    } // Name.Exception
+    .syntax-nf {
+      color:  map-get($theme, "syntax-builtin");
+    } // Name.Function
+    .syntax-nl {
+      color: map-get($theme, "foreground");
+    } // Name.Label
+    .syntax-nn {
+      color: map-get($theme, "foreground");
+    } // Name.Namespace
+    .syntax-nx {
+      color: map-get($theme, "foreground");
+    } // Name.Other
+    .syntax-py {
+      color: map-get($theme, "foreground");
+    } // Name.Property
+    .syntax-nt {
+      color:  map-get($theme, "syntax-keyword");
+    } // Name.Tag
+    .syntax-nv {
+      color:  map-get($theme, "syntax-keyword");
+    } // Name.Variable
+    .syntax-ow {
+      color: map-get($theme, "syntax-comment");
+    } // Operator.Word
+    .syntax-w {
+      color: map-get($theme, "foreground");
+    } // Text.Whitespace
+    .syntax-mf {
+      color: map-get($theme, "syntax-literal");
+    } // Literal.Number.Float
+    .syntax-mh {
+      color: map-get($theme, "syntax-literal");
+    } // Literal.Number.Hex
+    .syntax-mi {
+      color: map-get($theme, "syntax-literal");
+    } // Literal.Number.Integer
+    .syntax-mo {
+      color: map-get($theme, "syntax-literal");
+    } // Literal.Number.Oct
+    .syntax-sb {
+      color: map-get($theme, "syntax-string");
+    } // Literal.String.Backtick
+    .syntax-sc {
+      color: map-get($theme, "syntax-string");
+    } // Literal.String.Char
+    .syntax-sd {
+      color: map-get($theme, "syntax-comment");
+    } // Literal.String.Doc
+    .syntax-s2 {
+      color: map-get($theme, "syntax-string");
+    } // Literal.String.Double
+    .syntax-se {
+      color: map-get($theme, "syntax-constant");
+    } // Literal.String.Escape
+    .syntax-sh {
+      color: map-get($theme, "syntax-comment");
+    } // Literal.String.Heredoc
+    .syntax-si {
+      color: map-get($theme, "syntax-string");
+    } // Literal.String.Interpol
+    .syntax-sx {
+      color: map-get($theme, "syntax-string");
+    } // Literal.String.Other
+    .syntax-sr {
+      color:  map-get($theme, "syntax-constant");
+    } // Literal.String.Regex
+    .syntax-s1 {
+      color: map-get($theme, "syntax-string");
+    } // Literal.String.Single
+    .syntax-ss {
+      color: map-get($theme, "syntax-string");
+    } // Literal.String.Symbol
+    .syntax-bp {
+      color:  map-get($theme, "syntax-keyword");
+    } // Name.Builtin.Pseudo
+    .syntax-vc {
+      color:  map-get($theme, "syntax-keyword");
+    } // Name.Variable.Class
+    .syntax-vg {
+      color:  map-get($theme, "syntax-keyword");
+    } // Name.Variable.Global
+    .syntax-vi {
+      color:  map-get($theme, "syntax-keyword");
+    } // Name.Variable.Instance
+    .syntax-il {
+      color: map-get($theme, "syntax-comment");
+    } // Literal.Number.Integer.Long
   }
 }
 
@@ -765,6 +840,12 @@
   $foreground-highlight: map-get-fallback($theme, "foreground-highlight", "foreground-primary");
   $stripe-mine: map-get-fallback($theme, "stripe-mine", "link-visited");
   $stripe-target: map-get-fallback($theme, "stripe-target", "warning");
+  $syntax-builtin: map-get-fallback($theme, "syntax-builtin", "foreground-primary");
+  $syntax-comment: map-get-fallback($theme, "syntax-comment", "foreground-primary");
+  $syntax-constant: map-get-fallback($theme, "syntax-constant", "foreground-primary");
+  $syntax-keyword: map-get-fallback($theme, "syntax-keyword", "foreground-primary");
+  $syntax-literal: map-get-fallback($theme, "syntax-literal", "foreground-primary");
+  $syntax-string: map-get-fallback($theme, "syntax-string", "foreground-primary");
   $topic-tag-nsfw: map-get-fallback($theme, "topic-tag-nsfw", "error");
   $topic-tag-spoiler: map-get-fallback($theme, "topic-tag-spoiler", "warning");
 
@@ -791,6 +872,12 @@
     "link-hover": $link-hover,
     "stripe-mine": $stripe-mine,
     "stripe-target": $stripe-target,
+    "syntax-builtin": $syntax-builtin,
+    "syntax-comment": $syntax-comment,
+    "syntax-constant": $syntax-constant,
+    "syntax-keyword": $syntax-keyword,
+    "syntax-literal": $syntax-literal,
+    "syntax-string": $syntax-string,
     "topic-tag-nsfw": $topic-tag-nsfw,
     "topic-tag-spoiler": $topic-tag-spoiler,
   ));
