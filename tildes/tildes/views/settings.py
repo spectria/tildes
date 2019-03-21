@@ -14,7 +14,11 @@ import qrcode
 from webargs.pyramidparser import use_kwargs
 
 from tildes.lib.string import separate_string
-from tildes.schemas.user import EMAIL_ADDRESS_NOTE_MAX_LENGTH, UserSchema
+from tildes.schemas.user import (
+    BIO_MAX_LENGTH,
+    EMAIL_ADDRESS_NOTE_MAX_LENGTH,
+    UserSchema,
+)
 
 
 PASSWORD_FIELD = UserSchema(only=("password",)).fields["password"]
@@ -113,7 +117,7 @@ def get_settings_two_factor_qr_code(request: Request) -> Response:
 def get_settings_bio(request: Request) -> dict:
     """Generate the user bio settings page."""
     # pylint: disable=unused-argument
-    return {}
+    return {"bio_max_length": BIO_MAX_LENGTH}
 
 
 @view_config(route_name="settings_password_change", request_method="POST")

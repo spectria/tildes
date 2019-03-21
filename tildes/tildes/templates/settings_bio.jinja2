@@ -10,6 +10,10 @@
 {% block main_heading %}Edit your user bio{% endblock %}
 
 {% block settings %}
+  <p>Enter a bio that others will be able to view on your user page (maximum {{ bio_max_length }} characters). To remove your bio, set it to blank.</p>
+
+  <div class="divider"></div>
+
   <form
     method="post"
     name="user-bio"
@@ -20,7 +24,7 @@
     {{ markdown_textarea('User Bio (Markdown)', text=request.user.bio_markdown) }}
 
     <div class="form-buttons">
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">Save bio</button>
     </div>
   </form>
 {% endblock %}
