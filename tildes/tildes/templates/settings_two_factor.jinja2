@@ -1,13 +1,13 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends 'base_no_sidebar.jinja2' %}
+{% extends 'base_settings.jinja2' %}
 
 {% block title %}Set up two-factor authentication{% endblock %}
 
 {% block main_heading %}Set up two-factor authentication{% endblock %}
 
-{% block content %}
+{% block settings %}
 {% if request.user.two_factor_enabled %}
 <p>You already have two-factor authentication enabled. To disable it, enter a code from your authenticator device below and click the button. If you do not have access to your authenticator device, enter a backup code.</p>
 

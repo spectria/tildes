@@ -1,13 +1,13 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends 'base_no_sidebar.jinja2' %}
+{% extends 'base_settings.jinja2' %}
 
 {% block title %}Set up account recovery{% endblock %}
 
 {% block main_heading %}Set up account recovery{% endblock %}
 
-{% block content %}
+{% block settings %}
 <p>In order to support account recovery while maximizing user privacy, Tildes's recovery process is a bit unusual.</p>
 
 <p>The email address you enter below will be cryptographically hashed (using <a href="https://en.wikipedia.org/wiki/Argon2">Argon2</a>) and only the hash stored. <strong>Your actual address is not stored</strong>, so it is impossible for anyone to see what it is or use it to send you email, and your address can't be leaked (due to a data breach, account compromise, etc.).</p>

@@ -1,13 +1,13 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% extends 'base_no_sidebar.jinja2' %}
+{% extends 'base_settings.jinja2' %}
 
 {% block title %}Define topic tag filters{% endblock %}
 
 {% block main_heading %}Define topic tag filters{% endblock %}
 
-{% block content %}
+{% block settings %}
 <p>You can configure a list of filtered topic tags below. If a topic has <em>any</em> of these tags, it will be filtered out (not shown) by default, but you can toggle the filtering off to see a full list.</p>
 
 <p>These filters are <em>global</em> and will apply both to your home page as well as inside specific groups.</p>
