@@ -42,6 +42,14 @@ code {
   tab-size: 4;
 }
 
+dl dd {
+  @extend %links-text;
+  @extend %lists-text;
+
+  margin-left: 0.4rem;
+  font-size: 0.7rem;
+}
+
 // Fixes a Chrome bug that seems to treat children of <details> as having
 // box-sizing: content-box. See Known issues: https://caniuse.com/#feat=details
 details * {
