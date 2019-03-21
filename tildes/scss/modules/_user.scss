@@ -1,0 +1,33 @@
+// Copyright (c) 2019 Tildes contributors <code@tildes.net>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+.user-bio {
+  @extend %links-text;
+  @extend %lists-text;
+
+  border: 1px solid;
+  padding: 0.4rem;
+  margin-bottom: 1rem;
+  font-size: 0.6rem;
+
+  summary::after {
+    font-size: 0.6rem;
+    font-style: italic;
+    content: "Hide bio";
+    display: none;
+  }
+
+  &[open] {
+    font-size: 0.8rem;
+
+    summary {
+      &::after {
+        display: inline;
+      }
+
+      span {
+        display: none;
+      }
+    }
+  }
+}
