@@ -15,6 +15,7 @@
     name="user-bio"
     autocomplete="off"
     data-ic-patch-to="{{ request.route_url("ic_user", username=request.user.username) }}"
+    data-js-confirm-leave-page-unsaved
   >
     {{ markdown_textarea('User Bio (Markdown)', text=request.user.bio_markdown) }}
 
