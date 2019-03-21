@@ -48,13 +48,6 @@
     </div>
   {% endif %}
 
-  {% if user.bio_rendered_html %}
-    <details class="user-bio">
-      <summary><span>View {{ user.username }}'s bio</span></summary>
-      {{ user.bio_rendered_html|safe }}
-    </details>
-  {% endif %}
-
   {% if posts %}
     {% if request.has_permission("view_history", user) and posts.has_prev_page %}
       <div class="pagination">
@@ -127,6 +120,13 @@
 <dl>
   <dt>Registered</dt>
   <dd>{{ user.created_time.strftime('%B %-d, %Y') }}</dd>
+
+  {% if user.bio_rendered_html %}
+    <div class="user-bio">
+      <dt>Bio</dt>
+      <dd>{{ user.bio_rendered_html|safe }}</dd>
+    </div>
+  {% endif %}
 </dl>
 
 {% if request.has_permission('message', user) %}
