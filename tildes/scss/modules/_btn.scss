@@ -38,6 +38,10 @@
 
   font-weight: normal;
 
+  @media (max-width: $size-md) {
+    border-left: 0;
+  }
+
   margin-right: 0.4rem;
   @media (min-width: $size-md) {
     margin-right: 0.2rem;
