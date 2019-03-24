@@ -79,11 +79,13 @@
         </a>
       </div>
 
+      <div class="topic-info-source"
       {% if topic.is_user_treated_as_source %}
-        <div aria-label="Posted by">{{ username_linked(topic.user.username) }}</div>
+        aria-label="Posted by">{{ username_linked(topic.user.username) }}
       {% else %}
-        <div aria-label="Link domain">{{ topic.link_domain }}</div>
+        aria-label="Link domain">{{ topic.link_domain }}
       {% endif %}
+      </div>
 
       <div aria-label="Post time">{{ adaptive_date_responsive(topic.created_time, precision=1) }}</div>
     </footer>
