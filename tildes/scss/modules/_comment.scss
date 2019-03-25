@@ -7,7 +7,7 @@
 
   header {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     font-size: 0.7rem;
     line-height: 0.7rem;
 
@@ -74,8 +74,17 @@
 }
 
 .comment-nav-link {
+  @include min-touch-size;
+
+  display: flex;
+  align-items: center;
+
   font-size: 0.6rem;
+
   margin-left: 0.4rem;
+  @media (min-width: $size-md) {
+    margin-left: 1rem;
+  }
 }
 
 .comment-tree {
