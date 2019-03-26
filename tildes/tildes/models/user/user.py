@@ -177,6 +177,14 @@ class User(DatabaseModel):
         #  - only allow logged-in users to look through user history
         acl.append((Allow, Authenticated, "view_history"))
 
+        # view_info:
+        #  - can't view info (registration date, bio, etc.) for deleted/banned users
+        #  - otherwise, everyone can view
+        if self.is_banned or self.is_deleted:
+            acl.append((Deny, Everyone, "view_info"))
+
+        acl.append((Allow, Everyone, "view_info"))
+
         # message:
         #  - deleted and banned users can't be messaged
         #  - otherwise, logged-in users can message anyone except themselves

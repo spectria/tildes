@@ -116,6 +116,7 @@
 <hr>
 {% endif %}
 
+{% if request.has_permission("view_info", user) %}
 <h2>User info</h2>
 <dl>
   <dt>Registered</dt>
@@ -128,6 +129,7 @@
     </div>
   {% endif %}
 </dl>
+{% endif %}
 
 {% if request.has_permission('message', user) %}
   <a href="/user/{{ user.username }}/new_message" class="btn btn-primary">Send a private message</a>
