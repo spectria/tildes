@@ -19,6 +19,7 @@ from tildes.lib.database import get_session_from_config
 from tildes.models.comment import Comment
 from tildes.models.log import Log
 from tildes.models.topic import Topic, TopicVisit
+from tildes.models.user import User
 
 
 # sensitive data older than this should be removed
@@ -57,6 +58,7 @@ class DataCleaner:
 
         self.clean_old_deleted_comments()
         self.clean_old_deleted_topics()
+        self.clean_old_deleted_users()
 
     def delete_old_log_entries(self) -> None:
         """Delete all log entries older than the retention cutoff.
@@ -140,3 +142,44 @@ class DataCleaner:
         )
         self.db_session.commit()
         logging.info(f"Cleaned {updated} old deleted topics.")
+
+    def clean_old_deleted_users(self) -> None:
+        """Clean the data of old deleted users."""
+        updated = (
+            self.db_session.query(User)
+            .filter(
+                User.is_deleted == True,  # noqa
+                User.deleted_time <= self.retention_cutoff,  # type: ignore
+                User.password_hash != "",
+            )
+            .update(
+                {
+                    "password_hash": "",
+                    "email_address_hash": DEFAULT,
+                    "email_address_note": DEFAULT,
+                    "two_factor_enabled": DEFAULT,
+                    "two_factor_secret": DEFAULT,
+                    "two_factor_backup_codes": DEFAULT,
+                    "inviter_id": DEFAULT,
+                    "invite_codes_remaining": DEFAULT,
+                    "track_comment_visits": DEFAULT,
+                    "collapse_old_comments": DEFAULT,
+                    "auto_mark_notifications_read": DEFAULT,
+                    "open_new_tab_external": DEFAULT,
+                    "open_new_tab_internal": DEFAULT,
+                    "open_new_tab_text": DEFAULT,
+                    "theme_default": DEFAULT,
+                    "permissions": DEFAULT,
+                    "home_default_order": DEFAULT,
+                    "home_default_period": DEFAULT,
+                    "_filtered_topic_tags": DEFAULT,
+                    "comment_label_weight": DEFAULT,
+                    "last_exemplary_label_time": DEFAULT,
+                    "_bio_markdown": DEFAULT,
+                    "bio_rendered_html": DEFAULT,
+                },
+                synchronize_session=False,
+            )
+        )
+        self.db_session.commit()
+        logging.info(f"Cleaned {updated} old deleted users.")
