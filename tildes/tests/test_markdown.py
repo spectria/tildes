@@ -148,6 +148,14 @@ def test_https_link_linkified():
     assert '<a href="https://example.com">' in processed
 
 
+def test_mailto_link_linkified():
+    """Ensure that writing an email results in a working mailto link."""
+    markdown = "My email is email@example.com."
+    processed = convert_markdown_to_safe_html(markdown)
+
+    assert '<a href="mailto:email@example.com">' in processed
+
+
 def test_link_with_path_linkified():
     """Ensure a link with a path results in a link."""
     markdown = "So http://example.com/a/b_c_d/e too?"
@@ -166,7 +174,7 @@ def test_link_with_query_string_linkified():
 
 def test_other_protocol_urls_not_linkified():
     """Ensure some other protocols don't linkify (not comprehensive)."""
-    protocols = ("data", "ftp", "irc", "mailto", "news", "ssh", "xmpp")
+    protocols = ("data", "ftp", "irc", "news", "ssh", "xmpp")
 
     for protocol in protocols:
         markdown = f"Testing {protocol}://example.com for linking"
@@ -205,7 +213,7 @@ def test_html_lookalike_closing_not_removed():
 
 def test_a_href_protocol_violation():
     """Ensure link to other protocols removes the link (not comprehensive)."""
-    protocols = ("data", "ftp", "irc", "mailto", "news", "ssh", "xmpp")
+    protocols = ("data", "ftp", "irc", "news", "ssh", "xmpp")
 
     for protocol in protocols:
         markdown = f"Testing [a link]({protocol}://example.com) for linking"

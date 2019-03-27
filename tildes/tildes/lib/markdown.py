@@ -95,7 +95,7 @@ HTML_ATTRIBUTE_WHITELIST = {
     "code": allow_syntax_highlighting_classes,
     "span": allow_syntax_highlighting_classes,
 }
-PROTOCOL_WHITELIST = ("http", "https")
+PROTOCOL_WHITELIST = ("http", "https", "mailto")
 
 # Regex that finds ordered list markdown that was probably accidental - ones being
 # initiated by anything except "1." at the start of a post
