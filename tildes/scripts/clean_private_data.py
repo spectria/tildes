@@ -16,10 +16,17 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import text
 
 from tildes.lib.database import get_session_from_config
-from tildes.models.comment import Comment
+from tildes.models.comment import (
+    Comment,
+    CommentBookmark,
+    CommentLabel,
+    CommentNotification,
+    CommentVote,
+)
+from tildes.models.group import GroupSubscription
 from tildes.models.log import Log
-from tildes.models.topic import Topic, TopicVisit
-from tildes.models.user import User
+from tildes.models.topic import Topic, TopicBookmark, TopicVisit, TopicVote
+from tildes.models.user import User, UserGroupSettings
 
 
 # sensitive data older than this should be removed
@@ -49,6 +56,9 @@ class DataCleaner:
         self.db_session = db_session
         self.retention_cutoff = datetime.now() - retention_period
 
+        # set high timeout for this script, since cleanup can activate a lot of triggers
+        self.db_session.execute("SET statement_timeout TO '10min'")
+
     def clean_all(self) -> None:
         """Call all the cleanup functions."""
         logging.info(f"Cleaning up all data (retention cutoff {self.retention_cutoff})")
@@ -59,6 +69,8 @@ class DataCleaner:
         self.clean_old_deleted_comments()
         self.clean_old_deleted_topics()
         self.clean_old_deleted_users()
+
+        self.clean_old_deleted_user_data()
 
     def delete_old_log_entries(self) -> None:
         """Delete all log entries older than the retention cutoff.
@@ -183,3 +195,34 @@ class DataCleaner:
         )
         self.db_session.commit()
         logging.info(f"Cleaned {updated} old deleted users.")
+
+    def clean_old_deleted_user_data(self) -> None:
+        """Clean additional data from deleted users (subscriptions, votes, etc.)."""
+        models_to_delete_from = [
+            CommentBookmark,
+            CommentLabel,
+            CommentNotification,
+            CommentVote,
+            GroupSubscription,
+            TopicBookmark,
+            TopicVote,
+            UserGroupSettings,
+        ]
+
+        user_id_subquery = (
+            self.db_session.query(User.user_id)
+            .filter(
+                User.is_deleted == True,  # noqa
+                User.deleted_time <= self.retention_cutoff,  # type: ignore
+            )
+            .subquery()
+        )
+
+        for model_cls in models_to_delete_from:
+            deleted = (
+                self.db_session.query(model_cls)
+                .filter(model_cls.user_id.in_(user_id_subquery))  # type: ignore
+                .delete(synchronize_session=False)
+            )
+            self.db_session.commit()
+            logging.info(f"Deleted {deleted} rows from {model_cls.__name__}.")
