@@ -11,10 +11,12 @@ from tildes.models import DatabaseModel, ModelQuery
 
 def get_resource(request: Request, base_query: ModelQuery) -> DatabaseModel:
     """Prepare and execute base query from a root factory, returning result."""
-    query = base_query.lock_based_on_request_method().join_all_relationships()
-
-    if not request.is_safe_method:
-        query = query.undefer_all_columns()
+    # pylint: disable=unused-argument
+    query = (
+        base_query.lock_based_on_request_method()
+        .join_all_relationships()
+        .undefer_all_columns()
+    )
 
     resource = query.one_or_none()
 

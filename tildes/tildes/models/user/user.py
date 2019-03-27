@@ -116,14 +116,16 @@ class User(DatabaseModel):
     )
     comment_label_weight: Optional[float] = Column(REAL)
     last_exemplary_label_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
-    _bio_markdown: str = Column(
-        "bio_markdown",
-        Text,
-        CheckConstraint(
-            f"LENGTH(bio_markdown) <= {BIO_MAX_LENGTH}", name="bio_markdown_length"
-        ),
+    _bio_markdown: str = deferred(
+        Column(
+            "bio_markdown",
+            Text,
+            CheckConstraint(
+                f"LENGTH(bio_markdown) <= {BIO_MAX_LENGTH}", name="bio_markdown_length"
+            ),
+        )
     )
-    bio_rendered_html: str = Column(Text)
+    bio_rendered_html: str = deferred(Column(Text))
 
     @hybrid_property
     def filtered_topic_tags(self) -> List[str]:
