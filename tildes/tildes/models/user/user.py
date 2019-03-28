@@ -58,6 +58,7 @@ class User(DatabaseModel):
           inserted into comment_labels.
       Internal:
         - deleted_time will be set when is_deleted is set to true
+        - banned_time will be set when is_banned is set to true
     """
 
     schema_class = UserSchema
@@ -108,6 +109,7 @@ class User(DatabaseModel):
     )
     deleted_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     is_banned: bool = Column(Boolean, nullable=False, server_default="false")
+    banned_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     permissions: Any = Column(JSONB(none_as_null=True))
     home_default_order: Optional[TopicSortOption] = Column(ENUM(TopicSortOption))
     home_default_period: Optional[str] = Column(Text)
