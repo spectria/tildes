@@ -198,6 +198,14 @@ class User(DatabaseModel):
         acl.append((Deny, self.user_id, "message"))
         acl.append((Allow, Authenticated, "message"))
 
+        # ban:
+        #  - admins can ban non-deleted users except themselves
+        if self.is_deleted:
+            acl.append((Deny, Everyone, "ban"))
+
+        acl.append((Deny, self.user_id, "ban"))  # required so users can't self-ban
+        acl.append((Allow, "admin", "ban"))
+
         # grant the user all other permissions on themself
         acl.append((Allow, self.user_id, ALL_PERMISSIONS))
 

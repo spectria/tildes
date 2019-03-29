@@ -152,6 +152,7 @@ def add_intercooler_routes(config: Configurator) -> None:
             "/default_listing_options",
             factory=user_by_username,
         )
+        add_ic_route("user_ban", "/ban", factory=user_by_username)
 
 
 class LoggedInFactory:

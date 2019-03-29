@@ -134,4 +134,20 @@
 {% if request.has_permission('message', user) %}
   <a href="/user/{{ user.username }}/new_message" class="btn btn-primary">Send a private message</a>
 {% endif %}
+
+{% if request.has_permission("ban", user) %}
+  <div class="divider"></div>
+  {% if user.is_banned %}
+    <button class="btn"
+      data-ic-delete-from="{{ request.route_url("ic_user_ban", username=user.username) }}"
+      data-ic-confirm="Unban user {{ user.username }}?"
+    >Unban user</button>
+  {% else %}
+    <button class="btn"
+      data-ic-put-to="{{ request.route_url("ic_user_ban", username=user.username) }}"
+      data-ic-confirm="Ban user {{ user.username }}?"
+    >Ban user</button>
+  {% endif %}
+{% endif %}
+
 {% endblock %}

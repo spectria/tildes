@@ -329,3 +329,27 @@ def put_filtered_topic_tags(request: Request, tags: str) -> dict:
     request.user.filtered_topic_tags = result.data["tags"]
 
     return IC_NOOP
+
+
+@ic_view_config(route_name="user_ban", request_method="PUT", permission="ban")
+def put_user_ban(request: Request) -> Response:
+    """Ban a user."""
+    user = request.context
+
+    user.is_banned = True
+
+    # delete all of the user's outstanding invite codes
+    request.query(UserInviteCode).filter(
+        UserInviteCode.user_id == user.user_id,
+        UserInviteCode.invitee_id == None,  # noqa
+    ).delete(synchronize_session=False)
+
+    return Response("Banned")
+
+
+@ic_view_config(route_name="user_ban", request_method="DELETE", permission="ban")
+def delete_user_ban(request: Request) -> Response:
+    """Unban a user."""
+    request.context.is_banned = False
+
+    return Response("Unbanned")
