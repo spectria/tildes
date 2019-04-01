@@ -36,6 +36,28 @@
         </button>
       </form>
     </li>
+
+    <li>
+      <form
+        name="interact-mark-notifications-read"
+        autocomplete="off"
+        data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+      >
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input
+              type="checkbox"
+              id="interact_mark_notifications_read"
+              name="interact_mark_notifications_read"
+              data-js-autosubmit-on-change
+              {% if request.user.interact_mark_notifications_read %}checked{% endif %}
+            >
+            <i class="form-icon"></i> Automatically mark notifications read when you interact with the source comment (by voting, labeling, replying, etc.)
+          </label>
+        </div>
+      </form>
+    </li>
+
     <li>
       <form
         name="auto-mark-notifications-read"
@@ -56,6 +78,7 @@
         </div>
       </form>
     </li>
+
     <li>
       <h4>Open links in new tabs</h4>
       <form

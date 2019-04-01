@@ -96,6 +96,9 @@ class User(DatabaseModel):
     auto_mark_notifications_read: bool = Column(
         Boolean, nullable=False, server_default="false"
     )
+    interact_mark_notifications_read: bool = Column(
+        Boolean, nullable=False, server_default="true"
+    )
     open_new_tab_external: bool = Column(
         Boolean, nullable=False, server_default="false"
     )

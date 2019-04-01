@@ -163,6 +163,22 @@ def patch_change_auto_mark_notifications(request: Request) -> Response:
 @ic_view_config(
     route_name="user",
     request_method="PATCH",
+    request_param="ic-trigger-name=interact-mark-notifications-read",
+    permission="change_interact_mark_notifications_read_setting",
+)
+def patch_change_interact_mark_notifications(request: Request) -> Response:
+    """Change the user's "automatically mark notifications read on interact" setting."""
+    user = request.context
+
+    new_value = bool(request.params.get("interact_mark_notifications_read"))
+    user.interact_mark_notifications_read = new_value
+
+    return IC_NOOP
+
+
+@ic_view_config(
+    route_name="user",
+    request_method="PATCH",
     request_param="ic-trigger-name=open-links-new-tab",
     permission="change_open_links_new_tab_setting",
 )

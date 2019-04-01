@@ -68,6 +68,10 @@
       {% endif %}
     </div>
   {% endif %}
+
+  {% if request.user.interact_mark_notifications_read %}
+    <p class="text-secondary text-small">Comments will be automatically marked read when you take an action on them (such as voting or replying). They will not disappear from the unread page until reloading. If you prefer to always mark them manually, you can disable this behavior on <a href="/settings">the Settings page</a>.</p>
+  {% endif %}
 {% else %}
   <p>No unread notifications.</p>
   <p><a href="/notifications">Go to previously read notifications</a></p>

@@ -124,6 +124,14 @@ def post_comment_reply(request: Request, markdown: str) -> dict:
         )
         request.db_session.add(notification)
 
+    # mark any notifications from the parent comment read if interaction-marking enabled
+    if request.user.interact_mark_notifications_read:
+        request.query(CommentNotification).filter(
+            CommentNotification.user == request.user,
+            CommentNotification.comment == parent_comment,
+            CommentNotification.is_unread == True,  # noqa
+        ).update({"is_unread": False}, synchronize_session=False)
+
     # commit and then re-query the new comment to get complete data
     request.tm.commit()
 
@@ -205,6 +213,14 @@ def put_vote_comment(request: Request) -> dict:
     new_vote = CommentVote(request.user, comment)
     request.db_session.add(new_vote)
 
+    # mark any notifications from the comment read if interaction-marking enabled
+    if request.user.interact_mark_notifications_read:
+        request.query(CommentNotification).filter(
+            CommentNotification.user == request.user,
+            CommentNotification.comment == comment,
+            CommentNotification.is_unread == True,  # noqa
+        ).update({"is_unread": False}, synchronize_session=False)
+
     try:
         # manually flush before attempting to commit, to avoid having all objects
         # detached from the session in case of an error
@@ -238,6 +254,14 @@ def delete_vote_comment(request: Request) -> dict:
     request.query(CommentVote).filter(
         CommentVote.comment == comment, CommentVote.user == request.user
     ).delete(synchronize_session=False)
+
+    # mark any notifications from the comment read if interaction-marking enabled
+    if request.user.interact_mark_notifications_read:
+        request.query(CommentNotification).filter(
+            CommentNotification.user == request.user,
+            CommentNotification.comment == comment,
+            CommentNotification.is_unread == True,  # noqa
+        ).update({"is_unread": False}, synchronize_session=False)
 
     # manually commit the transaction so triggers will execute
     request.tm.commit()
@@ -279,6 +303,14 @@ def put_label_comment(
     label = CommentLabel(comment, request.user, name, weight, reason)
     request.db_session.add(label)
 
+    # mark any notifications from the comment read if interaction-marking enabled
+    if request.user.interact_mark_notifications_read:
+        request.query(CommentNotification).filter(
+            CommentNotification.user == request.user,
+            CommentNotification.comment == comment,
+            CommentNotification.is_unread == True,  # noqa
+        ).update({"is_unread": False}, synchronize_session=False)
+
     try:
         # manually flush before attempting to commit, to avoid having all objects
         # detached from the session in case of an error
@@ -314,6 +346,14 @@ def delete_label_comment(request: Request, name: CommentLabelOption) -> Response
         CommentLabel.user_id == request.user.user_id,
         CommentLabel.label == name,
     ).delete(synchronize_session=False)
+
+    # mark any notifications from the comment read if interaction-marking enabled
+    if request.user.interact_mark_notifications_read:
+        request.query(CommentNotification).filter(
+            CommentNotification.user == request.user,
+            CommentNotification.comment == comment,
+            CommentNotification.is_unread == True,  # noqa
+        ).update({"is_unread": False}, synchronize_session=False)
 
     # commit and then re-query the comment to get complete data
     request.tm.commit()
@@ -410,6 +450,14 @@ def put_comment_bookmark(request: Request) -> dict:
     bookmark = CommentBookmark(request.user, comment)
     request.db_session.add(bookmark)
 
+    # mark any notifications from the comment read if interaction-marking enabled
+    if request.user.interact_mark_notifications_read:
+        request.query(CommentNotification).filter(
+            CommentNotification.user == request.user,
+            CommentNotification.comment == comment,
+            CommentNotification.is_unread == True,  # noqa
+        ).update({"is_unread": False}, synchronize_session=False)
+
     try:
         # manually flush before attempting to commit, to avoid having all
         # objects detached from the session in case of an error
@@ -443,6 +491,14 @@ def delete_comment_bookmark(request: Request) -> dict:
     request.query(CommentBookmark).filter(
         CommentBookmark.user == request.user, CommentBookmark.comment == comment
     ).delete(synchronize_session=False)
+
+    # mark any notifications from the comment read if interaction-marking enabled
+    if request.user.interact_mark_notifications_read:
+        request.query(CommentNotification).filter(
+            CommentNotification.user == request.user,
+            CommentNotification.comment == comment,
+            CommentNotification.is_unread == True,  # noqa
+        ).update({"is_unread": False}, synchronize_session=False)
 
     # commit and then re-query the comment to get complete data
     request.tm.commit()
