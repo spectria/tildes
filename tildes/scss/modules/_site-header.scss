@@ -26,6 +26,7 @@
 .site-header-logo {
   background-image: url(/favicon-32x32.png);
   background-repeat: no-repeat;
+  image-rendering: crisp-edges;
   padding-left: 40px;
   padding-right: 8px;
   line-height: 32px;
