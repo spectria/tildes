@@ -157,7 +157,7 @@ def get_group_topics(
 
     topics = query.get_page(per_page)
 
-    period_options = [SimpleHoursPeriod(hours) for hours in (1, 12, 24, 72)]
+    period_options = [SimpleHoursPeriod(hours) for hours in (1, 12, 24, 72, 168)]
 
     # add the current period to the bottom of the dropdown if it's not one of the
     # "standard" ones
