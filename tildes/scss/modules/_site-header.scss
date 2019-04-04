@@ -26,7 +26,14 @@
 .site-header-logo {
   background-image: url(/favicon-32x32.png);
   background-repeat: no-repeat;
-  image-rendering: crisp-edges;
+
+  // keep the logo pixelated - "pixelated" is best but Firefox only supports
+  // "crisp-edges" as of Firefox 68
+  image-rendering: pixelated;
+  @supports not (image-rendering: pixelated) {
+    image-rendering: crisp-edges;
+  }
+
   padding-left: 40px;
   padding-right: 8px;
   line-height: 32px;
