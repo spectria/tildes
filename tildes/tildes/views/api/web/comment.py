@@ -131,6 +131,7 @@ def post_comment_reply(request: Request, markdown: str) -> dict:
             CommentNotification.comment == parent_comment,
             CommentNotification.is_unread == True,  # noqa
         ).update({"is_unread": False}, synchronize_session=False)
+        _increment_topic_comments_seen(request, parent_comment)
 
     # commit and then re-query the new comment to get complete data
     request.tm.commit()
@@ -220,6 +221,7 @@ def put_vote_comment(request: Request) -> dict:
             CommentNotification.comment == comment,
             CommentNotification.is_unread == True,  # noqa
         ).update({"is_unread": False}, synchronize_session=False)
+        _increment_topic_comments_seen(request, comment)
 
     try:
         # manually flush before attempting to commit, to avoid having all objects
@@ -262,6 +264,7 @@ def delete_vote_comment(request: Request) -> dict:
             CommentNotification.comment == comment,
             CommentNotification.is_unread == True,  # noqa
         ).update({"is_unread": False}, synchronize_session=False)
+        _increment_topic_comments_seen(request, comment)
 
     # manually commit the transaction so triggers will execute
     request.tm.commit()
@@ -310,6 +313,7 @@ def put_label_comment(
             CommentNotification.comment == comment,
             CommentNotification.is_unread == True,  # noqa
         ).update({"is_unread": False}, synchronize_session=False)
+        _increment_topic_comments_seen(request, comment)
 
     try:
         # manually flush before attempting to commit, to avoid having all objects
@@ -354,6 +358,7 @@ def delete_label_comment(request: Request, name: CommentLabelOption) -> Response
             CommentNotification.comment == comment,
             CommentNotification.is_unread == True,  # noqa
         ).update({"is_unread": False}, synchronize_session=False)
+        _increment_topic_comments_seen(request, comment)
 
     # commit and then re-query the comment to get complete data
     request.tm.commit()
@@ -457,6 +462,7 @@ def put_comment_bookmark(request: Request) -> dict:
             CommentNotification.comment == comment,
             CommentNotification.is_unread == True,  # noqa
         ).update({"is_unread": False}, synchronize_session=False)
+        _increment_topic_comments_seen(request, comment)
 
     try:
         # manually flush before attempting to commit, to avoid having all
@@ -499,6 +505,7 @@ def delete_comment_bookmark(request: Request) -> dict:
             CommentNotification.comment == comment,
             CommentNotification.is_unread == True,  # noqa
         ).update({"is_unread": False}, synchronize_session=False)
+        _increment_topic_comments_seen(request, comment)
 
     # commit and then re-query the comment to get complete data
     request.tm.commit()
