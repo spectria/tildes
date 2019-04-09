@@ -48,9 +48,11 @@ def post_group_topics(
     request: Request, title: str, markdown: str, link: str, tags: str
 ) -> HTTPFound:
     """Post a new topic to a group."""
+    group = request.context
+
     if link:
         new_topic = Topic.create_link_topic(
-            group=request.context, author=request.user, title=title, link=link
+            group=group, author=request.user, title=title, link=link
         )
 
         # if they specified both a link and markdown, use the markdown to post an
@@ -66,13 +68,16 @@ def post_group_topics(
             )
     else:
         new_topic = Topic.create_text_topic(
-            group=request.context, author=request.user, title=title, markdown=markdown
+            group=group, author=request.user, title=title, markdown=markdown
         )
 
     try:
         new_topic.tags = tags.split(",")
     except ValidationError:
         raise ValidationError({"tags": ["Invalid tags"]})
+
+    # remove any tag that's the same as the group's name
+    new_topic.tags = [tag for tag in new_topic.tags if tag != str(group.path)]
 
     request.apply_rate_limit("topic_post")
 
