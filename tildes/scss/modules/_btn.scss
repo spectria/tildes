@@ -30,13 +30,9 @@
 }
 
 .btn-comment-collapse {
-  @include min-touch-size;
-
   height: 100%;
   line-height: 100%;
   padding: 0;
-
-  font-weight: normal;
 
   @media (max-width: $size-md) {
     border-left: 0;
@@ -71,6 +67,10 @@
   &.btn-used {
     border: 1px solid;
   }
+}
+
+.btn-light {
+  font-weight: normal;
 }
 
 .btn-post {

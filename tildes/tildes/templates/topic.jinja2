@@ -219,8 +219,10 @@
       {% endtrans %}
       </h2>
 
-      <button class="btn btn-comment-collapse" title="Collapse reply comments" data-js-comment-collapse-all-button>&minus;</button>
-      <button class="btn btn-comment-collapse" title="Expand all comments" data-js-comment-expand-all-button>+</button>
+      <div class="btn-group">
+        <button class="btn btn-sm btn-light" data-js-comment-collapse-all-button>Collapse replies</button>
+        <button class="btn btn-sm btn-light" data-js-comment-expand-all-button>Expand all</button>
+      </div>
 
       <form class="form-listing-options" method="get">
         <div class="form-group">
