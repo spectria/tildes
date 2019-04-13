@@ -15,11 +15,11 @@
 // sets up (nested) lists specifically for text content
 %lists-text {
   ol, ul {
-    margin: 0 0 0.4rem 2rem;
+    margin: 0 0 0.4rem 1rem;
 
     li {
       margin-top: 0.2rem;
-      max-width: $paragraph-max-width - 2rem; // subtract left margin
+      max-width: $paragraph-max-width - 1rem; // subtract left margin
     }
 
     &:last-child {
