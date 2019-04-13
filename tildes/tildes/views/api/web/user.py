@@ -330,11 +330,11 @@ def put_default_listing_options(
 @use_kwargs({"tags": String()})
 def put_filtered_topic_tags(request: Request, tags: str) -> dict:
     """Update a user's filtered topic tags list."""
-    if not tags:
+    if not tags or tags.isspace():
         request.user.filtered_topic_tags = []
         return IC_NOOP
 
-    split_tags = tags.split(",")
+    split_tags = tags.replace("\r", "").split("\n")
 
     try:
         schema = TopicSchema(only=("tags",))

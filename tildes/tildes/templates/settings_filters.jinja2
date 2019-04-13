@@ -21,8 +21,14 @@
       username=request.user.username,
     ) }}"
 >
-  <label class="form-label" for="tags">Tags (comma-separated):</label>
-  <input type="text" class="form-input" name="tags" id="tags" value="{{ request.user.filtered_topic_tags|join(', ') }}">
+  <label class="form-label" for="tags">Filtered tags (one per line):</label>
+  <textarea
+    class="form-input"
+    name="tags"
+    id="tags"
+    data-js-ctrl-enter-submit-form
+    data-js-auto-focus
+  >{{ request.user.filtered_topic_tags|join("\n") }}</textarea>
   <div class="form-buttons">
     <button class="btn btn-primary" type="submit">Save filtered tags</button>
   </div>
