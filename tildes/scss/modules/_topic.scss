@@ -16,7 +16,7 @@
     "title    voting"
     "metadata voting"
     "content  voting"
-    "info     voting";
+    "info     info";
   grid-template-columns: 1fr auto;
 
   // set some minimum row heights on mobile to space them out a bit
@@ -30,7 +30,10 @@
   }
 
   position: relative;
-  padding: 0.4rem;
+
+  @media (min-width: $size-sm) {
+    padding: 0.4rem;
+  }
 
   font-size: 0.6rem;
 
@@ -126,8 +129,12 @@
   margin-bottom: auto;
   padding: 0.2rem;
   height: auto;
-  min-width: 3rem;
   font-weight: normal;
+
+  // make the voting button wider on large screens
+  @media (min-width: $size-sm) {
+    min-width: 3rem;
+  }
 
   &.btn-used {
     border-color: transparent;
@@ -139,8 +146,8 @@
 }
 
 .topic-voting-votes {
-  font-size: 0.9rem;
-  line-height: 1.1rem;
+  font-size: 0.8rem;
+  line-height: 1rem;
 }
 
 .topic-voting-label {
@@ -195,7 +202,11 @@
 
 .topic-info {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
+  grid-template-columns: 1fr 1.5fr 0.7fr;
+  @media (min-width: $size-sm) {
+    grid-template-columns: 1fr 1.2fr 1fr;
+  }
+
   grid-column-gap: 0.4rem;
 
   max-width: 32rem;
