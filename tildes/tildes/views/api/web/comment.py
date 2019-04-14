@@ -30,6 +30,23 @@ from tildes.views import IC_NOOP
 from tildes.views.decorators import ic_view_config, rate_limit_view
 
 
+def _mark_comment_read_from_interaction(request: Request, comment: Comment) -> None:
+    """Mark any notifications from the comment read due to an interaction.
+
+    Does nothing if the user doesn't have the relevant user preference enabled.
+    """
+    if not request.user.interact_mark_notifications_read:
+        return
+
+    with request.db_session.no_autoflush:
+        request.query(CommentNotification).filter(
+            CommentNotification.user == request.user,
+            CommentNotification.comment == comment,
+            CommentNotification.is_unread == True,  # noqa
+        ).update({"is_unread": False}, synchronize_session=False)
+        _increment_topic_comments_seen(request, comment)
+
+
 def _increment_topic_comments_seen(request: Request, comment: Comment) -> None:
     """Increment the number of comments in a topic the user has viewed.
 
@@ -124,14 +141,7 @@ def post_comment_reply(request: Request, markdown: str) -> dict:
         )
         request.db_session.add(notification)
 
-    # mark any notifications from the parent comment read if interaction-marking enabled
-    if request.user.interact_mark_notifications_read:
-        request.query(CommentNotification).filter(
-            CommentNotification.user == request.user,
-            CommentNotification.comment == parent_comment,
-            CommentNotification.is_unread == True,  # noqa
-        ).update({"is_unread": False}, synchronize_session=False)
-        _increment_topic_comments_seen(request, parent_comment)
+    _mark_comment_read_from_interaction(request, parent_comment)
 
     # commit and then re-query the new comment to get complete data
     request.tm.commit()
@@ -214,14 +224,7 @@ def put_vote_comment(request: Request) -> dict:
     new_vote = CommentVote(request.user, comment)
     request.db_session.add(new_vote)
 
-    # mark any notifications from the comment read if interaction-marking enabled
-    if request.user.interact_mark_notifications_read:
-        request.query(CommentNotification).filter(
-            CommentNotification.user == request.user,
-            CommentNotification.comment == comment,
-            CommentNotification.is_unread == True,  # noqa
-        ).update({"is_unread": False}, synchronize_session=False)
-        _increment_topic_comments_seen(request, comment)
+    _mark_comment_read_from_interaction(request, comment)
 
     try:
         # manually flush before attempting to commit, to avoid having all objects
@@ -257,14 +260,7 @@ def delete_vote_comment(request: Request) -> dict:
         CommentVote.comment == comment, CommentVote.user == request.user
     ).delete(synchronize_session=False)
 
-    # mark any notifications from the comment read if interaction-marking enabled
-    if request.user.interact_mark_notifications_read:
-        request.query(CommentNotification).filter(
-            CommentNotification.user == request.user,
-            CommentNotification.comment == comment,
-            CommentNotification.is_unread == True,  # noqa
-        ).update({"is_unread": False}, synchronize_session=False)
-        _increment_topic_comments_seen(request, comment)
+    _mark_comment_read_from_interaction(request, comment)
 
     # manually commit the transaction so triggers will execute
     request.tm.commit()
@@ -306,14 +302,7 @@ def put_label_comment(
     label = CommentLabel(comment, request.user, name, weight, reason)
     request.db_session.add(label)
 
-    # mark any notifications from the comment read if interaction-marking enabled
-    if request.user.interact_mark_notifications_read:
-        request.query(CommentNotification).filter(
-            CommentNotification.user == request.user,
-            CommentNotification.comment == comment,
-            CommentNotification.is_unread == True,  # noqa
-        ).update({"is_unread": False}, synchronize_session=False)
-        _increment_topic_comments_seen(request, comment)
+    _mark_comment_read_from_interaction(request, comment)
 
     try:
         # manually flush before attempting to commit, to avoid having all objects
@@ -351,14 +340,7 @@ def delete_label_comment(request: Request, name: CommentLabelOption) -> Response
         CommentLabel.label == name,
     ).delete(synchronize_session=False)
 
-    # mark any notifications from the comment read if interaction-marking enabled
-    if request.user.interact_mark_notifications_read:
-        request.query(CommentNotification).filter(
-            CommentNotification.user == request.user,
-            CommentNotification.comment == comment,
-            CommentNotification.is_unread == True,  # noqa
-        ).update({"is_unread": False}, synchronize_session=False)
-        _increment_topic_comments_seen(request, comment)
+    _mark_comment_read_from_interaction(request, comment)
 
     # commit and then re-query the comment to get complete data
     request.tm.commit()
@@ -455,14 +437,7 @@ def put_comment_bookmark(request: Request) -> dict:
     bookmark = CommentBookmark(request.user, comment)
     request.db_session.add(bookmark)
 
-    # mark any notifications from the comment read if interaction-marking enabled
-    if request.user.interact_mark_notifications_read:
-        request.query(CommentNotification).filter(
-            CommentNotification.user == request.user,
-            CommentNotification.comment == comment,
-            CommentNotification.is_unread == True,  # noqa
-        ).update({"is_unread": False}, synchronize_session=False)
-        _increment_topic_comments_seen(request, comment)
+    _mark_comment_read_from_interaction(request, comment)
 
     try:
         # manually flush before attempting to commit, to avoid having all
@@ -498,14 +473,7 @@ def delete_comment_bookmark(request: Request) -> dict:
         CommentBookmark.user == request.user, CommentBookmark.comment == comment
     ).delete(synchronize_session=False)
 
-    # mark any notifications from the comment read if interaction-marking enabled
-    if request.user.interact_mark_notifications_read:
-        request.query(CommentNotification).filter(
-            CommentNotification.user == request.user,
-            CommentNotification.comment == comment,
-            CommentNotification.is_unread == True,  # noqa
-        ).update({"is_unread": False}, synchronize_session=False)
-        _increment_topic_comments_seen(request, comment)
+    _mark_comment_read_from_interaction(request, comment)
 
     # commit and then re-query the comment to get complete data
     request.tm.commit()
