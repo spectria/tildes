@@ -12,16 +12,6 @@ map $sent_http_content_type $expires_type_map {
     ~image/ max;
 }
 
-# redirect www. to base domain
-server {
-    listen 80;
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-
-    server_name www.tildes.net;
-    return 301 https://tildes.net$request_uri;
-}
-
 server {
     # remove trailing slash from addresses, the $port thing is a hack for
     # development in Vagrant, so the port forwarding from the host is kept
@@ -97,3 +87,15 @@ server {
         proxy_pass http://app_server;
     }
 }
+
+{% if grains["id"] == "prod" %}
+# redirect www. to base domain
+server {
+    listen 80;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    server_name www.tildes.net;
+    return 301 https://tildes.net$request_uri;
+}
+{% endif %}
