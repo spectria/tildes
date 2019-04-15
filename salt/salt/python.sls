@@ -22,13 +22,20 @@ venv-setup:
     - require:
       - pkg: python{{ python_version }}-venv
 
+# Packages needed to be able to compile psycopg2 (while installing requirements.txt)
+psycopg2-deps:
+  pkg.installed:
+    - pkgs:
+      - libpq-dev
+      - python{{ python_version }}-dev
+
 pip-installs:
   pip.installed:
     - requirements: {{ app_dir }}/requirements.txt
     - bin_env: {{ venv_dir }}
   require:
     - cmd: venv-setup
-    - pkg: pip-deps
+    - pkg: psycopg2-deps
 
 self-install:
   pip.installed:
