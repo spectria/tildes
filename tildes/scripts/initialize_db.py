@@ -15,7 +15,7 @@ from sqlalchemy.engine import Connectable, Engine
 from tildes.database_models import *  # noqa
 from tildes.lib.database import get_session_from_config
 from tildes.models import DatabaseModel
-from tildes.models.group import Group
+from tildes.models.group import Group, GroupSubscription
 from tildes.models.log import Log
 from tildes.models.user import User
 
@@ -77,13 +77,10 @@ def insert_dev_data(config_path: str) -> None:
     """Load the app config and insert some "starter" data for a dev version."""
     session = get_session_from_config(config_path)
 
-    session.add_all(
-        [
-            User("TestUser", "password"),
-            Group(
-                "testing", "An automatically created group to use for testing purposes"
-            ),
-        ]
-    )
+    user = User("TestUser", "password")
+    group = Group("testing", "An automatically created group to use for testing")
+    subscription = GroupSubscription(user, group)
+
+    session.add_all([user, group, subscription])
 
     session.commit()
