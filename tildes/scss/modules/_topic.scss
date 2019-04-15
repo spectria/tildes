@@ -26,7 +26,7 @@
     auto
     minmax($min-touch-size, auto);
   @media (min-width: $size-md) {
-    grid-template-rows: none;
+    grid-template-rows: auto auto minmax(0, auto) auto;
   }
 
   position: relative;
