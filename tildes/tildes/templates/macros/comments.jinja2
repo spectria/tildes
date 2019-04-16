@@ -98,28 +98,17 @@
         </div>
       {% endif %}
 
-      {% if comment.is_label_active("exemplary") %}
-        {% if request.has_permission("view_exemplary_reasons", comment) %}
-          <details class="comment-exemplary-reasons">
-            <summary><span class="label label-comment label-comment-exemplary">Exemplary</span>
-              <span class="comment-label-count">x{{ comment.label_counts["exemplary"] }}</span>
-            </summary>
-            <ul>
-            {% for label in comment.labels if label.name == "exemplary" %}
-              <li>"{{ label.reason }}"</li>
-            {% endfor %}
-            </ul>
-          </details>
-        {% else %}
-          <ul class="comment-labels">
-            <li>
-              <span class="label label-comment label-comment-exemplary">Exemplary</span>
-              {% if comment.label_counts["exemplary"] > 1 %}
-                <span class="comment-label-count">x{{ comment.label_counts["exemplary"] }}</span>
-              {% endif %}
-            </li>
+      {% if comment.is_label_active("exemplary") and request.has_permission("view_exemplary_reasons", comment) %}
+        <details class="comment-exemplary-reasons">
+          <summary><span class="label label-comment label-comment-exemplary">Exemplary</span>
+            <span class="comment-label-count">x{{ comment.label_counts["exemplary"] }}</span>
+          </summary>
+          <ul>
+          {% for label in comment.labels if label.name == "exemplary" %}
+            <li>"{{ label.reason }}"</li>
+          {% endfor %}
           </ul>
-        {% endif %}
+        </details>
       {% endif %}
 
       {% if comment.label_counts and request.has_permission("view_labels", comment) %}
