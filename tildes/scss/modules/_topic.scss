@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 .topic-listing > li {
-  margin: 0 0 0.2rem 0;
+  margin: 0;
 }
 
 .topic-listing-filter {
@@ -32,7 +32,7 @@
 
   position: relative;
 
-  padding-left: 0.2rem;
+  padding: 0.2rem;
   @media (min-width: $size-sm) {
     padding: 0.4rem;
   }
