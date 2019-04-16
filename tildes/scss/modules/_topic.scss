@@ -15,19 +15,20 @@
   grid-template-areas:
     "title    voting"
     "metadata voting"
-    "content  voting"
     "info     info";
   grid-template-columns: 1fr auto;
+  grid-gap: 0.2rem;
 
   // set some minimum row heights on mobile to space them out a bit
-  grid-template-rows:
-    auto
-    minmax($min-touch-size, auto)
-    auto
-    minmax($min-touch-size, auto);
+  $row-height: $min-touch-size - 4px;  // subtract grid-gap
+  grid-template-rows: repeat(3, minmax($row-height, auto));
+
+  // on larger screens, rows can size automatically
   @media (min-width: $size-md) {
-    grid-template-rows: auto auto minmax(0, auto) auto;
+    grid-template-rows: auto;
   }
+
+  align-items: center;
 
   position: relative;
 
@@ -40,7 +41,6 @@
 
   header {
     grid-area: title;
-    margin-bottom: 0.2rem;
     display: flex;
     min-height: 1rem;
   }
@@ -111,7 +111,6 @@
 .topic-metadata {
   display: flex;
   align-items: baseline;
-  margin-bottom: 0.2rem;
   max-height: 4rem;
   overflow: hidden;
 }
@@ -166,7 +165,7 @@
   }
 
   max-width: none;
-  margin: 0 0.2rem 0.2rem 0;
+  margin: 0;
   font-style: italic;
 
   h1 {
@@ -269,6 +268,17 @@
 
   .form-listing-options {
     margin-left: auto;
+  }
+}
+
+.topic-with-excerpt {
+  // on larger screens only, add the "content" grid area
+  @media (min-width: $size-md) {
+    grid-template-areas:
+      "title    voting"
+      "metadata voting"
+      "content  voting"
+      "info     info";
   }
 }
 

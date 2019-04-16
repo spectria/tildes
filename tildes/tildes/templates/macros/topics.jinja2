@@ -178,6 +178,10 @@
     {% do classes.append('is-topic-official') %}
   {% endif %}
 
+  {% if topic.content_excerpt %}
+    {% do classes.append("topic-with-excerpt") %}
+  {% endif %}
+
   {{ classes|join(' ') }}
 {% endmacro %}
 
