@@ -362,6 +362,26 @@ class Topic(DatabaseModel):
         return self.get_content_metadata("domain") or get_domain_from_url(self.link)
 
     @property
+    def link_source(self) -> str:
+        """Return the link's "source", which can be defined for certain domains.
+
+        If special behavior isn't defined for a domain, this just falls back to
+        returning the domain itself.
+        """
+        if not self.is_link_type:
+            raise ValueError("Non-link topics do not have a link source")
+
+        domain = self.link_domain
+        authors = self.get_content_metadata("authors")
+
+        if domain == "twitter.com" and authors:
+            return f"Twitter: @{authors[0]}"
+        elif domain == "youtube.com" and authors:
+            return f"YouTube: {authors[0]}"
+
+        return domain
+
+    @property
     def is_spoiler(self) -> bool:
         """Return whether the topic is marked as a spoiler."""
         return "spoiler" in self.tags

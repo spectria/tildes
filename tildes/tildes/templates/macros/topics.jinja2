@@ -83,7 +83,7 @@
       {% if topic.is_user_treated_as_source %}
         aria-label="Posted by">{{ username_linked(topic.user.username) }}
       {% else %}
-        aria-label="Link domain">{{ topic.link_domain }}
+        aria-label="Link source">{{ topic.link_source }}
       {% endif %}
       </div>
 
