@@ -14,6 +14,7 @@
     <article id="comment-{{ comment.comment_id36 }}"
       class="{{ comment_classes(comment, mark_newer_than)|trim }}"
       data-comment-id36="{{ comment.comment_id36 }}"
+      data-comment-replies="{{ comment.replies|length }}"
 
       {# only add depth attr if we're rendering multiple comments at once #}
       {% if not is_individual_comment %}
