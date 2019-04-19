@@ -21,3 +21,6 @@ tildes/static/js/tildes.js
 
 # don't track site icon files
 tildes/static/images/site-icons/*.png
+
+# NodeJS dependencies
+tildes/node_modules/

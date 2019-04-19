@@ -1,0 +1,62 @@
+{
+  "name": "tildes",
+  "version": "1.0.0",
+  "description": "Tildes (tildes.net) - a non-profit community site",
+  "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "lint": "npm run lint:js ; npm run lint:scss",
+    "lint:js": "eslint static/js/",
+    "lint:scss": "stylelint scss/"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "stylelint": "^10.0.1",
+    "stylelint-scss": "^3.6.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true
+    },
+    "extends": "eslint:recommended",
+    "globals": {
+      "$": "readonly",
+      "Intercooler": "readonly",
+      "Tildes": "readonly"
+    },
+    "rules": {
+      "indent": [
+        "error",
+        4
+      ],
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ]
+    }
+  },
+  "eslintIgnore": [
+    "static/js/third_party*"
+  ],
+  "stylelint": {
+    "ignoreFiles": [
+      "scss/spectre*/**"
+    ],
+    "plugins": [
+      "stylelint-scss"
+    ],
+    "rules": {
+      "indentation": 2,
+      "no-descending-specificity": null,
+      "string-quotes": "double"
+    }
+  }
+}
