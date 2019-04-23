@@ -101,29 +101,6 @@
   }
 }
 
-// This is some horrifying CSS.
-// It makes it so that comments of a depth >= 4 will not indent their replies unless
-// there is more than one reply. Instead, it adds text before the next comment (the
-// single reply) indicating that it's a direct reply to the above comment.
-.comment:not([data-comment-depth="0"]):not([data-comment-depth="1"]):not([data-comment-depth="2"]):not([data-comment-depth="3"]) {
-  &[data-comment-replies="1"] {
-    & > .comment-tree-replies {
-      margin-left: -1px;  // compensate for border
-
-      & > .comment-tree-item > .comment > .comment-itself {
-        & > .comment-text::before,
-        & > header > .is-comment-deleted::before,
-        & > header > .is-comment-removed::before {
-          content: "(Reply to above comment)";
-          font-size: 0.6rem;
-          font-style: italic;
-          margin-right: 0.2rem;
-        }
-      }
-    }
-  }
-}
-
 .comment-tree-item {
   margin: 0;
   padding: 0;
@@ -262,3 +239,35 @@
     border-left: 3px solid;
   }
 }
+
+@mixin flatten-single-replies-above-depth($depth) {
+  // Makes it so that comments of the specified depth or greater will not indent
+  // their replies unless there is more than one reply. Instead, it adds text at the
+  // top of the next comment (the single reply) indicating that it's a direct reply to
+  // the above comment.
+
+  // We actually need the selector to check 1 level up from the specified starting
+  // depth because of how we're utilizing nesting.
+  $depth: $depth - 1;
+
+  .comment[data-comment-depth="#{$depth}"] {
+    .comment[data-comment-replies="1"] {
+      & > .comment-tree-replies {
+        margin-left: -1px;  // compensate for border
+
+        & > .comment-tree-item > .comment > .comment-itself {
+          & > .comment-text::before,
+          & > header > .is-comment-deleted::before,
+          & > header > .is-comment-removed::before {
+            content: "(Reply to above comment)";
+            font-size: 0.6rem;
+            font-style: italic;
+            margin-right: 0.2rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+@include flatten-single-replies-above-depth(4);
