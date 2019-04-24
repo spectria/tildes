@@ -11,3 +11,10 @@ generate-site-icons-css-cronjob:
     - name: {{ bin_dir }}/python -c "from scripts.generate_site_icons_css import generate_css; generate_css()"
     - user: {{ app_username }}
     - minute: '*/5'
+
+update-common-topic-tags-cronjob:
+  cron.present:
+    - name: {{ bin_dir }}/python -c "from scripts.update_groups_common_topic_tags import update_common_topic_tags; update_common_topic_tags('{{ app_dir }}/{{ pillar['ini_file'] }}')"
+    - user: {{ app_username }}
+    - hour: '*'
+    - minute: 0

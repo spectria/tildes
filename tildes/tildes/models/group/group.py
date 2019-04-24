@@ -4,13 +4,15 @@
 """Contains the Group class."""
 
 from datetime import datetime
-from typing import Any, Optional, Sequence, Tuple
+from typing import Any, List, Optional, Sequence, Tuple
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
 from sqlalchemy import Boolean, CheckConstraint, Column, Index, Integer, Text, TIMESTAMP
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.sql.expression import text
 from sqlalchemy_utils import Ltree, LtreeType
 
+from tildes.lib.database import ArrayOfLtree
 from tildes.models import DatabaseModel
 from tildes.schemas.group import GroupSchema, SHORT_DESCRIPTION_MAX_LENGTH
 
@@ -50,11 +52,23 @@ class Group(DatabaseModel):
     is_user_treated_as_topic_source: bool = Column(
         Boolean, nullable=False, server_default="false"
     )
+    _common_topic_tags: List[Ltree] = Column(
+        "common_topic_tags", ArrayOfLtree, nullable=False, server_default="{}"
+    )
 
     # Create a GiST index on path as well as the btree one that will be created by the
     # index=True/unique=True keyword args to Column above. The GiST index supports
     # additional operators for ltree queries: @>, <@, @, ~, ?
     __table_args__ = (Index("ix_groups_path_gist", path, postgresql_using="gist"),)
+
+    @hybrid_property
+    def common_topic_tags(self) -> List[str]:
+        """Return the group's list of common topic tags."""
+        return [str(tag).replace("_", " ") for tag in self._common_topic_tags]
+
+    @common_topic_tags.setter  # type: ignore
+    def common_topic_tags(self, new_tags: List[str]) -> None:
+        self._common_topic_tags = new_tags
 
     def __repr__(self) -> str:
         """Display the group's path and ID as its repr format."""
