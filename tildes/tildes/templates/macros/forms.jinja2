@@ -16,7 +16,7 @@
   >{% if text %}{{ text }}{% endif %}</textarea>
 {% endmacro %}
 
-{% macro topic_tagging(value=None, auto_focus=False) %}
+{% macro topic_tagging(value=None, auto_focus=False, autocomplete_options=None) %}
   <div class="form-autocomplete form-group" data-js-autocomplete-container>
     <label class="form-label" for="tags">
       <span>Tags (optional, comma-separated)</span>
@@ -34,7 +34,7 @@
         spellcheck="false"
         name="query"
         placeholder='Tags (like "music, soundtrack, full album")'
-        data-js-autocomplete-input=""
+        data-js-autocomplete-input='{{ autocomplete_options|tojson if autocomplete_options }}'
         {% if value %} value="{{ value }}"{% endif %}
         {% if auto_focus %}data-js-auto-focus{% endif %}
       >
