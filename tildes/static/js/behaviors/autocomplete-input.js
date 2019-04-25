@@ -42,6 +42,25 @@ $.onmount('[data-js-autocomplete-input]', function() {
         // move the "tags" name to the hidden input (so the form works without JS)
         $(this).removeAttr("name");
         $("[data-js-autocomplete-hidden-input]").attr("name", "tags");
+
+        // attach an event handler to the form that will add the input's value to
+        // the end of the tags list before submitting (to include any tag that's
+        // still in the input and wasn't converted to a chip)
+        $(this).closest("form").on("beforeSend.ic", function(evt, elt, data, settings, xhr, requestId) {
+            $autocompleteInput = $(elt).find("[data-js-autocomplete-input]").first();
+            if (!$autocompleteInput.val()) {
+                return;
+            }
+
+            var dataPieces = settings.data.split("&");
+            for (i = 0; i < dataPieces.length; i++) {
+                if (dataPieces[i].indexOf("tags=") === 0) {
+                    dataPieces[i] += $autocompleteInput.val();
+                    break;
+                }
+            }
+            settings.data = dataPieces.join("&");
+        });
     }
 
     if ($(this).val() !== '') {
