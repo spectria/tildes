@@ -37,6 +37,13 @@ $.onmount('[data-js-autocomplete-input]', function() {
         $.onmount();
     }
 
+    // initialization (won't repeat on re-mounts because it removes the name attr)
+    if ($(this).attr("name")) {
+        // move the "tags" name to the hidden input (so the form works without JS)
+        $(this).removeAttr("name");
+        $("[data-js-autocomplete-hidden-input]").attr("name", "tags");
+    }
+
     if ($(this).val() !== '') {
         addChip($(this));
     }
