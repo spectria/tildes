@@ -125,7 +125,7 @@ $.onmount('[data-js-autocomplete-input]', function() {
         }
         var $tagsHiddenInput = $('[data-js-autocomplete-hidden-input]');
         var suggestions = $this.data('js-autocomplete-input').filter(function(suggestion) {
-            return suggestion.startsWith($this.val()) &&
+            return suggestion.startsWith($this.val().toLowerCase()) &&
                 !$tagsHiddenInput.val().match(new RegExp('(^|,)' + suggestion + ','));
         });
         if (suggestions.length === 0) {
