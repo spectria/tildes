@@ -105,10 +105,12 @@ $.onmount('[data-js-autocomplete-input]', function() {
                     var $tagsHiddenInput = $("[data-js-autocomplete-hidden-input]");
                     var $lastChip = $chips.children().last();
 
-                    $(this).blur();
-                    if (!$lastChip.hasClass('active')) {
-                        $lastChip.addClass("active");
-                        $lastChip.children('[data-js-autocomplete-chip-clear]').first().focus();
+                    if ($lastChip.length) {
+                        $(this).blur();
+                        if (!$lastChip.hasClass('active')) {
+                            $lastChip.addClass("active");
+                            $lastChip.children('[data-js-autocomplete-chip-clear]').first().focus();
+                        }
                     }
                 }
                 break;
