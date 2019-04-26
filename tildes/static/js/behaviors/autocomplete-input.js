@@ -99,6 +99,7 @@ $.onmount('[data-js-autocomplete-input]', function() {
                 break;
             case 'Backspace':
                 if ($(this).val() === '') {
+                    event.preventDefault();
                     var $autocompleteContainer = $(this).parents('[data-js-autocomplete-container]').first();
                     var $chips = $autocompleteContainer.find('[data-js-autocomplete-chips]').first();
                     var $tagsHiddenInput = $("[data-js-autocomplete-hidden-input]");
