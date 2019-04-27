@@ -23,18 +23,26 @@ def update_common_topic_tags(config_path: str) -> None:
 
     for group in all_groups:
         # create a subquery for all tags from topics in that group - UNNEST() converts
-        # the arrays of tags into rows so that we can easily group and count
+        # the arrays of tags into rows so that we can easily group and count, and
+        # created_time will be used to determine when a particular tag was last used
         group_tags = (
-            db_session.query(func.unnest(Topic._tags).label("tag"))  # noqa
+            db_session.query(
+                func.unnest(Topic._tags).label("tag"), Topic.created_time  # noqa
+            )
             .filter(Topic.group == group)
             .subquery()
         )
 
-        # get the list of the most common tags, based on frequency
+        # get the list of the most common tags, based on frequency and breaking ties
+        # with which was used most recently
         common_tags = (
-            db_session.query(group_tags.columns["tag"], func.count().label("frequency"))
+            db_session.query(
+                group_tags.columns["tag"],
+                func.count().label("frequency"),
+                func.max(group_tags.columns["created_time"]).label("last_used"),
+            )
             .group_by("tag")
-            .order_by(desc("frequency"))
+            .order_by(desc("frequency"), desc("last_used"))
             .limit(MAX_NUM_COMMON_TAGS)
             .all()
         )
