@@ -13,20 +13,20 @@ from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import CommentLabelOption, CommentSortOption, TopicSortOption
 from tildes.models.comment import Comment
-from tildes.models.pagination import MixedPaginatedResults
+from tildes.models.pagination import MixedPaginatedResults, PaginatedResults
 from tildes.models.topic import Topic
-from tildes.models.user import UserInviteCode
+from tildes.models.user import User, UserInviteCode
 from tildes.schemas.fields import PostType
 from tildes.schemas.listing import MixedListingSchema
 
 
-@view_config(route_name="user", renderer="user.jinja2")  # noqa
+@view_config(route_name="user", renderer="user.jinja2")
 @use_kwargs(MixedListingSchema())
 @use_kwargs(
     {
         "post_type": PostType(load_from="type"),
         "order_name": String(load_from="order", missing="new"),
-    }  # noqa
+    }
 )
 def get_user(
     request: Request,
@@ -73,34 +73,9 @@ def get_user(
         except KeyError:
             order = order_options["NEW"]
 
-    result_sets = []
-    for type_to_query in types_to_query:
-        query = request.query(type_to_query).filter(type_to_query.user == user)
-
-        if anchor_type:
-            query = query.anchor_type(anchor_type)
-
-        if before:
-            query = query.before_id36(before)
-
-        if after:
-            query = query.after_id36(after)
-
-        if order:
-            query = query.apply_sort_option(order)
-
-        query = query.join_all_relationships()
-
-        # include removed posts if the user's looking at their own page or is an admin
-        if request.user and (user == request.user or request.user.is_admin):
-            query = query.include_removed()
-
-        result_sets.append(query.get_page(per_page))
-
-    if len(result_sets) == 1:
-        posts = result_sets[0]
-    else:
-        posts = MixedPaginatedResults(result_sets)
+    posts = _get_user_posts(
+        request, user, types_to_query, anchor_type, before, after, order, per_page
+    )
 
     return {
         "user": user,
@@ -127,3 +102,45 @@ def get_invite(request: Request) -> dict:
     )
 
     return {"codes": codes}
+
+
+def _get_user_posts(
+    request: Request,
+    user: User,
+    types_to_query: List[Union[Type[Topic], Type[Comment]]],
+    anchor_type: Optional[str],
+    before: Optional[str],
+    after: Optional[str],
+    order: Optional[Union[TopicSortOption, CommentSortOption]],
+    per_page: int,
+) -> Union[PaginatedResults, MixedPaginatedResults]:
+    """Get the posts to display on a user page (topics, comments, or both)."""
+    # pylint: disable=too-many-arguments
+    result_sets = []
+    for type_to_query in types_to_query:
+        query = request.query(type_to_query).filter(type_to_query.user == user)
+
+        if anchor_type:
+            query = query.anchor_type(anchor_type)
+
+        if before:
+            query = query.before_id36(before)
+
+        if after:
+            query = query.after_id36(after)
+
+        if order:
+            query = query.apply_sort_option(order)
+
+        query = query.join_all_relationships()
+
+        # include removed posts if the user's looking at their own page or is an admin
+        if request.user and (user == request.user or request.user.is_admin):
+            query = query.include_removed()
+
+        result_sets.append(query.get_page(per_page))
+
+    if len(result_sets) == 1:
+        return result_sets[0]
+
+    return MixedPaginatedResults(result_sets)
