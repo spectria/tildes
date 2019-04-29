@@ -96,7 +96,7 @@
 .comment-tree-replies {
   margin-left: 0.4rem;
 
-  @media (min-width: $size-md) {
+  @media (min-width: $size-xl) {
     margin-left: 1rem;
   }
 }
@@ -276,4 +276,29 @@
   }
 }
 
-@include flatten-single-replies-above-depth(4);
+@media (max-width: $size-xs) {
+  @include flatten-single-replies-above-depth(4);
+}
+@media (min-width: $size-xs) and (max-width: $size-sm) {
+  @include flatten-single-replies-above-depth(7);
+}
+@media (min-width: $size-sm) and (max-width: $size-md) {
+  @include flatten-single-replies-above-depth(10);
+}
+@media (min-width: $size-md) and (max-width: $size-lg) {
+  // drop back down because sidebar shows up, which actually gives less space
+  @include flatten-single-replies-above-depth(7);
+}
+@media (min-width: $size-lg) and (max-width: $size-xl) {
+  @include flatten-single-replies-above-depth(9);
+}
+@media (min-width: $size-xl) and (max-width: $size-2x) {
+  // don't increase much yet since left indent increases, so space is reduced again
+  @include flatten-single-replies-above-depth(12);
+}
+@media (min-width: $size-2x) and (max-width: $size-max) {
+  @include flatten-single-replies-above-depth(20);
+}
+@media (min-width: $size-max) {
+  @include flatten-single-replies-above-depth(30);
+}
