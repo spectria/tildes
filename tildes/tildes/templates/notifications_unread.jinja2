@@ -3,7 +3,7 @@
 
 {% extends 'base_user_menu.jinja2' %}
 
-{% from 'macros/comments.jinja2' import comment_label_options_template, render_single_comment with context %}
+{% from 'macros/comments.jinja2' import comment_label_options_template, comment_reply_template, render_single_comment with context %}
 {% from 'macros/links.jinja2' import group_linked, username_linked %}
 
 {% block title %}Unread notifications{% endblock %}
@@ -78,4 +78,8 @@
 {% endif %}
 
 {% if request.user %}{{ comment_label_options_template(comment_label_options) }}{% endif %}
+{% endblock %}
+
+{% block templates %}
+  {{ comment_reply_template() }}
 {% endblock %}

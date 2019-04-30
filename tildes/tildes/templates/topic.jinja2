@@ -3,7 +3,7 @@
 
 {% extends 'base.jinja2' %}
 
-{% from 'macros/comments.jinja2' import comment_label_options_template, render_comment_tree with context %}
+{% from 'macros/comments.jinja2' import comment_label_options_template, comment_reply_template, render_comment_tree with context %}
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive, time_ago %}
 {% from 'macros/forms.jinja2' import markdown_textarea %}
 {% from 'macros/links.jinja2' import group_linked, username_linked %}
@@ -12,22 +12,7 @@
 {% block title %}{{ topic.title }} - ~{{ topic.group.path }}{% endblock %}
 
 {% block templates %}
-<template id="comment-reply">
-  <form
-    method="post"
-    autocomplete="off"
-    data-js-confirm-cancel="Discard your reply?"
-    data-js-prevent-double-submit
-    data-js-confirm-leave-page-unsaved
-    data-ic-replace-target="true"
-  >
-    {{ markdown_textarea(auto_focus=True) }}
-    <div class="form-buttons">
-      <button type="submit" class="btn btn-primary">Post comment</button>
-      <button type="button" class="btn btn-link" data-js-cancel-button>Cancel</button>
-    </div>
-  </form>
-</template>
+  {{ comment_reply_template() }}
 {% endblock %}
 
 {% block header_context_link %}
