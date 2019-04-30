@@ -4,7 +4,7 @@
 $.onmount('[data-js-markdown-preview-tab]', function() {
     $(this).click(function(event) {
         var $editTextarea = $(this).closest('form').find('[name="markdown"]');
-        var $previewDiv = $(this).closest('form').find('[data-js-markdown-preview]');
+        var $previewDiv = $(this).closest('form').find('.form-markdown-preview');
 
         $editTextarea.addClass('d-none');
         $previewDiv.removeClass('d-none');

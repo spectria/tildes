@@ -44,6 +44,16 @@ select.form-select:not([multiple]) {
   }
 }
 
+.form-markdown-preview {
+  @extend %links-text;
+  @extend %lists-text;
+
+  min-height: 8rem;
+  padding: 0.4rem;
+  border: 1px dashed;
+  overflow: auto;
+}
+
 .form-buttons {
   display: flex;
   flex-direction: row-reverse;
