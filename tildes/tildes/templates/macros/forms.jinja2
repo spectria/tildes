@@ -1,26 +1,25 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% macro markdown_textarea(caption='Text (Markdown)', id='markdown', text=None, auto_focus=False) %}
-  <label class="form-label" for="{{ id }}">
-    <span>{{ caption }}</span>
-    <a href="https://docs.tildes.net/text-formatting" target="_blank" tabindex="-1">Formatting help</a>
-  </label>
+{% macro markdown_textarea(id='markdown', text=None, auto_focus=False) %}
   <div class="form-markdown">
-    <menu class="tab tab-markdown-mode">
-      <li class="tab-item active" data-js-tab data-js-markdown-edit-tab>
-        <button type="button" class="btn btn-link">Edit</button>
-      </li>
-      <li class="tab-item" data-js-tab data-js-markdown-preview-tab>
-        <button
-          type="button"
-          class="btn btn-link"
-          data-ic-post-to="/api/web/markdown_preview"
-          data-ic-target="#{{ id }}-preview"
-          data-ic-replace-target="false"
-        >Preview</button>
-      </li>
-    </menu>
+    <header>
+      <menu class="tab tab-markdown-mode">
+        <li class="tab-item active" data-js-tab data-js-markdown-edit-tab>
+          <button type="button" class="btn btn-link">Edit</button>
+        </li>
+        <li class="tab-item" data-js-tab data-js-markdown-preview-tab>
+          <button
+            type="button"
+            class="btn btn-link"
+            data-ic-post-to="/api/web/markdown_preview"
+            data-ic-target="#{{ id }}-preview"
+            data-ic-replace-target="false"
+          >Preview</button>
+        </li>
+      </menu>
+      <a href="https://docs.tildes.net/text-formatting" target="_blank" tabindex="-1">Formatting help</a>
+    </header>
     <textarea
       class="form-input"
       id="{{ id }}"

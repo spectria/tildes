@@ -32,6 +32,18 @@ select.form-select:not([multiple]) {
   margin-bottom: 2rem;
 }
 
+.form-markdown {
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    a {
+      font-size: 0.6rem;
+    }
+  }
+}
+
 .form-buttons {
   display: flex;
   flex-direction: row-reverse;

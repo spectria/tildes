@@ -13,7 +13,7 @@
     data-ic-target=".topic-full .topic-full-text"
     data-js-confirm-leave-page-unsaved
 >
-  {{ markdown_textarea('Edit your topic', id="topic-markdown", text=topic.markdown, auto_focus=True) }}
+  {{ markdown_textarea(id="topic-markdown", text=topic.markdown, auto_focus=True) }}
   <div class="form-buttons">
     <button class="btn btn-primary" type="submit">Save edits</button>
     <button

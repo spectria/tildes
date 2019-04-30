@@ -21,7 +21,7 @@
     data-ic-patch-to="{{ request.route_url("ic_user", username=request.user.username) }}"
     data-js-confirm-leave-page-unsaved
   >
-    {{ markdown_textarea('User Bio (Markdown)', text=request.user.bio_markdown) }}
+    {{ markdown_textarea(text=request.user.bio_markdown) }}
 
     <div class="form-buttons">
       <button type="submit" class="btn btn-primary">Save bio</button>

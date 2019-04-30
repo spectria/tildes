@@ -21,7 +21,6 @@ $.onmount('[data-js-comment-reply-button]', function() {
 
         var $parentComment = $(this).parents('article.comment:first');
         var parentCommentID = $parentComment.attr('data-comment-id36');
-        var parentCommentAuthor = $parentComment.find('header:first .link-user').text();
         var postURL = '/api/web/comments/' + parentCommentID + '/replies';
         var markdownID = 'markdown-reply-' + parentCommentID;
         var previewID = markdownID + '-preview';
@@ -36,8 +35,6 @@ $.onmount('[data-js-comment-reply-button]', function() {
         var clone = document.importNode(template.content, true);
 
         clone.querySelector('form').setAttribute('data-ic-post-to', postURL);
-        clone.querySelector('label').setAttribute('for', markdownID);
-        clone.querySelector('span').innerHTML = 'Replying to ' + parentCommentAuthor;
         clone.querySelector('textarea').setAttribute('id', markdownID);
 
         var preview = clone.querySelector('[data-js-markdown-preview]');
