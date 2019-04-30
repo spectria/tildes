@@ -257,7 +257,7 @@
   }
 
   %collapsed-theme {
-    header {
+    .comment-header {
       background-color: map-get($theme, "background-primary");
     }
   }
@@ -275,14 +275,14 @@
   .comment {
     border-color: map-get($theme, "border");
 
-    header {
-      color: map-get($theme, "foreground-highlight");
-      background-color: map-get($theme, "background-secondary");
-    }
-
     &[data-comment-depth="0"] {
       border-color: map-get($theme, "border");
     }
+  }
+
+  .comment-header {
+    color: map-get($theme, "foreground-highlight");
+    background-color: map-get($theme, "background-secondary");
   }
 
   .comment:target > .comment-itself {

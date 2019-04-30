@@ -5,19 +5,6 @@
   border-left: 1px solid;
   margin-bottom: 0.4rem;
 
-  header {
-    display: flex;
-    align-items: center;
-    font-size: 0.7rem;
-    line-height: 0.7rem;
-
-    // no padding on mobile - the collapse button will do the job
-    padding: 0 0.2rem 0 0;
-    @media (min-width: $size-md) {
-      padding: 0.2rem;
-    }
-  }
-
   &:target > .comment-itself {
     border-left: 3px solid;
   }
@@ -25,6 +12,19 @@
 
 .comment[data-comment-depth="0"] {
   border-bottom: 1px solid;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  line-height: 0.7rem;
+
+  // no padding on mobile - the collapse button will do the job
+  padding: 0 0.2rem 0 0;
+  @media (min-width: $size-md) {
+    padding: 0.2rem;
+  }
 }
 
 .comment-user-info {
