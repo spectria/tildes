@@ -35,7 +35,8 @@ $.onmount('[data-js-comment-reply-button]', function() {
         var clone = document.importNode(template.content, true);
 
         clone.querySelector('form').setAttribute('data-ic-post-to', postURL);
-        clone.querySelector('textarea').setAttribute('id', markdownID);
+        var textarea = clone.querySelector('textarea');
+        textarea.setAttribute('id', markdownID);
 
         var preview = clone.querySelector('.form-markdown-preview');
         preview.setAttribute('id', previewID);
