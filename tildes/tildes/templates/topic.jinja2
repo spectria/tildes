@@ -12,7 +12,10 @@
 {% block title %}{{ topic.title }} - ~{{ topic.group.path }}{% endblock %}
 
 {% block templates %}
-  {{ comment_reply_template() }}
+  {% if request.user %}
+    {{ comment_reply_template() }}
+    {{ comment_label_options_template(comment_label_options) }}
+  {% endif %}
 {% endblock %}
 
 {% block header_context_link %}
@@ -280,7 +283,6 @@
 
 </article>
 
-{% if request.user %}{{ comment_label_options_template(comment_label_options) }}{% endif %}
 {% endblock content %}
 
 {% block sidebar %}

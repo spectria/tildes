@@ -3,11 +3,18 @@
 
 {% extends 'base_user_menu.jinja2' %}
 
-{% from 'macros/comments.jinja2' import comment_label_options_template, render_single_comment with context %}
+{% from 'macros/comments.jinja2' import comment_label_options_template, comment_reply_template, render_single_comment with context %}
 {% from 'macros/links.jinja2' import group_linked, username_linked %}
 {% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
 
 {% block title %}User: {{ user.username }}{% endblock %}
+
+{% block templates %}
+  {% if request.user %}
+    {{ comment_reply_template() }}
+    {{ comment_label_options_template(comment_label_options) }}
+  {% endif %}
+{% endblock %}
 
 {% block header_context_link %}
 <a class="site-header-context" href="/user/{{ user.username }}">{{ user.username }}</a>
@@ -129,8 +136,6 @@
     </div>
   {% endif %}
 {% endif %}
-
-{% if request.user %}{{ comment_label_options_template(comment_label_options) }}{% endif %}
 
 {% endblock %}
 

@@ -76,10 +76,9 @@
   <p>No unread notifications.</p>
   <p><a href="/notifications">Go to previously read notifications</a></p>
 {% endif %}
-
-{% if request.user %}{{ comment_label_options_template(comment_label_options) }}{% endif %}
 {% endblock %}
 
 {% block templates %}
+  {{ comment_label_options_template(comment_label_options) }}
   {{ comment_reply_template() }}
 {% endblock %}
