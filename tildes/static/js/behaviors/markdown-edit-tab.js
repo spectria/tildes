@@ -8,5 +8,6 @@ $.onmount('[data-js-markdown-edit-tab]', function() {
 
         $editTextarea.removeClass('d-none');
         $previewDiv.addClass('d-none');
+        $previewDiv.empty();
     });
 });
