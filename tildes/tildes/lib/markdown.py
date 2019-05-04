@@ -5,7 +5,7 @@
 
 from functools import partial
 import re
-from typing import Any, Callable, Iterator, List, Match, Optional, Pattern, Tuple
+from typing import Any, Callable, Dict, Iterator, List, Match, Optional, Pattern, Tuple
 
 from bs4 import BeautifulSoup
 import bleach
@@ -16,6 +16,7 @@ from pygments.formatters import HtmlFormatter
 from pygments.lexers import get_lexer_by_name, PhpLexer
 from pygments.util import ClassNotFound
 
+from tildes.enums import BleachContext
 from tildes.metrics import histogram_timer
 from tildes.schemas.group import is_valid_group_path
 from tildes.schemas.user import is_valid_username
@@ -87,7 +88,7 @@ HTML_TAG_WHITELIST = (
     "tr",
     "ul",
 )
-HTML_ATTRIBUTE_WHITELIST = {
+HTML_ATTRIBUTE_WHITELIST_DEFAULT = {
     "a": ["href", "title"],
     "ol": ["start"],
     "td": ["align"],
@@ -96,6 +97,12 @@ HTML_ATTRIBUTE_WHITELIST = {
     "span": allow_syntax_highlighting_classes,
 }
 PROTOCOL_WHITELIST = ("http", "https", "mailto")
+
+# per-context overrides for allowed attributes
+HTML_ATTRIBUTE_WHITELIST_OVERRIDES: Dict[BleachContext, Dict[str, List[str]]] = {
+    BleachContext.DEFAULT: {},
+    BleachContext.USER_BIO: {"a": ["href", "title", "rel"]},
+}
 
 # Regex that finds ordered list markdown that was probably accidental - ones being
 # initiated by anything except "1." at the start of a post
@@ -111,7 +118,9 @@ SUBSEQUENT_BLOCKQUOTES_REGEX = re.compile("^>([^\n]*?)\n\n(?=>)", flags=re.MULTI
 
 
 @histogram_timer("markdown_processing")
-def convert_markdown_to_safe_html(markdown: str) -> str:
+def convert_markdown_to_safe_html(
+    markdown: str, context: BleachContext = BleachContext.DEFAULT
+) -> str:
     """Convert markdown to sanitized HTML."""
     # apply custom pre-processing to markdown
     markdown = preprocess_markdown(markdown)
@@ -138,7 +147,7 @@ def convert_markdown_to_safe_html(markdown: str) -> str:
     html = postprocess_markdown_html(html)
 
     # add linkification and sanitize the final HTML before returning it
-    return linkify_and_sanitize_html(html)
+    return linkify_and_sanitize_html(html, context)
 
 
 def preprocess_markdown(markdown: str) -> str:
@@ -450,16 +459,22 @@ class LinkifyFilter(Filter):
         return [{"type": "Characters", "data": match[0]}]
 
 
-def linkify_and_sanitize_html(html: str) -> str:
+def linkify_and_sanitize_html(html: str, context: BleachContext) -> str:
     """Use bleach and html5lib filters to linkify and sanitize HTML."""
     # list of tag names to exclude from linkification
     linkify_skipped_tags = ["code", "pre"]
 
     tildes_linkifier = partial(LinkifyFilter, skip_tags=linkify_skipped_tags)
 
+    # include overrides for the current context
+    attribute_whitelist = {
+        **HTML_ATTRIBUTE_WHITELIST_DEFAULT,
+        **HTML_ATTRIBUTE_WHITELIST_OVERRIDES[context],
+    }
+
     cleaner = bleach.Cleaner(
         tags=HTML_TAG_WHITELIST,
-        attributes=HTML_ATTRIBUTE_WHITELIST,
+        attributes=attribute_whitelist,
         protocols=PROTOCOL_WHITELIST,
         filters=[tildes_linkifier],
     )
