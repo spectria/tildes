@@ -270,7 +270,7 @@
     {# done as an elif so we never mark a user's own comments as "new" #}
     {% elif mark_newer_than and comment.created_time > mark_newer_than %}
       {% do classes.append('is-comment-new') %}
-    {% elif request.has_permission('view_author', comment.topic) and comment.user == comment.topic.user %}
+    {% elif request.has_permission('view_author', comment.topic) and request.has_permission("view", comment) and comment.user == comment.topic.user %}
       {% do classes.append('is-comment-by-op') %}
     {% endif %}
 
