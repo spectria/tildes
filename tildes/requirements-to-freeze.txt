@@ -30,6 +30,7 @@ pytest
 pytest-mock
 PyYAML  # needs to be installed separately for webassets
 qrcode
+requests
 sentry-sdk
 SQLAlchemy
 SQLAlchemy-Utils
