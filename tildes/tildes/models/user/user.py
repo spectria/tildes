@@ -32,7 +32,7 @@ from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import text
 from sqlalchemy_utils import Ltree
 
-from tildes.enums import BleachContext, CommentLabelOption, TopicSortOption
+from tildes.enums import CommentLabelOption, HTMLSanitizationContext, TopicSortOption
 from tildes.lib.database import ArrayOfLtree, CIText
 from tildes.lib.datetime import utc_now
 from tildes.lib.hash import hash_string, is_match_for_hash
@@ -156,7 +156,7 @@ class User(DatabaseModel):
 
         if self._bio_markdown is not None:
             self.bio_rendered_html = convert_markdown_to_safe_html(
-                new_markdown, BleachContext.USER_BIO
+                new_markdown, HTMLSanitizationContext.USER_BIO
             )
         else:
             self.bio_rendered_html = None

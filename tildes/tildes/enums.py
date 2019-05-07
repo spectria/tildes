@@ -143,8 +143,7 @@ class TopicType(enum.Enum):
     LINK = enum.auto()
 
 
-class BleachContext(enum.Enum):
-    """Enum for the possible contexts of Bleach HTML sanitization."""
+class HTMLSanitizationContext(enum.Enum):
+    """Enum for the possible contexts for HTML sanitization."""
 
-    DEFAULT = enum.auto()
     USER_BIO = enum.auto()

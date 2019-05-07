@@ -3,7 +3,7 @@
 
 from bs4 import BeautifulSoup
 
-from tildes.enums import BleachContext
+from tildes.enums import HTMLSanitizationContext
 from tildes.lib.markdown import convert_markdown_to_safe_html
 
 
@@ -403,6 +403,8 @@ def test_a_rel_removed_default_context():
 def test_a_rel_kept_user_bio_context():
     """Ensure a rel= attr is kept on an <a> tag in the user bio context."""
     markdown = '<a href="http://example.com" rel="something">Link</a>'
-    processed = convert_markdown_to_safe_html(markdown, BleachContext.USER_BIO)
+    processed = convert_markdown_to_safe_html(
+        markdown, HTMLSanitizationContext.USER_BIO
+    )
 
     assert "rel=" in processed
