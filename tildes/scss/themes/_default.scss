@@ -1,30 +1,31 @@
 // Contains the default Tildes theme
 
 $default-theme: (
-  "alert": #cb4b16,  // Solarized
+  "alert": #e66b00,
   "background-primary": #fff,
   "background-secondary": #eee,
   "border": #ccc,
-  "comment-label-exemplary": #268bd2,  // Solarized
-  "comment-label-joke": #859900,  // Solarized
-  "comment-label-noise": #b58900,  // Solarized
-  "comment-label-offtopic": #2aa198,  // Solarized
-  "comment-label-malice": #dc322f,  // Solarized
-  "error": #f00,
+  "button": #1460aa,
+  "comment-label-exemplary": #1460aa,
+  "comment-label-joke": #4b6319,
+  "comment-label-noise": #856514,
+  "comment-label-offtopic": #1e824c,
+  "comment-label-malice": #d91e18,
+  "error": #d91e18,
   "foreground-highlight": #222,
   "foreground-primary": #333,
-  "foreground-secondary": #999,
-  "link": #268bd2,  // Solarized
-  "link-visited": #6c71c4,  // Solarized
-  "stripe-mine": #6c71c4,  // Solarized
+  "foreground-secondary": #888,
+  "link": #0030e0,
+  "link-visited": #551a8b,
+  "stripe-target": #ffd700,
   "syntax-builtin": #268bd2,  // Solarized
   "syntax-comment": #129b12,
   "syntax-constant": #dc322f,  // Solarized
   "syntax-keyword": #3329c2,
   "syntax-literal": #2aa198,  // Solarized
   "syntax-string": #2aa198,  // Solarized
-  "topic-tag-nsfw": #dc322f,  // Solarized
-  "warning": #b58900,  // Solarized
+  "topic-tag-spoiler": #e66b00,
+  "warning": #e66b00,
 );
 
 // define the default theme using the base values
