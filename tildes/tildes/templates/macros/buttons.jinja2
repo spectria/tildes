@@ -1,0 +1,39 @@
+{# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% macro post_action_toggle_button(subject, is_toggled, normal_name, normal_label, toggled_name, toggled_label, route_name) %}
+  {% if is_toggled %}
+    <li><button class="btn-post-action btn-post-action-used" name="{{ toggled_name }}"
+      {% if subject is comment %}
+        data-ic-delete-from="{{ request.route_url(
+          route_name,
+          comment_id36=subject.comment_id36,
+        ) }}"
+        data-ic-target="#comment-{{ subject.comment_id36 }} .comment-itself:first"
+      {% elif subject is topic %}
+        data-ic-delete-from="{{ request.route_url(
+          route_name,
+          topic_id36=subject.topic_id36,
+        ) }}"
+      {% endif %}
+      data-ic-replace-target="true"
+      >{{ toggled_label }}
+  {% else %}
+    <li><button class="btn-post-action" name="{{ normal_name }}"
+      {% if subject is comment %}
+        data-ic-put-to="{{ request.route_url(
+          route_name,
+          comment_id36=subject.comment_id36,
+        ) }}"
+        data-ic-target="#comment-{{ subject.comment_id36 }} .comment-itself:first"
+      {% elif subject is topic %}
+        data-ic-put-to="{{ request.route_url(
+          route_name,
+          topic_id36=subject.topic_id36,
+        ) }}"
+      {% endif %}
+      data-ic-replace-target="true"
+      >{{ normal_label }}
+  {% endif %}
+  </button></li>
+{% endmacro %}

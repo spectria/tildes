@@ -6,6 +6,7 @@
 from marshmallow import ValidationError
 from marshmallow.fields import String
 from pyramid.httpexceptions import HTTPNotFound
+from pyramid.renderers import render_to_response
 from pyramid.response import Response
 from pyramid.request import Request
 from sqlalchemy import cast, Text
@@ -394,7 +395,7 @@ def put_topic_bookmark(request: Request) -> Response:
         # the user has already bookmarked this topic
         savepoint.rollback()
 
-    return Response("Bookmarked")
+    return _bookmark_toggle_button(topic, request, is_toggled=True)
 
 
 @ic_view_config(
@@ -408,4 +409,22 @@ def delete_topic_bookmark(request: Request) -> Response:
         TopicBookmark.user == request.user, TopicBookmark.topic == topic
     ).delete(synchronize_session=False)
 
-    return Response("Unbookmarked")
+    return _bookmark_toggle_button(topic, request, is_toggled=False)
+
+
+def _bookmark_toggle_button(
+    topic: Topic, request: Request, is_toggled: bool
+) -> Response:
+    return render_to_response(
+        "tildes:templates/intercooler/post_action_toggle_button.jinja2",
+        value={
+            "subject": topic,
+            "is_toggled": is_toggled,
+            "normal_name": "bookmark",
+            "normal_label": "Bookmark",
+            "toggled_name": "unbookmark",
+            "toggled_label": "Unbookmark",
+            "route_name": "ic_topic_bookmark",
+        },
+        request=request,
+    )

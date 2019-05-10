@@ -3,6 +3,7 @@
 
 {% extends 'base.jinja2' %}
 
+{% from 'macros/buttons.jinja2' import post_action_toggle_button with context %}
 {% from 'macros/comments.jinja2' import comment_label_options_template, comment_reply_template, render_comment_tree with context %}
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive, time_ago %}
 {% from 'macros/forms.jinja2' import markdown_textarea %}
@@ -164,25 +165,15 @@
     {% endif %}
 
     {% if request.has_permission('bookmark', topic) %}
-      <li>
-      {% if not topic.bookmark_created_time %}
-        <button class="btn-post-action"
-          data-ic-put-to="{{ request.route_url(
-            'ic_topic_bookmark',
-            topic_id36=topic.topic_id36,
-          ) }}"
-          data-ic-replace-target="true"
-        >Bookmark</button>
-      {% else %}
-        <button class="btn-post-action"
-          data-ic-delete-from="{{ request.route_url(
-            'ic_topic_bookmark',
-            topic_id36=topic.topic_id36,
-          ) }}"
-          data-ic-replace-target="true"
-        >Unbookmark</button>
-      {% endif %}
-      </li>
+      {{ post_action_toggle_button(
+           subject=topic,
+           is_toggled=topic.bookmark_created_time,
+           normal_name="bookmark",
+           normal_label="Bookmark",
+           toggled_name="unbookmark",
+           toggled_label="Unbookmark",
+           route_name="ic_topic_bookmark",
+      ) }}
     {% endif %}
 
     {% if request.has_permission("remove", topic) %}

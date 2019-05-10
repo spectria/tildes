@@ -1,6 +1,7 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% from 'buttons.jinja2' import post_action_toggle_button with context %}
 {% from 'datetime.jinja2' import adaptive_date_responsive %}
 {% from 'forms.jinja2' import markdown_textarea %}
 {% from 'links.jinja2' import username_linked %}
@@ -207,26 +208,15 @@
         {% endif %}
 
         {% if request.has_permission('bookmark', comment) %}
-          {% if comment.bookmark_created_time %}
-            <li><button class="btn-post-action btn-post-action-used" name="unbookmark"
-              data-ic-delete-from="{{ request.route_url(
-                'ic_comment_bookmark',
-                comment_id36=comment.comment_id36,
-              ) }}"
-              data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
-              data-ic-replace-target="true"
-              >Bookmarked
-          {% else %}
-            <li><button class="btn-post-action" name="bookmark"
-              data-ic-put-to="{{ request.route_url(
-                'ic_comment_bookmark',
-                comment_id36=comment.comment_id36,
-              ) }}"
-              data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
-              data-ic-replace-target="true"
-              >Bookmark
-          {% endif %}
-          </button></li>
+          {{ post_action_toggle_button(
+               subject=comment,
+               is_toggled=comment.bookmark_created_time,
+               normal_name="bookmark",
+               normal_label="Bookmark",
+               toggled_name="unbookmark",
+               toggled_label="Unbookmark",
+               route_name="ic_comment_bookmark",
+          ) }}
         {% endif %}
 
         {% if request.has_permission("remove", comment) %}
