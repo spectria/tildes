@@ -37,6 +37,7 @@ def includeme(config: Configurator) -> None:
         config.add_route("group_topics", "/topics", factory=group_by_path)
 
         config.add_route("topic", "/{topic_id36}/{title}", factory=topic_by_id36)
+        config.add_route("topic_no_title", "/{topic_id36}", factory=topic_by_id36)
 
     config.add_route("user", "/user/{username}", factory=user_by_username)
     with config.route_prefix_context("/user/{username}"):

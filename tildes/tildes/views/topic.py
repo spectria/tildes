@@ -255,6 +255,7 @@ def get_new_topic_form(request: Request) -> dict:
 
 
 @view_config(route_name="topic", renderer="topic.jinja2")
+@view_config(route_name="topic_no_title", renderer="topic.jinja2")
 @use_kwargs({"comment_order": Enum(CommentTreeSortOption, missing="relevance")})
 def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
     """View a single topic."""
