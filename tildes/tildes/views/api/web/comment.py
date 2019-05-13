@@ -426,7 +426,7 @@ def delete_comment_remove(request: Request) -> Response:
     route_name="comment_bookmark",
     request_method="PUT",
     permission="bookmark",
-    renderer="comment_contents.jinja2",
+    renderer="post_action_toggle_button.jinja2",
 )
 def put_comment_bookmark(request: Request) -> dict:
     """Bookmark a comment with Intercooler."""
@@ -448,22 +448,14 @@ def put_comment_bookmark(request: Request) -> dict:
         # the user has already bookmarked this comment
         savepoint.rollback()
 
-    # re-query the comment to get complete data
-    comment = (
-        request.query(Comment)
-        .join_all_relationships()
-        .filter_by(comment_id=comment.comment_id)
-        .one()
-    )
-
-    return {"comment": comment}
+    return {"name": "bookmark", "subject": comment, "is_toggled": True}
 
 
 @ic_view_config(
     route_name="comment_bookmark",
     request_method="DELETE",
     permission="bookmark",
-    renderer="comment_contents.jinja2",
+    renderer="post_action_toggle_button.jinja2",
 )
 def delete_comment_bookmark(request: Request) -> dict:
     """Unbookmark a comment with Intercooler."""
@@ -475,14 +467,4 @@ def delete_comment_bookmark(request: Request) -> dict:
 
     _mark_comment_read_from_interaction(request, comment)
 
-    # commit and then re-query the comment to get complete data
-    request.tm.commit()
-
-    comment = (
-        request.query(Comment)
-        .join_all_relationships()
-        .filter_by(comment_id=comment.comment_id)
-        .one()
-    )
-
-    return {"comment": comment}
+    return {"name": "bookmark", "subject": comment, "is_toggled": False}

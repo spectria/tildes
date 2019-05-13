@@ -165,15 +165,7 @@
     {% endif %}
 
     {% if request.has_permission('bookmark', topic) %}
-      {{ post_action_toggle_button(
-           subject=topic,
-           is_toggled=topic.bookmark_created_time,
-           normal_name="bookmark",
-           normal_label="Bookmark",
-           toggled_name="unbookmark",
-           toggled_label="Unbookmark",
-           route_name="ic_topic_bookmark",
-      ) }}
+      {{ post_action_toggle_button("bookmark", topic, is_toggled=topic.bookmark_created_time) }}
     {% endif %}
 
     {% if request.has_permission("remove", topic) %}

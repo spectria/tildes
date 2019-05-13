@@ -3,12 +3,4 @@
 
 {% from 'macros/buttons.jinja2' import post_action_toggle_button with context %}
 
-{{ post_action_toggle_button(
-     subject=subject,
-     is_toggled=is_toggled,
-     normal_name=normal_name,
-     normal_label=normal_label,
-     toggled_name=toggled_name,
-     toggled_label=toggled_label,
-     route_name=route_name,
-) }}
+{{ post_action_toggle_button("bookmark", subject, is_toggled) }}

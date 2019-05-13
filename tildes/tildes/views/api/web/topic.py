@@ -6,7 +6,6 @@
 from marshmallow import ValidationError
 from marshmallow.fields import String
 from pyramid.httpexceptions import HTTPNotFound
-from pyramid.renderers import render_to_response
 from pyramid.response import Response
 from pyramid.request import Request
 from sqlalchemy import cast, Text
@@ -375,9 +374,12 @@ def patch_topic_link(request: Request, link: str) -> dict:
 
 
 @ic_view_config(
-    route_name="topic_bookmark", request_method="PUT", permission="bookmark"
+    route_name="topic_bookmark",
+    request_method="PUT",
+    permission="bookmark",
+    renderer="post_action_toggle_button.jinja2",
 )
-def put_topic_bookmark(request: Request) -> Response:
+def put_topic_bookmark(request: Request) -> dict:
     """Bookmark a topic with Intercooler."""
     topic = request.context
 
@@ -395,13 +397,16 @@ def put_topic_bookmark(request: Request) -> Response:
         # the user has already bookmarked this topic
         savepoint.rollback()
 
-    return _bookmark_toggle_button(topic, request, is_toggled=True)
+    return {"name": "bookmark", "subject": topic, "is_toggled": True}
 
 
 @ic_view_config(
-    route_name="topic_bookmark", request_method="DELETE", permission="bookmark"
+    route_name="topic_bookmark",
+    request_method="DELETE",
+    permission="bookmark",
+    renderer="post_action_toggle_button.jinja2",
 )
-def delete_topic_bookmark(request: Request) -> Response:
+def delete_topic_bookmark(request: Request) -> dict:
     """Unbookmark a topic with Intercooler."""
     topic = request.context
 
@@ -409,22 +414,4 @@ def delete_topic_bookmark(request: Request) -> Response:
         TopicBookmark.user == request.user, TopicBookmark.topic == topic
     ).delete(synchronize_session=False)
 
-    return _bookmark_toggle_button(topic, request, is_toggled=False)
-
-
-def _bookmark_toggle_button(
-    topic: Topic, request: Request, is_toggled: bool
-) -> Response:
-    return render_to_response(
-        "tildes:templates/intercooler/post_action_toggle_button.jinja2",
-        value={
-            "subject": topic,
-            "is_toggled": is_toggled,
-            "normal_name": "bookmark",
-            "normal_label": "Bookmark",
-            "toggled_name": "unbookmark",
-            "toggled_label": "Unbookmark",
-            "route_name": "ic_topic_bookmark",
-        },
-        request=request,
-    )
+    return {"name": "bookmark", "subject": topic, "is_toggled": False}
