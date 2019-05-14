@@ -236,48 +236,68 @@ def patch_move_topic(request: Request, path: str) -> dict:
     return Response("Moved")
 
 
-@ic_view_config(route_name="topic_remove", request_method="PUT", permission="remove")
-def put_topic_remove(request: Request) -> Response:
+@ic_view_config(
+    route_name="topic_remove",
+    request_method="PUT",
+    permission="remove",
+    renderer="post_action_toggle_button.jinja2",
+)
+def put_topic_remove(request: Request) -> dict:
     """Remove a topic with Intercooler."""
     topic = request.context
 
     topic.is_removed = True
     request.db_session.add(LogTopic(LogEventType.TOPIC_REMOVE, request, topic))
 
-    return Response("Removed")
+    return {"name": "remove", "subject": topic, "is_toggled": True}
 
 
-@ic_view_config(route_name="topic_remove", request_method="DELETE", permission="remove")
-def delete_topic_remove(request: Request) -> Response:
+@ic_view_config(
+    route_name="topic_remove",
+    request_method="DELETE",
+    permission="remove",
+    renderer="post_action_toggle_button.jinja2",
+)
+def delete_topic_remove(request: Request) -> dict:
     """Un-remove a topic with Intercooler."""
     topic = request.context
 
     topic.is_removed = False
     request.db_session.add(LogTopic(LogEventType.TOPIC_UNREMOVE, request, topic))
 
-    return Response("Un-removed")
+    return {"name": "remove", "subject": topic, "is_toggled": False}
 
 
-@ic_view_config(route_name="topic_lock", request_method="PUT", permission="lock")
-def put_topic_lock(request: Request) -> Response:
+@ic_view_config(
+    route_name="topic_lock",
+    request_method="PUT",
+    permission="lock",
+    renderer="post_action_toggle_button.jinja2",
+)
+def put_topic_lock(request: Request) -> dict:
     """Lock a topic with Intercooler."""
     topic = request.context
 
     topic.is_locked = True
     request.db_session.add(LogTopic(LogEventType.TOPIC_LOCK, request, topic))
 
-    return Response("Locked")
+    return {"name": "lock", "subject": topic, "is_toggled": True}
 
 
-@ic_view_config(route_name="topic_lock", request_method="DELETE", permission="lock")
-def delete_topic_lock(request: Request) -> Response:
+@ic_view_config(
+    route_name="topic_lock",
+    request_method="DELETE",
+    permission="lock",
+    renderer="post_action_toggle_button.jinja2",
+)
+def delete_topic_lock(request: Request) -> dict:
     """Unlock a topic with Intercooler."""
     topic = request.context
 
     topic.is_locked = False
     request.db_session.add(LogTopic(LogEventType.TOPIC_UNLOCK, request, topic))
 
-    return Response("Unlocked")
+    return {"name": "lock", "subject": topic, "is_toggled": False}
 
 
 @ic_view_config(

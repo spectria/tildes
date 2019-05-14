@@ -212,27 +212,7 @@
         {% endif %}
 
         {% if request.has_permission("remove", comment) %}
-          <li>
-          {% if not comment.is_removed %}
-            <button class="btn-post-action"
-              data-ic-put-to="{{ request.route_url(
-                'ic_comment_remove',
-                comment_id36=comment.comment_id36,
-              ) }}"
-              data-ic-replace-target="true"
-              data-ic-confirm="Remove this comment?"
-            >Remove</button>
-          {% else %}
-            <button class="btn-post-action"
-              data-ic-delete-from="{{ request.route_url(
-                'ic_comment_remove',
-                comment_id36=comment.comment_id36,
-              ) }}"
-              data-ic-replace-target="true"
-              data-ic-confirm="Un-remove this comment?"
-            >Un-remove</button>
-          {% endif %}
-          </li>
+          {{ post_action_toggle_button("remove", comment, comment.is_removed) }}
         {% endif %}
 
         {% if request.has_permission('reply', comment) %}

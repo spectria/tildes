@@ -141,27 +141,7 @@
     {% endif %}
 
     {% if request.has_permission('lock', topic) %}
-      <li>
-      {% if not topic.is_locked %}
-        <button class="btn-post-action"
-          data-ic-put-to="{{ request.route_url(
-            'ic_topic_lock',
-            topic_id36=topic.topic_id36,
-          ) }}"
-          data-ic-replace-target="true"
-          data-ic-confirm="Lock this topic?"
-        >Lock</button>
-      {% else %}
-        <button class="btn-post-action"
-          data-ic-delete-from="{{ request.route_url(
-            'ic_topic_lock',
-            topic_id36=topic.topic_id36,
-          ) }}"
-          data-ic-replace-target="true"
-          data-ic-confirm="Unlock this topic?"
-        >Unlock</button>
-      {% endif %}
-      </li>
+      {{ post_action_toggle_button("lock", topic, topic.is_locked) }}
     {% endif %}
 
     {% if request.has_permission('bookmark', topic) %}
@@ -169,27 +149,7 @@
     {% endif %}
 
     {% if request.has_permission("remove", topic) %}
-      <li>
-      {% if not topic.is_removed %}
-        <button class="btn-post-action"
-          data-ic-put-to="{{ request.route_url(
-            'ic_topic_remove',
-            topic_id36=topic.topic_id36,
-          ) }}"
-          data-ic-replace-target="true"
-          data-ic-confirm="Remove this topic?"
-        >Remove</button>
-      {% else %}
-        <button class="btn-post-action"
-          data-ic-delete-from="{{ request.route_url(
-            'ic_topic_remove',
-            topic_id36=topic.topic_id36,
-          ) }}"
-          data-ic-replace-target="true"
-          data-ic-confirm="Un-remove this topic?"
-        >Un-remove</button>
-      {% endif %}
-      </li>
+      {{ post_action_toggle_button("remove", topic, topic.is_removed) }}
     {% endif %}
   </menu>
   <div class="btn-post-settings"></div>

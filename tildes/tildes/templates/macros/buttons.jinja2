@@ -12,6 +12,16 @@
   {% if name == "bookmark" %}
     {% set normal_label = "Bookmark" %}
     {% set toggled_label = "Unbookmark" %}
+  {% elif name == "lock" %}
+    {% set normal_label = "Lock" %}
+    {% set toggled_label = "Unlock" %}
+    {% set normal_confirm = "Lock this topic?" %}
+    {% set toggled_confirm = "Unlock this topic?" %}
+  {% elif name == "remove" %}
+    {% set normal_label = "Remove" %}
+    {% set toggled_label = "Un-remove" %}
+    {% set normal_confirm = "Remove this " + type_name + "?" %}
+    {% set toggled_confirm = "Un-remove this " + type_name + "?" %}
   {% endif %}
 
   <li>
@@ -19,11 +29,13 @@
     <button class="btn-post-action"
       data-ic-put-to="{{ _post_action_toggle_button_url(route_name, subject) }}"
       data-ic-replace-target="true"
+      {% if normal_confirm %}data-ic-confirm="{{ normal_confirm }}"{% endif %}
     >{{ normal_label }}</button>
   {% else %}
     <button class="btn-post-action btn-post-action-used"
       data-ic-delete-from="{{ _post_action_toggle_button_url(route_name, subject) }}"
       data-ic-replace-target="true"
+      {% if toggled_confirm %}data-ic-confirm="{{ toggled_confirm }}"{% endif %}
     >{{ toggled_label }}</button>
   {% endif %}
   </li>

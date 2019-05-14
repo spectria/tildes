@@ -398,28 +398,36 @@ def put_mark_comments_read(request: Request, mark_all_previous: bool) -> Respons
     return IC_NOOP
 
 
-@ic_view_config(route_name="comment_remove", request_method="PUT", permission="remove")
-def put_comment_remove(request: Request) -> Response:
+@ic_view_config(
+    route_name="comment_remove",
+    request_method="PUT",
+    permission="remove",
+    renderer="post_action_toggle_button.jinja2",
+)
+def put_comment_remove(request: Request) -> dict:
     """Remove a comment with Intercooler."""
     comment = request.context
 
     comment.is_removed = True
     request.db_session.add(LogComment(LogEventType.COMMENT_REMOVE, request, comment))
 
-    return Response("Removed")
+    return {"name": "remove", "subject": comment, "is_toggled": True}
 
 
 @ic_view_config(
-    route_name="comment_remove", request_method="DELETE", permission="remove"
+    route_name="comment_remove",
+    request_method="DELETE",
+    permission="remove",
+    renderer="post_action_toggle_button.jinja2",
 )
-def delete_comment_remove(request: Request) -> Response:
+def delete_comment_remove(request: Request) -> dict:
     """Un-remove a comment with Intercooler."""
     comment = request.context
 
     comment.is_removed = False
     request.db_session.add(LogComment(LogEventType.COMMENT_UNREMOVE, request, comment))
 
-    return Response("Un-removed")
+    return {"name": "remove", "subject": comment, "is_toggled": False}
 
 
 @ic_view_config(
