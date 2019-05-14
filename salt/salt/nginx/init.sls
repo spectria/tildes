@@ -23,3 +23,11 @@ nginx:
     - user: root
     - group: root
     - mode: 644
+
+# Add logrotate config to rotate daily and delete after 30 days
+/etc/logrotate.d/nginx:
+  file.managed:
+    - source: salt://nginx/logrotate
+    - user: root
+    - group: root
+    - mode: 644
