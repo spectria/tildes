@@ -6,3 +6,5 @@ nginx_worker_processes: auto
 postgresql_version: 10
 prometheus_ips: ['127.0.0.1']
 site_hostname: tildes.net
+ipv6_address: '2607:5300:0203:2dd8::'
+ipv6_gateway: '2607:5300:0203:2dff:ff:ff:ff:ff'
