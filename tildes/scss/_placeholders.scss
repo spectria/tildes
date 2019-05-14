@@ -11,6 +11,11 @@
     }
   }
 
+  hr {
+    margin-left: 0;
+    max-width: $paragraph-max-width;
+  }
+
   ol, ul {
     margin: 0 0 0.4rem 1rem;
 
