@@ -8,7 +8,6 @@
 
 body.static-site {
   main {
-    @extend %links-text;
-    @extend %lists-text;
+    @extend %text-container;
   }
 }

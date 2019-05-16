@@ -45,8 +45,7 @@ select.form-select:not([multiple]) {
 }
 
 .form-markdown-preview {
-  @extend %links-text;
-  @extend %lists-text;
+  @extend %text-container;
 
   min-height: 8rem;
   padding: 0.4rem;

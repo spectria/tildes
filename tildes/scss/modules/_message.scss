@@ -24,8 +24,7 @@
 }
 
 .message-text {
-  @extend %links-text;
-  @extend %lists-text;
+  @extend %text-container;
 
   margin-left: 0.2rem;
   overflow: auto;

@@ -156,8 +156,7 @@
 }
 
 .topic-text-excerpt {
-  @extend %links-text;
-  @extend %lists-text;
+  @extend %text-container;
 
   display: none;
   @media (min-width: $size-md) {
@@ -248,8 +247,7 @@
 }
 
 .topic-full-text {
-  @extend %links-text;
-  @extend %lists-text;
+  @extend %text-container;
 
   overflow: auto;
 }
