@@ -17,11 +17,16 @@
   }
 
   ol, ul {
-    margin: 0 0 0.4rem 1rem;
+    $list-left-margin: 2rem;
+    margin: 0 0 0.4rem $list-left-margin;
 
     li {
       margin-top: 0.2rem;
-      max-width: $paragraph-max-width - 1rem; // subtract left margin
+      max-width: $paragraph-max-width - $list-left-margin;
+    }
+
+    ol, ul {
+      margin-left: 1rem;
     }
 
     &:last-child {
