@@ -1,10 +1,4 @@
-gunicorn:
-  group.present:
-    - name: gunicorn
-  user.present:
-    - name: gunicorn
-    - groups: [gunicorn]
-    - createhome: False
+{% from 'common.jinja2' import app_username %}
 
 /etc/systemd/system/gunicorn.service:
   file.managed:
@@ -18,7 +12,8 @@ gunicorn:
 
 /etc/systemd/system/gunicorn.socket:
   file.managed:
-    - source: salt://gunicorn/gunicorn.socket
+    - source: salt://gunicorn/gunicorn.socket.jinja2
+    - template: jinja
     - user: root
     - group: root
     - mode: 644
@@ -27,7 +22,8 @@ gunicorn:
 
 /usr/lib/tmpfiles.d/gunicorn.conf:
   file.managed:
-    - source: salt://gunicorn/gunicorn.conf
+    - source: salt://gunicorn/gunicorn.conf.jinja2
+    - template: jinja
     - user: root
     - group: root
     - mode: 644
@@ -37,5 +33,3 @@ gunicorn:
 gunicorn.socket:
   service.running:
     - enable: True
-    - require:
-      - user: gunicorn

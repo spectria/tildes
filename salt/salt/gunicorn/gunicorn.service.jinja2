@@ -1,4 +1,4 @@
-{% from 'common.jinja2' import app_dir, bin_dir -%}
+{% from 'common.jinja2' import app_dir, app_username, bin_dir -%}
 [Unit]
 Description=gunicorn daemon
 Requires=gunicorn.socket
@@ -6,8 +6,8 @@ After=network.target
 
 [Service]
 PIDFile=/run/gunicorn/pid
-User=gunicorn
-Group=gunicorn
+User={{ app_username }}
+Group={{ app_username }}
 RuntimeDirectory=gunicorn
 WorkingDirectory={{ app_dir }}
 ExecStart={{ bin_dir }}/gunicorn --paste {{ pillar['ini_file'] }} --config {{ app_dir }}/gunicorn_config.py
