@@ -3,12 +3,13 @@
 
 """Root factories for groups."""
 
+from marshmallow.fields import String
 from pyramid.httpexceptions import HTTPMovedPermanently
 from pyramid.request import Request
 from sqlalchemy_utils import Ltree
 from webargs.pyramidparser import use_kwargs
 
-from tildes.models.group import Group
+from tildes.models.group import Group, GroupWikiPage
 from tildes.resources import get_resource
 from tildes.schemas.group import GroupSchema
 
@@ -30,5 +31,17 @@ def group_by_path(request: Request, path: str) -> Group:
         raise HTTPMovedPermanently(location=proper_url)
 
     query = request.query(Group).filter(Group.path == Ltree(path))
+
+    return get_resource(request, query)
+
+
+@use_kwargs({"wiki_page_slug": String()}, locations=("matchdict",))
+def group_wiki_page_by_slug(request: Request, wiki_page_slug: str) -> GroupWikiPage:
+    """Get a group's wiki page by its url slug (or 404)."""
+    group = group_by_path(request)  # pylint: disable=no-value-for-parameter
+
+    query = request.query(GroupWikiPage).filter(
+        GroupWikiPage.group == group, GroupWikiPage.slug == wiki_page_slug
+    )
 
     return get_resource(request, query)

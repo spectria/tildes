@@ -1,0 +1,34 @@
+{# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
+
+{% block title %}~{{ group.path }} wiki{% endblock %}
+
+{% block header_context_link %}
+<a class="site-header-context" href="/~{{ group.path }}">~{{ group.path }}</a>
+{% endblock %}
+
+{% block main_heading %}~{{ group.path }} wiki pages{% endblock %}
+
+{% block content %}
+{% if page_list %}
+<ul>
+  {% for page in page_list %}
+    <li>
+      <a href="{{ request.route_url("group_wiki_page", group_path=group.path, wiki_page_slug=page.slug) }}">{{ page.page_name }}</a>
+      <div class="text-small text-secondary">Last edited: {{ adaptive_date_responsive(page.last_edited_time) }}</div>
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No pages yet.</p>
+{% endif %}
+
+{% if request.has_permission("wiki_page_create", group) %}
+<hr>
+<a href="{{ request.route_url("group_wiki_new_page", group_path=group.path) }}">Create new wiki page</a>
+{% endif %}
+{% endblock %}

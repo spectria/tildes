@@ -17,6 +17,7 @@ prometheus-client
 prospector
 psycopg2
 publicsuffix2==2.20160818
+pygit2
 Pygments
 pyotp
 pyramid

@@ -220,6 +220,17 @@
     <a href="/~{{ group.path }}/new_topic" class="btn btn-primary">Post a new topic</a>
   {% endif %}
 
+  {% if wiki_pages %}
+    <ul class="nav">
+      <li>Group wiki pages</li>
+      <ul class="nav">
+      {% for page in wiki_pages %}
+        <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=group.path, wiki_page_slug=page.slug) }}">{{ page.page_name }}</a></li>
+      {% endfor %}
+      </ul>
+    </ul>
+  {% endif %}
+
   {% if request.user and not (tag or unfiltered) %}
     <hr>
     <details>

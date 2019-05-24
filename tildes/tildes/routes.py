@@ -10,7 +10,7 @@ from pyramid.request import Request
 from pyramid.security import Allow, Authenticated
 
 from tildes.resources.comment import comment_by_id36, notification_by_comment_id36
-from tildes.resources.group import group_by_path
+from tildes.resources.group import group_by_path, group_wiki_page_by_slug
 from tildes.resources.message import message_conversation_by_id36
 from tildes.resources.topic import topic_by_id36
 from tildes.resources.user import user_by_username
@@ -36,6 +36,22 @@ def includeme(config: Configurator) -> None:
 
         config.add_route("group_topics", "/topics", factory=group_by_path)
 
+        config.add_route("group_wiki", "/wiki", factory=group_by_path)
+
+        # if you change this from "new_page" make sure to also edit
+        # GroupWikiPage.__init__() to block the new slug to avoid url conflicts
+        config.add_route("group_wiki_new_page", "/wiki/new_page", factory=group_by_path)
+
+        config.add_route(
+            "group_wiki_page", "/wiki/{wiki_page_slug}", factory=group_wiki_page_by_slug
+        )
+        config.add_route(
+            "group_wiki_edit_page",
+            "/wiki/{wiki_page_slug}/edit",
+            factory=group_wiki_page_by_slug,
+        )
+
+        # these routes need to remain last inside this block
         config.add_route("topic", "/{topic_id36}/{title}", factory=topic_by_id36)
         config.add_route("topic_no_title", "/{topic_id36}", factory=topic_by_id36)
 

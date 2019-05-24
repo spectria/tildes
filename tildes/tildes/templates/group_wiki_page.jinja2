@@ -1,0 +1,44 @@
+{# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends 'base.jinja2' %}
+
+{% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
+
+{% block title %}{{ page.page_name }} - ~{{ page.group.path }} wiki{% endblock %}
+
+{% block header_context_link %}
+<a class="site-header-context" href="/~{{ page.group.path }}">~{{ page.group.path }}</a>
+{% endblock %}
+
+{% block main_heading %}{{ page.page_name }}{% endblock %}
+
+{% block content %}
+{{ page.rendered_html|safe }}
+
+<hr>
+<p class="text-small text-secondary">The text of this wiki page is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0</a>.</p>
+
+<a href="{{ request.route_url("group_wiki", group_path=page.group.path) }}">Back to wiki page list</a>
+{% endblock %}
+
+{% block sidebar %}
+<h2>Wiki page info</h2>
+<dl>
+  <dt>Last edited</dt>
+  <dd>{{ adaptive_date_responsive(page.last_edited_time) }}</dd>
+</dl>
+
+{% if request.has_permission("edit", page) %}
+  <a href="{{ request.route_url("group_wiki_edit_page", group_path=page.group.path, wiki_page_slug=page.slug) }}" class="btn btn-primary">Edit this page</a>
+{% endif %}
+
+<ul class="nav">
+  <li>Page list</li>
+  <ul class="nav">
+  {% for other_page in page_list %}
+    <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=other_page.group.path, wiki_page_slug=other_page.slug) }}">{{ other_page.page_name }}</a></li>
+  {% endfor %}
+  </ul>
+</ul>
+{% endblock %}

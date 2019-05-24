@@ -1,0 +1,43 @@
+{# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% from 'macros/forms.jinja2' import markdown_textarea %}
+
+{% block title %}New wiki page{% endblock %}
+
+{% block header_context_link %}
+<a class="site-header-context" href="/~{{ group.path }}">~{{ group.path }}</a>
+{% endblock %}
+
+{% block main_heading %}Create a new wiki page in ~{{ group.path }}{% endblock %}
+
+{% block content %}
+<form
+  method="post"
+  autocomplete="off"
+  action="/~{{ group.path }}/wiki"
+  data-ic-post-to="/~{{ group.path }}/wiki"
+  data-js-prevent-double-submit
+  data-js-confirm-leave-page-unsaved
+>
+  <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
+
+  <div class="form-group">
+    <label class="form-label" for="page_name">Page name</label>
+    <input class="form-input" id="page_name" name="page_name" type="text" placeholder="Page name" required data-js-auto-focus>
+  </div>
+
+  <div class="form-group">
+    {{ markdown_textarea() }}
+  </div>
+
+  <div class="form-buttons">
+    <button type="submit" class="btn btn-primary">Create wiki page</button>
+  </div>
+
+  {% include 'includes/wiki_editing_notes.jinja2' %}
+</form>
+</div>
+{% endblock %}

@@ -27,7 +27,7 @@ from tildes.enums import (
 from tildes.lib.database import ArrayOfLtree
 from tildes.lib.datetime import SimpleHoursPeriod
 from tildes.models.comment import Comment, CommentNotification, CommentTree
-from tildes.models.group import Group
+from tildes.models.group import Group, GroupWikiPage
 from tildes.models.log import LogComment, LogTopic
 from tildes.models.topic import Topic, TopicVisit
 from tildes.models.user import UserGroupSettings
@@ -106,7 +106,7 @@ def get_group_topics(
     unfiltered: bool,
 ) -> dict:
     """Get a listing of topics in the group."""
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-branches
     if request.matched_route.name == "home":
         # on the home page, include topics from the user's subscribed groups
         # (or all groups, if logged-out)
@@ -169,6 +169,16 @@ def get_group_topics(
     if period and period not in period_options:
         period_options.append(period)
 
+    if isinstance(request.context, Group):
+        wiki_pages = (
+            request.query(GroupWikiPage)
+            .filter(GroupWikiPage.group == request.context)
+            .order_by(GroupWikiPage.slug)
+            .all()
+        )
+    else:
+        wiki_pages = None
+
     return {
         "group": request.context,
         "groups": groups,
@@ -184,6 +194,7 @@ def get_group_topics(
         "rank_start": rank_start,
         "tag": tag,
         "unfiltered": unfiltered,
+        "wiki_pages": wiki_pages,
     }
 
 

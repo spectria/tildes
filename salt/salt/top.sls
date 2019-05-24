@@ -19,6 +19,7 @@ base:
     - prometheus.exporters.rabbitmq_exporter
     - prometheus.exporters.redis_exporter
     - consumers
+    - tildes-wiki
     - boussole
     - webassets
     - cronjobs

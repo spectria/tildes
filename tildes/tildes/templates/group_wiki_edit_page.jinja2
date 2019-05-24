@@ -1,0 +1,42 @@
+{# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% from 'macros/forms.jinja2' import markdown_textarea %}
+
+{% block title %}Edit wiki page{% endblock %}
+
+{% block header_context_link %}
+<a class="site-header-context" href="/~{{ page.group.path }}">~{{ page.group.path }}</a>
+{% endblock %}
+
+{% block main_heading %}Editing page "{{ page.page_name }}" in ~{{ page.group.path }}{% endblock %}
+
+{% block content %}
+  <form
+    method="post"
+    autocomplete="off"
+    action="/~{{ page.group.path }}/wiki/{{ page.slug }}"
+    data-ic-post-to="/~{{ page.group.path }}/wiki/{{ page.slug }}"
+    data-js-prevent-double-submit
+    data-js-confirm-leave-page-unsaved
+  >
+    <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
+
+    <div class="form-group">
+      {{ markdown_textarea(text=page.markdown, auto_focus=True) }}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="edit_message">Short edit summary</label>
+      <input class="form-input" id="edit_message" name="edit_message" type="text" placeholder="Edit summary" maxlength="80" required>
+    </div>
+
+    <div class="form-buttons">
+      <button type="submit" class="btn btn-primary">Save page</button>
+    </div>
+
+    {% include 'includes/wiki_editing_notes.jinja2' %}
+  </form>
+{% endblock %}

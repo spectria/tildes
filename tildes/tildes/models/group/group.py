@@ -108,6 +108,11 @@ class Group(DatabaseModel):
 
         acl.append((Allow, Authenticated, "post_topic"))
 
+        # wiki_page_create
+        #  - permission must be granted specifically
+        acl.append((Allow, "admin", "wiki_page_create"))
+        acl.append((Allow, "wiki", "wiki_page_create"))
+
         acl.append(DENY_ALL)
 
         return acl
