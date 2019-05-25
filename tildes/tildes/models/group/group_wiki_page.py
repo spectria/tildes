@@ -31,6 +31,7 @@ class GroupWikiPage(DatabaseModel):
     __tablename__ = "group_wiki_pages"
 
     BASE_PATH = "/var/lib/tildes-wiki"
+    GITLAB_REPO_URL = "https://gitlab.com/tildes/tildes-wiki"
 
     group_id: int = Column(
         Integer, ForeignKey("groups.group_id"), nullable=False, primary_key=True
@@ -89,7 +90,22 @@ class GroupWikiPage(DatabaseModel):
     @property
     def file_path(self) -> Path:
         """Return the full path to the page's file."""
-        return Path(self.BASE_PATH, str(self.group.path), f"{self.slug}.md")
+        return Path(self.BASE_PATH, self.relative_path)
+
+    @property
+    def relative_path(self) -> Path:
+        """Return a relative path to the page's file."""
+        return Path(str(self.group.path), f"{self.slug}.md")
+
+    @property
+    def history_url(self) -> str:
+        """Return a url to the page's edit history."""
+        return f"{self.GITLAB_REPO_URL}/commits/master/{self.relative_path}"
+
+    @property
+    def blame_url(self) -> str:
+        """Return a url to the page's blame view."""
+        return f"{self.GITLAB_REPO_URL}/blame/master/{self.relative_path}"
 
     @property
     def markdown(self) -> Optional[str]:

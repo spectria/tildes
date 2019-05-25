@@ -29,6 +29,10 @@
 <dl>
   <dt>Last edited</dt>
   <dd>{{ adaptive_date_responsive(page.last_edited_time) }}</dd>
+
+  <dt>Edit history (on GitLab)</dt>
+  <dd><a href="{{ page.history_url }}" target="_blank">Full edit history</a></dd>
+  <dd><a href="{{ page.blame_url }}" target="_blank">Line-by-line ("blame") view</a></dd>
 </dl>
 
 {% if request.has_permission("edit", page) %}
