@@ -339,6 +339,12 @@
     color: map-get($theme, "error");
   }
 
+  .input-group-addon {
+    background-color: map-get($theme, "background-secondary");
+    color: map-get($theme, "foreground-highlight");
+    border-color: map-get($theme, "border");
+  }
+
   .label-topic-tag {
     color: map-get($theme, "foreground-middle");
 
