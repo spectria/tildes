@@ -82,6 +82,10 @@
     border-color: map-get($theme, "border");
   }
 
+  hr {
+    border-color: map-get($theme, "border");
+  }
+
   main {
     background-color: map-get($theme, "background-primary");
   }
