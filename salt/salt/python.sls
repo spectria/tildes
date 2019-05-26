@@ -26,6 +26,7 @@ venv-setup:
 psycopg2-deps:
   pkg.installed:
     - pkgs:
+      - gcc
       - libpq-dev
       - python{{ python_version }}-dev
 
