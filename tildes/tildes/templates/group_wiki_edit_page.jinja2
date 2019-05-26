@@ -30,7 +30,10 @@
 
     <div class="form-group">
       <label class="form-label" for="edit_message">Short edit summary</label>
-      <input class="form-input" id="edit_message" name="edit_message" type="text" placeholder="Edit summary" maxlength="80" required>
+      <div class="input-group">
+        <span class="input-group-addon">~{{ page.group.path }}/{{ page.slug }}:</span>
+        <input class="form-input" id="edit_message" name="edit_message" type="text" placeholder="Edit summary" maxlength="80" required>
+      </div>
     </div>
 
     <div class="form-buttons">

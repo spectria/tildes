@@ -68,7 +68,7 @@ class GroupWikiPage(DatabaseModel):
         # create the directory for the group if it doesn't already exist
         self.file_path.parent.mkdir(mode=0o755, exist_ok=True)
 
-        self.edit(markdown, user, f'~{group.path}: Create page "{page_name}"')
+        self.edit(markdown, user, "Create page")
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""
@@ -139,6 +139,10 @@ class GroupWikiPage(DatabaseModel):
         repo.index.read()
         repo.index.add(str(self.file_path.relative_to(self.BASE_PATH)))
         repo.index.write()
+
+        # Prepend the group name and page slug to the edit message - if you change the
+        # format of this, make sure to also change the page-editing template to match
+        edit_message = f"~{self.group.path}/{self.slug}: {edit_message}"
 
         repo.create_commit(
             repo.head.name,
