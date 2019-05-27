@@ -443,6 +443,14 @@
     color: map-get($theme, "warning");
   }
 
+  .text-wiki {
+    h1, h2, h3, h4, h5, h6 {
+      a {
+        color: map-get($theme, "foreground-highlight");
+      }
+    }
+  }
+
   .toast {
     color: map-get($theme, "foreground-highlight");
     border-color: map-get($theme, "border");
