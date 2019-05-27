@@ -27,6 +27,11 @@
     margin-top: 2rem;
   }
 
+  // smaller margin when an h2 is directly after an h1
+  h1 + h2 {
+    margin-top: 1rem;
+  }
+
   h3 {
     margin-top: 1rem;
     font-size: 0.9rem;
