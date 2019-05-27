@@ -15,6 +15,7 @@ from sqlalchemy.sql.expression import text
 
 from tildes.lib.database import CIText
 from tildes.lib.datetime import utc_now
+from tildes.lib.html import add_anchors_to_headings
 from tildes.lib.markdown import convert_markdown_to_safe_html
 from tildes.lib.string import convert_to_url_slug
 from tildes.models import DatabaseModel
@@ -131,6 +132,7 @@ class GroupWikiPage(DatabaseModel):
 
         self.markdown = new_markdown
         self.rendered_html = convert_markdown_to_safe_html(new_markdown)
+        self.rendered_html = add_anchors_to_headings(self.rendered_html)
         self.last_edited_time = utc_now()
 
         repo = Repository(self.BASE_PATH)
