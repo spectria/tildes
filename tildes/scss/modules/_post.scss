@@ -2,10 +2,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 .post-listing {
-  h2 {
-    font-size: 0.6rem;
-  }
-
   & > li {
     margin-bottom: 1rem;
   }
@@ -16,14 +12,8 @@
 }
 
 .post-listing-notifications {
-  h2 {
-    font-size: 0.8rem;
-    line-height: 0.8rem;
-    margin-bottom: 0;
-  }
-
-  h2 + article {
-    margin-top: 0.4rem;
+  .comment {
+    margin-bottom: 0.4rem;
   }
 
   .btn-link-minimal {
