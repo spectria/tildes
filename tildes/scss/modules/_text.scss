@@ -27,8 +27,8 @@
     margin-top: 2rem;
   }
 
-  // smaller margin when an h2 is directly after an h1
-  h1 + h2 {
+  // smaller margin when two large headers are sequential
+  h1 + h1, h1 + h2, h2 + h2 {
     margin-top: 1rem;
   }
 
