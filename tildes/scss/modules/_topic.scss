@@ -264,13 +264,16 @@
   margin-bottom: 0.4rem;
 
   h2 {
-    margin-bottom: 0;
     margin-right: 0.4rem;
     white-space: nowrap;
   }
 
+  .btn-group {
+    margin-right: auto;
+  }
+
   .form-listing-options {
-    margin-left: auto;
+    margin-left: 0;
   }
 }
 
