@@ -59,7 +59,12 @@ $(document).on('complete.ic', function(evt, elt, data, status, xhr, requestId) {
     if (status === 'success') {
         $statusElement.addClass('form-status-success').text('Saved successfully');
     } else {
-        $statusElement.addClass('form-status-error').text(xhr.responseText);
+        if (xhr.status === 413) {
+            errorText = "Too much data submitted";
+        } else {
+            errorText = xhr.responseText;
+        }
+        $statusElement.addClass('form-status-error').text(errorText);
     }
     $statusElement.fadeIn('slow');
 });
