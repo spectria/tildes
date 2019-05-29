@@ -7,6 +7,8 @@ from typing import Sequence
 
 from marshmallow.exceptions import ValidationError
 from pyramid.httpexceptions import (
+    HTTPBadRequest,
+    HTTPForbidden,
     HTTPFound,
     HTTPNotFound,
     HTTPTooManyRequests,
@@ -56,17 +58,30 @@ def valueerror(request: Request) -> Response:
     return _422_response_with_errors([request.exception.args[0]])
 
 
+# I can't get a "general" view with context=HTTPError to work for some reason, so
+# this just specifically catches the errors that people have encountered.
+@ic_view_config(context=HTTPBadRequest)
+@ic_view_config(context=HTTPForbidden)
 @ic_view_config(context=HTTPNotFound)
-def httpnotfound(request: Request) -> Response:
-    """Convert a 404 error to a text response (instead of HTML)."""
+def error_to_text_response(request: Request) -> Response:
+    """Convert HTML error to a text response for Intercooler to display."""
+    # pylint: disable=too-many-branches
     response = request.exception
 
-    if request.matched_route.factory == comment_by_id36:
-        response.text = "Comment not found (or it was deleted)"
-    elif request.matched_route.factory == topic_by_id36:
-        response.text = "Topic not found (or it was deleted)"
-    else:
-        response.text = "Not found"
+    if isinstance(request.exception, HTTPNotFound):
+        if request.matched_route.factory == comment_by_id36:
+            response.text = "Comment not found (or it was deleted)"
+        elif request.matched_route.factory == topic_by_id36:
+            response.text = "Topic not found (or it was deleted)"
+        else:
+            response.text = "Not found"
+    elif isinstance(request.exception, HTTPForbidden):
+        response.text = "Access denied (try reloading)"
+    elif isinstance(request.exception, HTTPBadRequest):
+        if response.title == "Bad CSRF Token":
+            response.text = "Page expired, reload and try again"
+        else:
+            response.text = "Unknown error"
 
     return response
 
