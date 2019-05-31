@@ -10,7 +10,7 @@ from marshmallow.exceptions import ValidationError
 from marshmallow.fields import DateTime
 import sqlalchemy_utils
 
-from tildes.schemas.fields import Ltree, SimpleString
+from tildes.schemas.fields import Ltree, Markdown, SimpleString
 
 
 # Validation regex for each individual "element" of a group path, encodes:
@@ -37,6 +37,7 @@ class GroupSchema(Schema):
     short_description = SimpleString(
         max_length=SHORT_DESCRIPTION_MAX_LENGTH, allow_none=True
     )
+    sidebar_markdown = Markdown(allow_none=True)
 
     @pre_load
     def prepare_path(self, data: dict) -> dict:
@@ -64,6 +65,18 @@ class GroupSchema(Schema):
 
             if not GROUP_PATH_ELEMENT_VALID_REGEX.match(element):
                 raise ValidationError("Path element %s is invalid" % element)
+
+    @pre_load
+    def prepare_sidebar_markdown(self, data: dict) -> dict:
+        """Prepare the sidebar_markdown value before it's validated."""
+        if "sidebar_markdown" not in data:
+            return data
+
+        # if the value is empty, convert it to None
+        if not data["sidebar_markdown"] or data["sidebar_markdown"].isspace():
+            data["sidebar_markdown"] = None
+
+        return data
 
     class Meta:
         """Always use strict checking so error handlers are invoked."""

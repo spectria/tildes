@@ -9,10 +9,12 @@ from typing import Any, List, Optional, Sequence, Tuple
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
 from sqlalchemy import Boolean, CheckConstraint, Column, Index, Integer, Text, TIMESTAMP
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import text
 from sqlalchemy_utils import Ltree, LtreeType
 
 from tildes.lib.database import ArrayOfLtree
+from tildes.lib.markdown import convert_markdown_to_safe_html
 from tildes.models import DatabaseModel
 from tildes.schemas.group import GroupSchema, SHORT_DESCRIPTION_MAX_LENGTH
 
@@ -45,6 +47,8 @@ class Group(DatabaseModel):
             name="short_description_length",
         ),
     )
+    _sidebar_markdown: str = deferred(Column("sidebar_markdown", Text))
+    sidebar_rendered_html: str = deferred(Column(Text))
     num_subscriptions: int = Column(Integer, nullable=False, server_default="0")
     is_admin_posting_only: bool = Column(
         Boolean, nullable=False, server_default="false"
@@ -69,6 +73,24 @@ class Group(DatabaseModel):
     @common_topic_tags.setter  # type: ignore
     def common_topic_tags(self, new_tags: List[str]) -> None:
         self._common_topic_tags = new_tags
+
+    @hybrid_property
+    def sidebar_markdown(self) -> str:
+        """Return the sidebar's markdown."""
+        return self._sidebar_markdown
+
+    @sidebar_markdown.setter  # type: ignore
+    def sidebar_markdown(self, new_markdown: str) -> None:
+        """Set the sidebar's markdown and render its HTML."""
+        if new_markdown == self.sidebar_markdown:
+            return
+
+        self._sidebar_markdown = new_markdown
+
+        if self._sidebar_markdown is not None:
+            self.sidebar_rendered_html = convert_markdown_to_safe_html(new_markdown)
+        else:
+            self.sidebar_rendered_html = None
 
     def __repr__(self) -> str:
         """Display the group's path and ID as its repr format."""

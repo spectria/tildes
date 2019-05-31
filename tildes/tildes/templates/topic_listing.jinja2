@@ -220,6 +220,10 @@
     <a href="/~{{ group.path }}/new_topic" class="btn btn-primary">Post a new topic</a>
   {% endif %}
 
+  {% if group.sidebar_rendered_html %}
+    {{ group.sidebar_rendered_html|safe }}
+  {% endif %}
+
   {% if wiki_pages %}
     <ul class="nav">
       <li>Group wiki pages</li>
