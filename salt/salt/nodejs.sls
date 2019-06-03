@@ -1,3 +1,5 @@
+{% from "common.jinja2" import app_dir, app_username %}
+
 # Add the NodeSource repository and install Node.js 10.x
 nodejs-pkgrepo:
   pkgrepo.managed:
@@ -10,3 +12,11 @@ nodejs-pkgrepo:
   pkg.installed:
     - name: nodejs
     - refresh: True
+
+# Install the npm packages defined in package.json
+install-npm-packages:
+  npm.bootstrap:
+    - name: {{ app_dir }}
+    - user: {{ app_username }}
+    - require:
+      - pkg: nodejs
