@@ -11,6 +11,9 @@
   "dependencies": {},
   "devDependencies": {
     "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "prettier": "^1.17.1",
     "stylelint": "^10.0.1",
     "stylelint-scss": "^3.6.0"
   },
@@ -18,34 +21,27 @@
     "env": {
       "browser": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+      "eslint:recommended",
+      "plugin:prettier/recommended"
+    ],
     "globals": {
       "$": "readonly",
       "Intercooler": "readonly",
       "Tildes": "readonly"
-    },
-    "rules": {
-      "indent": [
-        "error",
-        4
-      ],
-      "linebreak-style": [
-        "error",
-        "unix"
-      ],
-      "quotes": [
-        "error",
-        "single"
-      ],
-      "semi": [
-        "error",
-        "always"
-      ]
     }
   },
   "eslintIgnore": [
-    "static/js/third_party*"
+    "static/js/third_party*",
+    "static/js/tildes.js"
   ],
+  "prettier": {
+    "bracketSpacing": false,
+    "endOfLine": "lf",
+    "printWidth": 88,
+    "proseWrap": "always",
+    "tabWidth": 4
+  },
   "stylelint": {
     "ignoreFiles": [
       "scss/spectre*/**"
