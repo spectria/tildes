@@ -29,6 +29,7 @@ base:
     - self-signed-cert
     - development
     - prometheus
+    - nodejs
   'prod':
     - nginx.shortener-config
     - nginx.static-sites-config
