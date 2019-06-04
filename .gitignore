@@ -4,6 +4,7 @@ Customfile
 __pycache__
 *.py[co]
 
+pip-wheel-metadata/
 *.egg-info/
 
 .cache/
