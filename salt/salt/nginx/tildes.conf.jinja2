@@ -73,6 +73,9 @@ server {
     }
 
     location @proxy_to_app {
+        # apply rate-limiting, allowing a burst above the limit
+        limit_req zone=tildes_app burst=5 nodelay;
+
         # Cornice adds the X-Content-Type-Options header, so it will end up
         # being duplicated since nginx is also configured to send it (above).
         # It's better to drop the header coming from Gunicorn here than to

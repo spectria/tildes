@@ -29,6 +29,10 @@ http {
     sendfile on;
     {% endif %}
 
+    # define a rate-limiting zone to use, and return HTTP 429 if exceeded
+    limit_req_zone $binary_remote_addr zone=tildes_app:10m rate=4r/s;
+    limit_req_status 429;
+
     keepalive_timeout  65;
 
     # redirect non-https accesses to the https version
