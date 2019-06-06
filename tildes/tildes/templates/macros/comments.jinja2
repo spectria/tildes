@@ -90,17 +90,6 @@
     </header>
 
     {% if request.has_permission('view', comment) %}
-      {# Show votes at the top only if it's your own comment #}
-      {% if request.user == comment.user and comment.num_votes > 0 %}
-        <div class="comment-votes">{{ comment.num_votes }}
-          {% trans num_votes=comment.num_votes %}
-          vote
-          {% pluralize %}
-          votes
-          {% endtrans %}
-        </div>
-      {% endif %}
-
       {% if comment.is_label_active("exemplary") and request.has_permission("view_exemplary_reasons", comment) %}
         <details class="comment-exemplary-reasons">
           <summary><span class="label label-comment label-comment-exemplary">Exemplary</span>
@@ -142,17 +131,6 @@
         {{ comment.rendered_html|safe }}
       </div>
 
-      {# Show votes at the bottom only if the viewer is logged out #}
-      {% if not request.user and comment.num_votes > 0 %}
-        <div class="comment-votes">{{ comment.num_votes }}
-          {% trans num_votes=comment.num_votes %}
-          vote
-          {% pluralize %}
-          votes
-          {% endtrans %}
-        </div>
-      {% endif %}
-
       <menu class="btn-post">
         {% if request.has_permission('vote', comment) %}
           {% if comment.user_voted is defined and comment.user_voted %}
@@ -173,9 +151,6 @@
               data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
               data-ic-replace-target="true"
               >Vote
-          {% endif %}
-          {% if comment.num_votes > 0 %}
-            ({{ comment.num_votes }})
           {% endif %}
           </button></li>
         {% endif %}
