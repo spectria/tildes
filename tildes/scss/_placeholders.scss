@@ -16,7 +16,8 @@
     max-width: $paragraph-max-width;
   }
 
-  ol, ul {
+  ol,
+  ul {
     $list-left-margin: 2rem;
     margin: 0 0 0.4rem $list-left-margin;
 
@@ -25,7 +26,8 @@
       max-width: $paragraph-max-width - $list-left-margin;
     }
 
-    ol, ul {
+    ol,
+    ul {
       margin-left: 1rem;
     }
 

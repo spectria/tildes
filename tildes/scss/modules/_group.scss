@@ -28,7 +28,8 @@
   align-items: center;
   margin: 1rem 0;
 
-  .group-subscription-count, button {
+  .group-subscription-count,
+  button {
     flex: 1; // makes the two elements equal width
   }
 

@@ -12,23 +12,33 @@
 
 // special formatting rules for wiki pages
 .text-wiki {
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     a {
       text-decoration: none;
     }
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     border-bottom: 1px dotted;
     padding-bottom: 0.2rem;
   }
 
-  h1, h2 {
+  h1,
+  h2 {
     margin-top: 2rem;
   }
 
   // smaller margin when two large headers are sequential
-  h1 + h1, h1 + h2, h2 + h2 {
+  h1 + h1,
+  h1 + h2,
+  h2 + h2 {
     margin-top: 1rem;
   }
 
