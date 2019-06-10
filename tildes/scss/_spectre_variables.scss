@@ -5,6 +5,7 @@
 
 $primary-color: #268bd2;  // Solarized
 
+// Remove the rounded corners on various elements
 $border-radius: 0;
 
 // Responsive breakpoints
@@ -13,4 +14,4 @@ $size-sm: 600px;
 $size-md: $show-sidebar-width;
 $size-lg: 960px;
 $size-xl: 1200px;
-$size-2x: 1500px;
+$size-2x: 1500px;  // stylelint-disable scss/dollar-variable-pattern

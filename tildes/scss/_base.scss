@@ -20,7 +20,7 @@ blockquote {
   border-left: 1px dotted;
 
   // nested blockquotes need reduced margin/padding
-  & > blockquote {
+  > blockquote {
     margin: 0;
     margin-bottom: 0.2rem;
     padding-top: 0;

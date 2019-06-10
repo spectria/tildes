@@ -271,7 +271,7 @@
   }
 
   .is-comment-collapsed-individual:not(:target) {
-    & > .comment-itself {
+    > .comment-itself {
       @extend %collapsed-theme;
     }
   }
@@ -478,7 +478,7 @@
   }
 
   .topic-listing {
-    & > li:nth-of-type(2n) {
+    > li:nth-of-type(2n) {
       color: mix(map-get($theme, "foreground-primary"), map-get($theme, "foreground-highlight"));
       background-color: mix(map-get($theme, "background-primary"), map-get($theme, "background-secondary"));
     }
@@ -539,7 +539,7 @@
   }
 
   .is-comment-new {
-    & > .comment-itself {
+    > .comment-itself {
       border-left-color: map-get($theme, "alert");
     }
 
@@ -549,7 +549,7 @@
   }
 
   .is-comment-exemplary {
-    & > .comment-itself {
+    > .comment-itself {
       border-left-color: map-get($theme, "comment-label-exemplary");
     }
   }

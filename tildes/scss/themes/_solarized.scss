@@ -2,6 +2,7 @@
 // (http://ethanschoonover.com/solarized)
 
 // "Official" color names from Solarized
+// stylelint-disable scss/dollar-variable-pattern
 $base03: #002b36;
 $base02: #073642;
 $base01: #586e75;
@@ -10,7 +11,9 @@ $base0: #839496;
 $base1: #93a1a1;
 $base2: #eee8d5;
 $base3: #fdf6e3;
+// stylelint-enable scss/dollar-variable-pattern
 
+// Accent colors
 $blue: #268bd2;
 $cyan: #2aa198;
 $green: #859900;
@@ -25,14 +28,12 @@ $bg-darkest: $base03;
 $bg-dark: $base02;
 $bg-light: $base2;
 $bg-lightest: $base3;
-
 $fg-darkest: $base01;
 $fg-dark: $base00;
 $fg-light: $base0;
 $fg-lightest: $base1;
 
-// Actual themes below:
-
+// Shared between both "light" and "dark" variants
 $solarized-base: (
   "alert": $orange,
   "comment-label-exemplary": $blue,
@@ -52,29 +53,33 @@ $solarized-base: (
   "warning": $yellow,
 );
 
-$theme-dark: map-merge($solarized-base, (
-  "background-input": #001f27,
-  "background-primary": $bg-darkest,
-  "background-secondary": $bg-dark,
-  "border": #33555e,
-  "foreground-highlight": $fg-lightest,
-  "foreground-primary": $fg-light,
-  "foreground-secondary": $fg-darkest,
-));
+// Dark theme definition
+$theme-dark:
+  map-merge($solarized-base, (
+    "background-input": #001f27,
+    "background-primary": $bg-darkest,
+    "background-secondary": $bg-dark,
+    "border": #33555e,
+    "foreground-highlight": $fg-lightest,
+    "foreground-primary": $fg-light,
+    "foreground-secondary": $fg-darkest,
+  ));
 
 body.theme-dark {
   @include use-theme($theme-dark);
 }
 
-$theme-light: map-merge($solarized-base, (
-  "background-input": #fefbf1,
-  "background-primary": $bg-lightest,
-  "background-secondary": $bg-light,
-  "border": #cbc5b6,
-  "foreground-highlight": $fg-darkest,
-  "foreground-primary": $fg-dark,
-  "foreground-secondary": $fg-lightest,
-));
+// Light theme definition
+$theme-light:
+  map-merge($solarized-base, (
+    "background-input": #fefbf1,
+    "background-primary": $bg-lightest,
+    "background-secondary": $bg-light,
+    "border": #cbc5b6,
+    "foreground-highlight": $fg-darkest,
+    "foreground-primary": $fg-dark,
+    "foreground-secondary": $fg-lightest,
+  ));
 
 body.theme-light {
   @include use-theme($theme-light);

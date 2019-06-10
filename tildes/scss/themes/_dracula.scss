@@ -1,10 +1,12 @@
 // Color palette is Zeno Rocha's "Dracula" (https://draculatheme.com/)
 
+// Base colors
 $background: #282a36;
 $background-alt: #44475a;
 $foreground: #f8f8f2;
 $foreground-alt: #6272a4;
 
+// Accent colors
 $cyan: #8be9fd;
 $green: #50fa7b;
 $orange: #ffb86c;
@@ -13,6 +15,7 @@ $purple: #bd93f9;
 $red: #ff5555;
 $yellow: #f1fa8c;
 
+// Actual theme definition
 $theme-dracula: (
   "alert": $orange,
   "background-primary": $background,

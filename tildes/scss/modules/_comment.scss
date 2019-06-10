@@ -155,7 +155,7 @@
 }
 
 .is-comment-by-op {
-  & > .comment-itself {
+  > .comment-itself {
     margin-left: -2px;
     border-left: 3px solid;
 
@@ -208,7 +208,7 @@
 // uses @extend to only collapse everything inside the collapsed comment itself and
 // not its replies
 .is-comment-collapsed-individual:not(:target) {
-  & > .comment-itself {
+  > .comment-itself {
     @extend %collapsed;
   }
 }
@@ -219,21 +219,21 @@
 }
 
 .is-comment-mine {
-  & > .comment-itself {
+  > .comment-itself {
     margin-left: -2px;
     border-left: 3px solid;
   }
 }
 
 .is-comment-new {
-  & > .comment-itself {
+  > .comment-itself {
     margin-left: -2px;
     border-left: 3px solid;
   }
 }
 
 .is-comment-exemplary {
-  & > .comment-itself {
+  > .comment-itself {
     margin-left: -2px;
     border-left: 3px solid;
   }
@@ -251,18 +251,19 @@
   @if ($depth < 2) {
     @error "Starting depth must be at least 2";
   }
+
   $depth: $depth - 2;
 
   .comment[data-comment-depth="#{$depth}"] {
     .comment[data-comment-replies="1"] > .comment-tree-replies > .comment-tree-item {
-      & > .comment[data-comment-replies="1"] {
-        & > .comment-tree-replies {
+      > .comment[data-comment-replies="1"] {
+        > .comment-tree-replies {
           margin-left: -1px;  // compensate for border
 
-          & > .comment-tree-item > .comment > .comment-itself {
-            & > .comment-text::before,
-            & > header > .is-comment-deleted::before,
-            & > header > .is-comment-removed::before {
+          > .comment-tree-item > .comment > .comment-itself {
+            > .comment-text::before,
+            > header > .is-comment-deleted::before,
+            > header > .is-comment-removed::before {
               content: "(Reply to above comment)";
               font-size: 0.6rem;
               font-style: italic;
