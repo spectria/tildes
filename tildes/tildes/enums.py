@@ -93,6 +93,8 @@ class LogEventType(enum.Enum):
     COMMENT_POST = enum.auto()
     COMMENT_REMOVE = enum.auto()
     COMMENT_UNREMOVE = enum.auto()
+    COMMENT_UNVOTE = enum.auto()
+    COMMENT_VOTE = enum.auto()
 
     TOPIC_LINK_EDIT = enum.auto()
     TOPIC_LOCK = enum.auto()
@@ -103,6 +105,8 @@ class LogEventType(enum.Enum):
     TOPIC_TITLE_EDIT = enum.auto()
     TOPIC_UNLOCK = enum.auto()
     TOPIC_UNREMOVE = enum.auto()
+    TOPIC_UNVOTE = enum.auto()
+    TOPIC_VOTE = enum.auto()
 
 
 class ScraperType(enum.Enum):

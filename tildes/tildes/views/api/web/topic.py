@@ -92,6 +92,8 @@ def put_topic_vote(request: Request) -> Response:
     new_vote = TopicVote(request.user, topic)
     request.db_session.add(new_vote)
 
+    request.db_session.add(LogTopic(LogEventType.TOPIC_VOTE, request, topic))
+
     try:
         # manually flush before attempting to commit, to avoid having all objects
         # detached from the session in case of an error
@@ -125,6 +127,8 @@ def delete_topic_vote(request: Request) -> Response:
     request.query(TopicVote).filter(
         TopicVote.topic == topic, TopicVote.user == request.user
     ).delete(synchronize_session=False)
+
+    request.db_session.add(LogTopic(LogEventType.TOPIC_UNVOTE, request, topic))
 
     # manually commit the transaction so triggers will execute
     request.tm.commit()

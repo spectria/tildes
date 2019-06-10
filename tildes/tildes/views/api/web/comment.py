@@ -226,6 +226,8 @@ def put_vote_comment(request: Request) -> dict:
 
     _mark_comment_read_from_interaction(request, comment)
 
+    request.db_session.add(LogComment(LogEventType.COMMENT_VOTE, request, comment))
+
     try:
         # manually flush before attempting to commit, to avoid having all objects
         # detached from the session in case of an error
@@ -261,6 +263,8 @@ def delete_vote_comment(request: Request) -> dict:
     ).delete(synchronize_session=False)
 
     _mark_comment_read_from_interaction(request, comment)
+
+    request.db_session.add(LogComment(LogEventType.COMMENT_UNVOTE, request, comment))
 
     # manually commit the transaction so triggers will execute
     request.tm.commit()
