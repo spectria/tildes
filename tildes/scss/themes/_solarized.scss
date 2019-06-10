@@ -54,33 +54,31 @@ $solarized-base: (
 );
 
 // Dark theme definition
-$theme-dark:
-  map-merge($solarized-base, (
-    "background-input": #001f27,
-    "background-primary": $bg-darkest,
-    "background-secondary": $bg-dark,
-    "border": #33555e,
-    "foreground-highlight": $fg-lightest,
-    "foreground-primary": $fg-light,
-    "foreground-secondary": $fg-darkest,
-  ));
+$solarized-dark: (
+  "background-input": #001f27,
+  "background-primary": $bg-darkest,
+  "background-secondary": $bg-dark,
+  "border": #33555e,
+  "foreground-highlight": $fg-lightest,
+  "foreground-primary": $fg-light,
+  "foreground-secondary": $fg-darkest,
+);
 
 body.theme-dark {
-  @include use-theme($theme-dark);
+  @include use-theme(map-merge($solarized-base, $solarized-dark));
 }
 
 // Light theme definition
-$theme-light:
-  map-merge($solarized-base, (
-    "background-input": #fefbf1,
-    "background-primary": $bg-lightest,
-    "background-secondary": $bg-light,
-    "border": #cbc5b6,
-    "foreground-highlight": $fg-darkest,
-    "foreground-primary": $fg-dark,
-    "foreground-secondary": $fg-lightest,
-  ));
+$solarized-light: (
+  "background-input": #fefbf1,
+  "background-primary": $bg-lightest,
+  "background-secondary": $bg-light,
+  "border": #cbc5b6,
+  "foreground-highlight": $fg-darkest,
+  "foreground-primary": $fg-dark,
+  "foreground-secondary": $fg-lightest,
+);
 
 body.theme-light {
-  @include use-theme($theme-light);
+  @include use-theme(map-merge($solarized-base, $solarized-light));
 }

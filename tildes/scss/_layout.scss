@@ -25,7 +25,10 @@ body {
 }
 
 .l-no-sidebar {
-  grid-template-columns: 1fr minmax(auto, calc(#{$main-max-width} + #{$sidebar-width} + 0.4rem)) 1fr;
+  grid-template-columns:
+    1fr
+    minmax(auto, calc(#{$main-max-width} + #{$sidebar-width} + 0.4rem))
+    1fr;
   grid-template-areas:
     ". header ."
     ". main   ."
@@ -73,8 +76,9 @@ body {
 }
 
 #sidebar {
-  /* hidden by default, show on wider screens */
+  // hidden by default, show on wider screens
   display: none;
+
   @media (min-width: $show-sidebar-width) {
     display: block;
     grid-area: sidebar;

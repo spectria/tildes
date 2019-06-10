@@ -35,6 +35,7 @@
 
 .sidebar-controls {
   display: flex;
+
   @media (min-width: $show-sidebar-width) {
     display: none;
   }
@@ -48,7 +49,6 @@
 
 .is-sidebar-displayed {
   @media (max-width: $show-sidebar-width) {
-
     display: block !important;
     position: absolute;
     right: 0;

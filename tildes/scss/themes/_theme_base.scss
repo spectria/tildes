@@ -215,6 +215,7 @@
 
       $active-color: #fff;
       $is-active-bg-light: lightness(map-get($theme, "button")) > 50;
+
       @if ($is-active-bg-light) {
         $active-color: #000;
       }
@@ -479,8 +480,16 @@
 
   .topic-listing {
     > li:nth-of-type(2n) {
-      color: mix(map-get($theme, "foreground-primary"), map-get($theme, "foreground-highlight"));
-      background-color: mix(map-get($theme, "background-primary"), map-get($theme, "background-secondary"));
+      color:
+        mix(
+          map-get($theme, "foreground-primary"),
+          map-get($theme, "foreground-highlight")
+        );
+      background-color:
+        mix(
+          map-get($theme, "background-primary"),
+          map-get($theme, "background-secondary")
+        );
     }
   }
 
@@ -657,7 +666,7 @@
       font-style: italic;
     } // Generic.Emph
     .syntax-gr {
-      color:  map-get($theme, "syntax-constant");
+      color: map-get($theme, "syntax-constant");
     } // Generic.Error
     .syntax-gh {
       color: map-get($theme, "syntax-constant");
@@ -685,7 +694,7 @@
       color: map-get($theme, "syntax-constant");
     } // Keyword.Constant
     .syntax-kd {
-      color:  map-get($theme, "syntax-keyword");
+      color: map-get($theme, "syntax-keyword");
     } // Keyword.Declaration
     .syntax-kn {
       color: map-get($theme, "syntax-comment");
@@ -694,7 +703,7 @@
       color: map-get($theme, "syntax-comment");
     } // Keyword.Pseudo
     .syntax-kr {
-      color:  map-get($theme, "syntax-keyword");
+      color: map-get($theme, "syntax-keyword");
     } // Keyword.Reserved
     .syntax-kt {
       color: map-get($theme, "syntax-keyword");
@@ -712,16 +721,16 @@
       color: map-get($theme, "foreground");
     } // Name.Attribute
     .syntax-nb {
-      color:  map-get($theme, "syntax-builtin");
+      color: map-get($theme, "syntax-builtin");
     } // Name.Builtin
     .syntax-nc {
-      color:  map-get($theme, "syntax-keyword");
+      color: map-get($theme, "syntax-keyword");
     } // Name.Class
     .syntax-no {
       color: map-get($theme, "syntax-constant");
     } // Name.Constant
     .syntax-nd {
-      color:  map-get($theme, "syntax-keyword");
+      color: map-get($theme, "syntax-keyword");
     } // Name.Decorator
     .syntax-ni {
       color: map-get($theme, "syntax-builtin");
@@ -730,7 +739,7 @@
       color: map-get($theme, "syntax-builtin");
     } // Name.Exception
     .syntax-nf {
-      color:  map-get($theme, "syntax-builtin");
+      color: map-get($theme, "syntax-builtin");
     } // Name.Function
     .syntax-nl {
       color: map-get($theme, "foreground");
@@ -745,10 +754,10 @@
       color: map-get($theme, "foreground");
     } // Name.Property
     .syntax-nt {
-      color:  map-get($theme, "syntax-keyword");
+      color: map-get($theme, "syntax-keyword");
     } // Name.Tag
     .syntax-nv {
-      color:  map-get($theme, "syntax-keyword");
+      color: map-get($theme, "syntax-keyword");
     } // Name.Variable
     .syntax-ow {
       color: map-get($theme, "syntax-comment");
@@ -793,7 +802,7 @@
       color: map-get($theme, "syntax-string");
     } // Literal.String.Other
     .syntax-sr {
-      color:  map-get($theme, "syntax-constant");
+      color: map-get($theme, "syntax-constant");
     } // Literal.String.Regex
     .syntax-s1 {
       color: map-get($theme, "syntax-string");
@@ -802,16 +811,16 @@
       color: map-get($theme, "syntax-string");
     } // Literal.String.Symbol
     .syntax-bp {
-      color:  map-get($theme, "syntax-keyword");
+      color: map-get($theme, "syntax-keyword");
     } // Name.Builtin.Pseudo
     .syntax-vc {
-      color:  map-get($theme, "syntax-keyword");
+      color: map-get($theme, "syntax-keyword");
     } // Name.Variable.Class
     .syntax-vg {
-      color:  map-get($theme, "syntax-keyword");
+      color: map-get($theme, "syntax-keyword");
     } // Name.Variable.Global
     .syntax-vi {
-      color:  map-get($theme, "syntax-keyword");
+      color: map-get($theme, "syntax-keyword");
     } // Name.Variable.Instance
     .syntax-il {
       color: map-get($theme, "syntax-comment");
@@ -844,8 +853,8 @@
     "foreground-secondary"
     "link"
     "link-visited"
-    "warning"
-  ;
+    "warning";
+
   @each $key in $essential-keys {
     @if (not map-has-key($theme, $key)) {
       @error "Missing essential key in theme: #{$key}";
@@ -860,7 +869,9 @@
   $border: map-get-fallback($theme, "border", "foreground-secondary");
   $button: map-get-fallback($theme, "button", "link");
   $button-used: map-get-fallback($theme, "button-used", "link-visited");
-  $foreground-highlight: map-get-fallback($theme, "foreground-highlight", "foreground-primary");
+  // stylelint-disable-next-line
+  $foreground-highlight:
+    map-get-fallback($theme, "foreground-highlight", "foreground-primary");
   $stripe-mine: map-get-fallback($theme, "stripe-mine", "link-visited");
   $stripe-target: map-get-fallback($theme, "stripe-target", "warning");
   $syntax-builtin: map-get-fallback($theme, "syntax-builtin", "foreground-primary");
@@ -872,13 +883,17 @@
   $topic-tag-nsfw: map-get-fallback($theme, "topic-tag-nsfw", "error");
   $topic-tag-spoiler: map-get-fallback($theme, "topic-tag-spoiler", "warning");
 
-  // foreground-extreme: if not defined, use white on a dark background and black on a light one
+  // foreground-extreme: if not defined, use white on a dark bg and black on a light one
   $foreground-extreme: map-get($theme, "foreground-extreme");
   $foreground-extreme: if($is-light, #000, #fff) !default;
 
   // foreground-middle: if not defined, mix foreground-primary and foreground-secondary
   $foreground-middle: map-get($theme, "foreground-middle");
-  $foreground-middle: mix(map-get($theme, "foreground-primary"), map-get($theme, "foreground-secondary")) !default;
+  $foreground-middle:
+    mix(
+      map-get($theme, "foreground-primary"),
+      map-get($theme, "foreground-secondary")
+    ) !default;
 
   // link-hover: if not defined, darken the link color slightly
   $link-hover: map-get($theme, "link-hover");

@@ -24,6 +24,7 @@
 
   // have the tabs span the full width at small sizes
   width: 100%;
+
   @media (min-width: $size-md) {
     width: auto;
   }
@@ -33,6 +34,7 @@
 
     a {
       margin-right: 0;
+
       @media (min-width: $size-md) {
         margin-right: 1rem;
       }

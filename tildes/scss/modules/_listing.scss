@@ -9,6 +9,7 @@
 
   // right-align the period dropdown at small sizes, left-align at larger
   justify-content: flex-end;
+
   @media (min-width: $size-md) {
     justify-content: flex-start;
   }

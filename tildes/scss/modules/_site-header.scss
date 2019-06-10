@@ -9,6 +9,7 @@
   .logged-in-user-info {
     // hidden on small screens
     display: none;
+
     @media (min-width: $show-sidebar-width) {
       display: flex;
     }
@@ -30,6 +31,7 @@
   // keep the logo pixelated - "pixelated" is best but Firefox only supports
   // "crisp-edges" as of Firefox 68
   image-rendering: pixelated;
+
   @supports not (image-rendering: pixelated) {
     image-rendering: crisp-edges;
   }
