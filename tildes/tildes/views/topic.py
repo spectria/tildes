@@ -349,22 +349,16 @@ def post_comment_on_topic(request: Request, markdown: str) -> HTTPFound:
 
 
 def _get_default_settings(request: Request, order: Any) -> DefaultSettings:  # noqa
-    if isinstance(request.context, Group):
-        is_home_page = False
-
-        if request.user:
-            user_settings = (
-                request.query(UserGroupSettings)
-                .filter(
-                    UserGroupSettings.user == request.user,
-                    UserGroupSettings.group == request.context,
-                )
-                .one_or_none()
+    if isinstance(request.context, Group) and request.user:
+        user_settings = (
+            request.query(UserGroupSettings)
+            .filter(
+                UserGroupSettings.user == request.user,
+                UserGroupSettings.group == request.context,
             )
-        else:
-            user_settings = None
+            .one_or_none()
+        )
     else:
-        is_home_page = True
         user_settings = None
 
     if user_settings and user_settings.default_order:
@@ -388,17 +382,11 @@ def _get_default_settings(request: Request, order: Any) -> DefaultSettings:  # n
     else:
         # Overall default periods, if the user doesn't have either a group-specific or a
         # home default set up:
-        #   * "all time" if sorting by new
-        #   * "all time" if sorting by activity and inside a group
-        #   * "3 days" if sorting by activity and on home page
-        #   * "1 day" otherwise (sorting by most votes or most comments)
-        if order == TopicSortOption.NEW:
-            default_period = None
-        elif order == TopicSortOption.ACTIVITY and not is_home_page:
-            default_period = None
-        elif order == TopicSortOption.ACTIVITY:
-            default_period = SimpleHoursPeriod(72)
-        else:
+        #   * "1 day" if sorting by most votes or most comments
+        #   * "all time" otherwise
+        if order in (TopicSortOption.VOTES, TopicSortOption.COMMENTS):
             default_period = SimpleHoursPeriod(24)
+        else:
+            default_period = None
 
     return DefaultSettings(order=default_order, period=default_period)
