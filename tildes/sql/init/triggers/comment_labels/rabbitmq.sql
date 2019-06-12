@@ -28,3 +28,9 @@ CREATE TRIGGER send_rabbitmq_message_for_comment_label_insert
     AFTER INSERT ON comment_labels
     FOR EACH ROW
     EXECUTE PROCEDURE send_rabbitmq_message_for_comment_label('created');
+
+
+CREATE TRIGGER send_rabbitmq_message_for_comment_label_delete
+    AFTER DELETE ON comment_labels
+    FOR EACH ROW
+    EXECUTE PROCEDURE send_rabbitmq_message_for_comment_label('deleted');

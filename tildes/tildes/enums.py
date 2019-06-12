@@ -117,12 +117,28 @@ class ScraperType(enum.Enum):
 
 
 class TopicSortOption(enum.Enum):
-    """Enum for the different methods topics can be sorted by."""
+    """Enum for the different methods topics can be sorted by.
 
+    Note that there are two sort methods based on activity:
+      - "All activity" will bump a topic back to the top of the sort whenever *any* new
+        comments are posted in that topic, similar to how forums behave. This uses the
+        Topic.last_activity_time value.
+      - "Activity" tries to only bump topics back up when "interesting" activity
+        occurs in them, using some checks to decide whether specific comments should be
+        disregarded. This uses the topic.last_interesting_activity_time value, which is
+        updated by a separate background process (topic_interesting_activity_updater).
+    """
+
+    ACTIVITY = enum.auto()
     VOTES = enum.auto()
     COMMENTS = enum.auto()
     NEW = enum.auto()
-    ACTIVITY = enum.auto()
+    ALL_ACTIVITY = enum.auto()
+
+    @property
+    def display_name(self) -> str:
+        """Return the sort method's name in a format more suitable for display."""
+        return self.name.capitalize().replace("_", " ")
 
     @property
     def descending_description(self) -> str:
@@ -135,7 +151,9 @@ class TopicSortOption(enum.Enum):
         if self.name == "NEW":
             return "newest"
         elif self.name == "ACTIVITY":
-            return "activity"
+            return "relevant activity"
+        elif self.name == "ALL_ACTIVITY":
+            return "all activity"
 
         return "most {}".format(self.name.lower())
 

@@ -36,7 +36,7 @@
       {% endif %}
 
       <a href="{{ request.current_listing_base_url({'order': option.name.lower()}) }}">
-        {{ option.descending_description.capitalize() }}
+        {{ option.display_name }}
       </a>
 
       </li>

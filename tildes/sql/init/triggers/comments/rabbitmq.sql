@@ -32,3 +32,31 @@ CREATE TRIGGER send_rabbitmq_message_for_comment_edit
     FOR EACH ROW
     WHEN (OLD.markdown IS DISTINCT FROM NEW.markdown)
     EXECUTE PROCEDURE send_rabbitmq_message_for_comment('edited');
+
+
+CREATE TRIGGER send_rabbitmq_message_for_comment_delete
+    AFTER UPDATE ON comments
+    FOR EACH ROW
+    WHEN (OLD.is_deleted = false AND NEW.is_deleted = true)
+    EXECUTE PROCEDURE send_rabbitmq_message_for_comment('deleted');
+
+
+CREATE TRIGGER send_rabbitmq_message_for_comment_undelete
+    AFTER UPDATE ON comments
+    FOR EACH ROW
+    WHEN (OLD.is_deleted = true AND NEW.is_deleted = false)
+    EXECUTE PROCEDURE send_rabbitmq_message_for_comment('undeleted');
+
+
+CREATE TRIGGER send_rabbitmq_message_for_comment_remove
+    AFTER UPDATE ON comments
+    FOR EACH ROW
+    WHEN (OLD.is_removed = false AND NEW.is_removed = true)
+    EXECUTE PROCEDURE send_rabbitmq_message_for_comment('removed');
+
+
+CREATE TRIGGER send_rabbitmq_message_for_comment_unremove
+    AFTER UPDATE ON comments
+    FOR EACH ROW
+    WHEN (OLD.is_removed = true AND NEW.is_removed = false)
+    EXECUTE PROCEDURE send_rabbitmq_message_for_comment('unremoved');

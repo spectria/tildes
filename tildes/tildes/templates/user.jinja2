@@ -43,7 +43,7 @@
     <div class="listing-options">
       <menu class="tab tab-listing-order">
         <li class="tab-item{{' active' if not post_type else ''}}">
-          <a href="{{ request.current_listing_normal_url() }}">All activity</a>
+          <a href="{{ request.current_listing_normal_url() }}">All posts</a>
         </li>
         <li class="tab-item{{' active' if post_type == 'topic' else ''}}">
           <a href="{{ request.current_listing_normal_url({'type': 'topic'}) }}">Topics</a>

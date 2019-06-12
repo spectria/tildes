@@ -126,6 +126,8 @@ class TopicQuery(PaginatedQuery):
         elif sort == TopicSortOption.NEW:
             self._sort_column = Topic.created_time
         elif sort == TopicSortOption.ACTIVITY:
+            self._sort_column = Topic.last_interesting_activity_time
+        elif sort == TopicSortOption.ALL_ACTIVITY:
             self._sort_column = Topic.last_activity_time
 
         self.sort_desc = desc

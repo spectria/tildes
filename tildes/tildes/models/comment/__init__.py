@@ -6,5 +6,5 @@ from .comment_notification import CommentNotification
 from .comment_notification_query import CommentNotificationQuery
 from .comment_query import CommentQuery
 from .comment_label import CommentLabel
-from .comment_tree import CommentTree
+from .comment_tree import CommentInTree, CommentTree
 from .comment_vote import CommentVote

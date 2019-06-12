@@ -89,6 +89,12 @@ class Topic(DatabaseModel):
         index=True,
         server_default=text("NOW()"),
     )
+    last_interesting_activity_time: datetime = Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        index=True,
+        server_default=text("NOW()"),
+    )
     is_deleted: bool = Column(
         Boolean, nullable=False, server_default="false", index=True
     )
