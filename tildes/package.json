@@ -51,10 +51,18 @@
     ],
     "rules": {
       "at-rule-empty-line-before": [
-        "always", {
-          "except": ["blockless-after-same-name-blockless", "first-nested"],
-          "ignore": ["after-comment"],
-          "ignoreAtRules": ["else"]
+        "always",
+        {
+          "except": [
+            "blockless-after-same-name-blockless",
+            "first-nested"
+          ],
+          "ignore": [
+            "after-comment"
+          ],
+          "ignoreAtRules": [
+            "else"
+          ]
         }
       ],
       "at-rule-name-case": "lower",
@@ -64,7 +72,12 @@
       "block-closing-brace-empty-line-before": "never",
       "block-closing-brace-newline-after": [
         "always",
-        {"ignoreAtRules": ["else", "if"]}
+        {
+          "ignoreAtRules": [
+            "else",
+            "if"
+          ]
+        }
       ],
       "block-closing-brace-newline-before": "always",
       "block-no-empty": true,
@@ -127,7 +140,14 @@
       "property-no-unknown": true,
       "rule-empty-line-before": [
         "always",
-        {"except": ["first-nested"], "ignore": ["after-comment"]}
+        {
+          "except": [
+            "first-nested"
+          ],
+          "ignore": [
+            "after-comment"
+          ]
+        }
       ],
       "selector-attribute-brackets-space-inside": "never",
       "selector-attribute-operator-space-after": "never",
@@ -152,7 +172,14 @@
       "string-quotes": "double",
       "unit-case": "lower",
       "unit-no-unknown": true,
-      "unit-whitelist": ["%", "fr", "px", "rem", "vh", "vw"],
+      "unit-whitelist": [
+        "%",
+        "fr",
+        "px",
+        "rem",
+        "vh",
+        "vw"
+      ],
       "value-keyword-case": "lower",
       "value-list-max-empty-lines": 0,
       "value-no-vendor-prefix": true,
@@ -176,14 +203,26 @@
       "scss/dollar-variable-colon-space-before": "never",
       "scss/dollar-variable-empty-line-before": [
         "always",
-        {"except": ["after-comment", "after-dollar-variable", "first-nested"]}
+        {
+          "except": [
+            "after-comment",
+            "after-dollar-variable",
+            "first-nested"
+          ]
+        }
       ],
       "scss/dollar-variable-no-missing-interpolation": true,
       "scss/dollar-variable-pattern": "^[a-z-]+$",
       "scss/double-slash-comment-empty-line-before": [
-        "always", {
-          "except": ["first-nested"],
-          "ignore": ["between-comments", "stylelint-commands"]
+        "always",
+        {
+          "except": [
+            "first-nested"
+          ],
+          "ignore": [
+            "between-comments",
+            "stylelint-commands"
+          ]
         }
       ],
       "scss/double-slash-comment-whitespace-inside": "always",
