@@ -55,12 +55,16 @@ class TopicInterestingActivityUpdater(PgsqlQueueConsumer):
             comment_time = None
 
         # find the max interesting time from all of this comment's replies
+        reply_time = None
         if comment.replies:
-            reply_time = max(
-                [self._find_last_interesting_time(reply) for reply in comment.replies]
-            )
-        else:
-            reply_time = None
+            reply_times = [
+                self._find_last_interesting_time(reply) for reply in comment.replies
+            ]
+            try:
+                reply_time = max([time for time in reply_times if time])
+            except ValueError:
+                # all reply_times were None, just fall through
+                pass
 
         # disregard either time if it's None (or both)
         potential_times = [time for time in (comment_time, reply_time) if time]
