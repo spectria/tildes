@@ -106,7 +106,7 @@ def get_group_topics(
     unfiltered: bool,
 ) -> dict:
     """Get a listing of topics in the group."""
-    # pylint: disable=too-many-arguments, too-many-branches
+    # pylint: disable=too-many-arguments, too-many-branches, too-many-locals
     if request.matched_route.name == "home":
         # on the home page, include topics from the user's subscribed groups
         # (or all groups, if logged-out)
@@ -176,8 +176,16 @@ def get_group_topics(
             .order_by(GroupWikiPage.slug)
             .all()
         )
+
+        # remove the index from the page list, we'll output it separately
+        if any(page.slug == "index" for page in wiki_pages):
+            wiki_has_index = True
+            wiki_pages = [page for page in wiki_pages if page.slug != "index"]
+        else:
+            wiki_has_index = False
     else:
         wiki_pages = None
+        wiki_has_index = False
 
     return {
         "group": request.context,
@@ -195,6 +203,7 @@ def get_group_topics(
         "tag": tag,
         "unfiltered": unfiltered,
         "wiki_pages": wiki_pages,
+        "wiki_has_index": wiki_has_index,
     }
 
 

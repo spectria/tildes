@@ -40,7 +40,14 @@ def get_group_wiki_page(request: Request) -> dict:
         .all()
     )
 
-    return {"page": page, "page_list": page_list}
+    # remove the index from the page list, we'll output it separately
+    if any(page.slug == "index" for page in page_list):
+        has_index_page = True
+        page_list = [page for page in page_list if page.slug != "index"]
+    else:
+        has_index_page = False
+
+    return {"page": page, "page_list": page_list, "has_index_page": has_index_page}
 
 
 @view_config(

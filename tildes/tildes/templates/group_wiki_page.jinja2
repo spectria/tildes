@@ -42,13 +42,11 @@
 <ul class="nav">
   <li>Page list</li>
   <ul class="nav">
-  {% if page_list|selectattr("page_name", "eq", "index")|list %}
+  {% if has_index_page %}
     <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=page.group.path, wiki_page_slug="index") }}" class="text-bold">index</a></li>
   {% endif %}
   {% for other_page in page_list %}
-    {% if other_page.page_name != "index" %}
     <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=other_page.group.path, wiki_page_slug=other_page.slug) }}">{{ other_page.page_name }}</a></li>
-    {% endif %}
   {% endfor %}
   </ul>
 </ul>
