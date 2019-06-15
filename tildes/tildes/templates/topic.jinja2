@@ -12,6 +12,11 @@
 
 {% block title %}{{ topic.title }} - ~{{ topic.group.path }}{% endblock %}
 
+{% block meta_og_tags %}
+  <meta property="og:title" content="{{ self.title() }}">
+  <meta property="og:description" content="{{ topic.num_comments }} comments in the discussion of this {{ "link" if topic.is_link_type else "post" }} on Tildes">
+{% endblock %}
+
 {% block templates %}
   {% if request.user %}
     {{ comment_reply_template() }}
