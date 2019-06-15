@@ -6,21 +6,20 @@ body {
     display: grid;
     grid-template-rows: auto 1fr auto;
 
-    grid-template-columns: 1fr minmax(auto, $main-max-width) $sidebar-width 1fr;
+    grid-template-columns: 1fr minmax(auto, $main-max-width) 1fr;
     grid-template-areas:
-      ". header header  ."
-      ". main   sidebar ."
-      ". footer footer  .";
-    grid-gap: 0.4rem;
+      ". header ."
+      ". main   ."
+      ". footer .";
+    grid-row-gap: 0.2rem;
 
-    @media (max-width: $show-sidebar-width) {
-      grid-template-columns: 1fr minmax(auto, $main-max-width) 1fr;
+    @media (min-width: $show-sidebar-width) {
+      grid-template-columns: 1fr minmax(auto, $main-max-width) $sidebar-width 1fr;
       grid-template-areas:
-        ". header ."
-        ". main   ."
-        ". footer .";
-      grid-row-gap: 0.2rem;
-      grid-column-gap: 0;
+        ". header header  ."
+        ". main   sidebar ."
+        ". footer footer  .";
+      grid-gap: 0.4rem;
     }
   }
 }
@@ -77,13 +76,12 @@ body {
 }
 
 #sidebar {
-  // displayed by default, hide on smaller screens - doing it this way (vs. hidden by
-  // default) seems to be necessary to prevent a layout "shift" while loading
-  display: block;
-  grid-area: sidebar;
+  // hidden by default, show on wider screens
+  display: none;
 
-  @media (max-width: $show-sidebar-width) {
-    display: none;
+  @media (min-width: $show-sidebar-width) {
+    display: block;
+    grid-area: sidebar;
   }
 
   width: $sidebar-width;
