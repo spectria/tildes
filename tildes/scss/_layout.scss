@@ -6,7 +6,7 @@ body {
     display: grid;
     grid-template-rows: auto 1fr auto;
 
-    grid-template-columns: 1fr minmax(auto, $main-max-width) auto 1fr;
+    grid-template-columns: 1fr minmax(auto, $main-max-width) $sidebar-width 1fr;
     grid-template-areas:
       ". header header  ."
       ". main   sidebar ."
