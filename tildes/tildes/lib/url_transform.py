@@ -44,6 +44,8 @@ def apply_url_transformations(url: str) -> str:
 
 def _is_exempt_from_transformations(parsed_url: ParseResult) -> bool:
     """Return whether this url should be exempt from the transformation process."""
+    if not parsed_url.hostname:
+        return True
 
     # Paradox forums use an invalid url scheme that will break if processed
     if parsed_url.hostname == "forum.paradoxplaza.com":
