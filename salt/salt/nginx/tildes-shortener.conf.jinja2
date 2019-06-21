@@ -1,26 +1,27 @@
 server {
-    # remove trailing slash from addresses
-    rewrite ^/(.*)/$ https://$host/$1 permanent;
-
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-
-    add_header Strict-Transport-Security "max-age={{ pillar['hsts_max_age'] }}; includeSubDomains; preload" always;
-
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Xss-Protection "1; mode=block" always;
-    add_header Referrer-Policy "same-origin" always;
 
     server_name tild.es;
 
     keepalive_timeout 5;
 
+    add_header Strict-Transport-Security "max-age={{ pillar['hsts_max_age'] }}; includeSubDomains; preload" always;
+
+    # Are these security headers unnecessary when we're just redirecting?
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Xss-Protection "1; mode=block" always;
+    add_header Referrer-Policy "same-origin" always;
+
+    # Exact location match to redirect the root url to tildes.net
+    location = / {
+        return 301 https://tildes.net;
+    }
+
+    # Will match all addresses *except* the root
     location / {
-        proxy_set_header Host $host;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_redirect off;
-        proxy_pass http://app_server/shortener/;
+        # Strip any trailing slash while redirecting
+        rewrite ^/(.*)/?$ https://tildes.net/shortener/$1 permanent;
     }
 }
