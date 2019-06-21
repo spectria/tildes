@@ -224,7 +224,7 @@
     {{ group.sidebar_rendered_html|safe }}
   {% endif %}
 
-  {% if wiki_pages %}
+  {% if wiki_pages or wiki_has_index %}
     <ul class="nav">
       <li>Group wiki pages</li>
       <ul class="nav">
