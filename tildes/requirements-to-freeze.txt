@@ -10,7 +10,7 @@ freezegun
 gunicorn
 html5lib
 ipython
-mypy==0.670  # 0.700 includes incorrect bleach stubs
+mypy
 mypy-extensions
 Pillow
 prometheus-client
