@@ -14,7 +14,7 @@ mypy==0.670  # 0.700 includes incorrect bleach stubs
 mypy-extensions
 Pillow
 prometheus-client
-prospector
+prospector==1.1.6.2
 psycopg2
 publicsuffix2==2.20160818
 pygit2
