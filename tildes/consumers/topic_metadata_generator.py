@@ -5,8 +5,8 @@
 
 from typing import Any, Dict, Sequence
 
-from amqpy import Message
 import publicsuffix
+from amqpy import Message
 from sqlalchemy import cast, func
 from sqlalchemy.dialects.postgresql import JSONB
 

@@ -3,16 +3,17 @@
 
 """Contains the YoutubeScraper class."""
 
-from datetime import timedelta
 import re
+from datetime import timedelta
 from typing import Any, Dict
 from urllib.parse import parse_qs, urlparse
 
-from dateutil import parser
 import requests
+from dateutil import parser
 
 from tildes.enums import ScraperType
 from tildes.models.scraper import ScraperResult
+
 from .exceptions import ScraperError
 
 

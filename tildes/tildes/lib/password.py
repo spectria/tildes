@@ -7,6 +7,7 @@ from hashlib import sha1
 
 from redis import ConnectionError, Redis, ResponseError  # noqa
 
+
 # unix socket path for redis server with the breached passwords bloom filter
 BREACHED_PASSWORDS_REDIS_SOCKET = "/run/redis_breached_passwords/socket"
 

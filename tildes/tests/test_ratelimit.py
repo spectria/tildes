@@ -8,10 +8,10 @@ from random import randint
 from pytest import raises
 
 from tildes.lib.ratelimit import (
+    RATE_LIMITED_ACTIONS,
     RateLimitedAction,
     RateLimitError,
     RateLimitResult,
-    RATE_LIMITED_ACTIONS,
 )
 
 

@@ -3,12 +3,11 @@
 
 """Functions related to processing/manipulating strings."""
 
-from xml.etree.ElementTree import Element
-
 import re
-from typing import Iterator, List, Optional
 import unicodedata
+from typing import Iterator, List, Optional
 from urllib.parse import quote
+from xml.etree.ElementTree import Element
 
 from html5lib import HTMLParser
 

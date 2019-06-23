@@ -3,13 +3,13 @@
 
 """Functions related to transforming URLs (sanitization, cleanup, etc.)."""
 
+import logging
 from abc import ABC, abstractmethod
 from collections import Counter
-import logging
 from urllib.parse import (
-    ParseResult,
     parse_qs,
     parse_qsl,
+    ParseResult,
     urlencode,
     urlparse,
     urlunparse,

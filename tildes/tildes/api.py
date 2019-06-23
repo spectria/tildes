@@ -5,8 +5,8 @@
 
 from typing import Any
 
-from cornice import Service
 import venusian
+from cornice import Service
 
 
 class APIv0(Service):

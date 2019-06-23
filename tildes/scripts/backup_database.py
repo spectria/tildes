@@ -13,12 +13,12 @@ place, and will probably just crash completely if they aren't:
     * The specified GPG recipient's public key is in the keyring
 """
 
-from datetime import datetime, timedelta
-from ftplib import FTP
 import logging
-from netrc import netrc
 import os
 import subprocess
+from datetime import datetime, timedelta
+from ftplib import FTP
+from netrc import netrc
 
 import click
 

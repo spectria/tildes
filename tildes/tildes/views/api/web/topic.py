@@ -6,8 +6,8 @@
 from marshmallow import ValidationError
 from marshmallow.fields import String
 from pyramid.httpexceptions import HTTPNotFound
-from pyramid.response import Response
 from pyramid.request import Request
+from pyramid.response import Response
 from sqlalchemy import cast, Text
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.exc import IntegrityError

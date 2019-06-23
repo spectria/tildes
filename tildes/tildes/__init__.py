@@ -5,13 +5,13 @@
 
 from typing import Any, Dict, Optional, Tuple
 
+import sentry_sdk
 from marshmallow.exceptions import ValidationError
 from paste.deploy.config import PrefixMiddleware
 from pyramid.config import Configurator
 from pyramid.httpexceptions import HTTPTooManyRequests
 from pyramid.request import Request
 from redis import Redis
-import sentry_sdk
 from sentry_sdk.integrations.pyramid import PyramidIntegration
 from webassets import Bundle
 

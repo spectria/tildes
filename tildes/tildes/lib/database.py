@@ -7,7 +7,6 @@ import enum
 from typing import Any, Callable, List, Optional
 
 from pyramid.paster import bootstrap
-
 from sqlalchemy import cast, func
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.engine.interfaces import Dialect

@@ -3,8 +3,8 @@
 
 """Contains the CommentNotification class."""
 
-from datetime import datetime
 import re
+from datetime import datetime
 from typing import Any, List, Sequence, Tuple
 
 from pyramid.security import Allow, DENY_ALL
@@ -17,6 +17,7 @@ from tildes.enums import CommentNotificationType
 from tildes.lib.markdown import LinkifyFilter
 from tildes.models import DatabaseModel
 from tildes.models.user import User
+
 from .comment import Comment
 
 

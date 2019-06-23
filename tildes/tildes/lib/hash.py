@@ -6,6 +6,7 @@
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 
+
 # These parameter values were chosen to achieve a hash-verification time of about 10ms
 # on the current production server. They can be updated to different values if the
 # server changes (consider upgrading old password hashes on login as well if that

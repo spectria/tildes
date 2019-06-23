@@ -12,6 +12,7 @@ from wrapt import ObjectProxy
 from tildes.enums import CommentTreeSortOption
 from tildes.metrics import get_histogram
 from tildes.models.user import User
+
 from .comment import Comment
 
 

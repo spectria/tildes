@@ -14,6 +14,7 @@ from tildes.enums import TopicSortOption
 from tildes.lib.datetime import SimpleHoursPeriod, utc_now
 from tildes.models.group import Group
 from tildes.models.pagination import PaginatedQuery
+
 from .topic import Topic
 from .topic_bookmark import TopicBookmark
 from .topic_visit import TopicVisit

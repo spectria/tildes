@@ -13,6 +13,7 @@ from sqlalchemy.orm import relationship
 from tildes.lib.datetime import utc_now
 from tildes.models import DatabaseModel
 from tildes.models.user import User
+
 from .topic import Topic
 
 

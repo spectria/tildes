@@ -31,3 +31,4 @@ pylint:
     - no-self-use  # schemas do this a lot, would be nice to only disable for schemas
     - too-few-public-methods  # plenty of classes that don't need multiple methods
     - too-many-instance-attributes  # models have many instance attributes
+    - ungrouped-imports  # let isort handle this

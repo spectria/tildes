@@ -10,6 +10,7 @@ from sqlalchemy.orm import joinedload
 
 from tildes.lib.id import id_to_id36
 from tildes.models.pagination import PaginatedQuery, PaginatedResults
+
 from .comment_notification import CommentNotification
 from .comment_vote import CommentVote
 

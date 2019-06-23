@@ -3,8 +3,8 @@
 
 """Consumer that fetches data from Embedly's Extract API for link topics."""
 
-from datetime import timedelta
 import os
+from datetime import timedelta
 from typing import Sequence
 
 from amqpy import Message

@@ -9,7 +9,8 @@ from typing import Any, Iterator, List, Optional, Sequence, TypeVar
 from pyramid.request import Request
 from sqlalchemy import Column, func, inspect
 
-from tildes.lib.id import id_to_id36, id36_to_id
+from tildes.lib.id import id36_to_id, id_to_id36
+
 from .model_query import ModelQuery
 
 

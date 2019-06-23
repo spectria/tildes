@@ -6,10 +6,10 @@
 import enum
 from typing import Any, Optional, Type
 
+import sqlalchemy_utils
 from marshmallow.exceptions import ValidationError
 from marshmallow.fields import Field, String
 from marshmallow.validate import Length, OneOf, Regexp
-import sqlalchemy_utils
 
 from tildes.lib.datetime import SimpleHoursPeriod
 from tildes.lib.id import ID36_REGEX

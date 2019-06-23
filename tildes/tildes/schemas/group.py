@@ -5,10 +5,10 @@
 
 import re
 
+import sqlalchemy_utils
 from marshmallow import pre_load, Schema, validates
 from marshmallow.exceptions import ValidationError
 from marshmallow.fields import DateTime
-import sqlalchemy_utils
 
 from tildes.schemas.fields import Ltree, Markdown, SimpleString
 

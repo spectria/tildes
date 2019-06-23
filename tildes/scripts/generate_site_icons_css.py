@@ -8,6 +8,7 @@ import shutil
 import stat
 from tempfile import NamedTemporaryFile
 
+
 ICON_FOLDER = "/opt/tildes/static/images/site-icons"
 OUTPUT_FILE = "/opt/tildes/static/css/site-icons.css"
 

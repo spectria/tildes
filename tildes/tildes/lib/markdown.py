@@ -3,12 +3,12 @@
 
 """Functions/constants related to markdown handling."""
 
-from functools import partial
 import re
+from functools import partial
 from typing import Any, Callable, Iterator, List, Match, Optional, Pattern, Tuple
 
-from bs4 import BeautifulSoup
 import bleach
+from bs4 import BeautifulSoup
 from html5lib.filters.base import Filter
 from html5lib.treewalkers.base import NonRecursiveTreeWalker
 from pygments import highlight
@@ -20,11 +20,12 @@ from tildes.enums import HTMLSanitizationContext
 from tildes.metrics import histogram_timer
 from tildes.schemas.group import is_valid_group_path
 from tildes.schemas.user import is_valid_username
+
 from .cmark import (
     CMARK_EXTENSIONS,
-    CMARK_OPTS,
     cmark_find_syntax_extension,
     cmark_node_free,
+    CMARK_OPTS,
     cmark_parser_attach_syntax_extension,
     cmark_parser_feed,
     cmark_parser_finish,

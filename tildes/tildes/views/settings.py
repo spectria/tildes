@@ -6,11 +6,11 @@
 from io import BytesIO
 
 import pyotp
+import qrcode
 from pyramid.httpexceptions import HTTPForbidden, HTTPUnprocessableEntity
 from pyramid.request import Request
 from pyramid.response import Response
 from pyramid.view import view_config
-import qrcode
 from webargs.pyramidparser import use_kwargs
 
 from tildes.lib.string import separate_string

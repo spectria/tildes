@@ -3,15 +3,16 @@
 
 """Contains the UserInviteCode class."""
 
-from datetime import datetime
 import random
 import string
+from datetime import datetime
 
 from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Text, TIMESTAMP
 from sqlalchemy.sql.expression import text
 
 from tildes.lib.string import separate_string
 from tildes.models import DatabaseModel
+
 from .user import User
 
 

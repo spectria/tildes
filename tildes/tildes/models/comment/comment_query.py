@@ -10,6 +10,7 @@ from sqlalchemy.sql.expression import and_
 
 from tildes.enums import CommentSortOption
 from tildes.models.pagination import PaginatedQuery
+
 from .comment import Comment
 from .comment_bookmark import CommentBookmark
 from .comment_vote import CommentVote

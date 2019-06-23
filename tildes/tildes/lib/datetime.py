@@ -3,8 +3,8 @@
 
 """Functions/classes related to dates and times."""
 
-from datetime import datetime, timedelta, timezone
 import re
+from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
 from ago import human

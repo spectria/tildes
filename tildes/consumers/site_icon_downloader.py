@@ -7,10 +7,10 @@ from io import BytesIO
 from os import path
 from typing import Optional, Sequence
 
-from amqpy import Message
-from PIL import Image
 import publicsuffix
 import requests
+from amqpy import Message
+from PIL import Image
 
 from tildes.enums import ScraperType
 from tildes.lib.amqp import PgsqlQueueConsumer

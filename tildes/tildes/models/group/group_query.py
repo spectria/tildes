@@ -8,6 +8,7 @@ from typing import Any
 from pyramid.request import Request
 
 from tildes.models import ModelQuery
+
 from .group import Group
 from .group_subscription import GroupSubscription
 

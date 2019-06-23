@@ -3,9 +3,9 @@
 
 """Contains classes related to handling AMQP (rabbitmq) messages."""
 
-from abc import abstractmethod
 import json
 import os
+from abc import abstractmethod
 from typing import Sequence
 
 from amqpy import AbstractConsumer, Connection, Message

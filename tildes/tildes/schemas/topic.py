@@ -7,14 +7,15 @@ import re
 import typing
 from urllib.parse import urlparse
 
+import sqlalchemy_utils
 from marshmallow import pre_load, Schema, validates, validates_schema, ValidationError
 from marshmallow.fields import DateTime, List, Nested, String, URL
-import sqlalchemy_utils
 
 from tildes.lib.url_transform import apply_url_transformations
 from tildes.schemas.fields import Enum, ID36, Ltree, Markdown, SimpleString
 from tildes.schemas.group import GroupSchema
 from tildes.schemas.user import UserSchema
+
 
 TITLE_MAX_LENGTH = 200
 TAG_SYNONYMS = {"spoiler": ["spoilers"]}

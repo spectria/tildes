@@ -15,6 +15,7 @@ from tildes.enums import CommentLabelOption
 from tildes.metrics import incr_counter
 from tildes.models import DatabaseModel
 from tildes.models.user import User
+
 from .comment import Comment
 
 

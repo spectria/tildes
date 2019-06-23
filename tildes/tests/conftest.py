@@ -1,8 +1,8 @@
 # Copyright (c) 2018 Tildes contributors <code@tildes.net>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from http.cookiejar import CookieJar
 import os
+from http.cookiejar import CookieJar
 
 from pyramid import testing
 from pyramid.paster import get_app, get_appsettings

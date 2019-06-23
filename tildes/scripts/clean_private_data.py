@@ -9,8 +9,8 @@ Other things that should probably be added here eventually:
     - Delete old used invite codes (30 days after used?)
 """
 
-from datetime import datetime, timedelta
 import logging
+from datetime import datetime, timedelta
 
 from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import text

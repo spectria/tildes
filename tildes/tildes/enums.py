@@ -3,9 +3,8 @@
 
 """Contains Enum classes."""
 
-from typing import Optional
-
 import enum
+from typing import Optional
 
 
 class CommentNotificationType(enum.Enum):

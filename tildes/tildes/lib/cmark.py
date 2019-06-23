@@ -1,7 +1,7 @@
 """Set up the shared libcmark-gfm library and extensions."""
 # pylint: disable=invalid-name
 
-from ctypes import CDLL, c_char_p, c_int, c_size_t, c_void_p
+from ctypes import c_char_p, c_int, c_size_t, c_void_p, CDLL
 
 
 CMARK_DLL = CDLL("/usr/local/lib/libcmark-gfm.so")

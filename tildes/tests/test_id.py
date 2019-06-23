@@ -5,7 +5,7 @@
 
 from pytest import raises
 
-from tildes.lib.id import id_to_id36, id36_to_id
+from tildes.lib.id import id36_to_id, id_to_id36
 
 
 def test_id_to_id36():

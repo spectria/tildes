@@ -14,7 +14,7 @@ from sqlalchemy.orm.exc import FlushError
 from webargs.pyramidparser import use_kwargs
 from zope.sqlalchemy import mark_changed
 
-from tildes.enums import CommentNotificationType, CommentLabelOption, LogEventType
+from tildes.enums import CommentLabelOption, CommentNotificationType, LogEventType
 from tildes.lib.datetime import utc_now
 from tildes.models.comment import (
     Comment,
@@ -25,7 +25,7 @@ from tildes.models.comment import (
 )
 from tildes.models.log import LogComment
 from tildes.models.topic import TopicVisit
-from tildes.schemas.comment import CommentSchema, CommentLabelSchema
+from tildes.schemas.comment import CommentLabelSchema, CommentSchema
 from tildes.views import IC_NOOP
 from tildes.views.decorators import ic_view_config, rate_limit_view
 
