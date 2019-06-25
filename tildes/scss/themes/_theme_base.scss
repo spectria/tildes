@@ -132,9 +132,13 @@
   }
 
   .btn.btn-link {
-    color: map-get($theme, "button");
+    color: map-get($theme, "link");
     background-color: transparent;
     border-color: transparent;
+
+    &:hover {
+      color: map-get($theme, "link");
+    }
   }
 
   .btn.btn-primary {
