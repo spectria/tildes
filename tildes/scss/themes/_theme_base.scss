@@ -402,6 +402,10 @@
     background-color: map-get($theme, "background-primary");
   }
 
+  #site-footer a:visited {
+    color: map-get($theme, "link");
+  }
+
   .site-header-context,
   .site-header-context:visited {
     color: map-get($theme, "foreground-primary");
