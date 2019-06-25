@@ -298,10 +298,6 @@
     border-left-color: map-get($theme, "stripe-target");
   }
 
-  .comment-nav-link {
-    color: map-get($theme, "foreground-secondary");
-  }
-
   .divider {
     border-color: map-get($theme, "border");
 
@@ -312,10 +308,6 @@
   }
 
   .empty-subtitle {
-    color: map-get($theme, "foreground-secondary");
-  }
-
-  .foreground-secondary {
     color: map-get($theme, "foreground-secondary");
   }
 
