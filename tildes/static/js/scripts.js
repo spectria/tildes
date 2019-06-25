@@ -70,6 +70,12 @@ $(function() {
             if (xhr.status === 413) {
                 errorText = "Too much data submitted";
             }
+
+            // check if the response came back as HTML (unhandled error of some sort)
+            if (errorText.lastIndexOf("<html>", 500) !== -1) {
+                errorText = "Unknown error";
+            }
+
             $statusElement.addClass("form-status-error").text(errorText);
         }
         $statusElement.fadeIn("slow");
