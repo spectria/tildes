@@ -3,7 +3,7 @@
 
 """Root factories for topics."""
 
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.request import Request
 from webargs.pyramidparser import use_kwargs
 
@@ -16,11 +16,16 @@ from tildes.schemas.topic import TopicSchema
 @use_kwargs(TopicSchema(only=("topic_id36",)), locations=("matchdict",))
 def topic_by_id36(request: Request, topic_id36: str) -> Topic:
     """Get a topic specified by {topic_id36} in the route (or 404)."""
+    try:
+        topic_id = id36_to_id(topic_id36)
+    except ValueError:
+        raise HTTPNotFound
+
     query = (
         request.query(Topic)
         .include_deleted()
         .include_removed()
-        .filter_by(topic_id=id36_to_id(topic_id36))
+        .filter_by(topic_id=topic_id)
     )
 
     topic = get_resource(request, query)
