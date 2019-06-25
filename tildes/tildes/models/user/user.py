@@ -252,7 +252,14 @@ class User(DatabaseModel):
 
         code = code.strip().replace(" ", "").lower()
 
-        if totp.verify(code):
+        # some possible user input (such as unicode) can cause an error in the totp
+        # library, catch that and treat it the same as an invalid code
+        try:
+            is_valid_code = totp.verify(code)
+        except TypeError:
+            is_valid_code = False
+
+        if is_valid_code:
             return True
         elif self.two_factor_backup_codes and code in self.two_factor_backup_codes:
             # Need to set the attribute so SQLAlchemy knows it changed
