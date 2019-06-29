@@ -3,7 +3,7 @@
 
 """Root factories for comments."""
 
-from pyramid.httpexceptions import HTTPForbidden
+from pyramid.httpexceptions import HTTPForbidden, HTTPNotFound
 from pyramid.request import Request
 from webargs.pyramidparser import use_kwargs
 
@@ -22,7 +22,10 @@ def comment_by_id36(request: Request, comment_id36: str) -> Comment:
         .filter_by(comment_id=id36_to_id(comment_id36))
     )
 
-    return get_resource(request, query)
+    try:
+        return get_resource(request, query)
+    except HTTPNotFound:
+        raise HTTPNotFound("Comment not found (or it was deleted)")
 
 
 @use_kwargs(CommentSchema(only=("comment_id36",)), locations=("matchdict",))

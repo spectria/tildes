@@ -17,8 +17,6 @@ from pyramid.httpexceptions import (
 from pyramid.request import Request
 from pyramid.response import Response
 
-from tildes.resources.comment import comment_by_id36
-from tildes.resources.topic import topic_by_id36
 from tildes.views.decorators import ic_view_config
 from tildes.views.exceptions import errors_from_validationerror
 
@@ -69,10 +67,8 @@ def error_to_text_response(request: Request) -> Response:
     response = request.exception
 
     if isinstance(request.exception, HTTPNotFound):
-        if request.matched_route.factory == comment_by_id36:
-            response.text = "Comment not found (or it was deleted)"
-        elif request.matched_route.factory == topic_by_id36:
-            response.text = "Topic not found (or it was deleted)"
+        if response.message:
+            response.text = response.message
         else:
             response.text = "Not found"
     elif isinstance(request.exception, HTTPForbidden):

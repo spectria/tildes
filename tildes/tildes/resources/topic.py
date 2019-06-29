@@ -28,7 +28,10 @@ def topic_by_id36(request: Request, topic_id36: str) -> Topic:
         .filter_by(topic_id=topic_id)
     )
 
-    topic = get_resource(request, query)
+    try:
+        topic = get_resource(request, query)
+    except HTTPNotFound:
+        raise HTTPNotFound("Topic not found (or it was deleted)")
 
     # if there's also a group specified in the route, check that it's the same group as
     # the topic was posted in, otherwise redirect to correct group
