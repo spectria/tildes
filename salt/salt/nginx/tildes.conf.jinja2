@@ -73,8 +73,10 @@ server {
     }
 
     location @proxy_to_app {
+        {% if grains["id"] == "prod" %}
         # apply rate-limiting, allowing a burst above the limit
         limit_req zone=tildes_app burst=5 nodelay;
+        {% endif -%}
 
         # Cornice adds the X-Content-Type-Options header, so it will end up
         # being duplicated since nginx is also configured to send it (above).
