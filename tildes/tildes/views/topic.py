@@ -43,7 +43,7 @@ DefaultSettings = namedtuple("DefaultSettings", ["order", "period"])
 
 @view_config(route_name="group_topics", request_method="POST", permission="post_topic")
 @use_kwargs(TopicSchema(only=("title", "markdown", "link")))
-@use_kwargs({"tags": String()})
+@use_kwargs({"tags": String(missing="")})
 def post_group_topics(
     request: Request, title: str, markdown: str, link: str, tags: str
 ) -> HTTPFound:
