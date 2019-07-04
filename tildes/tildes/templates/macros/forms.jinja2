@@ -33,7 +33,7 @@
 {% endmacro %}
 
 {% macro topic_tagging(value=None, auto_focus=False, autocomplete_options=None) %}
-  <div class="form-autocomplete form-group" data-js-autocomplete-container>
+  <div class="form-autocomplete form-group" data-js-autocomplete-container data-js-ctrl-enter-submit-form>
     <label class="form-label" for="tags">
       <span>Tags (optional, comma-separated)</span>
       <a href="https://docs.tildes.net/topic-tagging" target="_blank" tabindex="-1">Tagging help</a>
