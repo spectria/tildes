@@ -5,8 +5,8 @@
   "license": "AGPL-3.0-or-later",
   "scripts": {
     "lint": "npm run lint:js ; npm run lint:scss",
-    "lint:js": "eslint static/js/",
-    "lint:scss": "stylelint scss/"
+    "lint:js": "node node_modules/eslint/bin/eslint.js static/js/",
+    "lint:scss": "node node_modules/stylelint/bin/stylelint.js scss/"
   },
   "dependencies": {},
   "devDependencies": {

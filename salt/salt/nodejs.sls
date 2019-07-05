@@ -14,9 +14,12 @@ nodejs-pkgrepo:
     - refresh: True
 
 # Install the npm packages defined in package.json
+# Uses the --no-bin-links option to prevent npm from creating symlinks in the .bin
+# directory, which doesn't work inside Vagrant on Windows
 install-npm-packages:
-  npm.bootstrap:
-    - name: {{ app_dir }}
-    - user: {{ app_username }}
+  cmd.run:
+    - name: npm install --no-bin-links
+    - cwd: {{ app_dir }}
+    - runas: {{ app_username }}
     - require:
       - pkg: nodejs
