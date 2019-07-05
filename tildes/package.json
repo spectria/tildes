@@ -37,7 +37,6 @@
   ],
   "prettier": {
     "bracketSpacing": false,
-    "endOfLine": "lf",
     "printWidth": 88,
     "proseWrap": "always",
     "tabWidth": 4
@@ -115,7 +114,6 @@
       "function-whitespace-after": "always",
       "indentation": 2,
       "length-zero-no-unit": true,
-      "linebreaks": "unix",
       "max-empty-lines": 1,
       "max-line-length": 88,
       "media-feature-colon-space-after": "always",
