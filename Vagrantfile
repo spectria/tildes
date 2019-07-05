@@ -24,4 +24,9 @@ Vagrant.configure(VAGRANT_CONFIG_VERSION) do |config|
       salt.verbose = true
       salt.log_level = "info"
   end
+
+  config.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+      vb.cpus = "4"
+  end
 end
