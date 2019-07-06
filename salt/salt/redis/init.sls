@@ -84,13 +84,17 @@ redis-user:
     - require_in:
       - service: disable-transparent-hugepage
 
-# enable the "disable transparent hugepage" service, and run it + restart redis if necessary
+# enable the "disable transparent hugepage" service and run it
 disable-transparent-hugepage:
   service.enabled:
     - name: transparent_hugepage.service
   cmd.run:
-    - name: systemctl start transparent_hugepage.service && systemctl restart redis.service
+    - name: systemctl start transparent_hugepage.service
     - unless: 'cat /sys/kernel/mm/transparent_hugepage/enabled | grep \\[never\\]'
+    - require_in:
+      - service: redis.service
+    - watch_in:
+      - service: redis.service
 
 # Set kernel overcommit mode (recommended for Redis)
 overcommit-memory:
