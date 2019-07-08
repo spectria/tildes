@@ -4,15 +4,18 @@
 """Views used by Pyramid when an exception is raised."""
 
 from typing import Sequence
+from urllib.parse import quote_plus
 
 from marshmallow import ValidationError
 from pyramid.httpexceptions import (
     HTTPError,
     HTTPForbidden,
+    HTTPFound,
     HTTPNotFound,
     HTTPUnprocessableEntity,
 )
 from pyramid.request import Request
+from pyramid.security import Authenticated
 from pyramid.view import (
     exception_view_config,
     forbidden_view_config,
@@ -57,10 +60,15 @@ def group_not_found(request: Request) -> dict:
 
 
 @notfound_view_config(xhr=False, renderer="error_page.jinja2")
-@forbidden_view_config(xhr=False, renderer="error_page.jinja2")
+@forbidden_view_config(
+    xhr=False, effective_principals=Authenticated, renderer="error_page.jinja2"
+)
 @exception_view_config(context=HTTPError, xhr=False, renderer="error_page.jinja2")
 def generic_error_page(request: Request) -> dict:
-    """Display a generic error page for all HTTP exceptions."""
+    """Display a generic error page for all HTTP exceptions.
+
+    Note that for 403 errors, this view will only be used if the user is logged in.
+    """
     request.response.status_int = request.exception.status_int
 
     error = f"Error {request.exception.status_code} ({request.exception.title})"
@@ -76,3 +84,12 @@ def generic_error_page(request: Request) -> dict:
         description = request.exception.explanation
 
     return {"error": error, "description": description}
+
+
+@forbidden_view_config(xhr=False)
+def logged_out_forbidden(request: Request) -> HTTPFound:
+    """Redirect logged-out users to login page on 403 error."""
+    forbidden_path = quote_plus(request.path_qs)
+    login_url = request.route_url("login", _query={"from_url": forbidden_path})
+
+    return HTTPFound(location=login_url)
