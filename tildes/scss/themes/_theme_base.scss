@@ -366,6 +366,10 @@
     @include theme-special-label(map-get($theme, "topic-tag-spoiler"), $is-light);
   }
 
+  .link-no-visited-color:visited {
+    color: map-get($theme, "link");
+  }
+
   .logged-in-user-username,
   .logged-in-user-username:visited {
     color: map-get($theme, "foreground-primary");

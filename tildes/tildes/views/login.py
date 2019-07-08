@@ -3,7 +3,10 @@
 
 """Views related to logging in/out."""
 
+from urllib.parse import unquote_plus
+
 from marshmallow.fields import String
+from mypy_extensions import NoReturn
 from pyramid.httpexceptions import HTTPFound, HTTPUnauthorized, HTTPUnprocessableEntity
 from pyramid.renderers import render_to_response
 from pyramid.request import Request
@@ -23,15 +26,16 @@ from tildes.views.decorators import not_logged_in, rate_limit_view
 @view_config(
     route_name="login", renderer="login.jinja2", permission=NO_PERMISSION_REQUIRED
 )
+@use_kwargs({"from_url": String(missing="")})
 @not_logged_in
-def get_login(request: Request) -> dict:
+def get_login(request: Request, from_url: str) -> dict:
     """Display the login form."""
     # pylint: disable=unused-argument
-    return {}
+    return {"from_url": unquote_plus(from_url)}
 
 
-def finish_login(request: Request, user: User) -> None:
-    """Save the user ID into session."""
+def finish_login(request: Request, user: User, redirect_url: str) -> HTTPFound:
+    """Save the user ID into session and return a redirect to appropriate page."""
     # Username/password were correct - attach the user_id to the session
     remember(request, user.user_id)
 
@@ -45,6 +49,12 @@ def finish_login(request: Request, user: User) -> None:
     request.user = user
     request.db_session.add(Log(LogEventType.USER_LOG_IN, request))
 
+    # only use redirect_url if it's a relative url, so we can't redirect to other sites
+    if redirect_url.startswith("/"):
+        return HTTPFound(location=redirect_url)
+
+    return HTTPFound(location="/")
+
 
 @view_config(
     route_name="login", request_method="POST", permission=NO_PERMISSION_REQUIRED
@@ -54,9 +64,12 @@ def finish_login(request: Request, user: User) -> None:
         only=("username", "password"), context={"username_trim_whitespace": True}
     )
 )
+@use_kwargs({"from_url": String(missing="")})
 @not_logged_in
 @rate_limit_view("login")
-def post_login(request: Request, username: str, password: str) -> HTTPFound:
+def post_login(
+    request: Request, username: str, password: str, from_url: str
+) -> Response:
     """Process a log in request."""
     incr_counter("logins")
 
@@ -88,13 +101,11 @@ def post_login(request: Request, username: str, password: str) -> HTTPFound:
         request.session["two_factor_username"] = username
         return render_to_response(
             "tildes:templates/intercooler/login_two_factor.jinja2",
-            {"keep": request.params.get("keep")},
+            {"keep": request.params.get("keep"), "from_url": from_url},
             request=request,
         )
 
-    finish_login(request, user)
-
-    raise HTTPFound(location="/")
+    raise finish_login(request, user, from_url)
 
 
 @view_config(
@@ -104,8 +115,8 @@ def post_login(request: Request, username: str, password: str) -> HTTPFound:
 )
 @not_logged_in
 @rate_limit_view("login_two_factor")
-@use_kwargs({"code": String()})
-def post_login_two_factor(request: Request, code: str) -> Response:
+@use_kwargs({"code": String(), "from_url": String(missing="")})
+def post_login_two_factor(request: Request, code: str, from_url: str) -> NoReturn:
     """Process a log in request with 2FA."""
     # Look up the user for the supplied username
     user = (
@@ -117,9 +128,7 @@ def post_login_two_factor(request: Request, code: str) -> Response:
 
     if user.is_correct_two_factor_code(code):
         del request.session["two_factor_username"]
-        finish_login(request, user)
-
-        raise HTTPFound(location="/")
+        raise finish_login(request, user, from_url)
     else:
         raise HTTPUnauthorized(body="Invalid code, please try again.")
 

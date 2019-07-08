@@ -4,6 +4,7 @@
 """Contains configuration, functions, etc. for the Jinja template system."""
 
 from typing import Any
+from urllib.parse import quote_plus
 
 from pyramid.config import Configurator
 
@@ -28,6 +29,11 @@ def is_topic(item: Any) -> bool:
     return isinstance(item, Topic)
 
 
+def do_quote_plus(string: str) -> str:
+    """Escape the string using the urllib quote_plus function."""
+    return quote_plus(string)
+
+
 def includeme(config: Configurator) -> None:
     """Configure Jinja2 template renderer."""
     settings = config.get_settings()
@@ -39,6 +45,7 @@ def includeme(config: Configurator) -> None:
     settings["jinja2.filters"] = {
         "adaptive_date": adaptive_date,
         "ago": descriptive_timedelta,
+        "quote_plus": do_quote_plus,
     }
 
     # add custom jinja tests

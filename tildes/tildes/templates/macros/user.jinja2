@@ -25,8 +25,15 @@
           {% endtrans %}
         </a>
       {% endif %}
-    {% else %}
-      <a class="text-small" href="/login">Log in</a>
+    {# Only show the "Log in" link if we're not already on the login page #}
+    {% elif not request.matched_route or request.matched_route.name != "login" %}
+      <a class="text-small link-no-visited-color"
+        {% if request.path_qs == "/" %}
+          href="/login"
+        {% else %}
+          href="/login?from_url={{ request.path_qs|quote_plus }}"
+        {% endif %}
+      >Log in</a>
     {% endif %}
   </div>
 {% endmacro %}

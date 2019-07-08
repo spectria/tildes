@@ -5,6 +5,7 @@
 
 <form class="form-narrow" method="post" autocomplete="off" action="/login_two_factor" data-ic-post-to="/login_two_factor">
   <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
+  <input type="hidden" name="from_url" value="{{ from_url }}">
   {% if keep %}
   <input type="hidden" name="keep" value="on">
   {% endif %}
