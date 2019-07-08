@@ -24,6 +24,18 @@ from tildes.models.user import User
 pytest_plugins = ["tests.fixtures"]
 
 
+# Extra environment setup for webtest TestApps:
+#   - wsgi.url_scheme: needed for secure cookies from the session library
+#   - tm.active: setting to True effectively disables pyramid_tm, which fixes an issue
+#     with webtest fixtures failing to rollback data after the tests are complete
+#   - REMOTE_ADDR: must be defined for logging to work
+WEBTEST_EXTRA_ENVIRON = {
+    "wsgi.url_scheme": "https",
+    "tm.active": True,
+    "REMOTE_ADDR": "0.0.0.0",
+}
+
+
 class NestedSessionWrapper(Session):
     """Wrapper that starts a new nested transaction on commit/rollback."""
 
@@ -198,19 +210,7 @@ def base_app(overall_redis_session, sdb):
 @fixture(scope="session")
 def webtest(base_app):
     """Create a webtest TestApp and log in as the SessionUser account in it."""
-    # create the TestApp - note that specifying wsgi.url_scheme is necessary so that the
-    # secure cookies from the session library will work
-    app = TestApp(
-        base_app,
-        # This "tm.active" is a temporary fix around this fixture failing to rollback
-        # data after the tests are complete (it effectively deactivates pyramid_tm).
-        extra_environ={
-            "wsgi.url_scheme": "https",
-            "tm.active": True,
-            "REMOTE_ADDR": "0.0.0.0",
-        },
-        cookiejar=CookieJar(),
-    )
+    app = TestApp(base_app, extra_environ=WEBTEST_EXTRA_ENVIRON, cookiejar=CookieJar())
 
     # fetch the login page, fill in the form, and submit it (sets the cookie)
     login_page = app.get("/login")
@@ -224,4 +224,4 @@ def webtest(base_app):
 @fixture(scope="session")
 def webtest_loggedout(base_app):
     """Create a logged-out webtest TestApp (no cookies retained)."""
-    yield TestApp(base_app)
+    yield TestApp(base_app, extra_environ=WEBTEST_EXTRA_ENVIRON)
