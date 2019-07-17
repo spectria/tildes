@@ -1,6 +1,8 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% from 'utils.jinja2' import pluralize %}
+
 {% macro logged_in_user_info() %}
   <div class="logged-in-user-info">
     {% if request.user %}
@@ -8,21 +10,13 @@
 
       {% if request.user.num_unread_messages > 0 %}
         <a class="logged-in-user-alert" href="/messages/unread">
-          {% trans num_messages=request.user.num_unread_messages %}
-          {{ num_messages }} new message
-          {% pluralize %}
-          {{ num_messages }} new messages
-          {% endtrans %}
+          {{ pluralize(request.user.num_unread_messages, "new message") }}
         </a>
       {% endif %}
 
       {% if request.user.num_unread_notifications > 0 %}
         <a class="logged-in-user-alert" href="/notifications/unread">
-          {% trans num_notifications=request.user.num_unread_notifications %}
-          {{ num_notifications }} new comment
-          {% pluralize %}
-          {{ num_notifications }} new comments
-          {% endtrans %}
+          {{ pluralize(request.user.num_unread_notifications, "new comment") }}
         </a>
       {% endif %}
     {# Only show the "Log in" link if we're not already on the login page #}

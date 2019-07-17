@@ -3,6 +3,7 @@
 
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
 {% from 'macros/links.jinja2' import group_linked, username_linked %}
+{% from 'utils.jinja2' import pluralize %}
 
 {% macro render_topic_for_listing(topic, show_group=False, rank=None) %}
   <article id="topic-{{ topic.topic_id36 }}"
@@ -65,11 +66,7 @@
           href="{{ topic.permalink }}"
           {% if request.user.open_new_tab_internal %}target="_blank"{% endif %}
         >
-          {% trans num_comments=topic.num_comments %}
-          {{ num_comments }} comment
-          {% pluralize %}
-          {{ num_comments }} comments
-          {% endtrans %}
+          {{ pluralize(topic.num_comments, "comment") }}
 
           {% if topic.comments_since_last_visit is defined and topic.comments_since_last_visit %}
             <span class="topic-info-comments-new" title="Last visit {{ topic.last_visit_time|ago }}">

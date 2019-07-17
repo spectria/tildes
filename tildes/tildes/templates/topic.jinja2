@@ -167,13 +167,7 @@
 <section class="topic-comments">
   {% if comments %}
     <header class="topic-comments-header">
-      <h2>
-      {% trans num_comments=topic.num_comments %}
-      {{ num_comments }} comment
-      {% pluralize %}
-      {{ num_comments }} comments
-      {% endtrans %}
-      </h2>
+      <h2>{{ pluralize(topic.num_comments, "comment") }}</h2>
 
       <div class="btn-group">
         <button class="btn btn-sm btn-light" data-js-comment-collapse-all-button>Collapse replies</button>
@@ -256,17 +250,8 @@
   <dt>Comments</dt>
   {% if topic.num_comments > 0 %}
     <dd>
-    {% trans num_comments=topic.num_comments %}
-    {{ num_comments }} comment
-    {% pluralize %}
-    {{ num_comments }} comments
-    {% endtrans %}
-
-    {% trans num_top_level=comments.num_top_level %}
-    ({{ num_top_level }} thread)
-    {% pluralize %}
-    ({{ num_top_level }} threads)
-    {% endtrans %}
+      {{ pluralize(topic.num_comments, "comment") }}
+      ({{ pluralize(comments.num_top_level, "thread") }})
     </dd>
 
     <dt>Last comment posted</dt>

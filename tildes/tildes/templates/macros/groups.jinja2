@@ -1,15 +1,11 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% from 'utils.jinja2' import pluralize %}
+
 {% macro render_group_subscription_box(group) %}
   <div class="group-subscription">
-    <span class="group-subscription-count">
-    {% trans num_subscriptions=group.num_subscriptions %}
-    {{ num_subscriptions }} subscriber
-    {% pluralize %}
-    {{ num_subscriptions }} subscribers
-    {% endtrans %}
-    </span>
+    <span class="group-subscription-count">{{ pluralize(group.num_subscriptions, "subscriber") }}</span>
 
     {% if request.has_permission('subscribe', group) %}
       {% if group.user_subscribed %}
