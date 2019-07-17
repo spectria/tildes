@@ -1,0 +1,15 @@
+{# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% macro pluralize(counter, base_word, plural_word=None) %}
+  {% if not plural_word %}
+    {% set plural_word = base_word~"s" %}
+  {% endif %}
+
+  {%- trans counter=counter -%}
+    {{ counter }} {{ base_word }}
+  {%- pluralize -%}
+    {{ counter }} {{ plural_word }}
+  {%- endtrans %}
+{% endmacro %}
+

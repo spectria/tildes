@@ -9,12 +9,13 @@
 {% from 'macros/forms.jinja2' import markdown_textarea %}
 {% from 'macros/links.jinja2' import group_linked, username_linked %}
 {% from 'macros/topics.jinja2' import topic_voting with context %}
+{% from 'macros/utils.jinja2' import pluralize %}
 
 {% block title %}{{ topic.title }} - ~{{ topic.group.path }}{% endblock %}
 
 {% block meta_og_tags %}
   <meta property="og:title" content="{{ self.title() }}">
-  <meta property="og:description" content="{{ topic.num_comments }} comments in the discussion of this {{ "link" if topic.is_link_type else "post" }} on Tildes">
+  <meta property="og:description" content="{{ pluralize(topic.num_comments, "comment") }} in the discussion of this {{ "link" if topic.is_link_type else "post" }} on Tildes">
 {% endblock %}
 
 {% block templates %}
