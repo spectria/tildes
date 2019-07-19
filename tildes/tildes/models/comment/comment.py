@@ -5,11 +5,10 @@
 
 from collections import Counter
 from datetime import datetime, timedelta
-from typing import Any, Optional, Sequence, Tuple
+from typing import Any, Optional, Sequence, Tuple, TYPE_CHECKING
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, TIMESTAMP
-from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.expression import text
 
@@ -23,6 +22,10 @@ from tildes.models.topic import Topic
 from tildes.models.user import User
 from tildes.schemas.comment import CommentSchema
 
+if TYPE_CHECKING:  # workaround for mypy issues with @hybrid_property
+    from builtins import property as hybrid_property
+else:
+    from sqlalchemy.ext.hybrid import hybrid_property
 
 # edits inside this period after creation will not mark the comment as edited
 EDIT_GRACE_PERIOD = timedelta(minutes=5)
@@ -96,7 +99,7 @@ class Comment(DatabaseModel):
         """Return the comment's markdown."""
         return self._markdown
 
-    @markdown.setter  # type: ignore
+    @markdown.setter
     def markdown(self, new_markdown: str) -> None:
         """Set the comment's markdown and render its HTML."""
         if new_markdown == self.markdown:

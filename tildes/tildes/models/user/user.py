@@ -172,7 +172,7 @@ class User(DatabaseModel):
     def __init__(self, username: str, password: str):
         """Create a new user account."""
         self.username = username
-        self.password = password
+        self.password = password  # type: ignore
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""

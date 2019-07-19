@@ -4,7 +4,7 @@
 """Contains the Topic class."""
 
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple, TYPE_CHECKING
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
 from sqlalchemy import (
@@ -18,7 +18,6 @@ from sqlalchemy import (
     TIMESTAMP,
 )
 from sqlalchemy.dialects.postgresql import ENUM, JSONB, TSVECTOR
-from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.expression import text
@@ -38,6 +37,10 @@ from tildes.models.group import Group
 from tildes.models.user import User
 from tildes.schemas.topic import TITLE_MAX_LENGTH, TopicSchema
 
+if TYPE_CHECKING:  # workaround for mypy issues with @hybrid_property
+    from builtins import property as hybrid_property
+else:
+    from sqlalchemy.ext.hybrid import hybrid_property
 
 # edits inside this period after creation will not mark the topic as edited
 EDIT_GRACE_PERIOD = timedelta(minutes=5)
@@ -143,7 +146,7 @@ class Topic(DatabaseModel):
 
         return self._markdown
 
-    @markdown.setter  # type: ignore
+    @markdown.setter
     def markdown(self, new_markdown: str) -> None:
         """Set the topic's markdown and render its HTML."""
         if not self.is_text_type:
@@ -171,7 +174,7 @@ class Topic(DatabaseModel):
 
         return sorted_tags
 
-    @tags.setter  # type: ignore
+    @tags.setter
     def tags(self, new_tags: List[str]) -> None:
         self._tags = new_tags
 
