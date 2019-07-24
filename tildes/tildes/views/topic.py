@@ -4,12 +4,14 @@
 """Views related to posting/viewing topics and comments on them."""
 
 from collections import namedtuple
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from marshmallow import missing, ValidationError
-from marshmallow.fields import String
+from marshmallow.fields import Boolean, String
 from pyramid.httpexceptions import HTTPFound
+from pyramid.renderers import render_to_response
 from pyramid.request import Request
+from pyramid.response import Response
 from pyramid.view import view_config
 from sqlalchemy import cast
 from sqlalchemy.sql.expression import any_, desc
@@ -43,14 +45,50 @@ DefaultSettings = namedtuple("DefaultSettings", ["order", "period"])
 
 @view_config(route_name="group_topics", request_method="POST", permission="post_topic")
 @use_kwargs(TopicSchema(only=("title", "markdown", "link")))
-@use_kwargs({"tags": String(missing="")})
+@use_kwargs({"tags": String(missing=""), "confirm_repost": Boolean(missing=False)})
 def post_group_topics(
-    request: Request, title: str, markdown: str, link: str, tags: str
-) -> HTTPFound:
+    request: Request,
+    title: str,
+    markdown: str,
+    link: str,
+    tags: str,
+    confirm_repost: bool,
+) -> Union[HTTPFound, Response]:
     """Post a new topic to a group."""
+    # pylint: disable=too-many-arguments
     group = request.context
 
     if link:
+        # check to see if this link has been posted before
+        previous_topics = (
+            request.db_session.query(Topic)
+            .filter(Topic.link == link)
+            .order_by(desc(Topic.created_time))
+            .limit(5)
+            .all()
+        )
+
+        if previous_topics and not confirm_repost:
+            # Render partial form for Intercooler.js request, whole page for normal POST
+            # (I don't like this much, there must be a better way to handle this)
+            if "X-IC-Request" in request.headers:
+                template = "tildes:templates/includes/new_topic_form.jinja2"
+            else:
+                template = "tildes:templates/new_topic.jinja2"
+
+            return render_to_response(
+                template,
+                {
+                    "group": group,
+                    "title": title,
+                    "link": link,
+                    "markdown": markdown,
+                    "tags": tags,
+                    "previous_topics": previous_topics,
+                },
+                request=request,
+            )
+
         new_topic = Topic.create_link_topic(
             group=group, author=request.user, title=title, link=link
         )

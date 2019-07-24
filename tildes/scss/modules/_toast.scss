@@ -2,8 +2,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 .toast {
+  @extend %text-container;
+
   margin: 1rem 0;
   font-weight: bold;
+
+  ul {
+    margin-bottom: 1rem;
+  }
 }
 
 .toast-minor {

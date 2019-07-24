@@ -1,0 +1,79 @@
+{# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% from "macros/datetime.jinja2" import adaptive_date_responsive %}
+{% from 'macros/forms.jinja2' import markdown_textarea, topic_tagging %}
+
+<form
+  id="new-topic"
+  method="post"
+  autocomplete="off"
+  action="/~{{ group.path }}/topics"
+  data-ic-post-to="/~{{ group.path }}/topics"
+  data-js-prevent-double-submit
+  data-js-confirm-leave-page-unsaved
+>
+  <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
+
+  <div class="toast toast-minor">
+    <h2>Tildes prioritizes high-quality content and discussions</h2>
+    <p>Please post topics that are interesting, informative, or have the potential to start a good discussion.</p>
+    <p>Please <em>avoid</em> posting topics that are primarily for entertainment or that don't have discussion value.</p>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label" for="title">Title</label>
+    <input class="form-input" id="title" name="title" type="text" placeholder="Title" required data-js-auto-focus
+      {% if title %}value="{{ title }}"{% endif %}
+    >
+  </div>
+
+  <fieldset>
+    <legend>Enter a link, text, or both:</legend>
+    <div class="form-group">
+      <label class="form-label" for="link">Link</label>
+      <input class="form-input" id="link" name="link" type="URL" placeholder="Link"
+        {% if link %}value="{{ link }}"{% endif %}
+      >
+      <p class="form-input-note">If you enter a link, your post will be a link topic (whether you also include text or not).</p>
+    </div>
+
+    <div class="form-group">
+      {{ markdown_textarea(text=markdown) }}
+      <p class="form-input-note">If you enter only text (and no link), your post will be a text topic.</p>
+      <p class="form-input-note">If you also enter a link, this text will be posted as the first comment and can be used to add more information or give your thoughts on the linked content. Adding text when posting a link is not required, but it can help get the discussion started.</p>
+      </p>
+    </div>
+  </fieldset>
+
+  {{ topic_tagging(autocomplete_options=group.common_topic_tags, value=tags) }}
+
+  <div class="form-buttons">
+    <button type="submit" class="btn btn-primary">Post topic</button>
+    {% if previous_topics %}
+      <div class="form-status form-status-error">Link has been posted before, see below</div>
+    {% endif %}
+  </div>
+
+  {% if previous_topics %}
+    <div class="toast toast-minor toast-warning">
+      <h2>This link has been posted previously:</h2>
+
+      <ul>
+      {% for previous_topic in previous_topics %}
+        <li>{{ adaptive_date_responsive(previous_topic.created_time) }} in ~{{ previous_topic.group }}: <a href="{{ previous_topic.permalink }}" target="_blank">{{ previous_topic.title }}</a></li>
+      {% endfor %}
+      </ul>
+
+      <p>If you want to post it again anyway, check the box below and click the "Post topic" button above again.</p>
+
+      <div class="form-group ml-2">
+        <label class="form-checkbox">
+          <input type="checkbox" id="confirm_repost" name="confirm_repost" value="true">
+          <i class="form-icon"></i> Re-post this link in ~{{ group }}
+        </label>
+      </div>
+    </div>
+  {% endif %}
+</form>
+

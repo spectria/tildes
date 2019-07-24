@@ -70,6 +70,7 @@ $.onmount("[data-js-autocomplete-input]", function() {
                 for (var i = 0; i < dataPieces.length; i++) {
                     if (dataPieces[i].indexOf("tags=") === 0) {
                         dataPieces[i] += $autocompleteInput.val();
+                        $autocompleteInput.val("");
                         break;
                     }
                 }
