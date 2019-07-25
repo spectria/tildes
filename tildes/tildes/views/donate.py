@@ -12,6 +12,8 @@ from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from webargs.pyramidparser import use_kwargs
 
+from tildes.views.decorators import rate_limit_view
+
 
 @view_config(
     route_name="donate_stripe",
@@ -28,6 +30,7 @@ from webargs.pyramidparser import use_kwargs
         "currency": String(required=True, validate=OneOf(("CAD", "USD"))),
     }
 )
+@rate_limit_view("donate")
 def post_donate_stripe(
     request: Request, stripe_token: str, donator_email: str, amount: int, currency: str
 ) -> dict:

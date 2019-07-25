@@ -281,6 +281,7 @@ class RateLimitedAction:
 # the actual list of actions with rate-limit restrictions
 # each action must have a unique name to prevent key collisions
 _RATE_LIMITED_ACTIONS = (
+    RateLimitedAction("donate", timedelta(hours=1), 5, max_burst=5, by_user=False),
     RateLimitedAction("login", timedelta(hours=1), 20),
     RateLimitedAction("login_two_factor", timedelta(hours=1), 20),
     RateLimitedAction("register", timedelta(hours=1), 50),
