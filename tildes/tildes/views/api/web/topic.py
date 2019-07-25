@@ -161,10 +161,22 @@ def get_topic_tags(request: Request) -> dict:
     renderer="topic_tags.jinja2",
     permission="tag",
 )
-@use_kwargs({"tags": String()})
-def put_tag_topic(request: Request, tags: str) -> dict:
+@use_kwargs({"tags": String(), "conflict_check": String()})
+def put_tag_topic(request: Request, tags: str, conflict_check: str) -> dict:
     """Apply tags to a topic with Intercooler."""
+    # pylint: disable=too-many-branches
     topic = request.context
+
+    # check for edit conflict by verifying tags didn't change after they loaded the form
+    if conflict_check:
+        conflict_check_tags = conflict_check.split(",")
+    else:
+        conflict_check_tags = []
+
+    if conflict_check_tags != topic.tags:
+        raise ValidationError(
+            {"tags": ["Someone else edited simultaneously, please cancel and retry"]}
+        )
 
     if tags:
         # split the tag string on commas
