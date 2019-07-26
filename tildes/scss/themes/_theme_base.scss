@@ -241,6 +241,10 @@
     color: map-get($theme, "foreground-secondary");
   }
 
+  .comment-removed-warning {
+    color: map-get($theme, "warning");
+  }
+
   .comment-votes {
     color: map-get($theme, "foreground-secondary");
   }
