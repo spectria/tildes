@@ -479,7 +479,12 @@
     .toast-warning {
       background-color: rgba(map-get($theme, "warning"), 0.9);
       border-color: map-get($theme, "warning");
-      color: map-get($theme, "foreground-extreme");
+
+      @if (perceived-brightness(map-get($theme, "warning")) > 50) {
+        color: #000;
+      } @else {
+        color: #fff;
+      }
     }
   }
 
