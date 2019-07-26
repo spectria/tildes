@@ -1,0 +1,39 @@
+// Copyright (c) 2019 Tildes contributors <code@tildes.net>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+@function sqrt($r) {
+  // Adapted from https://www.antimath.info/css/sass-sqrt-function/
+  // stylelint-disable scss/dollar-variable-pattern
+  $x0: 1;
+  $x1: $x0;
+
+  @for $i from 1 through 10 {
+    $x1: $x0 - ($x0 * $x0 - abs($r)) / (2 * $x0);
+    $x0: $x1;
+  }
+
+  @return $x1;
+}
+
+@function perceived-brightness($color) {
+  // Adapted from https://gist.github.com/jlong/f06f5843104ee10006fe
+  // Perceived Brightness math based on: http://alienryderflex.com/hsp.html
+  $red-magic-number: 299;
+  $green-magic-number: 587;
+  $blue-magic-number: 114;
+  $brightness-divisor: $red-magic-number + $green-magic-number + $blue-magic-number;
+
+  // Extract color components
+  $red-component: red($color);
+  $green-component: green($color);
+  $blue-component: blue($color);
+
+  // Calculate a brightness value in 3d color space between 0 and 255
+  $red: $red-component * $red-component * $red-magic-number;
+  $green: $green-component * $green-component * $green-magic-number;
+  $blue: $blue-component * $blue-component * $blue-magic-number;
+  $number: sqrt(($red + $green + $blue) / $brightness-divisor);
+
+  // Convert to percentage and return
+  @return 100% * $number / 255;
+}
