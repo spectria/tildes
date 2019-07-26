@@ -49,6 +49,7 @@
         autocapitalize="none"
         spellcheck="false"
         name="tags"
+        pattern="[\w .,]*"
         placeholder='Tags (like "music, soundtrack, full album")'
         data-js-autocomplete-input='{{ autocomplete_options|tojson if autocomplete_options }}'
         {% if value %} value="{{ value }}"{% endif %}

@@ -230,6 +230,23 @@
         color: $active-color;
       }
     }
+
+    &.error {
+      background-color: map-get($theme, "error");
+
+      $error-color: #fff;
+      $is-error-bg-light: perceived-brightness(map-get($theme, "error")) > 50;
+
+      @if ($is-error-bg-light) {
+        $error-color: #000;
+      }
+
+      color: $error-color;
+
+      .btn {
+        color: $error-color;
+      }
+    }
   }
 
   .comment-branch-counter {

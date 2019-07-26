@@ -35,6 +35,14 @@ $.onmount("[data-js-autocomplete-input]", function() {
                     $chip.html(tag);
                     $chip.append(clearIcon);
 
+                    if (!tag.match(/^[\w .]+$/)) {
+                        $chip.addClass("error");
+                        $chip.attr(
+                            "title",
+                            "Tags may only contain letters, numbers, and spaces."
+                        );
+                    }
+
                     $chips.append($chip);
 
                     $tagsHiddenInput.val($tagsHiddenInput.val() + tag + ",");
