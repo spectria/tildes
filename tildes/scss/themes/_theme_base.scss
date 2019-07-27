@@ -345,6 +345,19 @@
     border-color: map-get($theme, "border");
   }
 
+  // error colors for :invalid inputs, using same approach as Spectre
+  .form-input:not(:placeholder-shown):invalid {
+    border-color: map-get($theme, "error");
+
+    &:focus {
+      box-shadow: 0 0 0 1px map-get($theme, "error");
+    }
+
+    + .form-input-hint {
+      color: map-get($theme, "error");
+    }
+  }
+
   .form-markdown-preview {
     border-color: map-get($theme, "border");
   }
