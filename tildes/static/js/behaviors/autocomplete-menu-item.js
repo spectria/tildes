@@ -11,7 +11,12 @@ $.onmount("[data-js-autocomplete-menu-item]", function() {
         var $tagsHiddenInput = $("[data-js-autocomplete-hidden-input]");
         var $autocompleteInput = $("[data-js-autocomplete-input]");
 
-        if (!$tagsHiddenInput.val().includes(clickedSuggestionText + ",")) {
+        var existingTags = $tagsHiddenInput.val().split(",");
+        if (
+            existingTags.every(function(val) {
+                return val !== clickedSuggestionText;
+            })
+        ) {
             var $chips = $autocompleteContainer
                 .find("[data-js-autocomplete-chips]")
                 .first();
