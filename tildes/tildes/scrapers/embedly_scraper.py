@@ -4,6 +4,7 @@
 """Contains the EmbedlyScraper class."""
 
 from typing import Any, Dict
+from urllib.parse import urlparse
 
 import requests
 
@@ -18,6 +19,19 @@ class EmbedlyScraper:
     def __init__(self, api_key: str):
         """Create a new scraper using the specified Embedly API key."""
         self.api_key = api_key
+
+    def is_applicable(self, url: str) -> bool:
+        """Return whether this scraper is applicable to a particular url."""
+        parsed_url = urlparse(url)
+
+        # exclude links to YouTube videos, since we have a dedicated scraper for those
+        if (
+            parsed_url.hostname in ("www.youtube.com", "youtube.com")
+            and parsed_url.path == "/watch"
+        ):
+            return False
+
+        return True
 
     def scrape_url(self, url: str) -> ScraperResult:
         """Scrape a url and return the result."""
