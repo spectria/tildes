@@ -8,7 +8,16 @@
 
 {% block title %}Search results for "{{ search }}"{% endblock %}
 
-{% block header_context_link %}<span class="site-header-context">Search: "{{ search }}"</span>{% endblock %}
+{% block header_context_link %}
+  <span class="site-header-context">
+    {% if group %}
+      Search in ~{{ group.path }}:
+    {% else %}
+      Search:
+    {% endif %}
+    "{{ search }}"
+  </span>
+{% endblock %}
 
 {% block filter_info %}
   {% if group %}
