@@ -43,6 +43,9 @@ class TopicEmbedlyExtractor(PgsqlQueueConsumer):
         if not topic.is_link_type:
             return
 
+        if not self.scraper.is_applicable(topic.link):
+            return
+
         # see if we already have a recent scrape result from the same url
         result = (
             self.db_session.query(ScraperResult)
