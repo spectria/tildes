@@ -4,13 +4,23 @@
 {% extends 'topic_listing.jinja2' %}
 
 {% from 'macros/forms.jinja2' import search_form %}
+{% from 'macros/links.jinja2' import group_linked %}
 
 {% block title %}Search results for "{{ search }}"{% endblock %}
 
 {% block header_context_link %}<span class="site-header-context">Search: "{{ search }}"</span>{% endblock %}
 
+{% block filter_info %}
+  {% if group %}
+    <div class="topic-listing-filter">
+    Search results from inside {{ group_linked(group.path) }} only.
+    <a href="{{ request.route_url("search", _query={"q": search}) }}">Search all groups</a>
+    </div>
+  {% endif %}
+{% endblock %}
+
 {% block sidebar %}
-  {{ search_form(search) }}
+  {{ search_form(search, group) }}
 
   <h2>Search results</h2>
 

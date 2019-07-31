@@ -61,8 +61,16 @@
   </div>
 {% endmacro %}
 
-{% macro search_form(existing_query=None) %}
-  <form class="form-search" method="GET" action="/search">
+{% macro search_form(existing_query=None, group=None) %}
+  <form
+    class="form-search"
+    method="GET"
+    {% if group %}
+      action="/~{{ group.path }}/search"
+    {% else %}
+      action="/search"
+    {% endif %}
+  >
     <div class="input-group">
       <input
         type="text"

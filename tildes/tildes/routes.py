@@ -36,6 +36,8 @@ def includeme(config: Configurator) -> None:
 
         config.add_route("group_topics", "/topics", factory=group_by_path)
 
+        config.add_route("group_search", "/search", factory=group_by_path)
+
         config.add_route("group_wiki", "/wiki", factory=group_by_path)
 
         # if you change this from "new_page" make sure to also edit

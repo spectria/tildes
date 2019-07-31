@@ -99,7 +99,7 @@
   {% endif %}
 </div>
 
-{% if search is not defined %}
+{% block filter_info %}
 <div class="topic-listing-filter">
 {% if tag %}
   {% if is_single_group %}
@@ -124,7 +124,7 @@
   <a href="{{ request.current_listing_normal_url({'unfiltered': 'true'}) }}">View unfiltered list</a>
 {% endif %}
 </div>
-{% endif %}
+{% endblock %}
 
 {% if topics.has_prev_page %}
   <div class="pagination">
@@ -206,7 +206,7 @@
 {% endblock %}
 
 {% block sidebar %}
-  {{ search_form() }}
+  {{ search_form(group=group) }}
 
   <h3>~{{ group.path }}</h3>
 

@@ -246,6 +246,7 @@ def get_group_topics(
 
 
 @view_config(route_name="search", renderer="search.jinja2")
+@view_config(route_name="group_search", renderer="search.jinja2")
 @use_kwargs(TopicListingSchema(only=("after", "before", "order", "per_page", "period")))
 @use_kwargs({"search": String(load_from="q", missing="")})
 def get_search(
@@ -259,6 +260,10 @@ def get_search(
 ) -> dict:
     """Get a list of search results."""
     # pylint: disable=too-many-arguments
+    group = None
+    if isinstance(request.context, Group):
+        group = request.context
+
     if order is missing:
         order = TopicSortOption.NEW
 
@@ -271,6 +276,10 @@ def get_search(
         .search(search)
         .apply_sort_option(order)
     )
+
+    # if searching from inside a group, restrict to that group alone
+    if group:
+        query = query.inside_groups([group])
 
     # restrict the time period, if not set to "all time"
     if period:
@@ -295,6 +304,7 @@ def get_search(
     return {
         "search": search,
         "topics": topics,
+        "group": group,
         "order": order,
         "order_options": TopicSortOption,
         "period": period,

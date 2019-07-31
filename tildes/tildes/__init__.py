@@ -137,6 +137,7 @@ def current_listing_base_url(
     base_vars_by_route: Dict[str, Tuple[str, ...]] = {
         "bookmarks": ("per_page", "type"),
         "group": ("order", "period", "per_page", "tag", "unfiltered"),
+        "group_search": ("order", "period", "per_page", "q"),
         "home": ("order", "period", "per_page", "tag", "unfiltered"),
         "search": ("order", "period", "per_page", "q"),
         "user": ("order", "per_page", "type"),
@@ -169,6 +170,7 @@ def current_listing_normal_url(
     normal_vars_by_route: Dict[str, Tuple[str, ...]] = {
         "bookmarks": ("order", "period", "per_page"),
         "group": ("order", "period", "per_page"),
+        "group_search": ("order", "period", "per_page", "q"),
         "home": ("order", "period", "per_page"),
         "notifications": ("per_page",),
         "search": ("order", "period", "per_page", "q"),
