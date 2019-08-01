@@ -7,11 +7,14 @@ from ctypes import c_char_p, c_int, c_size_t, c_void_p, CDLL
 CMARK_DLL = CDLL("/usr/local/lib/libcmark-gfm.so")
 CMARK_EXT_DLL = CDLL("/usr/local/lib/libcmark-gfm-extensions.so")
 
-# Enable the --hardbreaks and --unsafe options for cmark
-# Can we import these somehow? They're defined in cmark.h as:
-# CMARK_OPT_HARDBREAKS (1 << 2)
-# CMARK_OPT_UNSAFE (1 << 17)
-CMARK_OPTS = (1 << 2) | (1 << 17)
+# Enable cmark options: --hardbreaks, --unsafe, --strikethrough-double-tilde
+# Can we import these somehow? They're defined in cmark.h with the same values as below
+CMARK_OPT_HARDBREAKS = 1 << 2
+CMARK_OPT_UNSAFE = 1 << 17
+CMARK_OPT_STRIKETHROUGH_DOUBLE_TILDE = 1 << 14
+CMARK_OPTS = (
+    CMARK_OPT_HARDBREAKS | CMARK_OPT_UNSAFE | CMARK_OPT_STRIKETHROUGH_DOUBLE_TILDE
+)
 
 CMARK_EXTENSIONS = (b"autolink", b"strikethrough", b"table")
 

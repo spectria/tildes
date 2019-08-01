@@ -36,11 +36,28 @@ def test_basic_markdown_unescaped():
 
 def test_strikethrough():
     """Ensure strikethrough works and doesn't turn into a group link."""
-    markdown = "This ~should not~ should work"
+    markdown = "This ~~should not~~ should work"
     processed = convert_markdown_to_safe_html(markdown)
 
     assert "<del>" in processed
     assert "<a" not in processed
+
+
+def test_no_single_tilde_strikethrough():
+    """Ensure using single tildes for strikethrough doesn't work."""
+    markdown = "This ~will not~ end up as strikethrough."
+    processed = convert_markdown_to_safe_html(markdown)
+
+    assert "<del>" not in processed
+
+
+def test_strikethrough_with_group():
+    """Ensure strikethrough works with a group name in the middle."""
+    markdown = "They ~~spammed ~music heavily~~ posted lots of songs."
+    processed = convert_markdown_to_safe_html(markdown)
+
+    assert processed.count("<del>") == 1
+    assert "<a" in processed
 
 
 def test_table():
@@ -377,7 +394,7 @@ def test_username_ref_inside_pre_ignored():
 
 def test_group_ref_inside_code_ignored():
     """Ensure a group reference inside a <code> tag doesn't get linked."""
-    markdown = "Strikethrough works like: `this ~should not~ work`."
+    markdown = "Link to a group by just writing its name: `see ~news for more`."
     processed = convert_markdown_to_safe_html(markdown)
 
     assert "<a" not in processed
