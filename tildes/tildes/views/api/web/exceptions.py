@@ -4,6 +4,7 @@
 """Web API exception views."""
 
 from typing import Sequence
+from urllib.parse import quote
 
 from marshmallow.exceptions import ValidationError
 from pyramid.httpexceptions import (
@@ -106,4 +107,4 @@ def httpfound(request: Request) -> Response:
     302 into a 200 with that header so it works as a redirect for both standard requests
     as well as Intercooler ones.
     """
-    return Response(headers={"X-IC-Redirect": request.exception.location})
+    return Response(headers={"X-IC-Redirect": quote(request.exception.location)})
