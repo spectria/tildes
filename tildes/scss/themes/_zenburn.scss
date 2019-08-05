@@ -1,0 +1,41 @@
+// Color palette is Jani Nurminen's "Zenburn"
+// http://kippura.org/zenburnpage/
+
+// Basic monochrome colors
+$background: #3f3f3f;
+$background-alt: #4f4f4f;
+$foreground: #dcdccc;
+$foreground-alt: #aaa;
+$border: #5b605e;
+
+// Accent colors
+$blue: #8cd0d3;
+$green: #7f9f7f;
+$green-bright: #80d4aa;
+$pink: #dca3a3;
+$red: #dc8c6c;
+$purple: #bc8cbc;
+$yellow: #efef8f;
+
+// Actual theme definition
+$theme-zenburn: (
+  "alert": $green-bright,
+  "background-primary": $background,
+  "background-secondary": $background-alt,
+  "border": $border,
+  "comment-label-exemplary": $blue,
+  "comment-label-joke": $green,
+  "comment-label-noise": $yellow,
+  "comment-label-offtopic": $pink,
+  "comment-label-malice": $red,
+  "error": $red,
+  "foreground-primary": $foreground,
+  "foreground-secondary": $foreground-alt,
+  "link": $blue,
+  "link-visited": $purple,
+  "warning": $yellow,
+);
+
+body.theme-zenburn {
+  @include use-theme($theme-zenburn);
+}

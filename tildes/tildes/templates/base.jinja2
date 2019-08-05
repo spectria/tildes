@@ -28,6 +28,8 @@
   <meta name="theme-color" content="#282c34">
   {% elif request.cookies.get('theme', '') == 'black' %}
   <meta name="theme-color" content="#222">
+  {% elif request.cookies.get('theme', '') == 'zenburn' %}
+  <meta name="theme-color" content="#3f3f3f">
   {% endif %}
 
   {% assets "css" %}
@@ -113,7 +115,8 @@
             ("dark", "Solarized Dark"),
             ("dracula", "Dracula"),
             ("atom-one-dark", "Atom One Dark"),
-            ("black", "Black")) %}
+            ("black", "Black"),
+            ("zenburn", "Zenburn")) %}
         <option value="{{ theme }}"
           {{ 'selected' if theme == request.cookies.get("theme", "white") else '' }}
         >

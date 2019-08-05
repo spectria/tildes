@@ -39,6 +39,7 @@ def get_settings(request: Request) -> dict:
         "dracula": "Dracula",
         "atom-one-dark": "Atom One Dark",
         "black": "Black",
+        "zenburn": "Zenburn",
     }
 
     if site_default_theme == user_default_theme:
