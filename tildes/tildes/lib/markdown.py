@@ -77,6 +77,7 @@ HTML_TAG_WHITELIST = (
     "ol",
     "p",
     "pre",
+    "small",
     "strong",
     "sub",
     "sup",
