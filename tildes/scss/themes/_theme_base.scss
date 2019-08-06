@@ -19,8 +19,8 @@
   color: map-get($theme, "foreground-primary");
   background-color: map-get($theme, "background-secondary");
 
-  // set $is-light as a bool for whether $background-color seems light or dark
-  $is-light: lightness(map-get($theme, "background-primary")) > 50;
+  // set $is-light as a bool for whether the background seems light or dark
+  $is-light: is-color-bright(map-get($theme, "background-primary"));
 
   a {
     color: map-get($theme, "link");
@@ -142,13 +142,7 @@
   }
 
   .btn.btn-primary {
-    $is-button-bg-light: lightness(map-get($theme, "button")) > 50;
-
-    @if ($is-button-bg-light) {
-      color: #000;
-    } @else {
-      color: #fff;
-    }
+    color: choose-by-brightness(map-get($theme, "button"), #000, #fff);
 
     background-color: map-get($theme, "button");
     border-color: map-get($theme, "button");
@@ -159,11 +153,7 @@
     }
 
     &:visited {
-      @if ($is-button-bg-light) {
-        color: #000;
-      } @else {
-        color: #fff;
-      }
+      color: choose-by-brightness(map-get($theme, "button"), #000, #fff);
     }
   }
 
@@ -216,35 +206,20 @@
 
     &.active {
       background-color: map-get($theme, "button");
-
-      $active-color: #fff;
-      $is-active-bg-light: lightness(map-get($theme, "button")) > 50;
-
-      @if ($is-active-bg-light) {
-        $active-color: #000;
-      }
-
-      color: $active-color;
+      color: choose-by-brightness(map-get($theme, "button"), #000, #fff);
 
       .btn {
-        color: $active-color;
+        color: choose-by-brightness(map-get($theme, "button"), #000, #fff);
       }
     }
 
     &.error {
       background-color: map-get($theme, "error");
 
-      $error-color: #fff;
-      $is-error-bg-light: perceived-brightness(map-get($theme, "error")) > 50;
-
-      @if ($is-error-bg-light) {
-        $error-color: #000;
-      }
-
-      color: $error-color;
+      color: choose-by-brightness(map-get($theme, "error"), #000, #fff);
 
       .btn {
-        color: $error-color;
+        color: choose-by-brightness(map-get($theme, "error"), #000, #fff);
       }
     }
   }
@@ -909,9 +884,6 @@
     }
   }
 
-  // set $is-light as a bool for whether background-primary seems light or dark
-  $is-light: lightness(map-get($theme, "background-primary")) > 50;
-
   // colors that simply fall back to another if not defined
   $background-input: map-get-fallback($theme, "background-input", "background-primary");
   $border: map-get-fallback($theme, "border", "foreground-secondary");
@@ -933,7 +905,12 @@
 
   // foreground-extreme: if not defined, use white on a dark bg and black on a light one
   $foreground-extreme: map-get($theme, "foreground-extreme");
-  $foreground-extreme: if($is-light, #000, #fff) !default;
+  $foreground-extreme:
+    choose-by-brightness(
+      map-get($theme, "background-primary"),
+      #000,
+      #fff,
+    ) !default;
 
   // foreground-middle: if not defined, mix foreground-primary and foreground-secondary
   $foreground-middle: map-get($theme, "foreground-middle");

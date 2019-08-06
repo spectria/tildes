@@ -37,3 +37,20 @@
   // Convert to percentage and return
   @return 100% * $number / 255;
 }
+
+@function is-color-bright($color) {
+  // Return a bool for whether the color seems to be bright or not.
+  // Threshold of 60 is arbitrary, not sure if there's a "correct" value
+  @return perceived-brightness($color) > 60;
+}
+
+@function choose-by-brightness($based-on-color, $if-light, $if-dark) {
+  // Used for choosing a color based on the brightness of another, for cases like
+  // picking a text color depending whether the background is light or dark.
+  // Returns the $if-light color if $based-on-color is light, or $if-dark otherwise.
+  @if (is-color-bright($based-on-color)) {
+    @return $if-light;
+  } @else {
+    @return $if-dark;
+  }
+}
