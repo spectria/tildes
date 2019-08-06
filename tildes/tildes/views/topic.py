@@ -61,7 +61,7 @@ def post_group_topics(
     if link:
         # check to see if this link has been posted before
         previous_topics = (
-            request.db_session.query(Topic)
+            request.query(Topic)
             .filter(Topic.link == link)
             .order_by(desc(Topic.created_time))
             .limit(5)
