@@ -79,6 +79,23 @@ $.onmount("[data-js-comment-reply-button]", function() {
             }
         }
 
+        var parentCommentTimestamp = new Date(
+            $parentComment
+                .find(".comment-posted-time")
+                .first()
+                .attr("datetime")
+        );
+
+        // add a warning if the comment being replied to is over a week old
+        if (Date.now() - parentCommentTimestamp > 1000 * 3600 * 24 * 7) {
+            var warningDiv = document.createElement("div");
+            warningDiv.classList.add("toast", "toast-minor", "toast-warning");
+            warningDiv.innerHTML =
+                "<h2>The comment you're replying to is over a week old.</h2>" +
+                "<p>(Replying to old comments is fine, just making sure it's intentional)</p>";
+            clone.querySelector("form").prepend(warningDiv);
+        }
+
         // update Intercooler so it knows about this new form
         Intercooler.processNodes(clone);
 

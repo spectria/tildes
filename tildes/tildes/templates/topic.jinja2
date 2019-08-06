@@ -213,6 +213,12 @@
       data-js-prevent-double-submit
       data-js-confirm-leave-page-unsaved
     >
+      {% if old_topic_warning %}
+      <div class="toast toast-minor toast-warning">
+        <h2>This topic is over a week old.</h2>
+        <p>(Replying to old topics is fine, just making sure it's intentional)</p>
+      </div>
+      {% endif %}
       <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
 
       {{ markdown_textarea() }}

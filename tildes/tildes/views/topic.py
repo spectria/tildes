@@ -6,6 +6,7 @@
 from collections import namedtuple
 from typing import Any, Optional, Union
 
+from datetime import timedelta
 from marshmallow import missing, ValidationError
 from marshmallow.fields import Boolean, String
 from pyramid.httpexceptions import HTTPFound
@@ -374,6 +375,8 @@ def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
             tree.uncollapse_new_comments(topic.last_visit_time)
             tree.finalize_collapsing_maximized()
 
+    old_topic_warning = topic.age > timedelta(days=7)
+
     return {
         "topic": topic,
         "log": log,
@@ -381,6 +384,7 @@ def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
         "comment_order": comment_order,
         "comment_order_options": CommentTreeSortOption,
         "comment_label_options": CommentLabelOption,
+        "old_topic_warning": old_topic_warning,
     }
 
 
