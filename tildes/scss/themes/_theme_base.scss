@@ -112,6 +112,28 @@
     }
   }
 
+  .breadcrumb .breadcrumb-item {
+    color: map-get($theme, "foreground-secondary");
+
+    &:not(:last-child) {
+      a {
+        color: map-get($theme, "foreground-secondary");
+      }
+    }
+
+    &:not(:first-child) {
+      &::before {
+        color: map-get($theme, "foreground-secondary");
+      }
+    }
+
+    &:last-child {
+      a {
+        color: map-get($theme, "link");
+      }
+    }
+  }
+
   .btn {
     color: map-get($theme, "button");
     background-color: transparent;
