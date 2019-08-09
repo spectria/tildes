@@ -17,6 +17,41 @@ server {
     keepalive_timeout 5;
     gzip_static on;
 
+    {% if subdomain == "docs" %}
+    # redirects for old docs urls, 302s in case we ever want to re-use these slugs
+    location /code-of-conduct {
+        return 302 https://docs.tildes.net/policies/code-of-conduct;
+    }
+
+    location /mechanics {
+        return 302 https://docs.tildes.net/instructions;
+    }
+
+    location /overall-goals {
+        return 302 https://docs.tildes.net/philosophy;
+    }
+
+    location /privacy-policy {
+        return 302 https://docs.tildes.net/policies/privacy-policy;
+    }
+
+    location /technical-goals {
+        return 302 https://docs.tildes.net/philosophy/site-implementation;
+    }
+
+    location /terms-of-use {
+        return 302 https://docs.tildes.net/policies/terms-of-use;
+    }
+
+    location /text-formatting {
+        return 302 https://docs.tildes.net/instructions/text-formatting;
+    }
+
+    location /topic-tagging {
+        return 302 https://docs.tildes.net/instructions/posting-on-tildes#tagging-topics;
+    }
+    {% endif %}
+
     location /favicon.ico {
         root /opt/tildes-static-sites/theme/images;
         try_files $uri =404;
