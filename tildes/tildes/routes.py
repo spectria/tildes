@@ -45,11 +45,14 @@ def includeme(config: Configurator) -> None:
         config.add_route("group_wiki_new_page", "/wiki/new_page", factory=group_by_path)
 
         config.add_route(
-            "group_wiki_page", "/wiki/{wiki_page_slug}", factory=group_wiki_page_by_slug
-        )
-        config.add_route(
             "group_wiki_edit_page",
-            "/wiki/{wiki_page_slug}/edit",
+            "/wiki/{wiki_page_slug:.*?}/edit",
+            factory=group_wiki_page_by_slug,
+        )
+
+        config.add_route(
+            "group_wiki_page",
+            "/wiki/{wiki_page_slug:.*}",
             factory=group_wiki_page_by_slug,
         )
 
