@@ -15,7 +15,7 @@ class GroupWikiPageSchema(Schema):
     """Marshmallow schema for group wiki pages."""
 
     page_name = SimpleString(max_length=PAGE_NAME_MAX_LENGTH)
-    markdown = Markdown(max_length=100_000)
+    markdown = Markdown(max_length=1_000_000)
 
     class Meta:
         """Always use strict checking so error handlers are invoked."""
