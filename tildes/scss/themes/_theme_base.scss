@@ -98,12 +98,13 @@
     background-color: map-get($theme, "background-secondary");
   }
 
-  td {
+  td,
+  th {
     border-color: map-get($theme, "border");
   }
 
   th {
-    border-color: map-get($theme, "foreground-highlight");
+    border-bottom-color: map-get($theme, "foreground-highlight");
   }
 
   .form-autocomplete {
