@@ -211,14 +211,14 @@ def get_group_topics(
         wiki_pages = (
             request.query(GroupWikiPage)
             .filter(GroupWikiPage.group == request.context)
-            .order_by(GroupWikiPage.slug)
+            .order_by(GroupWikiPage.path)
             .all()
         )
 
         # remove the index from the page list, we'll output it separately
-        if any(page.slug == "index" for page in wiki_pages):
+        if any(page.path == "index" for page in wiki_pages):
             wiki_has_index = True
-            wiki_pages = [page for page in wiki_pages if page.slug != "index"]
+            wiki_pages = [page for page in wiki_pages if page.path != "index"]
         else:
             wiki_has_index = False
     else:

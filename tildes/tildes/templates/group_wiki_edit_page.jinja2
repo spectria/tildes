@@ -17,8 +17,8 @@
   <form
     method="post"
     autocomplete="off"
-    action="/~{{ page.group.path }}/wiki/{{ page.slug }}"
-    data-ic-post-to="/~{{ page.group.path }}/wiki/{{ page.slug }}"
+    action="/~{{ page.group.path }}/wiki/{{ page.path }}"
+    data-ic-post-to="/~{{ page.group.path }}/wiki/{{ page.path }}"
     data-js-prevent-double-submit
     data-js-confirm-leave-page-unsaved
   >
@@ -31,7 +31,7 @@
     <div class="form-group">
       <label class="form-label" for="edit_message">Short edit summary</label>
       <div class="input-group">
-        <span class="input-group-addon">~{{ page.group.path }}/{{ page.slug }}:</span>
+        <span class="input-group-addon">~{{ page.group.path }}/{{ page.path }}:</span>
         <input class="form-input" id="edit_message" name="edit_message" type="text" placeholder="Edit summary" maxlength="80" required>
       </div>
     </div>

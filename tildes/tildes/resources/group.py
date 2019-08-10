@@ -35,13 +35,13 @@ def group_by_path(request: Request, path: str) -> Group:
     return get_resource(request, query)
 
 
-@use_kwargs({"wiki_page_slug": String()}, locations=("matchdict",))
-def group_wiki_page_by_slug(request: Request, wiki_page_slug: str) -> GroupWikiPage:
-    """Get a group's wiki page by its url slug (or 404)."""
+@use_kwargs({"wiki_page_path": String()}, locations=("matchdict",))
+def group_wiki_page_by_path(request: Request, wiki_page_path: str) -> GroupWikiPage:
+    """Get a group's wiki page by its path (or 404)."""
     group = group_by_path(request)  # pylint: disable=no-value-for-parameter
 
     query = request.query(GroupWikiPage).filter(
-        GroupWikiPage.group == group, GroupWikiPage.slug == wiki_page_slug
+        GroupWikiPage.group == group, GroupWikiPage.path == wiki_page_path
     )
 
     return get_resource(request, query)

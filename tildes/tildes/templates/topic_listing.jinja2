@@ -229,10 +229,10 @@
       <li>Group wiki pages</li>
       <ul class="nav">
       {% if wiki_has_index %}
-        <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=group.path, wiki_page_slug="index") }}" class="text-bold">index</a></li>
+        <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=group.path, wiki_page_path="index") }}" class="text-bold">index</a></li>
       {% endif %}
       {% for page in wiki_pages %}
-        <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=group.path, wiki_page_slug=page.slug) }}">{{ page.page_name }}</a></li>
+        <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=group.path, wiki_page_path=page.path) }}">{{ page.page_name }}</a></li>
       {% endfor %}
       </ul>
     </ul>

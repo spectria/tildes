@@ -21,7 +21,7 @@ def get_group_wiki(request: Request) -> dict:
     page_list = (
         request.query(GroupWikiPage)
         .filter(GroupWikiPage.group == group)
-        .order_by(GroupWikiPage.slug)
+        .order_by(GroupWikiPage.path)
         .all()
     )
 
@@ -36,14 +36,14 @@ def get_group_wiki_page(request: Request) -> dict:
     page_list = (
         request.query(GroupWikiPage)
         .filter(GroupWikiPage.group == page.group)
-        .order_by(GroupWikiPage.slug)
+        .order_by(GroupWikiPage.path)
         .all()
     )
 
     # remove the index from the page list, we'll output it separately
-    if any(page.slug == "index" for page in page_list):
+    if any(page.path == "index" for page in page_list):
         has_index_page = True
-        page_list = [page for page in page_list if page.slug != "index"]
+        page_list = [page for page in page_list if page.path != "index"]
     else:
         has_index_page = False
 
@@ -76,7 +76,7 @@ def post_group_wiki(request: Request, page_name: str, markdown: str) -> HTTPFoun
 
     raise HTTPFound(
         location=request.route_url(
-            "group_wiki_page", group_path=group.path, wiki_page_slug=new_page.slug
+            "group_wiki_page", group_path=group.path, wiki_page_path=new_page.path
         )
     )
 
@@ -104,6 +104,6 @@ def post_group_wiki_page(request: Request, markdown: str, edit_message: str) -> 
 
     raise HTTPFound(
         location=request.route_url(
-            "group_wiki_page", group_path=page.group.path, wiki_page_slug=page.slug
+            "group_wiki_page", group_path=page.group.path, wiki_page_path=page.path
         )
     )

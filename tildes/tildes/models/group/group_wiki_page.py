@@ -38,7 +38,7 @@ class GroupWikiPage(DatabaseModel):
     group_id: int = Column(
         Integer, ForeignKey("groups.group_id"), nullable=False, primary_key=True
     )
-    slug: str = Column(CIText, nullable=False, primary_key=True)
+    path: str = Column(CIText, nullable=False, primary_key=True)
     page_name: str = Column(
         Text,
         CheckConstraint(
@@ -58,10 +58,10 @@ class GroupWikiPage(DatabaseModel):
         """Create a new wiki page."""
         self.group = group
         self.page_name = page_name
-        self.slug = convert_to_url_slug(page_name)
+        self.path = convert_to_url_slug(page_name)
 
         # prevent possible conflict with url for creating a new page
-        if self.slug == "new_page":
+        if self.path == "new_page":
             raise ValueError("Invalid page name")
 
         if self.file_path.exists():
@@ -97,7 +97,7 @@ class GroupWikiPage(DatabaseModel):
     @property
     def relative_path(self) -> Path:
         """Return a relative path to the page's file."""
-        return Path(str(self.group.path), f"{self.slug}.md")
+        return Path(str(self.group.path), f"{self.path}.md")
 
     @property
     def history_url(self) -> str:
@@ -143,9 +143,9 @@ class GroupWikiPage(DatabaseModel):
         repo.index.add(str(self.file_path.relative_to(self.BASE_PATH)))
         repo.index.write()
 
-        # Prepend the group name and page slug to the edit message - if you change the
+        # Prepend the group name and page path to the edit message - if you change the
         # format of this, make sure to also change the page-editing template to match
-        edit_message = f"~{self.group.path}/{self.slug}: {edit_message}"
+        edit_message = f"~{self.group.path}/{self.path}: {edit_message}"
 
         repo.create_commit(
             repo.head.name,

@@ -10,7 +10,7 @@ from pyramid.request import Request
 from pyramid.security import Allow, Authenticated
 
 from tildes.resources.comment import comment_by_id36, notification_by_comment_id36
-from tildes.resources.group import group_by_path, group_wiki_page_by_slug
+from tildes.resources.group import group_by_path, group_wiki_page_by_path
 from tildes.resources.message import message_conversation_by_id36
 from tildes.resources.topic import topic_by_id36
 from tildes.resources.user import user_by_username
@@ -46,14 +46,14 @@ def includeme(config: Configurator) -> None:
 
         config.add_route(
             "group_wiki_edit_page",
-            "/wiki/{wiki_page_slug:.*?}/edit",
-            factory=group_wiki_page_by_slug,
+            "/wiki/{wiki_page_path:.*?}/edit",
+            factory=group_wiki_page_by_path,
         )
 
         config.add_route(
             "group_wiki_page",
-            "/wiki/{wiki_page_slug:.*}",
-            factory=group_wiki_page_by_slug,
+            "/wiki/{wiki_page_path:.*}",
+            factory=group_wiki_page_by_path,
         )
 
         # these routes need to remain last inside this block
