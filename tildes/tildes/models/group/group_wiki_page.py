@@ -61,7 +61,7 @@ class GroupWikiPage(DatabaseModel):
         self.path = convert_to_url_slug(page_name)
 
         # prevent possible conflict with url for creating a new page
-        if self.path == "new_page":
+        if self.slug == "new_page":
             raise ValueError("Invalid page name")
 
         if self.file_path.exists():
@@ -98,6 +98,11 @@ class GroupWikiPage(DatabaseModel):
     def relative_path(self) -> Path:
         """Return a relative path to the page's file."""
         return Path(str(self.group.path), f"{self.path}.md")
+
+    @property
+    def slug(self) -> str:
+        """Return the page's slug, which is also its filename with no extension."""
+        return self.file_path.stem
 
     @property
     def history_url(self) -> str:
