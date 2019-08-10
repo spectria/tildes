@@ -1,0 +1,14 @@
+ol.breadcrumb,
+ul.breadcrumb {
+  margin-left: 0;
+  font-size: 0.6rem;
+  line-height: 0.8rem;
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

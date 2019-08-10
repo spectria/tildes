@@ -84,6 +84,8 @@
 
 <main class="{% block main_classes %}{% endblock %}" data-js-hide-sidebar-if-open>
 
+{% block pre_main_heading %}{% endblock %}
+
 {# Only output the <h1> tag if the main_heading block has some content #}
 {% set main_heading %}{% block main_heading %}{% endblock %}{% endset %}
 {% if main_heading %}

@@ -4,8 +4,8 @@
 """Contains the GroupWikiPage class."""
 
 from datetime import datetime
-from pathlib import Path
-from typing import Any, Optional, Sequence, Tuple
+from pathlib import Path, PurePath
+from typing import Any, List, Optional, Sequence, Tuple
 
 from pygit2 import Repository, Signature
 from pyramid.security import Allow, DENY_ALL, Everyone
@@ -103,6 +103,19 @@ class GroupWikiPage(DatabaseModel):
     def slug(self) -> str:
         """Return the page's slug, which is also its filename with no extension."""
         return self.file_path.stem
+
+    @property
+    def folders(self) -> List[PurePath]:
+        """Return a list of the folders the page is inside (if any)."""
+        path = PurePath(self.path)
+
+        # the last element of .parents will be ".", chop that off
+        folders = list(path.parents)[:-1]
+
+        # reverse the list, since .parents goes "upwards" towards root
+        folders.reverse()
+
+        return folders
 
     @property
     def history_url(self) -> str:
