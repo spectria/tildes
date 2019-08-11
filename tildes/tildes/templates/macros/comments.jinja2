@@ -45,7 +45,7 @@
   <div class="comment-itself">
     <header class="comment-header">
       <button class="btn btn-light btn-comment-collapse" data-js-comment-collapse-button>
-        {{ "+" if comment.collapsed_state in ("full", "individual") else "−" }}
+        <span class="btn-comment-collapse-label"></span>
       </button>
 
       {% if not is_individual_comment and comment.num_children > 0 %}

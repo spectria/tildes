@@ -192,6 +192,10 @@
     font-size: 0.6rem;
     line-height: 0.8rem;
   }
+
+  .btn-comment-collapse-label::after {
+    content: "+";
+  }
 }
 
 .is-comment-collapsed:not(:target) {

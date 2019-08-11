@@ -46,6 +46,10 @@
   }
 }
 
+.btn-comment-collapse-label::after {
+  content: "−";
+}
+
 .btn-comment-label {
   @include min-touch-size;
 
