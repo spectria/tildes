@@ -4,7 +4,7 @@
 """Root factories for groups."""
 
 from marshmallow.fields import String
-from pyramid.httpexceptions import HTTPMovedPermanently
+from pyramid.httpexceptions import HTTPMovedPermanently, HTTPNotFound
 from pyramid.request import Request
 from sqlalchemy_utils import Ltree
 from webargs.pyramidparser import use_kwargs
@@ -40,6 +40,18 @@ def group_wiki_page_by_path(request: Request, wiki_page_path: str) -> GroupWikiP
     """Get a group's wiki page by its path (or 404)."""
     group = group_by_path(request)  # pylint: disable=no-value-for-parameter
 
+    query = request.query(GroupWikiPage).filter(
+        GroupWikiPage.group == group, GroupWikiPage.path == wiki_page_path
+    )
+
+    # try to return the page with the exact path, but catch if it doesn't exist
+    try:
+        return get_resource(request, query)
+    except HTTPNotFound:
+        pass
+
+    # if it didn't exist, try treating it as a folder and looking for an index page
+    wiki_page_path += "/index"
     query = request.query(GroupWikiPage).filter(
         GroupWikiPage.group == group, GroupWikiPage.path == wiki_page_path
     )
