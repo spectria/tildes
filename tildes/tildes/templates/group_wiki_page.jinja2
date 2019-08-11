@@ -20,7 +20,7 @@
   </li>
   {% for folder in page.folders %}
     <li class="breadcrumb-item">
-      <a href="{{ request.route_url("group_wiki_page", group_path=page.group.path, wiki_page_path=folder|string) }}">{{ folder.name }}</a>
+      <a href="{{ request.route_url("group_wiki_page", group_path=page.group.path, wiki_page_path=folder~"/index") }}">{{ folder.name }}</a>
     </li>
   {% endfor %}
 </ol>
