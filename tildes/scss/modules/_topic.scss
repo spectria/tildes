@@ -182,7 +182,7 @@
     line-height: 0.8rem;
   }
 
-  summary::after {
+  > summary::after {
     font-style: italic;
     content: "Re-collapse topic text";
     display: none;

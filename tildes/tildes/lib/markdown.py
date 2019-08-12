@@ -63,6 +63,7 @@ HTML_TAG_WHITELIST = (
     "br",
     "code",
     "del",
+    "details",
     "em",
     "h1",
     "h2",
@@ -80,6 +81,7 @@ HTML_TAG_WHITELIST = (
     "small",
     "strong",
     "sub",
+    "summary",
     "sup",
     "span",
     "table",
@@ -94,6 +96,7 @@ PROTOCOL_WHITELIST = ("http", "https", "mailto")
 
 HTML_ATTRIBUTE_WHITELIST_DEFAULT = {
     "a": ["href", "title"],
+    "details": ["open"],
     "ol": ["start"],
     "td": ["align"],
     "th": ["align"],

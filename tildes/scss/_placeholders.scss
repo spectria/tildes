@@ -11,6 +11,12 @@
     }
   }
 
+  details {
+    margin-bottom: 0.4rem;
+    padding: 0.2rem 0.4rem;
+    border: 1px dotted;
+  }
+
   hr {
     margin-left: 0;
     max-width: $paragraph-max-width;
