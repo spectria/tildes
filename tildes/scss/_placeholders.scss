@@ -15,6 +15,11 @@
     margin-bottom: 0.4rem;
     padding: 0.2rem 0.4rem;
     border: 1px dotted;
+
+    &:not([open]) {
+      cursor: pointer;
+      display: inline-block;
+    }
   }
 
   hr {
