@@ -63,12 +63,17 @@
     <footer class="topic-info">
       <div class="topic-info-comments">
         <a
+          {% if topic.comments_since_last_visit %}
+          href="{{ topic.permalink }}#comments"
+          {% else %}
           href="{{ topic.permalink }}"
+          {% endif %}
+
           {% if request.user.open_new_tab_internal %}target="_blank"{% endif %}
         >
           {{ pluralize(topic.num_comments, "comment") }}
 
-          {% if topic.comments_since_last_visit is defined and topic.comments_since_last_visit %}
+          {% if topic.comments_since_last_visit %}
             <span class="topic-info-comments-new" title="Last visit {{ topic.last_visit_time|ago }}">
               ({{ topic.comments_since_last_visit }} new)
             </span>
