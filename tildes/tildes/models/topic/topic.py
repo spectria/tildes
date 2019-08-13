@@ -158,7 +158,7 @@ class Topic(DatabaseModel):
         self._markdown = new_markdown
         self.rendered_html = convert_markdown_to_safe_html(new_markdown)
 
-        if self.created_time and utc_now() - self.created_time > EDIT_GRACE_PERIOD:
+        if self.age > EDIT_GRACE_PERIOD:
             self.last_edited_time = utc_now()
 
     @hybrid_property

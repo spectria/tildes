@@ -309,7 +309,7 @@ class User(DatabaseModel):
             raise ValueError("Unknown permissions format")
 
         # give the user the "comment.label" permission if they're over a week old
-        if utc_now() - self.created_time > timedelta(days=7):
+        if self.age > timedelta(days=7):
             principals.append("comment.label")
 
         return principals

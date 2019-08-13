@@ -115,7 +115,7 @@ class Comment(DatabaseModel):
             extracted_text, length=200, truncate_at_chars=" "
         )
 
-        if self.created_time and utc_now() - self.created_time > EDIT_GRACE_PERIOD:
+        if self.age > EDIT_GRACE_PERIOD:
             self.last_edited_time = utc_now()
 
     def __repr__(self) -> str:
@@ -197,7 +197,7 @@ class Comment(DatabaseModel):
             acl.append((Allow, "admin", "reply"))
             acl.append((Deny, Everyone, "reply"))
 
-        if utc_now() - self.created_time < timedelta(hours=2):
+        if self.age < timedelta(hours=2):
             acl.append((Deny, "comment.reply_slow", "reply"))
 
         acl.append((Allow, Authenticated, "reply"))

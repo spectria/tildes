@@ -3,6 +3,7 @@
 
 """Contains the base DatabaseModel class."""
 
+from datetime import timedelta
 from typing import Any, Optional, Type, TypeVar
 
 from marshmallow import Schema
@@ -10,6 +11,8 @@ from sqlalchemy import event
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import MetaData
 from sqlalchemy.sql.schema import Table
+
+from tildes.lib.datetime import utc_now
 
 
 ModelType = TypeVar("ModelType")  # pylint: disable=invalid-name
@@ -81,6 +84,18 @@ class DatabaseModelBase:
             self._schema = self.schema_class(partial=True)  # noqa
 
         return self._schema
+
+    @property
+    def age(self) -> timedelta:
+        """Return the model's age - requires it to have a `created_time` column."""
+        if not hasattr(self, "created_time"):
+            raise AttributeError("'age' attribute requires 'created_time' column.")
+
+        # created_time should only be None during __init__, age of 0 is reasonable
+        if self.created_time is None:  # type: ignore
+            return timedelta(0)
+
+        return utc_now() - self.created_time  # type: ignore
 
     def _validate_new_value(self, attribute: str, value: Any) -> Any:
         """Validate the new value for a column.
