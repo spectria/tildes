@@ -7,7 +7,7 @@ from pyramid.request import Request
 from webargs.pyramidparser import use_kwargs
 
 from tildes.lib.markdown import convert_markdown_to_safe_html
-from tildes.schemas.comment import CommentSchema
+from tildes.schemas.group_wiki_page import GroupWikiPageSchema
 from tildes.views.decorators import ic_view_config
 
 
@@ -16,7 +16,8 @@ from tildes.views.decorators import ic_view_config
     request_method="POST",
     renderer="markdown_preview.jinja2",
 )
-@use_kwargs(CommentSchema(only=("markdown",)))
+# uses GroupWikiPageSchema because it should always have the highest max_length
+@use_kwargs(GroupWikiPageSchema(only=("markdown",)))
 def markdown_preview(request: Request, markdown: str) -> dict:
     """Render the provided text as Markdown."""
     # pylint: disable=unused-argument
