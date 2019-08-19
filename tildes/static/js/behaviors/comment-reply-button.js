@@ -89,10 +89,11 @@ $.onmount("[data-js-comment-reply-button]", function() {
         // add a warning if the comment being replied to is over a week old
         if (Date.now() - parentCommentTimestamp > 1000 * 3600 * 24 * 7) {
             var warningDiv = document.createElement("div");
-            warningDiv.classList.add("toast", "toast-minor", "toast-warning");
+            warningDiv.classList.add("warning-old-reply");
             warningDiv.innerHTML =
-                "<h2>The comment you're replying to is over a week old.</h2>" +
-                "<p>(Replying to old comments is fine, just making sure it's intentional)</p>";
+                '<p class="text-warning text-small">The comment you\'re replying to ' +
+                "is over a week old. Replying to old comments is fine as long as " +
+                "you're contributing to the discussion.</p>";
             clone.querySelector("form").prepend(warningDiv);
         }
 

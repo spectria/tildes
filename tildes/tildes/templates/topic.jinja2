@@ -214,9 +214,8 @@
       data-js-confirm-leave-page-unsaved
     >
       {% if old_topic_warning %}
-      <div class="toast toast-minor toast-warning">
-        <h2>This topic is over a week old.</h2>
-        <p>(Replying to old topics is fine, just making sure it's intentional)</p>
+      <div class="warning-old-reply">
+        <p class="text-warning text-small">This topic is over a week old. Replying to old topics is fine as long as you're contributing to the discussion.</p>
       </div>
       {% endif %}
       <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
