@@ -15,10 +15,10 @@
     margin-bottom: 0.4rem;
     padding: 0.2rem 0.4rem;
     border: 1px dotted;
+    max-width: $paragraph-max-width;
 
     &:not([open]) {
       cursor: pointer;
-      max-width: $paragraph-max-width;
     }
   }
 
