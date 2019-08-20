@@ -14,11 +14,11 @@ All code contributions must be made under the same license as the project's main
 
 ## Setting up a development version
 
-Please see this page on the Tildes Docs for instructions to set up a development version: https://docs.tildes.net/development-setup
+Please see this page on the Tildes Docs for instructions to set up a development version: https://docs.tildes.net/instructions/development-setup
 
 ## General development information
 
-This page on the Tildes docs contains information about many aspects of Tildes development: https://docs.tildes.net/development
+This page on the Tildes docs contains information about many aspects of Tildes development: https://docs.tildes.net/instructions/development
 
 ## Contributing code
 
@@ -40,7 +40,7 @@ Once you've selected an issue to work on, please leave a comment saying so. This
 
 After you've finished making your changes, there are a few things to check before proposing your changes as a merge request.
 
-First, ensure that all the checks (tests, mypy and code-style) pass successfully. Merge requests that fail any of the checks will not be accepted. For more information, see this section of the development docs: https://docs.tildes.net/development#running-checks-on-your-code
+First, ensure that all the checks (tests, mypy and code-style) pass successfully. Merge requests that fail any of the checks will not be accepted. For more information, see this section of the development docs: https://docs.tildes.net/instructions/development#running-checks-on-your-code
 
 Squash your changes into logical commits. For many changes there should only be a single commit, but some can be broken into multiple logical sections. The commit messages should follow [the formatting described in this article](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html), with the summary line written in the imperative form. The summary line should make sense if you were to use it in a sentence like "If applied, this commit will \_\_\_\_\_\_\_\_". For example, "Add a new X", "Fix a bug with Y", and so on.
 
