@@ -430,6 +430,12 @@
     }
   }
 
+  .settings-list {
+    a:visited {
+      color: map-get($theme, "link");
+    }
+  }
+
   .sidebar-controls {
     background-color: map-get($theme, "background-secondary");
   }
