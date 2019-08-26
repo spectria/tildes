@@ -10,6 +10,7 @@ freezegun
 gunicorn
 html5lib
 ipython
+marshmallow<3.0  # 3.0+ requires significant updates
 mypy
 mypy-extensions
 Pillow
