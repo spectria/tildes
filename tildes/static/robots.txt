@@ -1,20 +1,33 @@
+# In general, scrapers are welcome if they are collecting data for informational uses
+# (such as search engines) and maintain a reasonable rate of scraping.
+#
+# Scrapers from SEO/marketing-type services will be blocked. Tildes data is not a
+# resource to be mined and sold.
+
+# https://ahrefs.com/robot
 User-agent: AhrefsBot
 Disallow: /
 
+# http://webmeup-crawler.com/
 User-agent: BLEXBot
 Disallow: /
 
+# https://app.hypefactors.com/media-monitoring/about.html
 User-agent: Buck
 Disallow: /
 
+# https://moz.com/help/moz-procedures/crawlers/dotbot
 User-agent: dotbot
 Disallow: /
 
+# Unknown/suspicious scraper - UA only contains a gmail address
 User-agent: MauiBot
 Disallow: /
 
+# https://megaindex.com/crawler
 User-agent: MegaIndex
 Disallow: /
 
+# https://www.semrush.com/bot/
 User-agent: SemrushBot
 Disallow: /
