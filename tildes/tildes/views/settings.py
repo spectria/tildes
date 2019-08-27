@@ -40,6 +40,8 @@ def get_settings(request: Request) -> dict:
         "atom-one-dark": "Atom One Dark",
         "black": "Black",
         "zenburn": "Zenburn",
+        "gruvbox-light": "Gruvbox Light",
+        "gruvbox-dark": "Gruvbox Dark",
     }
 
     if site_default_theme == user_default_theme:

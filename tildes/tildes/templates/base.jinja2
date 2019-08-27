@@ -30,6 +30,8 @@
   <meta name="theme-color" content="#222">
   {% elif request.cookies.get('theme', '') == 'zenburn' %}
   <meta name="theme-color" content="#3f3f3f">
+  {% elif request.cookies.get('theme', '') == 'gruvbox-dark' %}
+  <meta name="theme-color" content="#282828">
   {% endif %}
 
   {% assets "css" %}
@@ -118,7 +120,9 @@
             ("dracula", "Dracula"),
             ("atom-one-dark", "Atom One Dark"),
             ("black", "Black"),
-            ("zenburn", "Zenburn")) %}
+            ("zenburn", "Zenburn"),
+            ("gruvbox-light", "Gruvbox Light"),
+            ("gruvbox-dark", "Gruvbox Dark")) %}
         <option value="{{ theme }}"
           {{ 'selected' if theme == request.cookies.get("theme", "white") else '' }}
         >
