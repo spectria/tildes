@@ -18,6 +18,12 @@ _COUNTERS = {
     "comment_labels": Counter(
         "tildes_comment_labels_total", "Comment Labels", labelnames=["label"]
     ),
+    "donations": Counter(
+        "tildes_donations_total", "Donation Attempts", labelnames=["type"]
+    ),
+    "donation_failures": Counter(
+        "tildes_donation_failures_total", "Donation Failures", labelnames=["type"]
+    ),
     "invite_code_failures": Counter(
         "tildes_invite_code_failures_total", "Invite Code Failures"
     ),

@@ -12,6 +12,7 @@ from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
 from webargs.pyramidparser import use_kwargs
 
+from tildes.metrics import incr_counter
 from tildes.views.decorators import rate_limit_view
 
 
@@ -40,6 +41,8 @@ def post_donate_stripe(
     except KeyError:
         raise HTTPInternalServerError
 
+    incr_counter("donations", type="stripe")
+
     payment_successful = True
     try:
         stripe.Charge.create(
@@ -51,6 +54,7 @@ def post_donate_stripe(
             statement_descriptor="Donation - tildes.net",
         )
     except stripe.error.StripeError:
+        incr_counter("donation_failures", type="stripe")
         payment_successful = False
 
     return {"payment_successful": payment_successful}
