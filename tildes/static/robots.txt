@@ -28,6 +28,11 @@ Disallow: /
 User-agent: MegaIndex
 Disallow: /
 
+# https://mj12bot.com/
+# Note: claims to be powering a search engine, actually sells SEO/marketing data
+User-agent: MJ12bot
+Disallow: /
+
 # https://www.semrush.com/bot/
 User-agent: SemrushBot
 Disallow: /
