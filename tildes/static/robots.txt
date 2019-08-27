@@ -1,4 +1,10 @@
+User-agent: AhrefsBot
+Disallow: /
+
 User-agent: BLEXBot
+Disallow: /
+
+User-agent: Buck
 Disallow: /
 
 User-agent: dotbot
@@ -8,4 +14,7 @@ User-agent: MauiBot
 Disallow: /
 
 User-agent: MegaIndex
+Disallow: /
+
+User-agent: SemrushBot
 Disallow: /
