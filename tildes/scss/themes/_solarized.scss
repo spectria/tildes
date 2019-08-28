@@ -64,7 +64,7 @@ $solarized-dark: (
   "foreground-secondary": $fg-darkest,
 );
 
-body.theme-dark {
+body.theme-solarized-dark {
   @include use-theme(map-merge($solarized-base, $solarized-dark));
 }
 
@@ -81,6 +81,6 @@ $solarized-light: (
   "warning": $orange,
 );
 
-body.theme-light {
+body.theme-solarized-light {
   @include use-theme(map-merge($solarized-base, $solarized-light));
 }

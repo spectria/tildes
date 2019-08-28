@@ -34,8 +34,8 @@ def get_settings(request: Request) -> dict:
 
     theme_options = {
         "white": "White",
-        "light": "Solarized Light",
-        "dark": "Solarized Dark",
+        "solarized-light": "Solarized Light",
+        "solarized-dark": "Solarized Dark",
         "dracula": "Dracula",
         "atom-one-dark": "Atom One Dark",
         "black": "Black",

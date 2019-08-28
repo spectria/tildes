@@ -20,7 +20,7 @@
   {% endblock %}
 
   {# Hardcoding each option isn't great, but I don't know a better method #}
-  {% if request.cookies.get('theme', '') == 'dark' %}
+  {% if request.cookies.get('theme', '') == 'solarized-dark' %}
   <meta name="theme-color" content="#073642">
   {% elif request.cookies.get("theme", "") == "dracula" %}
   <meta name="theme-color" content="#282a36">
@@ -115,8 +115,8 @@
       <select class="form-select" name="theme" id="theme" data-js-theme-selector>
         {% for (theme, description) in (
             ("white", "White"),
-            ("light", "Solarized Light"),
-            ("dark", "Solarized Dark"),
+            ("solarized-light", "Solarized Light"),
+            ("solarized-dark", "Solarized Dark"),
             ("dracula", "Dracula"),
             ("atom-one-dark", "Atom One Dark"),
             ("black", "Black"),
