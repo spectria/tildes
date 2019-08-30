@@ -30,9 +30,17 @@ In general, anything beyond straightforward fixes and adjustments should have an
 
 If you look at [the list of issues](https://gitlab.com/tildes/tildes/issues), there are a few indicators you can use to find a good contribution to work on:
 
-* Make sure the issue isn't already being worked on by someone else. Check the comments on it, and whether it's set as "assigned to" someone. If someone else was working on it but there hasn't been any activity in a while, please post a comment first to check if they're still making progress.
-* Issues with the "high priority" label are ones that are needed soon, and contributions for these will probably be most appreciated. However, they may also be more complex than many other issues, and might not be the best place for a newer contributor to start.
-* Check the "Weight" field on the issue. If set, this is an estimate of how complex it will be to address, ranging from 1 (extremely simple, very small changes) to 9 (major changes, possibly requiring days or even weeks of work).
+* Make sure the issue isn't already being worked on by someone else. Check the comments on it, whether it's set as "assigned to" someone, or if the ~"In Progress" label is applied. If someone else was working on it but there hasn't been any activity in a while, please post a comment first to check if they're still making progress.
+* Issues labeled with ~"Priority::High" are ones that are needed soon, and contributions for these will probably be most appreciated. However, they may also be more complex than many other issues, and might not be the best place for a newer contributor to start.
+* Issues labeled with ~"Stage::Accepted" have been confirmed to be included, the ~"Stage::Unconfirmed" label indicates it has not yet been decided and ~"Stage::Denied" indicates it is confirmed it won't be included. Generally, issues that have been accepted should be prioritized over unconfirmed ones but it's not an absolute requirement.
+* For newer contributors there are issues with the ~"🚀 Beginner-Friendly" label. These are usually smaller tweaks or feature requests that don't require a full understanding of the stack to accomplish.
+* If you only know a portion of the languages Tildes uses there are also language-specific labels (for example: ~"◦ JavaScript" and ~"◦ Python") that you can use to filter the issue tracker with, [these all start with the white bullet ◦ character](https://gitlab.com/tildes/tildes/-/labels?search=%E2%97%A6).
+* Check the "Weight" field on the issue. If set, this is an estimate of how complex it will be to address:
+  1. The "formalities" (i.e. creating a branch, writing the MR) take longer or equally as long as the time spent updating code. The simplest, one line fixes, like tildes/tildes#371.
+  2. Can go from the basic issue to implementation within a few hours, like tildes/tildes#91.
+  3. Probably takes up at least a single day, maybe requires more discussion on how the feature will be implemented. Probably requires some advanced understanding of the codebase's general setup/how certain processes run outside the response-request cycle etc.
+  4. Like three, but more intensely. Might take a few days of work.
+  5. The big stuff. Larger features that have significant impact and are time consuming to implement, like the group wikis probably were. More than a few days of dedicated work, lots of details that need figuring out.
 
 Once you've selected an issue to work on, please leave a comment saying so. This will allow other people to see that they shouldn't also start on that issue.
 
