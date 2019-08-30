@@ -49,3 +49,6 @@ $theme-dracula: (
 body.theme-dracula {
   @include use-theme($theme-dracula);
 }
+body {
+  @include theme-preview-block($theme-dracula, "dracula");
+}

@@ -47,3 +47,6 @@ $theme-atom-one-dark: (
 body.theme-atom-one-dark {
   @include use-theme($theme-atom-one-dark);
 }
+body {
+  @include theme-preview-block($theme-atom-one-dark, "atom-one-dark");
+}

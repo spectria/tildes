@@ -31,3 +31,6 @@ $default-theme: (
 body {
   @include use-theme($default-theme);
 }
+body {
+  @include theme-preview-block($default-theme, "white");
+}

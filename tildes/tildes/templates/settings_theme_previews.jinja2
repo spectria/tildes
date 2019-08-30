@@ -1,0 +1,77 @@
+{# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% from 'macros/comments.jinja2' import render_comment_tree, comment_label_options_template, comment_reply_template with context %}
+{% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
+
+{% extends 'base_settings.jinja2' %}
+
+{% block main_classes %}{% endblock %}
+
+{% block title %}Theme previews{% endblock %}
+
+{% block main_heading %}Theme previews{% endblock %}
+
+{% block settings %}
+  <label for="theme">Choose a display theme:</label>
+  <form
+    class="form-inline"
+    name="account-default-theme"
+    data-ic-patch-to="{{ request.route_url(
+      'ic_user',
+      username=request.user.username
+    ) }}"
+  >
+    <select class="form-select col-8 col-sm-12" name="theme" id="theme" data-js-theme-selector>
+      {% for theme, description in theme_options.items() %}
+        <option
+          value="{{ theme }}"
+          {{ 'selected' if theme == current_theme else '' }}
+        >
+          {{ description }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <a class="btn btn-primary"  href="{{ request.route_url('settings') }}">Return to Settings</a>
+
+    <button id="button-set-default-theme" class="btn btn-link d-none">
+      Set as account default
+    </button>
+  </form>
+
+  <section class="settings-section">
+  <h2>Quick overview</h2>
+  <div class="theme-preview-blocks">
+    {% for theme, description in theme_options.items() %}
+      {# The theme dict includes various (default) texts in the descriptions, cut them off #}
+      {# Also, replace all spaces with NBSPs so the theme names don't get linewrapped #}
+      <span class="theme-preview-block-{{ theme }}">{{ description.split(" (")[0]|replace(" ", "\u00a0") }}</span>
+    {% endfor %}
+  </div>
+  </section>
+
+  <section class="settings-section">
+    <h2>Topic listings</h2>
+    <ol class="topic-listing">
+      {% for fake_topic in fake_topics %}
+      <li>
+        {{ render_topic_for_listing(fake_topic, show_group=true) }}
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  <section class="settings-section">
+    <h2>Comments</h2>
+    <ol class="comment-tree" id="comments">
+      {{ render_comment_tree(fake_comment_tree, mark_newer_than=last_visit, is_individual_comment=False) }}
+    </ol>
+  </section>
+{% endblock %}
+
+{% block templates %}
+  {% if request.user %}
+    {{ comment_reply_template() }}
+    {{ comment_label_options_template(comment_label_options) }}
+  {% endif %}
+{% endblock %}

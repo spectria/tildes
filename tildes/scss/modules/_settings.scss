@@ -28,3 +28,19 @@
     border-color: inherit;
   }
 }
+
+.theme-preview-blocks {
+  display: flex;
+  max-width: 40rem;
+  flex-wrap: wrap;
+  // The colors are assigned by a mixin from _theme_base.scss called in each theme file
+  span {
+    display: block;
+    flex-grow: 1;
+    min-width: 6rem;
+    text-align: center;
+    padding: 1rem;
+    font-weight: bold;
+    margin: .3rem;
+  }
+}
