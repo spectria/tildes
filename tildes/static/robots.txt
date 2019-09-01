@@ -4,6 +4,12 @@
 # Scrapers from SEO/marketing-type services will be blocked. Tildes data is not a
 # resource to be mined and sold.
 
+# urls blocked for all scrapers
+User-agent: *
+Disallow: /login
+
+# Specific, fully-blocked scrapers below
+
 # https://ahrefs.com/robot
 User-agent: AhrefsBot
 Disallow: /
