@@ -1,3 +1,4 @@
+{% from 'common.jinja2' import app_dir -%}
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
@@ -19,7 +20,12 @@ server {
         return 301 https://tildes.net;
     }
 
-    # Will match all addresses *except* the root
+    # Serve the same robots.txt file as on the site itself
+    location = /robots.txt {
+        root {{ app_dir }}/static;
+    }
+
+    # Will match all addresses *except* exact matches above
     location / {
         # Strip any trailing slash while redirecting
         rewrite ^/(.*)/?$ https://tildes.net/shortener/$1 permanent;
