@@ -109,6 +109,8 @@ class TopicQuery(PaginatedQuery):
             topic.bookmark_created_time = result.created_time
 
             topic.last_visit_time = result.visit_time
+
+            topic.comments_since_last_visit = None
             if result.num_comments is not None:
                 new_comments = topic.num_comments - result.num_comments
                 # prevent showing negative "new comments" due to deletions

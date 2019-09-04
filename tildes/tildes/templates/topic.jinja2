@@ -177,7 +177,7 @@
         {% if request.user
              and request.user.track_comment_visits
              and not request.user.collapse_old_comments
-             and topic.comments_since_last_visit > 0 %}
+             and topic.comments_since_last_visit %}
           <button class="btn btn-sm btn-light" data-js-comment-collapse-read-button>Collapse read</button>
         {% endif %}
 
