@@ -146,7 +146,9 @@ def get_group_topics(
 ) -> dict:
     """Get a listing of topics in the group."""
     # pylint: disable=too-many-arguments, too-many-branches, too-many-locals
-    if request.matched_route.name == "home":
+    is_home_page = request.matched_route.name == "home"
+
+    if is_home_page:
         # on the home page, include topics from the user's subscribed groups
         # (or all groups, if logged-out)
         if request.user:
@@ -171,7 +173,7 @@ def get_group_topics(
     query = (
         request.query(Topic)
         .join_all_relationships()
-        .inside_groups(groups)
+        .inside_groups(groups, include_subgroups=not is_home_page)
         .apply_sort_option(order)
     )
 

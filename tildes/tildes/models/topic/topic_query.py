@@ -137,14 +137,19 @@ class TopicQuery(PaginatedQuery):
 
         return self
 
-    def inside_groups(self, groups: Sequence[Group]) -> "TopicQuery":
+    def inside_groups(
+        self, groups: Sequence[Group], include_subgroups: bool = True
+    ) -> "TopicQuery":
         """Restrict the topics to inside specific groups (generative)."""
-        query_paths = [group.path for group in groups]
-        subgroup_subquery = self.request.db_session.query(Group.group_id).filter(
-            Group.path.descendant_of(query_paths)
-        )
+        if include_subgroups:
+            query_paths = [group.path for group in groups]
+            group_ids = self.request.db_session.query(Group.group_id).filter(
+                Group.path.descendant_of(query_paths)
+            )
+        else:
+            group_ids = [group.group_id for group in groups]
 
-        return self.filter(Topic.group_id.in_(subgroup_subquery))  # type: ignore
+        return self.filter(Topic.group_id.in_(group_ids))  # type: ignore
 
     def inside_time_period(self, period: SimpleHoursPeriod) -> "TopicQuery":
         """Restrict the topics to inside a time period (generative)."""
