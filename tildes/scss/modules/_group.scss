@@ -14,6 +14,12 @@
   .group-subscription-count {
     margin-bottom: 0.2rem;
   }
+
+  @for $indent-level from 1 through 4 {
+    tr.group-level-#{$indent-level} td:first-child {
+      padding-left: #{$indent-level}rem;
+    }
+  }
 }
 
 .group-list-description {

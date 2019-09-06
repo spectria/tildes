@@ -22,7 +22,7 @@
     </thead>
     <tbody>
       {% for group in groups %}
-        <tr>
+        <tr class="group-level-{{ group.path|length - 1 }}">
           <td>
             {{ group_linked(group.path) }}
             {% if group.short_description %}
