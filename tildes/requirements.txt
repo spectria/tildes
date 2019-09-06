@@ -1,5 +1,5 @@
 ago==0.0.93
-alembic==1.0.11
+alembic==1.1.0
 amqpy==0.13.1
 appdirs==1.4.3
 argon2-cffi==19.1.0
@@ -22,8 +22,8 @@ gunicorn==19.9.0
 html5lib==1.0.1
 hupper==1.8.1
 idna==2.8
-importlib-metadata==0.19
-ipython==7.7.0
+importlib-metadata==0.20
+ipython==7.8.0
 ipython-genutils==0.2.0
 isort==4.3.21
 jedi==0.15.1
@@ -31,7 +31,7 @@ Jinja2==2.10.1
 lazy-object-proxy==1.4.2
 Mako==1.1.0
 MarkupSafe==1.1.1
-marshmallow==2.20.2
+marshmallow==2.20.3
 mccabe==0.6.1
 more-itertools==7.2.0
 mypy==0.720
@@ -74,7 +74,7 @@ pyramid-mako==1.1.0
 pyramid-session-redis==1.5.0
 pyramid-tm==2.2.1
 pyramid-webassets==0.10
-pytest==5.1.1
+pytest==5.1.2
 pytest-mock==1.10.4
 python-dateutil==2.8.0
 python-editor==1.0.4
@@ -84,13 +84,13 @@ redis==3.3.8
 repoze.lru==0.7
 requests==2.22.0
 requirements-detector==0.6
-sentry-sdk==0.11.1
+sentry-sdk==0.11.2
 setoptconf==0.2.0
 simplejson==3.16.0
 six==1.12.0
-snowballstemmer==1.9.0
+snowballstemmer==1.9.1
 soupsieve==1.9.3
-SQLAlchemy==1.3.7
+SQLAlchemy==1.3.8
 SQLAlchemy-Utils==0.34.2
 stripe==2.35.1
 testing.common.database==2.0.3
@@ -104,7 +104,7 @@ typed-ast==1.4.0
 typing-extensions==3.7.4
 urllib3==1.25.3
 venusian==1.2.0
-waitress==1.3.0
+waitress==1.3.1
 wcwidth==0.1.7
 webargs==4.4.1
 webassets==0.12.1
