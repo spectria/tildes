@@ -4,18 +4,14 @@
 {% extends 'base.jinja2' %}
 
 {% from 'macros/forms.jinja2' import search_form %}
-{% from 'macros/groups.jinja2' import render_group_subscription_box with context %}
+{% from 'macros/groups.jinja2' import group_segmented_link, render_group_subscription_box with context %}
 {% from 'macros/links.jinja2' import group_linked %}
 {% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
 
 {% block title %}Topics in ~{{ group.path }}{% endblock %}
 
 {% block header_context_link %}
-  {# Split the link out for each "segment" of the group path #}
-  <a class="site-header-context" href="/~{{ group.path[0:1] }}">~{{ group.path[0:1] }}</a>
-  {% for i in range(1, group.path|length) %}
-    .<a class="site-header-context" href="/~{{ group.path[0:i+1] }}">{{ group.path[i:i+1] }}</a>
-  {% endfor %}
+  {{ group_segmented_link(group, class="site-header-context") }}
 {% endblock %}
 
 {% block content %}
