@@ -224,6 +224,17 @@
     {{ group.sidebar_rendered_html|safe }}
   {% endif %}
 
+  {% if subgroups %}
+    <ul class="nav">
+      <li>Subgroups</li>
+      <ul class="nav">
+      {% for subgroup in subgroups %}
+        <li class="nav-item">{{ group_linked(subgroup.path) }}</li>
+      {% endfor %}
+      </ul>
+    </ul>
+  {% endif %}
+
   {% if wiki_pages or wiki_has_index %}
     <ul class="nav">
       <li>Group wiki pages</li>

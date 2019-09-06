@@ -157,9 +157,19 @@ def get_group_topics(
             groups = [
                 group for group in request.query(Group).all() if group.path != "test"
             ]
+        subgroups = None
     else:
         # otherwise, just topics from the single group that we're looking at
         groups = [request.context]
+
+        subgroups = (
+            request.query(Group)
+            .filter(
+                Group.path.descendant_of(request.context.path),
+                Group.path != request.context.path,
+            )
+            .all()
+        )
 
     default_settings = _get_default_settings(request, order)
 
@@ -245,6 +255,7 @@ def get_group_topics(
         "unfiltered": unfiltered,
         "wiki_pages": wiki_pages,
         "wiki_has_index": wiki_has_index,
+        "subgroups": subgroups,
     }
 
 
