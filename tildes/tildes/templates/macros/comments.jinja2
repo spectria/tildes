@@ -61,13 +61,15 @@
           </span>
         {% endif %}
 
-        {{ adaptive_date_responsive(comment.created_time, class_="comment-posted-time") }}
+        <div class="comment-time-info">
+          {{ adaptive_date_responsive(comment.created_time, class_="comment-posted-time") }}
 
-        {% if comment.last_edited_time %}
-          <span class="comment-edited-time">
-            (edited {{ adaptive_date_responsive(comment.last_edited_time) }})
-          </span>
-        {% endif %}
+          {% if comment.last_edited_time %}
+            <span class="comment-edited-time">
+              (edited {{ adaptive_date_responsive(comment.last_edited_time) }})
+            </span>
+          {% endif %}
+        </div>
       {% else %}
         {% if comment.is_deleted %}
           <div class="is-comment-deleted">Comment deleted by author</div>
