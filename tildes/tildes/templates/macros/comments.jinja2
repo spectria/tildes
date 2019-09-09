@@ -94,7 +94,7 @@
 
     {% if request.has_permission('view', comment) %}
       {# Show votes at the top only if it's your own comment #}
-      {% if request.user == comment.user and comment.num_votes > 0 %}
+      {% if request.user == comment.user and comment.num_votes > 0 and not comment.is_removed %}
         <div class="comment-votes">{{ pluralize(comment.num_votes, "vote") }}</div>
       {% endif %}
 
