@@ -11,6 +11,8 @@ from pyramid.registry import Registry
 from pyramid.request import Request
 from pyramid.response import Response
 
+from tildes.metrics import incr_counter
+
 
 def http_method_tween_factory(handler: Callable, registry: Registry) -> Callable:
     # pylint: disable=unused-argument
@@ -95,6 +97,8 @@ def theme_cookie_tween_factory(handler: Callable, registry: Registry) -> Callabl
                 secure=True,
                 domain="." + request.domain,
             )
+            incr_counter("theme_cookie_tween_sets")
+
         return response
 
     return theme_cookie_tween

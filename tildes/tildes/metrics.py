@@ -31,6 +31,9 @@ _COUNTERS = {
     "login_failures": Counter("tildes_login_failures_total", "Login Failures"),
     "messages": Counter("tildes_messages_total", "Messages", labelnames=["type"]),
     "registrations": Counter("tildes_registrations_total", "User Registrations"),
+    "theme_cookie_tween_sets": Counter(
+        "tildes_theme_cookie_tween_sets_total", "Theme Cookies Set by Tween"
+    ),
     "topics": Counter("tildes_topics_total", "Topics", labelnames=["type"]),
     "subscriptions": Counter("tildes_subscriptions_total", "Subscriptions"),
     "unsubscriptions": Counter("tildes_unsubscriptions_total", "Unsubscriptions"),
