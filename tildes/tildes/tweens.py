@@ -71,33 +71,36 @@ def theme_cookie_tween_factory(handler: Callable, registry: Registry) -> Callabl
     """Return a tween function that sets the theme cookie."""
 
     def theme_cookie_tween(request: Request) -> Response:
-        """Set the theme cookie if needed (currently always, see comment below)."""
+        """Set the theme cookie if needed.
+
+        Will only set a cookie if the user has a default theme set for their account
+        but doesn't already have a theme cookie. This is necessary so that their default
+        theme will apply to the Blog and Docs sites as well, since those sites are
+        static and can't look up the user's default theme in the database.
+        """
         response = handler(request)
 
         # only set the cookie on GET requests
         if request.method.upper() != "GET":
             return response
 
-        current_theme = request.cookies.get("theme", "")
-        if not current_theme and request.user:
-            current_theme = request.user.theme_default
+        # if they already have a theme cookie, we don't need to do anything
+        if request.cookies.get("theme", ""):
+            return response
 
-        # Currently, we want to always set the theme cookie. This is because we
-        # recently started setting the domain on this cookie (to be able to apply the
-        # user's theme to the Blog/Docs sites), and all older cookies won't have a
-        # domain set. This will basically let us convert the old no-domain cookies to
-        # new ones. After a decent amount of time (maybe sometime in April 2019), we
-        # can change this to only set the cookie when it's not already present and the
-        # user has a default theme set (so their default theme will work for Blog/Docs).
-        if current_theme:
-            response.set_cookie(
-                "theme",
-                current_theme,
-                max_age=315360000,
-                secure=True,
-                domain="." + request.domain,
-            )
-            incr_counter("theme_cookie_tween_sets")
+        # if the user doesn't have a default theme, we don't need to do anything
+        if not request.user or not request.user.theme_default:
+            return response
+
+        # set a cookie with the user's default theme
+        response.set_cookie(
+            "theme",
+            request.user.theme_default,
+            max_age=315360000,
+            secure=True,
+            domain="." + request.domain,
+        )
+        incr_counter("theme_cookie_tween_sets")
 
         return response
 
