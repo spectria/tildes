@@ -77,6 +77,9 @@ def theme_cookie_tween_factory(handler: Callable, registry: Registry) -> Callabl
         but doesn't already have a theme cookie. This is necessary so that their default
         theme will apply to the Blog and Docs sites as well, since those sites are
         static and can't look up the user's default theme in the database.
+
+        Temporarily, this tween is also being used to convert old theme cookies with
+        "light" or "dark" values to the new "solarized-light" and "solarized-dark" ones.
         """
         response = handler(request)
 
@@ -84,18 +87,25 @@ def theme_cookie_tween_factory(handler: Callable, registry: Registry) -> Callabl
         if request.method.upper() != "GET":
             return response
 
-        # if they already have a theme cookie, we don't need to do anything
-        if request.cookies.get("theme", ""):
+        current_theme = request.cookies.get("theme", "")
+
+        # if they already have a valid theme cookie, we don't need to do anything
+        if current_theme and current_theme not in ("light", "dark"):
             return response
 
-        # if the user doesn't have a default theme, we don't need to do anything
-        if not request.user or not request.user.theme_default:
+        if current_theme in ("light", "dark"):
+            # add the "solarized-" prefix to "light" / "dark" values
+            new_theme = "solarized-" + current_theme
+        elif request.user and request.user.theme_default:
+            # otherwise (no theme cookie), set as the user's default
+            new_theme = request.user.theme_default
+        else:
+            # if the user isn't logged in or doesn't have a default, do nothing
             return response
 
-        # set a cookie with the user's default theme
         response.set_cookie(
             "theme",
-            request.user.theme_default,
+            new_theme,
             max_age=315360000,
             secure=True,
             domain="." + request.domain,
