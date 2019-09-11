@@ -368,10 +368,6 @@
     }
   }
 
-  .form-status-error {
-    color: map-get($theme, "error");
-  }
-
   .input-group-addon {
     background-color: map-get($theme, "background-secondary");
     color: map-get($theme, "foreground-highlight");
@@ -476,6 +472,10 @@
       color: map-get($theme, "link");
       border-bottom-color: map-get($theme, "link");
     }
+  }
+
+  .text-error {
+    color: map-get($theme, "error");
   }
 
   .text-secondary {

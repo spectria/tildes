@@ -8,7 +8,7 @@ $.onmount("[data-js-theme-selector]", function() {
         // hide any IC change message
         $(this)
             .parent()
-            .find(".form-status")
+            .find(".text-status-message")
             .hide();
 
         var new_theme = $(this).val();

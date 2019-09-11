@@ -55,6 +55,7 @@ select.form-select:not([multiple]) {
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-start;
+  align-items: center;
 
   margin: 0.2rem 0;
   max-width: 40rem;
@@ -70,11 +71,6 @@ textarea.form-input {
   line-height: 1.5;
   max-width: none;
   transition: none;
-}
-
-.form-status {
-  margin: auto 0;
-  font-size: 0.6rem;
 }
 
 .form-input {

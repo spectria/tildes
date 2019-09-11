@@ -99,6 +99,11 @@
   form {
     min-width: 100%;
   }
+
+  // Status message (errors) should be on their own line as well
+  > .text-status-message {
+    min-width: 100%;
+  }
 }
 
 .btn-post-action {

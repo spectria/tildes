@@ -26,45 +26,48 @@ $(function() {
         $.onmount();
     });
 
-    // Called whenever an Intercooler request completes; used for <form> elements
-    // to display the error or a success message.
-    // If the triggering element already contains an element with class
-    // "form-status", it will be removed, then a new one is added inside the
-    // .form-buttons element if possible, otherwise it will be appended to the
-    // triggering element itself. The status div will then have its class set based
-    // on whether the response was an error or not, and the text set to either the
-    // error message or a generic success message.
+    // Called whenever an Intercooler request completes; used to display an error or
+    // success message in an appropriate place near supported elements.
     /* eslint-disable-next-line no-unused-vars */
     $(document).on("complete.ic", function(evt, elt, data, status, xhr, requestId) {
-        // only do anything for <form> elements
-        if (elt[0].tagName !== "FORM") {
+        var $container = null;
+
+        // Only display these messages if the triggering element was <form> or <button>
+        if (elt[0].tagName === "FORM") {
+            $container = $(elt);
+
+            // add the message inside .form-buttons if possible
+            var $buttonElement = $container.find(".form-buttons").first();
+            if ($buttonElement.length) {
+                $container = $buttonElement;
+            }
+        } else if (elt[0].tagName === "BUTTON") {
+            // for buttons, we only want to display error messages
+            if (status !== "error") {
+                return;
+            }
+
+            // choose the containing <menu> as the place to display the message
+            // if the button isn't in a menu, nothing will be displayed
+            $container = $(elt).closest("menu");
+        }
+
+        // exit if it's an unsupported element or no appropriate container was found
+        if (!$container || !$container.length) {
             return;
         }
 
         // see if a status element already exists and remove it
-        $(elt)
-            .find(".form-status")
-            .remove();
+        $container.find(".text-status-message").remove();
 
-        // add a new one (inside .form-buttons if possible)
-        var statusDiv = '<div class="form-status"></div>';
+        // add the new one
+        $container.append('<div class="text-status-message"></div>');
+        var $statusElement = $container.find(".text-status-message").first();
 
-        var $buttonElement = $(elt)
-            .find(".form-buttons")
-            .first();
-        if ($buttonElement.length) {
-            $buttonElement.append(statusDiv);
-        } else {
-            $(elt).append(statusDiv);
-        }
-        var $statusElement = $(elt)
-            .find(".form-status")
-            .first();
-
-        // set the class and text, then fade in
+        // set the text (and class for errors), then fade in
         $statusElement.hide();
         if (status === "success") {
-            $statusElement.addClass("form-status-success").text("Saved successfully");
+            $statusElement.text("Saved successfully");
         } else {
             var errorText = xhr.responseText;
             if (xhr.status === 413) {
@@ -76,7 +79,7 @@ $(function() {
                 errorText = "Unknown error";
             }
 
-            $statusElement.addClass("form-status-error").text(errorText);
+            $statusElement.addClass("text-error").text(errorText);
         }
         $statusElement.fadeIn("slow");
     });
