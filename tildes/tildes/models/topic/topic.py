@@ -300,6 +300,16 @@ class Topic(DatabaseModel):
         acl.append((Allow, "admin", "tag"))
         acl.append((Allow, "topic.tag", "tag"))
 
+        # edit_title:
+        #  - allow admins or people with the "topic.edit_title" permission to always
+        #    edit titles
+        #  - allow users to edit their own topic's title for the first 5 minutes
+        acl.append((Allow, "admin", "edit_title"))
+        acl.append((Allow, "topic.edit_title", "edit_title"))
+
+        if self.age < timedelta(minutes=5):
+            acl.append((Allow, self.user_id, "edit_title"))
+
         # tools that require specifically granted permissions
         acl.append((Allow, "admin", "lock"))
         acl.append((Allow, "topic.lock", "lock"))
@@ -309,9 +319,6 @@ class Topic(DatabaseModel):
 
         acl.append((Allow, "admin", "move"))
         acl.append((Allow, "topic.move", "move"))
-
-        acl.append((Allow, "admin", "edit_title"))
-        acl.append((Allow, "topic.edit_title", "edit_title"))
 
         if self.is_link_type:
             acl.append((Allow, "admin", "edit_link"))
