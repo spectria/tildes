@@ -25,6 +25,7 @@ def is_bot(request: Request) -> bool:
         "bingbot",
         "Googlebot",
         "qotnews scraper",
+        "Prometheus",
         "Qwantify",
         "YandexBot",
     )
