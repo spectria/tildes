@@ -42,7 +42,7 @@ def metrics_tween_factory(handler: Callable, registry: Registry) -> Callable:
     request_histogram = Histogram(
         "tildes_pyramid_requests_seconds",
         "Request processing times",
-        labelnames=["route", "status_code", "method", "logged_in"],
+        labelnames=["route", "status_code", "method", "logged_in", "is_bot"],
     )
 
     def metrics_tween(request: Request) -> Response:
@@ -60,6 +60,7 @@ def metrics_tween_factory(handler: Callable, registry: Registry) -> Callable:
             status_code=response.status_code,
             method=request.method,
             logged_in=str(bool(request.user)).lower(),
+            is_bot=str(request.is_bot).lower(),
         ).observe(duration)
 
         return response

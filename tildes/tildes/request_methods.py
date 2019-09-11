@@ -19,6 +19,24 @@ def get_redis_connection(request: Request) -> Redis:
     return Redis(unix_socket_path=socket)
 
 
+def is_bot(request: Request) -> bool:
+    """Return whether the request is by a known bot (e.g. search engine crawlers)."""
+    bot_user_agent_substrings = (
+        "bingbot",
+        "Googlebot",
+        "qotnews scraper",
+        "Qwantify",
+        "YandexBot",
+    )
+
+    if request.user_agent:
+        return any(
+            [substring in request.user_agent for substring in bot_user_agent_substrings]
+        )
+
+    return False
+
+
 def is_safe_request_method(request: Request) -> bool:
     """Return whether the request method is "safe" (is GET or HEAD)."""
     return request.method in {"GET", "HEAD"}
@@ -124,6 +142,7 @@ def current_listing_normal_url(
 
 def includeme(config: Configurator) -> None:
     """Attach the request methods to the Pyramid request object."""
+    config.add_request_method(is_bot, "is_bot", reify=True)
     config.add_request_method(is_safe_request_method, "is_safe_method", reify=True)
 
     # Add the request.redis request method to access a redis connection. This is done in
