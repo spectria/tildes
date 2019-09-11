@@ -42,3 +42,7 @@ Disallow: /
 # https://www.semrush.com/bot/
 User-agent: SemrushBot
 Disallow: /
+
+# https://www.zoominfo.com/
+User-agent: ZoominfoBot
+Disallow: /
