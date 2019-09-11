@@ -7,6 +7,7 @@ from time import time
 from typing import Callable
 
 from prometheus_client import Histogram
+from pyramid.config import Configurator
 from pyramid.registry import Registry
 from pyramid.request import Request
 from pyramid.response import Response
@@ -115,3 +116,10 @@ def theme_cookie_tween_factory(handler: Callable, registry: Registry) -> Callabl
         return response
 
     return theme_cookie_tween
+
+
+def includeme(config: Configurator) -> None:
+    """Attach Tildes tweens to the Pyramid config."""
+    config.add_tween("tildes.tweens.http_method_tween_factory")
+    config.add_tween("tildes.tweens.metrics_tween_factory")
+    config.add_tween("tildes.tweens.theme_cookie_tween_factory")

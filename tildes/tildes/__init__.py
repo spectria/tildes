@@ -32,16 +32,13 @@ def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
     config.include("tildes.jinja")
     config.include("tildes.json")
     config.include("tildes.routes")
+    config.include("tildes.tweens")
 
     config.add_webasset("javascript", Bundle(output="js/tildes.js"))
     config.add_webasset("javascript-third-party", Bundle(output="js/third_party.js"))
     config.add_webasset("css", Bundle(output="css/tildes.css"))
 
     config.scan("tildes.views")
-
-    config.add_tween("tildes.tweens.http_method_tween_factory")
-    config.add_tween("tildes.tweens.metrics_tween_factory")
-    config.add_tween("tildes.tweens.theme_cookie_tween_factory")
 
     config.add_static_view("images", "/images")
 
