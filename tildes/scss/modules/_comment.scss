@@ -133,9 +133,15 @@
   margin: 0;
   padding: 0 1rem;
   justify-content: space-between;
+  align-items: center;
 
   @media (min-width: $size-md) {
     justify-content: left;
+  }
+
+  // Wrap error message onto a new line
+  .text-status-message {
+    min-width: 100%;
   }
 }
 

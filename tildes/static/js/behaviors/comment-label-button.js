@@ -24,7 +24,7 @@ $.onmount("[data-js-comment-label-button]", function() {
 
         var labeltemplate = document.querySelector("#comment-label-options");
         var clone = document.importNode(labeltemplate.content, true);
-        var options = clone.querySelectorAll("a");
+        var options = clone.querySelectorAll("button");
 
         for (var i = 0; i < options.length; i++) {
             var label = options[i];

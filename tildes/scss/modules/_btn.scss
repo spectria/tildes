@@ -58,18 +58,17 @@
   margin: 0 0.4rem;
   padding: 0.2rem;
 
+  background: none;
+  border: 0;
+
   font-size: 0.6rem;
   font-weight: bold;
   text-transform: capitalize;
 
   cursor: pointer;
 
-  &.btn {
-    height: 1rem;
-    text-transform: capitalize;
-  }
-
   &.btn-used {
+    height: 1rem;
     border: 1px solid;
   }
 }
