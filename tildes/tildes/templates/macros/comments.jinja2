@@ -21,7 +21,7 @@
 
       {# only add depth attr if we're rendering multiple comments at once #}
       {% if not is_individual_comment %}
-        data-comment-depth="{{ loop.depth0 }}"
+        data-comment-depth="{{ comment.depth }}"
       {% endif %}
 
       {% if request.has_permission("label", comment) %}

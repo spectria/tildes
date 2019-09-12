@@ -69,6 +69,8 @@ class CommentTree:
         for comment in self.comments:
             if comment.parent_comment_id:
                 parent_comment = self.comments_by_id[comment.parent_comment_id]
+
+                comment.depth = parent_comment.depth + 1
                 parent_comment.replies.append(comment)
 
                 # if this comment isn't deleted, work back up towards the root,
@@ -83,6 +85,7 @@ class CommentTree:
                         next_parent_id = parent_comment.parent_comment_id
                         parent_comment = self.comments_by_id[next_parent_id]
             else:
+                comment.depth = 0
                 self.tree.append(comment)
 
     @staticmethod
@@ -235,6 +238,7 @@ class CommentInTree(ObjectProxy):
         self.replies: List[CommentInTree] = []
         self.has_visible_descendant = False
         self.num_children = 0
+        self.depth: Optional[int] = None
 
     @property
     def has_uncollapsed_descendant(self) -> bool:

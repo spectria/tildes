@@ -189,6 +189,11 @@ def test_comment_tree(db, topic, session_user):
     assert child.replies == []
     assert child2.replies == [subchild, subchild2]
 
+    # check depth values are as expected
+    assert root.depth == 0
+    assert child.depth == 1
+    assert subchild.depth == 2
+
     # delete child2 (which has replies) and ensure it stays in the tree
     child2.is_deleted = True
     db.commit()
