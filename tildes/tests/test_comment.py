@@ -130,6 +130,14 @@ def test_comment_excerpt_excludes_blockquote(topic, session_user):
     assert comment.excerpt == "Yeah, I agree."
 
 
+def test_comment_excerpt_excludes_del(topic, session_user):
+    """Ensure that comment excerpts don't include text from strikethrough (<del>)."""
+    markdown = "I really ~~hate~~ love it."
+    comment = Comment(topic, session_user, markdown)
+
+    assert comment.excerpt == "I really love it."
+
+
 def test_comment_tree(db, topic, session_user):
     """Ensure that building and pruning a comment tree works."""
     all_comments = []

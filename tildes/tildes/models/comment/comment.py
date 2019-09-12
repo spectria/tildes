@@ -109,7 +109,7 @@ class Comment(DatabaseModel):
         self.rendered_html = convert_markdown_to_safe_html(new_markdown)
 
         extracted_text = extract_text_from_html(
-            self.rendered_html, skip_tags=["blockquote"]
+            self.rendered_html, skip_tags=["blockquote", "del"]
         )
         self.excerpt = truncate_string(
             extracted_text, length=200, truncate_at_chars=" "
