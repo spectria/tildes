@@ -42,6 +42,10 @@ class TopicInterestingActivityUpdater(PgsqlQueueConsumer):
 
     def _find_last_interesting_time(self, comment: CommentInTree) -> Optional[datetime]:
         """Recursively find the last "interesting" time from a comment and replies."""
+        # stop considering comments interesting once they get too deep down a branch
+        if comment.depth >= 5:
+            return None
+
         # if the comment has one of these labels, don't look any deeper down this branch
         uninteresting_labels = ("noise", "offtopic", "malice")
         if any(comment.is_label_active(label) for label in uninteresting_labels):
