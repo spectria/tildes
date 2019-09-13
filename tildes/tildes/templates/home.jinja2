@@ -71,7 +71,9 @@
         <summary>Filtered topic tags ({{ request.user.filtered_topic_tags|length }})</summary>
         <ul class="topic-tags">
           {% for tag in request.user.filtered_topic_tags %}
-            <li class="label label-topic-tag">{{ tag }}</li>
+            <li class="label label-topic-tag">
+              <a href="/?tag={{tag}}">{{ tag }}</a>
+            </li>
           {% else %}
             <li class="label label-topic-tag">No filtered tags</li>
           {% endfor %}
