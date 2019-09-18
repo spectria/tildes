@@ -106,9 +106,6 @@ def includeme(config: Configurator) -> None:
     # Route to expose metrics to Prometheus
     config.add_route("metrics", "/metrics")
 
-    # Route for Stripe donation processing page (POSTed to from docs site)
-    config.add_route("donate_stripe", "/donate_stripe")
-
     # Add all intercooler routes under the /api/web path
     with config.route_prefix_context("/api/web"):
         add_intercooler_routes(config)
