@@ -124,8 +124,7 @@ class ArrayOfLtree(ARRAY):  # pylint: disable=too-many-ancestors
 
         return process
 
-    # pylint: disable=invalid-name,too-many-ancestors
-    class comparator_factory(ARRAY.comparator_factory):
+    class comparator_factory(ARRAY.comparator_factory):  # noqa
         """Add custom comparison functions.
 
         The ancestor_of, descendant_of, and lquery functions are supported by LtreeType,

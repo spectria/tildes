@@ -15,7 +15,7 @@ mypy
 mypy-extensions
 Pillow
 prometheus-client
-prospector==1.1.6.2
+prospector
 psycopg2
 publicsuffix2==2.20160818
 pygit2

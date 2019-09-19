@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 """Functions/constants related to messages."""
+# flake8: noqa
 
 WELCOME_MESSAGE_SUBJECT = "Welcome to the Tildes alpha"
 

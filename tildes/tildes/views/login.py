@@ -126,11 +126,11 @@ def post_login_two_factor(request: Request, code: str, from_url: str) -> NoRetur
         .one_or_none()
     )
 
-    if user.is_correct_two_factor_code(code):
-        del request.session["two_factor_username"]
-        raise finish_login(request, user, from_url)
-    else:
+    if not user.is_correct_two_factor_code(code):
         raise HTTPUnauthorized(body="Invalid code, please try again.")
+
+    del request.session["two_factor_username"]
+    raise finish_login(request, user, from_url)
 
 
 @view_config(route_name="logout", request_method="POST")
