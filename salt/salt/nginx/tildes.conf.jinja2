@@ -29,6 +29,11 @@ server {
 
     {% if grains['id'] != 'dev' %}
       add_header Strict-Transport-Security "max-age={{ pillar['hsts_max_age'] }}; includeSubDomains; preload" always;
+
+      # Content Security Policy:
+      #   - "img-src data:" is needed for Spectre.css icons
+      #   - "script-src https://js.stripe.com" is needed for Stripe donation page
+      add_header Content-Security-Policy "default-src 'none'; script-src 'self' https://js.stripe.com; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'" always;
     {% endif %}
 
     add_header X-Content-Type-Options "nosniff" always;
@@ -56,21 +61,7 @@ server {
     # add Expires+Cache-Control headers from the mime-type map defined above
     expires $expires_type_map;
 
-    # Use a different Content-Security-Policy header for the donation page, to allow
-    # the Stripe javascript file to be loaded from their domain
-    location = /donate_stripe {
-        add_header Content-Security-Policy "default-src 'none'; script-src 'self' https://js.stripe.com; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'" always;
-
-        try_files $uri @proxy_to_app;
-        gzip_static on;
-    }
-
     location / {
-        {% if grains['id'] == 'prod' %}
-        # Content Security Policy - "img-src data:" is needed for Spectre.css icons
-        add_header Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'" always;
-        {% endif %}
-
         # checks for static file, if not found proxy to app
         try_files $uri @proxy_to_app;
         gzip_static on;
