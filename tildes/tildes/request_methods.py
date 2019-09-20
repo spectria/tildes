@@ -28,6 +28,7 @@ def is_bot(request: Request) -> bool:
         "Prometheus",
         "Python-urllib",
         "Qwantify",
+        "Tildes Scraper",
         "YandexBot",
     )
 
