@@ -21,8 +21,8 @@ _COUNTERS = {
     "donations": Counter(
         "tildes_donations_total", "Donation Attempts", labelnames=["type"]
     ),
-    "donation_failures": Counter(
-        "tildes_donation_failures_total", "Donation Failures", labelnames=["type"]
+    "donation_initiations": Counter(
+        "tildes_donation_initiations_total", "Donation Initiations", labelnames=["type"]
     ),
     "invite_code_failures": Counter(
         "tildes_invite_code_failures_total", "Invite Code Failures"
