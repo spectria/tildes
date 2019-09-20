@@ -32,8 +32,8 @@ server {
 
       # Content Security Policy:
       #   - "img-src data:" is needed for Spectre.css icons
-      #   - "script-src https://js.stripe.com" is needed for Stripe donation page
-      add_header Content-Security-Policy "default-src 'none'; script-src 'self' https://js.stripe.com; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'" always;
+      #   - "https://js.stripe.com" in script-src and frame-src is needed for Stripe
+      add_header Content-Security-Policy "default-src 'none'; script-src 'self' https://js.stripe.com; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; frame-src 'self' https://js.stripe.com; form-action 'self'; frame-ancestors 'none'; base-uri 'none'" always;
     {% endif %}
 
     add_header X-Content-Type-Options "nosniff" always;
