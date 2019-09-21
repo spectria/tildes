@@ -25,7 +25,7 @@ pyramid
 pyramid-debugtoolbar
 pyramid-ipython
 pyramid-jinja2
-pyramid-session-redis
+pyramid-session-redis==1.5.0  # 1.5.1 has a change that will invalidate current sessions
 pyramid-tm
 pyramid-webassets
 pytest
