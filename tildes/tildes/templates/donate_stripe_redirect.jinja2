@@ -1,0 +1,18 @@
+{# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% block title %}Stripe donation{% endblock %}
+
+{% block content %}
+  <script src="https://js.stripe.com/v3/"></script>
+
+  <p>Redirecting to Stripe...</p>
+
+  {# This div will cause the page to redirect to the Stripe Checkout page #}
+  <div
+    data-js-stripe-checkout="{{ publishable_key }}"
+    data-js-stripe-checkout-session="{{ session_id }}"
+  ></div>
+{% endblock %}

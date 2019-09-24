@@ -106,7 +106,7 @@ def includeme(config: Configurator) -> None:
     # Route to expose metrics to Prometheus
     config.add_route("metrics", "/metrics")
 
-    # Route for Stripe donation processing page (POSTed to from docs site)
+    # Routes for Stripe donations (linked from Docs site)
     config.add_route("donate_stripe", "/donate_stripe")
     config.add_route("donate_success", "/donate_success")
 

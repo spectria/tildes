@@ -17,10 +17,21 @@ from tildes.metrics import incr_counter
 
 @view_config(
     route_name="donate_stripe",
-    request_method="POST",
+    request_method="GET",
     renderer="donate_stripe.jinja2",
     permission=NO_PERMISSION_REQUIRED,
-    require_csrf=False,
+)
+def get_donate_stripe(request: Request) -> dict:
+    """Display the form for donating with Stripe."""
+    # pylint: disable=unused-argument
+    return {}
+
+
+@view_config(
+    route_name="donate_stripe",
+    request_method="POST",
+    renderer="donate_stripe_redirect.jinja2",
+    permission=NO_PERMISSION_REQUIRED,
 )
 @use_kwargs(
     {
@@ -50,7 +61,7 @@ def post_donate_stripe(request: Request, amount: int, currency: str) -> dict:
         ],
         submit_type="donate",
         success_url="https://tildes.net/donate_success",
-        cancel_url="https://docs.tildes.net/donate-stripe",
+        cancel_url="https://docs.tildes.net/donate",
     )
 
     return {"publishable_key": publishable_key, "session_id": session.id}

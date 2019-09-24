@@ -1,18 +1,38 @@
-{# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
+{# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% extends 'base_no_sidebar.jinja2' %}
 
-{% block title %}Stripe donation{% endblock %}
+{% block title %}Donate to Tildes{% endblock %}
+
+{% block main_heading %}Credit card donation (via Stripe){% endblock %}
 
 {% block content %}
-  <script src="https://js.stripe.com/v3/"></script>
+<p>After submitting this form, you will be redirected to the Stripe site to enter your payment info.</p>
 
-  <p>Redirecting to Stripe...</p>
+<p>Note that the donation is in Canadian Dollars (CAD) by default, but you can switch to USD if you prefer. At the moment, $10 CAD is about $7.50 USD.</p>
 
-  {# This div will cause the page to redirect to the Stripe Checkout page #}
-  <div
-    data-js-stripe-checkout="{{ publishable_key }}"
-    data-js-stripe-checkout-session="{{ session_id }}"
-  ></div>
+<div class="divider"></div>
+
+<form class="form-narrow" method="post" data-js-stripe-donate-form>
+  <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
+
+  <div class="form-group">
+    <label class="form-label" for="amount">Donation amount (must be at least $1)</label>
+
+    <div class="input-group">
+      <span class="input-group-addon">$</span>
+      <input class="form-input" id="amount" name="amount" type="text" data-js-auto-focus>
+      <select class="form-select" id="currency" name="currency">
+        <option value="CAD" selected>CAD</option>
+        <option value="USD">USD</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-buttons">
+    <button class="btn btn-primary" type="submit">Donate</button>
+    <div class="text-status-message text-error"></div>
+  </div>
+</form>
 {% endblock %}
