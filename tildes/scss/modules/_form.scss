@@ -1,6 +1,12 @@
 // Copyright (c) 2018 Tildes contributors <code@tildes.net>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+.form-group {
+  .form-radio {
+    margin-left: 1rem;
+  }
+}
+
 .form-narrow {
   max-width: 20rem;
 
@@ -95,6 +101,10 @@ textarea.form-input {
   a {
     font-size: 0.6rem;
   }
+}
+
+.form-radio {
+  display: block;
 }
 
 .form-search .form-input {

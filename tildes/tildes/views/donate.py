@@ -37,32 +37,65 @@ def get_donate_stripe(request: Request) -> dict:
     {
         "amount": Float(required=True, validate=Range(min=1.0)),
         "currency": String(required=True, validate=OneOf(("CAD", "USD"))),
+        "interval": String(required=True, validate=OneOf(("onetime", "month", "year"))),
     }
 )
-def post_donate_stripe(request: Request, amount: int, currency: str) -> dict:
+def post_donate_stripe(
+    request: Request, amount: int, currency: str, interval: str
+) -> dict:
     """Process a Stripe donation."""
     try:
         stripe.api_key = request.registry.settings["api_keys.stripe.secret"]
         publishable_key = request.registry.settings["api_keys.stripe.publishable"]
+        product_id = request.registry.settings["stripe.recurring_donation_product_id"]
     except KeyError:
         raise HTTPInternalServerError
 
     incr_counter("donation_initiations", type="stripe")
 
-    session = stripe.checkout.Session.create(
-        payment_method_types=["card"],
-        line_items=[
-            {
-                "name": "One-time donation - tildes.net",
-                "amount": int(amount * 100),
-                "currency": currency,
-                "quantity": 1,
-            }
-        ],
-        submit_type="donate",
-        success_url="https://tildes.net/donate_success",
-        cancel_url="https://docs.tildes.net/donate",
-    )
+    if interval == "onetime":
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=[
+                {
+                    "name": "One-time donation - tildes.net",
+                    "amount": int(amount * 100),
+                    "currency": currency,
+                    "quantity": 1,
+                }
+            ],
+            submit_type="donate",
+            success_url="https://tildes.net/donate_success",
+            cancel_url="https://docs.tildes.net/donate",
+        )
+    else:
+        product = stripe.Product.retrieve(product_id)
+        existing_plans = stripe.Plan.list(product=product, active=True, limit=100)
+
+        # look through existing plans to see if there's already a matching one, or
+        # create a new plan if not
+        for existing_plan in existing_plans:
+            if (
+                existing_plan.amount == int(amount * 100)
+                and existing_plan.currency == currency.lower()
+                and existing_plan.interval == interval
+            ):
+                plan = existing_plan
+                break
+        else:
+            plan = stripe.Plan.create(
+                amount=int(amount * 100),
+                currency=currency,
+                interval=interval,
+                product=product,
+            )
+
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            subscription_data={"items": [{"plan": plan.id}]},
+            success_url="https://tildes.net/donate_success",
+            cancel_url="https://docs.tildes.net/donate",
+        )
 
     return {"publishable_key": publishable_key, "session_id": session.id}
 

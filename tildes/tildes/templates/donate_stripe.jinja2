@@ -18,6 +18,22 @@
   <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
 
   <div class="form-group">
+    <label class="form-label">Donation type</label>
+    <label class="form-radio">
+      <input type="radio" name="interval" value="onetime" checked>
+      <i class="form-icon"></i> One time
+    </label>
+    <label class="form-radio">
+      <input type="radio" name="interval" value="month">
+      <i class="form-icon"></i> Monthly
+    </label>
+    <label class="form-radio">
+      <input type="radio" name="interval" value="year">
+      <i class="form-icon"></i> Yearly
+    </label>
+  </div>
+
+  <div class="form-group">
     <label class="form-label" for="amount">Donation amount (must be at least $1)</label>
 
     <div class="input-group">
