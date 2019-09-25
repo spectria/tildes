@@ -2,7 +2,11 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% macro username_linked(username) -%}
-  <a href="/user/{{ username }}" class="link-user">{{ username }}</a>
+  {% if username != "unknown user" %}
+    <a href="/user/{{ username }}" class="link-user">{{ username }}</a>
+  {% else %}
+    {{ username }}
+  {% endif %}
 {%- endmacro %}
 
 {% macro group_linked(group_path) -%}
