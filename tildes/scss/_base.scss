@@ -38,7 +38,6 @@ body {
 code {
   display: inline-block;
   font-size: inherit;
-  line-height: 1.1rem;
   -moz-tab-size: 4;
   tab-size: 4;
 }
@@ -175,6 +174,10 @@ p:last-child {
 
 pre {
   overflow: auto;
+
+  code {
+    line-height: 1.1rem;
+  }
 }
 
 section {
