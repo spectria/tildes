@@ -3,7 +3,7 @@
 # Pre-commit hook script that ensures mypy checks and tests pass
 
 vagrant ssh -c ". activate \
-    && echo 'Checking mypy type annotations...' && mypy . \
+    && echo 'Checking mypy type annotations...' && mypy --no-error-summary . \
     && echo 'Checking if Black would reformat any code...' && black --check . \
     && echo -n 'Running tests: ' && pytest -q \
     && echo 'Checking SCSS style...' && npm run --silent lint:scss \

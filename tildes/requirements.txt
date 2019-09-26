@@ -34,7 +34,7 @@ MarkupSafe==1.1.1
 marshmallow==2.20.5
 mccabe==0.6.1
 more-itertools==7.2.0
-mypy==0.720
+mypy==0.730
 mypy-extensions==0.4.1
 packaging==19.2
 parso==0.5.1
