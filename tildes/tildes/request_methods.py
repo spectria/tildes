@@ -24,6 +24,7 @@ def is_bot(request: Request) -> bool:
     bot_user_agent_substrings = (
         "bingbot",
         "Googlebot",
+        "heritrix",
         "http.rb",
         "qotnews scraper",
         "Prometheus",
