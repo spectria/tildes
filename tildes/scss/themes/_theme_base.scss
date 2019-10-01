@@ -90,10 +90,6 @@
     background-color: map-get($theme, "background-primary");
   }
 
-  section {
-    border-color: map-get($theme, "border");
-  }
-
   tbody tr:nth-of-type(2n + 1) {
     background-color: map-get($theme, "background-secondary");
   }

@@ -168,6 +168,7 @@
 
 <section class="topic-comments">
   {% if comments %}
+    <div class="divider"></div>
     <header class="topic-comments-header">
       <h2>{{ pluralize(topic.num_comments, "comment") }}</h2>
 
@@ -215,6 +216,7 @@
 
 {% if request.has_permission('comment', topic) %}
   <section data-js-remove-on-success>
+    <div class="divider"></div>
     <h2>Post a comment</h2>
     <form
       method="post"
