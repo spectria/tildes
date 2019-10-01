@@ -124,6 +124,11 @@ def post_group_topics(
 
     request.db_session.add(LogTopic(LogEventType.TOPIC_POST, request, new_topic))
 
+    # if the user added tags to the topic, show the field by default in the future
+    if tags and not request.user.show_tags_on_new_topic:
+        request.user.show_tags_on_new_topic = True
+        request.db_session.add(request.user)
+
     # flush the changes to the database so the new topic's ID is generated
     request.db_session.flush()
 

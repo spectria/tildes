@@ -68,6 +68,8 @@ class Topic(DatabaseModel):
         - deleted_time will be set when is_deleted is set to true
     """
 
+    # pylint: disable=too-many-public-methods
+
     schema_class = TopicSchema
 
     __tablename__ = "topics"
@@ -177,6 +179,17 @@ class Topic(DatabaseModel):
     @tags.setter
     def tags(self, new_tags: List[str]) -> None:
         self._tags = new_tags
+
+    @property
+    def important_tags(self) -> List[str]:
+        """Return only the topic's "important" tags."""
+        return [tag for tag in self.tags if tag in SPECIAL_TAGS]
+
+    @property
+    def unimportant_tags(self) -> List[str]:
+        """Return only the topic's tags that *aren't* considered "important"."""
+        important_tags = set(self.important_tags)
+        return [tag for tag in self.tags if tag not in important_tags]
 
     def __repr__(self) -> str:
         """Display the topic's title and ID as its repr format."""
@@ -447,7 +460,8 @@ class Topic(DatabaseModel):
             if published_timestamp:
                 published = utc_from_timestamp(published_timestamp)
                 if self.created_time - published > timedelta(days=3):
-                    metadata_strings.append(published.strftime("%b %-d %Y"))
+                    date_str = published.strftime("%b %-d %Y")
+                    metadata_strings.append(f"published {date_str}")
 
         return ", ".join(metadata_strings)
 

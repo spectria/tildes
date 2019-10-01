@@ -11,31 +11,22 @@
     data-topic-posted-by="{{ topic.user.username }}"
   >
     <header>
-      {% if topic.is_link_type %}
-        <div class="topic-icon topic-icon-{{ topic.link_domain.replace('.', '_') }}"></div>
-      {% endif %}
-
-      <div>
-        <h1 class="topic-title">
-          {% if topic.is_text_type %}
-            <a
-              href="{{ topic.permalink }}"
-              {% if request.user.open_new_tab_internal %}target="_blank"{% endif %}
-            >{{ topic.title }}</a>
-          {% elif topic.is_link_type %}
-            <a
-              href="{{ topic.link }}"
-              {% if request.user.open_new_tab_external %}
-                target="_blank"
-                rel="noopener"
-              {% endif %}
-            >{{ topic.title }}</a>
-          {% endif %}
-        </h1>
-        {% if topic.content_metadata_for_display %}
-          <span class="topic-content-metadata">({{ topic.content_metadata_for_display }})</span>
+      <h1 class="topic-title">
+        {% if topic.is_text_type %}
+          <a
+            href="{{ topic.permalink }}"
+            {% if request.user.open_new_tab_internal %}target="_blank"{% endif %}
+          >{{ topic.title }}</a>
+        {% elif topic.is_link_type %}
+          <a
+            href="{{ topic.link }}"
+            {% if request.user.open_new_tab_external %}
+              target="_blank"
+              rel="noopener"
+            {% endif %}
+          >{{ topic.title }}</a>
         {% endif %}
-      </div>
+      </h1>
     </header>
 
     <div class="topic-metadata">
@@ -43,9 +34,25 @@
         <span class="topic-group">{{ group_linked(topic.group.path) }}</span>
       {% endif %}
 
-      {% if topic.tags %}
+      {% if topic.important_tags %}
         <ul class="topic-tags">
-          {% for tag in topic.tags %}
+          {% for tag in topic.important_tags %}
+            {% if request.matched_route.name in ('home', 'group') %}
+              {{ topic_tag(tag, request.current_listing_normal_url({'tag': tag.replace(' ', '_')})) }}
+            {% else %}
+              {{ topic_tag(tag, request.route_url('home', _query=[('tag', tag.replace(' ', '_'))])) }}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if topic.content_metadata_for_display %}
+        <span class="topic-content-metadata">{{ topic.content_metadata_for_display }}</span>
+      {% endif %}
+
+      {% if topic.unimportant_tags and request.user and request.user.show_tags_in_listings %}
+        <ul class="topic-tags">
+          {% for tag in topic.unimportant_tags %}
             {% if request.matched_route.name in ('home', 'group') %}
               {{ topic_tag(tag, request.current_listing_normal_url({'tag': tag.replace(' ', '_')})) }}
             {% else %}
@@ -85,7 +92,12 @@
       {% if topic.is_user_treated_as_source %}
         aria-label="Posted by">{{ username_linked(topic.user.username) }}
       {% else %}
-        aria-label="Link source">{{ topic.link_source }}
+        aria-label="Link source">
+        {% if topic.is_link_type %}
+          <div class="topic-icon topic-icon-{{ topic.link_domain.replace('.', '_') }}"></div>
+        {% endif %}
+
+        {{ topic.link_source }}
       {% endif %}
       </div>
 

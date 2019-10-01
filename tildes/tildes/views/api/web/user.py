@@ -147,6 +147,22 @@ def post_disable_two_factor(request: Request, code: str) -> Response:
 @ic_view_config(
     route_name="user",
     request_method="PATCH",
+    request_param="ic-trigger-name=show-tags-in-listings",
+    permission="change_show_tags_in_listings_setting",
+)
+def patch_change_show_tags_in_listings(request: Request) -> Response:
+    """Change the user's "show tags in listings" setting."""
+    user = request.context
+
+    show_tags = bool(request.params.get("show_tags_in_listings"))
+    user.show_tags_in_listings = show_tags
+
+    return IC_NOOP
+
+
+@ic_view_config(
+    route_name="user",
+    request_method="PATCH",
     request_param="ic-trigger-name=auto-mark-notifications-read",
     permission="change_auto_mark_notifications_read_setting",
 )

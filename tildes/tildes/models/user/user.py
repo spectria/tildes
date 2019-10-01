@@ -107,6 +107,12 @@ class User(DatabaseModel):
     )
     open_new_tab_text: bool = Column(Boolean, nullable=False, server_default="false")
     theme_default: str = Column(Text)
+    show_tags_in_listings: bool = Column(
+        Boolean, nullable=False, server_default="false"
+    )
+    show_tags_on_new_topic: bool = Column(
+        Boolean, nullable=False, server_default="false"
+    )
     is_deleted: bool = Column(
         Boolean, nullable=False, server_default="false", index=True
     )

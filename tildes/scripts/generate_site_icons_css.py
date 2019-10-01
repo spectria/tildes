@@ -15,7 +15,6 @@ OUTPUT_FILE = "/opt/tildes/static/css/site-icons.css"
 CSS_RULE = """
 .topic-icon-{domain} {{
   background-image: url('/images/site-icons/{filename}');
-  border: 0;
 }}
 """
 

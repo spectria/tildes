@@ -48,6 +48,7 @@
       </span>
     {% endif %}
   </div>
+  {% include "includes/topic_tags.jinja2" %}
 </header>
 
 {% if topic.is_deleted %}
@@ -256,11 +257,6 @@
       readonly
       data-js-autoselect-input
     >
-  </dd>
-
-  <dt>Tags</dt>
-  <dd>
-    {% include 'includes/topic_tags.jinja2' %}
   </dd>
 
   <dt>Comments</dt>

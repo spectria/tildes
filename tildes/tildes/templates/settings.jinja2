@@ -39,6 +39,27 @@
 
     <li>
       <form
+        name="show-tags-in-listings"
+        autocomplete="off"
+        data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+      >
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input
+              type="checkbox"
+              id="show_tags_in_listings"
+              name="show_tags_in_listings"
+              data-js-autosubmit-on-change
+              {% if request.user.show_tags_in_listings %}checked{% endif %}
+            >
+            <i class="form-icon"></i> Show topic tags in listing pages (home page, groups, etc.)
+          </label>
+        </div>
+      </form>
+    </li>
+
+    <li>
+      <form
         name="interact-mark-notifications-read"
         autocomplete="off"
         data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"

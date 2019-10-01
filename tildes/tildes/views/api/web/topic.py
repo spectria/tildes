@@ -204,6 +204,11 @@ def put_tag_topic(request: Request, tags: str, conflict_check: str) -> dict:
         )
     )
 
+    # show the tag field by default in the future when the tagger is posting a new topic
+    if not request.user.show_tags_on_new_topic:
+        request.user.show_tags_on_new_topic = True
+        request.db_session.add(request.user)
+
     return {"topic": topic}
 
 

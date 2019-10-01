@@ -1,12 +1,9 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% from 'macros/topics.jinja2' import topic_tag %}
-
-<ul class="topic-tags">
-  {% for tag in topic.tags %}
-    {{ topic_tag(tag, "/~"~topic.group.path~"?tag="~tag.replace(' ', '_')) }}
-  {% else %}
-    <li class="label label-topic-tag">No tags</li>
-  {% endfor %}
-</ul>
+<div class="topic-full-tags">{% if topic.tags %}Tags:{% endif %}
+{% for tag in topic.tags %}
+  <a href="/~{{ topic.group.path }}?tag={{ tag.replace(" ", "_") }}">{{ tag }}</a>
+  {%- if not loop.last %},{% endif %}
+{% endfor %}
+</div>

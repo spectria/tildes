@@ -9,7 +9,8 @@
       'ic_topic_tags',
       topic_id36=topic.topic_id36,
     ) }}"
-    data-ic-target="#sidebar .topic-tags"
+    data-ic-target=".topic-full-tags"
+    data-ic-replace-target="true"
     data-js-remove-on-success
 >
   <input type="hidden" name="conflict_check" id="conflict_check" value="{{ topic.tags|join(",") }}">

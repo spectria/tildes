@@ -545,20 +545,16 @@
     }
   }
 
-  .topic-content-metadata {
-    color: map-get($theme, "foreground-secondary");
-  }
-
   .topic-full-byline {
     color: map-get($theme, "foreground-secondary");
   }
 
-  .topic-icon {
-    border-color: map-get($theme, "link");
-  }
+  .topic-full-tags {
+    color: map-get($theme, "foreground-secondary");
 
-  .topic-info {
-    color: map-get($theme, "foreground-middle");
+    a {
+      color: map-get($theme, "foreground-secondary");
+    }
   }
 
   .topic-info-comments-new {
