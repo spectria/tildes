@@ -22,6 +22,10 @@
   // set $is-light as a bool for whether the background seems light or dark
   $is-light: is-color-bright(map-get($theme, "background-primary"));
 
+  * {
+    border-color: map-get($theme, "border");
+  }
+
   a {
     color: map-get($theme, "link");
 
@@ -74,38 +78,12 @@
     background-color: map-get($theme, "background-secondary");
   }
 
-  fieldset {
-    border-color: map-get($theme, "border");
-  }
-
-  figure {
-    border-color: map-get($theme, "border");
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    border-color: map-get($theme, "border");
-  }
-
-  hr {
-    border-color: map-get($theme, "border");
-  }
-
   main {
     background-color: map-get($theme, "background-primary");
   }
 
   tbody tr:nth-of-type(2n + 1) {
     background-color: map-get($theme, "background-secondary");
-  }
-
-  td,
-  th {
-    border-color: map-get($theme, "border");
   }
 
   th {
@@ -305,14 +283,6 @@
     }
   }
 
-  .comment {
-    border-color: map-get($theme, "border");
-
-    &[data-comment-depth="0"] {
-      border-color: map-get($theme, "border");
-    }
-  }
-
   .comment-header {
     color: map-get($theme, "foreground-highlight");
     background-color: map-get($theme, "background-secondary");
@@ -322,13 +292,9 @@
     border-left-color: map-get($theme, "stripe-target");
   }
 
-  .divider {
-    border-color: map-get($theme, "border");
-
-    &[data-content]::after {
-      color: map-get($theme, "foreground-primary");
-      background-color: map-get($theme, "background-primary");
-    }
+  .divider[data-content]::after {
+    color: map-get($theme, "foreground-primary");
+    background-color: map-get($theme, "background-primary");
   }
 
   .empty-subtitle {
@@ -344,10 +310,6 @@
     background-color: map-get($theme, "background-input");
   }
 
-  .form-input:not(:focus) {
-    border-color: map-get($theme, "border");
-  }
-
   // error colors for :invalid inputs, using same approach as Spectre
   .form-input:not(:placeholder-shown):invalid {
     border-color: map-get($theme, "error");
@@ -361,22 +323,13 @@
     }
   }
 
-  .form-markdown-preview {
-    border-color: map-get($theme, "border");
-  }
-
-  .form-select {
-    border-color: map-get($theme, "border");
-
-    &:not([multiple]):not([size]) {
-      background-color: map-get($theme, "background-input");
-    }
+  .form-select:not([multiple]):not([size]) {
+    background-color: map-get($theme, "background-input");
   }
 
   .input-group-addon {
     background-color: map-get($theme, "background-secondary");
     color: map-get($theme, "foreground-highlight");
-    border-color: map-get($theme, "border");
   }
 
   .label-topic-tag {
@@ -409,8 +362,6 @@
   }
 
   .message {
-    border-color: map-get($theme, "border");
-
     header {
       color: map-get($theme, "foreground-highlight");
       background-color: map-get($theme, "background-secondary");
@@ -463,10 +414,6 @@
     background-color: map-get($theme, "alert");
   }
 
-  .tab {
-    border-color: map-get($theme, "border");
-  }
-
   .tab .tab-item {
     a {
       color: map-get($theme, "foreground-primary");
@@ -506,7 +453,6 @@
 
   .toast {
     color: map-get($theme, "foreground-highlight");
-    border-color: map-get($theme, "border");
     background-color: map-get($theme, "background-secondary");
   }
 
@@ -529,10 +475,6 @@
         color: #fff;
       }
     }
-  }
-
-  .topic {
-    border-color: map-get($theme, "border");
   }
 
   .topic-listing {
