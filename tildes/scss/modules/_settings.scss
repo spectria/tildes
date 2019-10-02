@@ -7,7 +7,23 @@
   }
 
   // Nested settings list
-  ul li {
-    margin-bottom: unset;
+  ul {
+    margin-top: 0;
+
+    li {
+      margin-bottom: unset;
+      margin-top: 0;
+    }
+  }
+}
+
+.settings-section {
+  .settings-list {
+    margin-left: 1rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+    border-bottom: 1px solid;
   }
 }

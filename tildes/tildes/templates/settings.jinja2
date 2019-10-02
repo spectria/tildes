@@ -8,6 +8,9 @@
 {% block main_heading %}User settings{% endblock %}
 
 {% block content %}
+<section class="settings-section">
+  <h2>Display settings</h2>
+
   <ul class="settings-list">
     <li>
       <label for="theme">Choose a display theme:</label>
@@ -57,47 +60,20 @@
         </div>
       </form>
     </li>
-
     <li>
-      <form
-        name="interact-mark-notifications-read"
-        autocomplete="off"
-        data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
-      >
-        <div class="form-group">
-          <label class="form-checkbox">
-            <input
-              type="checkbox"
-              id="interact_mark_notifications_read"
-              name="interact_mark_notifications_read"
-              data-js-autosubmit-on-change
-              {% if request.user.interact_mark_notifications_read %}checked{% endif %}
-            >
-            <i class="form-icon"></i> Automatically mark notifications read when you interact with the source comment (by voting, labeling, replying, etc.)
-          </label>
-        </div>
-      </form>
+      <a href="/settings/filters">Define topic tag filters</a>
+      <div class="text-small text-secondary">Define a list of topic tags to filter out of listings by default</div>
     </li>
+  </ul>
+</section>
 
+<section class="settings-section">
+  <h2>Site behavior settings</h2>
+
+  <ul class="settings-list">
     <li>
-      <form
-        name="auto-mark-notifications-read"
-        autocomplete="off"
-        data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
-      >
-        <div class="form-group">
-          <label class="form-checkbox">
-            <input
-              type="checkbox"
-              id="auto_mark_notifications_read"
-              name="auto_mark_notifications_read"
-              data-js-autosubmit-on-change
-              {% if request.user.auto_mark_notifications_read %}checked{% endif %}
-            >
-            <i class="form-icon"></i> Automatically mark all notifications read when you view the Unread Notifications page
-          </label>
-        </div>
-      </form>
+      <a href="/settings/comment_visits">Configure marking new comments (currently {{ 'enabled' if request.user.track_comment_visits else 'disabled' }})</a>
+      <div class="text-small text-secondary">Marks new comments in topics since your last visit, and which topics have any</div>
     </li>
 
     <li>
@@ -153,11 +129,71 @@
         </ul>
       </form>
     </li>
-    <li><a href="/settings/password_change">Change your password</a></li>
+  </ul>
+</section>
+
+<section class="settings-section">
+  <h2>Notification settings</h2>
+
+  <ul class="settings-list">
+    <li>
+      <form
+        name="interact-mark-notifications-read"
+        autocomplete="off"
+        data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+      >
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input
+              type="checkbox"
+              id="interact_mark_notifications_read"
+              name="interact_mark_notifications_read"
+              data-js-autosubmit-on-change
+              {% if request.user.interact_mark_notifications_read %}checked{% endif %}
+            >
+            <i class="form-icon"></i> Automatically mark notifications read when you interact with the source comment (by voting, labeling, replying, etc.)
+          </label>
+        </div>
+      </form>
+    </li>
+
+    <li>
+      <form
+        name="auto-mark-notifications-read"
+        autocomplete="off"
+        data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+      >
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input
+              type="checkbox"
+              id="auto_mark_notifications_read"
+              name="auto_mark_notifications_read"
+              data-js-autosubmit-on-change
+              {% if request.user.auto_mark_notifications_read %}checked{% endif %}
+            >
+            <i class="form-icon"></i> Automatically mark all notifications read when you view the Unread Notifications page
+          </label>
+        </div>
+      </form>
+    </li>
+
+  </ul>
+</section>
+
+<section class="settings-section">
+  <h2>Account settings</h2>
+
+  <ul class="settings-list">
+    <li>
+      <a href="/settings/bio">Edit your user bio</a>
+      <div class="text-small text-secondary">Tell others about yourself with a short bio on your user page</div>
+    </li>
     <li>
       <a href="/settings/account_recovery">Set up account recovery</a>
       <div class="text-small text-secondary">To be able to regain access in case of lost password, compromise, etc.</div>
     </li>
+    <li><a href="/settings/password_change">Change your password</a></li>
     <li>
       {% if not request.user.two_factor_enabled %}
         <a href="/settings/two_factor">Enable two-factor authentication</a>
@@ -167,17 +203,7 @@
         <div class="text-small text-secondary">Disabling two-factor authentication requires a code from your device or a backup code.</div>
       {% endif %}
     </li>
-    <li>
-      <a href="/settings/comment_visits">Configure marking new comments (currently {{ 'enabled' if request.user.track_comment_visits else 'disabled' }})</a>
-      <div class="text-small text-secondary">Marks new comments in topics since your last visit, and which topics have any</div>
-    </li>
-    <li>
-      <a href="/settings/filters">Define topic tag filters</a>
-      <div class="text-small text-secondary">Define a list of topic tags to filter out of listings by default</div>
-    </li>
-    <li>
-      <a href="/settings/bio">Edit your user bio</a>
-      <div class="text-small text-secondary">Tell others about yourself with a short bio on your user page</div>
-    </li>
   </ul>
+</section>
+
 {% endblock %}
