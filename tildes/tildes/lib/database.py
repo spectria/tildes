@@ -6,14 +6,17 @@
 import enum
 from typing import Any, Callable, List, Optional
 
+from dateutil.rrule import rrulestr
 from pyramid.paster import bootstrap
 from sqlalchemy import cast, func
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.engine.interfaces import Dialect
 from sqlalchemy.orm.session import Session
-from sqlalchemy.types import UserDefinedType
+from sqlalchemy.types import Text, TypeDecorator, UserDefinedType
 from sqlalchemy_utils import LtreeType
 from sqlalchemy_utils.types.ltree import LQUERY
+
+from tildes.lib.datetime import rrule_to_str
 
 
 # https://www.postgresql.org/docs/current/static/errcodes-appendix.html
@@ -145,3 +148,25 @@ class ArrayOfLtree(ARRAY):  # pylint: disable=too-many-ancestors
                 return self.op("?")(cast(other, ARRAY(LQUERY)))
             else:
                 return self.op("~")(other)
+
+
+class RecurrenceRule(TypeDecorator):
+    """Stores a dateutil rrule in the database as text."""
+
+    # pylint: disable=abstract-method
+
+    impl = Text
+
+    def process_bind_param(self, value, dialect):  # type: ignore
+        """Convert the rrule value to a string to store it."""
+        if value is None:
+            return value
+
+        return rrule_to_str(value)
+
+    def process_result_value(self, value, dialect):  # type: ignore
+        """Convert the stored string to an rrule."""
+        if value is None:
+            return value
+
+        return rrulestr(value)

@@ -16,5 +16,11 @@ from tildes.models.group import Group, GroupSubscription
 from tildes.models.log import Log
 from tildes.models.message import MessageConversation, MessageReply
 from tildes.models.scraper import ScraperResult
-from tildes.models.topic import Topic, TopicBookmark, TopicVisit, TopicVote
+from tildes.models.topic import (
+    Topic,
+    TopicBookmark,
+    TopicSchedule,
+    TopicVisit,
+    TopicVote,
+)
 from tildes.models.user import User, UserGroupSettings, UserInviteCode

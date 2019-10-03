@@ -3,7 +3,9 @@
 
 from datetime import datetime, timedelta, timezone
 
-from tildes.lib.datetime import descriptive_timedelta, utc_now
+from dateutil.rrule import rrulestr
+
+from tildes.lib.datetime import descriptive_timedelta, rrule_to_str, utc_now
 
 
 def test_utc_now_has_timezone():
@@ -60,3 +62,14 @@ def test_above_second_descriptive_timedelta():
     """Ensure it starts describing time in seconds above 1 second."""
     test_time = utc_now() - timedelta(seconds=1, microseconds=100)
     assert descriptive_timedelta(test_time) == "1 second ago"
+
+
+def test_rrule_to_str():
+    """Ensure the rrule_to_str method is giving an expected result.
+
+    This is mostly intended as protection in case dateutil ever changes the format
+    that they output when converting a rrule to string.
+    """
+    test_str = "FREQ=MONTHLY;INTERVAL=2"
+    rrule = rrulestr(test_str)
+    assert rrule_to_str(rrule) == test_str

@@ -5,3 +5,7 @@
 -- outside the retention period, and similar uses
 INSERT INTO users (user_id, username, password_hash)
 VALUES (0, 'unknown user', '');
+
+-- add a generic "Tildes" user to attribute automatic actions to
+INSERT INTO users (user_id, username, password_hash)
+VALUES (-1, 'Tildes', '');

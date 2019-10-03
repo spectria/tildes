@@ -7,6 +7,8 @@ import re
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
+from dateutil.rrule import rrule
+
 from ago import human
 
 
@@ -156,3 +158,12 @@ def adaptive_date(
         format_str += ", %Y"
 
     return target.strftime(format_str)
+
+
+def rrule_to_str(rrule_obj: rrule) -> str:
+    """Convert a dateutil rrule to its string definition.
+
+    dateutil does this natively, but it always includes the start date, which we don't
+    always need or want to be storing. This gives only the rrule definition.
+    """
+    return str(rrule_obj).split("RRULE:")[1]

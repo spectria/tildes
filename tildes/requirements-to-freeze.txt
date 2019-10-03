@@ -30,6 +30,7 @@ pyramid-tm
 pyramid-webassets
 pytest
 pytest-mock
+python-dateutil
 PyYAML  # needs to be installed separately for webassets
 qrcode
 requests
