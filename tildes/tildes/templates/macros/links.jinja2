@@ -1,11 +1,11 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% macro username_linked(username) -%}
-  {% if username != "unknown user" %}
-    <a href="/user/{{ username }}" class="link-user">{{ username }}</a>
+{% macro link_to_user(user) -%}
+  {% if user.is_real_user %}
+    <a href="/user/{{ user.username }}" class="link-user">{{ user.username }}</a>
   {% else %}
-    {{ username }}
+    {{ user.username }}
   {% endif %}
 {%- endmacro %}
 

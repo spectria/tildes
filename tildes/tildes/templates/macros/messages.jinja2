@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
-{% from 'macros/links.jinja2' import username_linked %}
+{% from 'macros/links.jinja2' import link_to_user %}
 
 {% macro render_message(message) %}
   {% if message.sender == request.user %}
@@ -12,7 +12,7 @@
   {% endif %}
 
     <header>
-      {{ username_linked(message.sender.username) }}
+      {{ link_to_user(message.sender) }}
       {{ adaptive_date_responsive(message.created_time) }}
     </header>
 

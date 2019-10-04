@@ -4,7 +4,7 @@
 {% from 'buttons.jinja2' import post_action_toggle_button with context %}
 {% from 'datetime.jinja2' import adaptive_date_responsive %}
 {% from 'forms.jinja2' import markdown_textarea %}
-{% from 'links.jinja2' import username_linked %}
+{% from 'links.jinja2' import link_to_user %}
 {% from 'utils.jinja2' import pluralize %}
 
 {% macro render_single_comment(comment) %}
@@ -53,7 +53,7 @@
       {% endif %}
 
       {% if request.has_permission('view', comment) %}
-        {{ username_linked(comment.user.username) }}
+        {{ link_to_user(comment.user) }}
 
         {% if request.has_permission('view_author', comment.topic) and comment.topic.user == comment.user %}
           <span class="comment-user-info">
@@ -119,7 +119,7 @@
               <span class="comment-label-count">
                 {{ weight }}:
                 {% for label in comment.labels if label.name == label_name %}
-                  {{ username_linked(label.user.username) }} ({{ label.weight }}{{ ' "%s"' % label.reason if label.reason else '' }})
+                  {{ link_to_user(label.user) }} ({{ label.weight }}{{ ' "%s"' % label.reason if label.reason else '' }})
                 {% endfor %}
               </span>
             </li>

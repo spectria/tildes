@@ -4,7 +4,7 @@
 {% extends 'base_user_menu.jinja2' %}
 
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
-{% from 'macros/links.jinja2' import username_linked %}
+{% from 'macros/links.jinja2' import link_to_user %}
 
 {% block title %}Message Inbox{% endblock %}
 
@@ -30,7 +30,7 @@
       <td class="message-list-subject">
         <a href="{{ request.route_url('message_conversation', conversation_id36=conversation.conversation_id36) }}">{{ conversation.subject }}</a>
       </td>
-      <td>{{ username_linked(conversation.other_user(request.user).username) }}</td>
+      <td>{{ link_to_user(conversation.other_user(request.user)) }}</td>
       <td class="text-right">{{ adaptive_date_responsive(conversation.last_activity_time) }}</td>
       <td class="text-right">{{ conversation.num_replies + 1 }}</td>
     </tr>

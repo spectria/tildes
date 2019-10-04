@@ -321,6 +321,11 @@ class User(DatabaseModel):
         return principals
 
     @property
+    def is_real_user(self) -> bool:
+        """Return whether this is a "real" user (not a special-purpose internal one)."""
+        return self.user_id > 0
+
+    @property
     def is_admin(self) -> bool:
         """Return whether the user has admin permissions."""
         return "admin" in self.auth_principals

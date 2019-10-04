@@ -8,7 +8,7 @@
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive, time_ago %}
 {% from 'macros/forms.jinja2' import markdown_textarea %}
 {% from 'macros/groups.jinja2' import group_segmented_link %}
-{% from 'macros/links.jinja2' import group_linked, username_linked %}
+{% from 'macros/links.jinja2' import group_linked, link_to_user %}
 {% from 'macros/topics.jinja2' import topic_voting with context %}
 {% from 'macros/utils.jinja2' import pluralize %}
 
@@ -37,7 +37,7 @@
   <h1>{{ topic.title }}</h1>
   <div class="topic-full-byline">Posted {{ adaptive_date_responsive(topic.created_time) }} by
     {% if request.has_permission('view_author', topic) %}
-      {{ username_linked(topic.user.username) }}
+      {{ link_to_user(topic.user) }}
     {% else %}
       unknown user
     {% endif %}
@@ -288,7 +288,7 @@
             {% if entry.user == topic.user and not request.has_permission('view_author', topic) %}
               Unknown user
             {% else %}
-              {{ username_linked(entry.user) }}
+              {{ link_to_user(entry.user) }}
             {% endif %}
             {{ entry }}
             <span class="topic-log-entry-time">({{ time_ago(entry.event_time, abbreviate=True) }})</span>

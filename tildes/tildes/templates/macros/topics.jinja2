@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
-{% from 'macros/links.jinja2' import group_linked, username_linked %}
+{% from 'macros/links.jinja2' import group_linked, link_to_user %}
 {% from 'utils.jinja2' import pluralize %}
 
 {% macro render_topic_for_listing(topic, show_group=False, rank=None) %}
@@ -90,7 +90,7 @@
 
       <div class="topic-info-source"
       {% if topic.is_user_treated_as_source %}
-        aria-label="Posted by">{{ username_linked(topic.user.username) }}
+        aria-label="Posted by">{{ link_to_user(topic.user) }}
       {% else %}
         aria-label="Link source">
         {% if topic.is_link_type %}
