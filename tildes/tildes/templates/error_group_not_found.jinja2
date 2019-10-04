@@ -3,7 +3,7 @@
 
 {% extends 'base_no_sidebar.jinja2' %}
 
-{% from 'macros/links.jinja2' import group_linked %}
+{% from 'macros/links.jinja2' import link_to_group %}
 
 {% block title %}
 Group not found
@@ -17,7 +17,7 @@ Group not found
     <p class="empty-subtitle">Did you mean one of these groups instead?</p>
     <ul>
     {% for group in group_suggestions %}
-      <li>{{ group_linked(group) }}</li>
+      <li>{{ link_to_group(group) }}</li>
     {% endfor %}
     </ul>
   {% endif %}

@@ -5,7 +5,7 @@
 
 {% from 'macros/forms.jinja2' import search_form %}
 {% from 'macros/groups.jinja2' import group_segmented_link, render_group_subscription_box with context %}
-{% from 'macros/links.jinja2' import group_linked %}
+{% from 'macros/links.jinja2' import link_to_group %}
 {% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
 
 {% block title %}Topics in ~{{ group.path }}{% endblock %}
@@ -99,7 +99,7 @@
 <div class="topic-listing-filter">
 {% if tag %}
   {% if is_single_group %}
-    Showing only topics in {{ group_linked(group.path) }} with the tag "{{ tag|replace('_', ' ') }}".
+    Showing only topics in {{ link_to_group(group) }} with the tag "{{ tag|replace('_', ' ') }}".
     <a href="{{ request.current_listing_normal_url() }}">Back to normal view</a> /
     <a href="{{ request.route_url("home", _query={"tag": tag}) }}">
       {% if request.user %}
@@ -225,7 +225,7 @@
       <li>Subgroups</li>
       <ul class="nav">
       {% for subgroup in subgroups %}
-        <li class="nav-item">{{ group_linked(subgroup.path) }}</li>
+        <li class="nav-item">{{ link_to_group(subgroup) }}</li>
       {% endfor %}
       </ul>
     </ul>

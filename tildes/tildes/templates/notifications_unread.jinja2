@@ -4,7 +4,7 @@
 {% extends 'base_user_menu.jinja2' %}
 
 {% from 'macros/comments.jinja2' import comment_label_options_template, comment_reply_template, render_single_comment with context %}
-{% from 'macros/links.jinja2' import group_linked %}
+{% from 'macros/links.jinja2' import link_to_group %}
 
 {% block title %}Unread notifications{% endblock %}
 
@@ -29,12 +29,12 @@
   {% for notification in notifications: %}
     <li>
       {% if notification.is_comment_reply %}
-        <h2 class="heading-notification">Reply to your comment on <a href="{{ notification.comment.topic.permalink }}">{{ notification.comment.topic.title }}</a> in {{ group_linked(notification.comment.topic.group.path) }}</h2>
+        <h2 class="heading-notification">Reply to your comment on <a href="{{ notification.comment.topic.permalink }}">{{ notification.comment.topic.title }}</a> in {{ link_to_group(notification.comment.topic.group) }}</h2>
       {% elif notification.is_topic_reply %}
-        <h2 class="heading-notification">Reply to your topic <a href="{{ notification.comment.topic.permalink }}">{{ notification.comment.topic.title }}</a> in {{ group_linked(notification.comment.topic.group.path) }}</h2>
+        <h2 class="heading-notification">Reply to your topic <a href="{{ notification.comment.topic.permalink }}">{{ notification.comment.topic.title }}</a> in {{ link_to_group(notification.comment.topic.group) }}</h2>
       {% elif notification.is_mention %}
         <h2 class="heading-notification">
-            You were mentioned in a comment on <a href="{{ notification.comment.topic.permalink }}">{{ notification.comment.topic.title }}</a> in {{ group_linked(notification.comment.topic.group.path) }}
+          You were mentioned in a comment on <a href="{{ notification.comment.topic.permalink }}">{{ notification.comment.topic.title }}</a> in {{ link_to_group(notification.comment.topic.group) }}
         </h2>
       {% endif %}
 

@@ -9,6 +9,6 @@
   {% endif %}
 {%- endmacro %}
 
-{% macro group_linked(group_path) -%}
-  <a href="/~{{ group_path }}" class="link-group">~{{ group_path }}</a>
+{% macro link_to_group(group) -%}
+  <a href="/~{{ group.path }}" class="link-group">~{{ group.path }}</a>
 {%- endmacro %}

@@ -4,7 +4,7 @@
 {% extends 'base_no_sidebar.jinja2' %}
 
 {% from 'macros/groups.jinja2' import render_group_subscription_box with context %}
-{% from 'macros/links.jinja2' import group_linked %}
+{% from 'macros/links.jinja2' import link_to_group %}
 
 {% block title %}Browse groups{% endblock %}
 
@@ -24,7 +24,7 @@
       {% for group in groups %}
         <tr class="group-level-{{ group.path|length - 1 }}">
           <td>
-            {{ group_linked(group.path) }}
+            {{ link_to_group(group) }}
             {% if group.short_description %}
               <p class="group-list-description">{{ group.short_description }}</p>
             {% endif %}

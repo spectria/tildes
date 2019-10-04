@@ -4,7 +4,7 @@
 {% extends 'topic_listing.jinja2' %}
 
 {% from 'macros/forms.jinja2' import search_form %}
-{% from 'macros/links.jinja2' import group_linked %}
+{% from 'macros/links.jinja2' import link_to_group %}
 
 {% block title %}Search results for "{{ search }}"{% endblock %}
 
@@ -22,7 +22,7 @@
 {% block filter_info %}
   {% if group %}
     <div class="topic-listing-filter">
-    Search results from inside {{ group_linked(group.path) }} only.
+    Search results from inside {{ link_to_group(group) }} only.
     <a href="{{ request.route_url("search", _query={"q": search}) }}">Search all groups</a>
     </div>
   {% endif %}

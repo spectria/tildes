@@ -4,7 +4,7 @@
 {% extends 'base_user_menu.jinja2' %}
 
 {% from 'macros/comments.jinja2' import comment_label_options_template, comment_reply_template, render_single_comment with context %}
-{% from 'macros/links.jinja2' import group_linked %}
+{% from 'macros/links.jinja2' import link_to_group %}
 {% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
 
 {% block title %}User: {{ user.username }}{% endblock %}
@@ -108,7 +108,7 @@
           {% else %}
             {{ post.topic.title }}
           {% endif %}
-        </a> in {{ group_linked(post.topic.group.path) }}</h2>
+        </a> in {{ link_to_group(post.topic.group) }}</h2>
         {{ render_single_comment(post) }}
       {% endif %}
       </li>

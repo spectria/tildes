@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
-{% from 'macros/links.jinja2' import group_linked, link_to_user %}
+{% from 'macros/links.jinja2' import link_to_group, link_to_user %}
 {% from 'utils.jinja2' import pluralize %}
 
 {% macro render_topic_for_listing(topic, show_group=False, rank=None) %}
@@ -31,7 +31,7 @@
 
     <div class="topic-metadata">
       {% if show_group %}
-        <span class="topic-group">{{ group_linked(topic.group.path) }}</span>
+        <span class="topic-group">{{ link_to_group(topic.group) }}</span>
       {% endif %}
 
       {% if topic.important_tags %}
