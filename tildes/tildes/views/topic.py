@@ -56,7 +56,6 @@ def post_group_topics(
     confirm_repost: bool,
 ) -> Union[HTTPFound, Response]:
     """Post a new topic to a group."""
-    # pylint: disable=too-many-arguments
     group = request.context
 
     if link:
@@ -150,7 +149,6 @@ def get_group_topics(
     unfiltered: bool,
 ) -> dict:
     """Get a listing of topics in the group."""
-    # pylint: disable=too-many-arguments, too-many-branches, too-many-locals
     is_home_page = request.matched_route.name == "home"
 
     if is_home_page:
@@ -278,7 +276,6 @@ def get_search(
     search: str,
 ) -> dict:
     """Get a list of search results."""
-    # pylint: disable=too-many-arguments
     group = None
     if isinstance(request.context, Group):
         group = request.context

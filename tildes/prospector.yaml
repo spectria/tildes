@@ -32,6 +32,12 @@ pylint:
     - no-else-return  # elif after return - could refactor to enable this check
     - no-self-use  # schemas do this a lot, would be nice to only disable for schemas
     - too-few-public-methods  # plenty of classes that don't need multiple methods
+    - too-many-ancestors  # almost never helpful
+    - too-many-arguments  # almost never helpful
+    - too-many-branches  # almost never helpful
     - too-many-instance-attributes  # models have many instance attributes
+    - too-many-locals  # almost never helpful
+    - too-many-public-methods  # almost never helpful
+    - too-many-return-statements  # almost never helpful
     - ungrouped-imports  # let isort handle this
     - unnecessary-pass  # I prefer using pass, even when it's not technically necessary

@@ -143,7 +143,6 @@ class Comment(DatabaseModel):
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""
-        # pylint: disable=too-many-branches
         acl = []
 
         # nobody has any permissions on deleted comments

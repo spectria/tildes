@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 """Contains the Log class."""
-# pylint: disable=too-many-branches,too-many-return-statements
 
 from typing import Any, Dict, Optional
 

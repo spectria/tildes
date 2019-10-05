@@ -58,7 +58,6 @@ class CommentLabel(DatabaseModel):
         reason: Optional[str] = None,
     ):
         """Add a new label to a comment."""
-        # pylint: disable=too-many-arguments
         self.comment_id = comment.comment_id
         self.user_id = user.user_id
         self.label = label

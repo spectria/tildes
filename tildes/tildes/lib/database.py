@@ -87,7 +87,7 @@ class CIText(UserDefinedType):
         return process
 
 
-class ArrayOfLtree(ARRAY):  # pylint: disable=too-many-ancestors
+class ArrayOfLtree(ARRAY):
     """Workaround class to support ltree[] columns which don't work "normally".
 
     This is heavily based on the ArrayOfEnum class from the SQLAlchemy docs:

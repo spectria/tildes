@@ -47,7 +47,6 @@ class EmbedlyScraper:
     @staticmethod
     def get_metadata_from_result(result: ScraperResult) -> Dict[str, Any]:
         """Get the metadata that we're interested in out of a scrape result."""
-        # pylint: disable=too-many-branches
         if result.scraper_type != ScraperType.EMBEDLY:
             raise ValueError("Can't process a result from a different scraper.")
 

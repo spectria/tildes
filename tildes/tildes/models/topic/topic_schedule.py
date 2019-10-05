@@ -60,7 +60,6 @@ class TopicSchedule(DatabaseModel):
         user: Optional[User] = None,
     ) -> None:
         """Create a new scheduled topic."""
-        # pylint: disable=too-many-arguments
         self.group = group
         self.title = title
         self.markdown = markdown

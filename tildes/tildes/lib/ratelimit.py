@@ -35,7 +35,6 @@ class RateLimitResult:
         time_until_retry: Optional[timedelta] = None,
     ):
         """Initialize a RateLimitResult."""
-        # pylint: disable=too-many-arguments
         if is_allowed and time_until_retry is not None:
             raise ValueError("time_until_retry must be None if is_allowed is True")
 
@@ -182,7 +181,6 @@ class RateLimitedAction:
         up to the same value as `limit` (the full limit may be used at any rate, but
         never more than `limit` inside any given period).
         """
-        # pylint: disable=too-many-arguments
         if max_burst and not 1 <= max_burst <= limit:
             raise ValueError("max_burst must be at least 1 and <= limit")
 

@@ -68,8 +68,6 @@ class Topic(DatabaseModel):
         - deleted_time will be set when is_deleted is set to true
     """
 
-    # pylint: disable=too-many-public-methods
-
     schema_class = TopicSchema
 
     __tablename__ = "topics"
@@ -239,7 +237,6 @@ class Topic(DatabaseModel):
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""
-        # pylint: disable=too-many-branches
         acl = []
 
         # deleted topics allow "general" viewing, but nothing else
@@ -429,7 +426,6 @@ class Topic(DatabaseModel):
     @property
     def content_metadata_for_display(self) -> str:
         """Return a string of the content's metadata, suitable for display."""
-        # pylint: disable=too-many-branches
         metadata_strings = []
 
         # display word count (if we have it) with either type of topic

@@ -164,7 +164,6 @@ def get_topic_tags(request: Request) -> dict:
 @use_kwargs({"tags": String(), "conflict_check": String()})
 def put_tag_topic(request: Request, tags: str, conflict_check: str) -> dict:
     """Apply tags to a topic with Intercooler."""
-    # pylint: disable=too-many-branches
     topic = request.context
 
     # check for edit conflict by verifying tags didn't change after they loaded the form

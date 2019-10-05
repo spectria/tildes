@@ -37,7 +37,6 @@ def get_user(
     order_name: str,
     post_type: Optional[str] = None,
 ) -> dict:
-    # pylint: disable=too-many-arguments
     """Generate the main user history page."""
     user = request.context
 
@@ -115,7 +114,6 @@ def _get_user_posts(
     per_page: int,
 ) -> Union[PaginatedResults, MixedPaginatedResults]:
     """Get the posts to display on a user page (topics, comments, or both)."""
-    # pylint: disable=too-many-arguments
     result_sets = []
     for type_to_query in types_to_query:
         query = request.query(type_to_query).filter(type_to_query.user == user)
