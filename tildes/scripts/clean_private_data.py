@@ -145,7 +145,6 @@ class DataCleaner:
                     "markdown": DEFAULT,
                     "rendered_html": DEFAULT,
                     "link": DEFAULT,
-                    "original_url": DEFAULT,
                     "content_metadata": DEFAULT,
                     "_tags": DEFAULT,
                 },

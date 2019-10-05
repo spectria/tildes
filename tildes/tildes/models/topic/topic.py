@@ -116,7 +116,6 @@ class Topic(DatabaseModel):
     _markdown: Optional[str] = deferred(Column("markdown", Text))
     rendered_html: Optional[str] = Column(Text)
     link: Optional[str] = Column(Text)
-    original_url: Optional[str] = Column(Text)
     content_metadata: Dict[str, Any] = Column(
         MutableDict.as_mutable(JSONB(none_as_null=True))
     )
@@ -229,7 +228,6 @@ class Topic(DatabaseModel):
         new_topic = cls._create_base_topic(group, author, title)
         new_topic.topic_type = TopicType.LINK
         new_topic.link = link
-        new_topic.original_url = link
 
         incr_counter("topics", type="link")
 
