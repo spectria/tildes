@@ -86,7 +86,7 @@
     background-color: map-get($theme, "background-secondary");
   }
 
-  th {
+  .table th {
     border-bottom-color: map-get($theme, "foreground-highlight");
   }
 
