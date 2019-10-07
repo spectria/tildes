@@ -3,6 +3,7 @@
 
 .comment {
   border-left: 1px solid;
+  border-color: inherit;
   margin-bottom: 0.4rem;
 
   &:target > .comment-itself {
