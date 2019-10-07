@@ -196,8 +196,8 @@ class Topic(DatabaseModel):
     def _create_base_topic(cls, group: Group, author: User, title: str) -> "Topic":
         """Create the "base" for a new topic."""
         new_topic = cls()
-        new_topic.group_id = group.group_id
-        new_topic.user_id = author.user_id
+        new_topic.group = group
+        new_topic.user = author
 
         # if the title is all caps, convert to title case
         if title.isupper():

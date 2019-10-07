@@ -8,6 +8,7 @@ import string
 from datetime import datetime
 
 from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Text, TIMESTAMP
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
 from tildes.lib.string import separate_string
@@ -39,6 +40,8 @@ class UserInviteCode(DatabaseModel):
     )
     invitee_id: int = Column(Integer, ForeignKey("users.user_id"))
 
+    user: User = relationship("User", innerjoin=True, foreign_keys=[user_id])
+
     def __str__(self) -> str:
         """Format the code into a more easily readable version."""
         return separate_string(self.code, "-", 5)
@@ -49,7 +52,7 @@ class UserInviteCode(DatabaseModel):
         Note that uniqueness is not confirmed here, so there is the potential to create
         duplicate codes (which will fail to commit to the database).
         """
-        self.user_id = user.user_id
+        self.user = user
 
         code_chars = random.choices(self.ALPHABET, k=self.LENGTH)
         self.code = "".join(code_chars)

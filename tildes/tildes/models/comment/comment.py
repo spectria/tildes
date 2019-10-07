@@ -131,13 +131,9 @@ class Comment(DatabaseModel):
     ):
         """Create a new comment."""
         self.topic = topic
-        self.user_id = author.user_id
-        if parent_comment:
-            self.parent_comment_id = parent_comment.comment_id
-        else:
-            self.parent_comment_id = None
-
+        self.user = author
         self.markdown = markdown
+        self.parent_comment = parent_comment
 
         incr_counter("comments")
 

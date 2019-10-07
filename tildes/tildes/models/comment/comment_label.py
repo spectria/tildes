@@ -58,8 +58,8 @@ class CommentLabel(DatabaseModel):
         reason: Optional[str] = None,
     ):
         """Add a new label to a comment."""
-        self.comment_id = comment.comment_id
-        self.user_id = user.user_id
+        self.comment = comment
+        self.user = user
         self.label = label
         self.weight = weight
         self.reason = reason

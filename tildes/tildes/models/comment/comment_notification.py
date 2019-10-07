@@ -99,15 +99,15 @@ class CommentNotification(DatabaseModel):
 
         for user in users_to_mention:
             # prevent the user from mentioning themselves
-            if comment.user_id == user.user_id:
+            if comment.user == user:
                 continue
 
             if parent_comment:
                 # prevent comment replies from mentioning that comment's poster
-                if parent_comment.user_id == user.user_id:
+                if parent_comment.user == user:
                     continue
             # prevent top-level comments from mentioning the thread creator
-            elif comment.topic.user_id == user.user_id:
+            elif comment.topic.user == user:
                 continue
 
             mention_notification = cls(

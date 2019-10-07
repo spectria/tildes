@@ -111,9 +111,9 @@ class MessageConversation(DatabaseModel):
 
     def __init__(self, sender: User, recipient: User, subject: str, markdown: str):
         """Create a new message conversation between two users."""
-        self.sender_id = sender.user_id
-        self.recipient_id = recipient.user_id
-        self.unread_user_ids = [self.recipient_id]
+        self.sender = sender
+        self.recipient = recipient
+        self.unread_user_ids = [self.recipient.user_id]
         self.subject = subject
         self.markdown = markdown
         self.rendered_html = convert_markdown_to_safe_html(markdown)
@@ -231,12 +231,15 @@ class MessageReply(DatabaseModel):
     markdown: str = deferred(Column(Text, nullable=False))
     rendered_html: str = Column(Text, nullable=False)
 
+    conversation: MessageConversation = relationship(
+        "MessageConversation", innerjoin=True
+    )
     sender: User = relationship("User", lazy=False, innerjoin=True)
 
     def __init__(self, conversation: MessageConversation, sender: User, markdown: str):
         """Add a new reply to a message conversation."""
-        self.conversation_id = conversation.conversation_id
-        self.sender_id = sender.user_id
+        self.conversation = conversation
+        self.sender = sender
         self.markdown = markdown
         self.rendered_html = convert_markdown_to_safe_html(markdown)
 
