@@ -95,7 +95,7 @@ def post_toplevel_comment(request: Request, markdown: str) -> dict:
 
     request.db_session.add(LogComment(LogEventType.COMMENT_POST, request, new_comment))
 
-    if topic.user != request.user and not topic.is_deleted:
+    if CommentNotification.should_create_reply_notification(new_comment):
         notification = CommentNotification(
             topic.user, new_comment, CommentNotificationType.TOPIC_REPLY
         )
@@ -135,7 +135,7 @@ def post_comment_reply(request: Request, markdown: str) -> dict:
 
     request.db_session.add(LogComment(LogEventType.COMMENT_POST, request, new_comment))
 
-    if parent_comment.user != request.user:
+    if CommentNotification.should_create_reply_notification(new_comment):
         notification = CommentNotification(
             parent_comment.user, new_comment, CommentNotificationType.COMMENT_REPLY
         )

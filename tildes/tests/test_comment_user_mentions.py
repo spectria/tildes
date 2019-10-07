@@ -36,15 +36,10 @@ def test_get_mentions_for_comment(db, user_list, comment):
         assert mentions[index].user == user
 
 
-def test_mention_filtering_parent_comment(mocker, db, topic, user_list):
+def test_mention_filtering_parent_comment(db, topic, user_list):
     """Test notification filtering for parent comments."""
     parent_comment = Comment(topic, user_list[0], "Comment content.")
-    parent_comment.user_id = user_list[0].user_id
-    comment = mocker.Mock(
-        user_id=user_list[1].user_id,
-        markdown=f"@{user_list[0].username}",
-        parent_comment=parent_comment,
-    )
+    comment = Comment(topic, user_list[1], f"@{user_list[0].username}", parent_comment)
     mentions = CommentNotification.get_mentions_for_comment(db, comment)
     assert not mentions
 

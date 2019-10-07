@@ -5,7 +5,7 @@
 
 from collections import Counter
 from datetime import datetime, timedelta
-from typing import Any, Optional, Sequence, Tuple, TYPE_CHECKING
+from typing import Any, Optional, Sequence, Tuple, TYPE_CHECKING, Union
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, TIMESTAMP
@@ -227,6 +227,14 @@ class Comment(DatabaseModel):
     def comment_id36(self) -> str:
         """Return the comment's ID in ID36 format."""
         return id_to_id36(self.comment_id)
+
+    @property
+    def parent(self) -> Union["Comment", Topic]:
+        """Return what the comment is replying to (a topic or another comment)."""
+        if self.parent_comment:
+            return self.parent_comment
+
+        return self.topic
 
     @property
     def parent_comment_id36(self) -> str:

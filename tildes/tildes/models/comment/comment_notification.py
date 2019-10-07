@@ -55,6 +55,12 @@ class CommentNotification(DatabaseModel):
         self, user: User, comment: Comment, notification_type: CommentNotificationType
     ):
         """Create a new notification for a user from a comment."""
+        if notification_type in (
+            CommentNotificationType.COMMENT_REPLY,
+            CommentNotificationType.TOPIC_REPLY,
+        ) and not self.should_create_reply_notification(comment):
+            raise ValueError("That comment shouldn't create a reply notification")
+
         self.user = user
         self.comment = comment
         self.notification_type = notification_type
@@ -65,6 +71,18 @@ class CommentNotification(DatabaseModel):
         acl.append((Allow, self.user_id, "mark_read"))
         acl.append(DENY_ALL)
         return acl
+
+    @classmethod
+    def should_create_reply_notification(cls, comment: Comment) -> bool:
+        """Return whether a comment should generate a reply notification."""
+        # User is replying to their own post
+        if comment.parent.user == comment.user:
+            return False
+
+        if not comment.parent.user.is_real_user:
+            return False
+
+        return True
 
     @property
     def is_comment_reply(self) -> bool:
@@ -95,19 +113,14 @@ class CommentNotification(DatabaseModel):
             .all()
         )
 
-        parent_comment = comment.parent_comment
-
         for user in users_to_mention:
             # prevent the user from mentioning themselves
             if comment.user == user:
                 continue
 
-            if parent_comment:
-                # prevent comment replies from mentioning that comment's poster
-                if parent_comment.user == user:
-                    continue
-            # prevent top-level comments from mentioning the thread creator
-            elif comment.topic.user == user:
+            # prevent mentioning the user they're replying to
+            # (they'll already get a reply notification)
+            if comment.parent.user == user:
                 continue
 
             mention_notification = cls(

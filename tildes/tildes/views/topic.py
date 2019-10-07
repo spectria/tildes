@@ -415,7 +415,7 @@ def post_comment_on_topic(request: Request, markdown: str) -> HTTPFound:
 
     request.db_session.add(LogComment(LogEventType.COMMENT_POST, request, new_comment))
 
-    if topic.user != request.user and not topic.is_deleted:
+    if CommentNotification.should_create_reply_notification(new_comment):
         notification = CommentNotification(
             topic.user, new_comment, CommentNotificationType.TOPIC_REPLY
         )
