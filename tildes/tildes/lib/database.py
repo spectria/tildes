@@ -6,7 +6,7 @@
 import enum
 from typing import Any, Callable, List, Optional
 
-from dateutil.rrule import rrulestr
+from dateutil.rrule import rrule, rrulestr
 from pyramid.paster import bootstrap
 from sqlalchemy import cast, func
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -157,14 +157,14 @@ class RecurrenceRule(TypeDecorator):
 
     impl = Text
 
-    def process_bind_param(self, value, dialect):  # type: ignore
+    def process_bind_param(self, value: rrule, dialect: Dialect) -> str:
         """Convert the rrule value to a string to store it."""
         if value is None:
             return value
 
         return rrule_to_str(value)
 
-    def process_result_value(self, value, dialect):  # type: ignore
+    def process_result_value(self, value: str, dialect: Dialect) -> rrule:
         """Convert the stored string to an rrule."""
         if value is None:
             return value
