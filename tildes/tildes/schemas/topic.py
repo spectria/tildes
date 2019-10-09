@@ -7,12 +7,11 @@ import re
 import typing
 from urllib.parse import urlparse
 
-import sqlalchemy_utils
 from marshmallow import pre_load, Schema, validates, validates_schema, ValidationError
 from marshmallow.fields import DateTime, List, Nested, String, URL
 
 from tildes.lib.url_transform import apply_url_transformations
-from tildes.schemas.fields import Enum, ID36, Ltree, Markdown, SimpleString
+from tildes.schemas.fields import Enum, ID36, Markdown, SimpleString
 from tildes.schemas.group import GroupSchema
 from tildes.schemas.user import UserSchema
 
@@ -31,7 +30,7 @@ class TopicSchema(Schema):
     rendered_html = String(dump_only=True)
     link = URL(schemes={"http", "https"}, allow_none=True)
     created_time = DateTime(dump_only=True)
-    tags = List(Ltree())
+    tags = List(String())
 
     user = Nested(UserSchema, dump_only=True)
     group = Nested(GroupSchema, dump_only=True)
@@ -47,14 +46,14 @@ class TopicSchema(Schema):
         for tag in data["tags"]:
             tag = tag.lower()
 
-            # replace spaces with underscores
-            tag = tag.replace(" ", "_")
+            # replace underscores with spaces
+            tag = tag.replace("_", " ")
 
-            # remove any consecutive underscores
-            tag = re.sub("_{2,}", "_", tag)
+            # remove any consecutive spaces
+            tag = re.sub(" {2,}", " ", tag)
 
-            # remove any leading/trailing underscores
-            tag = tag.strip("_")
+            # remove any leading/trailing spaces
+            tag = tag.strip(" ")
 
             # drop any empty tags
             if not tag or tag.isspace():
@@ -76,7 +75,7 @@ class TopicSchema(Schema):
         return data
 
     @validates("tags")
-    def validate_tags(self, value: typing.List[sqlalchemy_utils.Ltree]) -> None:
+    def validate_tags(self, value: typing.List[str]) -> None:
         """Validate the tags field, raising an error if an issue exists.
 
         Note that tags are validated by ensuring that each tag would be a valid group
@@ -88,7 +87,7 @@ class TopicSchema(Schema):
         group_schema = GroupSchema(partial=True)
         for tag in value:
             try:
-                group_schema.validate({"path": str(tag)})
+                group_schema.validate({"path": tag})
             except ValidationError:
                 raise ValidationError("Tag %s is invalid" % tag)
 

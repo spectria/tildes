@@ -4,7 +4,6 @@
 """Script for updating the list of common topic tags for all groups."""
 
 from sqlalchemy import desc, func
-from sqlalchemy_utils import Ltree
 
 from tildes.lib.database import get_session_from_config
 from tildes.models.group import Group
@@ -26,9 +25,7 @@ def update_common_topic_tags(config_path: str) -> None:
         # the arrays of tags into rows so that we can easily group and count, and
         # created_time will be used to determine when a particular tag was last used
         group_tags = (
-            db_session.query(
-                func.unnest(Topic._tags).label("tag"), Topic.created_time  # noqa
-            )
+            db_session.query(func.unnest(Topic.tags).label("tag"), Topic.created_time)
             .filter(Topic.group == group)
             .subquery()
         )
@@ -47,9 +44,7 @@ def update_common_topic_tags(config_path: str) -> None:
             .all()
         )
 
-        group._common_topic_tags = [  # noqa
-            Ltree(common_tag[0]) for common_tag in common_tags
-        ]
+        group.common_topic_tags = [common_tag[0] for common_tag in common_tags]
 
         db_session.add(group)
         db_session.commit()

@@ -30,10 +30,9 @@ from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import text
-from sqlalchemy_utils import Ltree
 
 from tildes.enums import CommentLabelOption, HTMLSanitizationContext, TopicSortOption
-from tildes.lib.database import ArrayOfLtree, CIText
+from tildes.lib.database import CIText, TagList
 from tildes.lib.datetime import utc_now
 from tildes.lib.hash import hash_string, is_match_for_hash
 from tildes.lib.markdown import convert_markdown_to_safe_html
@@ -122,8 +121,8 @@ class User(DatabaseModel):
     permissions: Any = Column(JSONB(none_as_null=True))
     home_default_order: Optional[TopicSortOption] = Column(ENUM(TopicSortOption))
     home_default_period: Optional[str] = Column(Text)
-    _filtered_topic_tags: List[Ltree] = Column(
-        "filtered_topic_tags", ArrayOfLtree, nullable=False, server_default="{}"
+    filtered_topic_tags: List[str] = Column(
+        TagList, nullable=False, server_default="{}"
     )
     comment_label_weight: Optional[float] = Column(REAL)
     last_exemplary_label_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
@@ -137,15 +136,6 @@ class User(DatabaseModel):
         )
     )
     bio_rendered_html: str = deferred(Column(Text))
-
-    @hybrid_property
-    def filtered_topic_tags(self) -> List[str]:
-        """Return the user's list of filtered topic tags."""
-        return [str(tag).replace("_", " ") for tag in self._filtered_topic_tags]
-
-    @filtered_topic_tags.setter  # type: ignore
-    def filtered_topic_tags(self, new_tags: List[str]) -> None:
-        self._filtered_topic_tags = new_tags
 
     @hybrid_property
     def bio_markdown(self) -> str:

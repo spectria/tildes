@@ -146,7 +146,7 @@ class DataCleaner:
                     "rendered_html": DEFAULT,
                     "link": DEFAULT,
                     "content_metadata": DEFAULT,
-                    "_tags": DEFAULT,
+                    "tags": DEFAULT,
                 },
                 synchronize_session=False,
             )
@@ -183,7 +183,7 @@ class DataCleaner:
                     "permissions": DEFAULT,
                     "home_default_order": DEFAULT,
                     "home_default_period": DEFAULT,
-                    "_filtered_topic_tags": DEFAULT,
+                    "filtered_topic_tags": DEFAULT,
                     "comment_label_weight": DEFAULT,
                     "last_exemplary_label_time": DEFAULT,
                     "_bio_markdown": DEFAULT,

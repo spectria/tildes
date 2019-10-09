@@ -11,9 +11,8 @@ from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Text, TIMES
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import text
-from sqlalchemy_utils import Ltree
 
-from tildes.lib.database import ArrayOfLtree, RecurrenceRule
+from tildes.lib.database import RecurrenceRule, TagList
 from tildes.models import DatabaseModel
 from tildes.models.group import Group
 from tildes.models.topic import Topic
@@ -40,7 +39,7 @@ class TopicSchedule(DatabaseModel):
         nullable=False,
     )
     markdown: str = Column(Text, nullable=False)
-    tags: List[Ltree] = Column(ArrayOfLtree, nullable=False, server_default="{}")
+    tags: List[str] = Column(TagList, nullable=False, server_default="{}")
     next_post_time: Optional[datetime] = Column(
         TIMESTAMP(timezone=True), nullable=True, index=True
     )
@@ -63,7 +62,7 @@ class TopicSchedule(DatabaseModel):
         self.group = group
         self.title = title
         self.markdown = markdown
-        self.tags = [Ltree(tag) for tag in tags]
+        self.tags = tags
         self.next_post_time = next_post_time
         self.recurrence_rule = recurrence_rule
         self.user = user
@@ -82,7 +81,7 @@ class TopicSchedule(DatabaseModel):
             )
 
         topic = Topic.create_text_topic(self.group, user, self.title, self.markdown)
-        topic.tags = [str(tag) for tag in self.tags]
+        topic.tags = self.tags
 
         return topic
 

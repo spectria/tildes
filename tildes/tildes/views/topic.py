@@ -27,7 +27,7 @@ from tildes.enums import (
     LogEventType,
     TopicSortOption,
 )
-from tildes.lib.database import ArrayOfLtree
+from tildes.lib.database import TagList
 from tildes.lib.datetime import SimpleHoursPeriod
 from tildes.models.comment import Comment, CommentNotification, CommentTree
 from tildes.models.group import Group, GroupWikiPage
@@ -196,7 +196,7 @@ def get_group_topics(
 
     # restrict to a specific tag, if we're viewing a single one
     if tag:
-        query = query.has_tag(tag)
+        query = query.has_tag(str(tag))
 
     # apply before/after pagination restrictions if relevant
     if before:
@@ -206,11 +206,10 @@ def get_group_topics(
         query = query.after_id36(after)
 
     # apply topic tag filters unless they're disabled or viewing a single tag
-    if request.user and not (tag or unfiltered):
-        # pylint: disable=protected-access
+    if request.user and request.user.filtered_topic_tags and not (tag or unfiltered):
         query = query.filter(
-            ~Topic._tags.descendant_of(  # type: ignore
-                any_(cast(request.user._filtered_topic_tags, ArrayOfLtree))
+            ~Topic.tags.descendant_of(  # type: ignore
+                any_(cast(request.user.filtered_topic_tags, TagList))
             )
         )
 

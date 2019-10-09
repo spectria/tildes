@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 <div class="topic-full-tags">{% if topic.tags %}Tags:{% endif %}
-{% for tag in topic.tags %}
+{% for tag in topic.tags_ordered %}
   <a href="/~{{ topic.group.path }}?tag={{ tag.replace(" ", "_") }}">{{ tag }}</a>
   {%- if not loop.last %},{% endif %}
 {% endfor %}

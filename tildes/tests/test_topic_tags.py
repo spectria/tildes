@@ -8,12 +8,6 @@ def test_tags_whitespace_stripped(text_topic):
     assert text_topic.tags == ["one", "two", "three"]
 
 
-def test_tag_space_replacement(text_topic):
-    """Ensure spaces in tags are converted to underscores internally."""
-    text_topic.tags = ["one two", "three four five"]
-    assert text_topic._tags == ["one_two", "three_four_five"]
-
-
 def test_tag_consecutive_spaces(text_topic):
     """Ensure consecutive spaces/underscores in tags are removed."""
     text_topic.tags = ["one  two", "three   four", "five __ six"]

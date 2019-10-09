@@ -13,7 +13,7 @@ from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.engine.interfaces import Dialect
 from sqlalchemy.orm.session import Session
 from sqlalchemy.types import Text, TypeDecorator, UserDefinedType
-from sqlalchemy_utils import LtreeType
+from sqlalchemy_utils import Ltree, LtreeType
 from sqlalchemy_utils.types.ltree import LQUERY
 
 from tildes.lib.datetime import rrule_to_str
@@ -170,3 +170,19 @@ class RecurrenceRule(TypeDecorator):
             return value
 
         return rrulestr(value)
+
+
+class TagList(TypeDecorator):
+    """Stores a list of tags in the database as an array of ltree."""
+
+    # pylint: disable=abstract-method
+
+    impl = ArrayOfLtree
+
+    def process_bind_param(self, value: str, dialect: Dialect) -> List[Ltree]:
+        """Convert the value to ltree[] for storing."""
+        return [Ltree(tag.replace(" ", "_")) for tag in value]
+
+    def process_result_value(self, value: List[Ltree], dialect: Dialect) -> List[str]:
+        """Convert the stored value to a list of strings."""
+        return [str(tag).replace("_", " ") for tag in value]

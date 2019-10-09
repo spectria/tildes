@@ -8,7 +8,6 @@ from typing import Any, Sequence
 from pyramid.request import Request
 from sqlalchemy import func
 from sqlalchemy.sql.expression import and_, null
-from sqlalchemy_utils import Ltree
 
 from tildes.enums import TopicSortOption
 from tildes.lib.datetime import SimpleHoursPeriod, utc_now
@@ -163,7 +162,7 @@ class TopicQuery(PaginatedQuery):
 
         return self.filter(Topic.created_time > start_time)
 
-    def has_tag(self, tag: Ltree) -> "TopicQuery":
+    def has_tag(self, tag: str) -> "TopicQuery":
         """Restrict the topics to ones with a specific tag (generative).
 
         Note that this method searches for topics that have any tag that either starts
@@ -172,7 +171,7 @@ class TopicQuery(PaginatedQuery):
         queries = [f"{tag}.*", f"*.{tag}"]
 
         # pylint: disable=protected-access
-        return self.filter(Topic._tags.lquery(queries))  # type: ignore
+        return self.filter(Topic.tags.lquery(queries))  # type: ignore
 
     def search(self, query: str) -> "TopicQuery":
         """Restrict the topics to ones that match a search query (generative)."""

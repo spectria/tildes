@@ -4,7 +4,8 @@
 """Contains the Topic class."""
 
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Sequence, Tuple, TYPE_CHECKING
+from itertools import chain
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, TYPE_CHECKING
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
 from sqlalchemy import (
@@ -21,11 +22,10 @@ from sqlalchemy.dialects.postgresql import ENUM, JSONB, TSVECTOR
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.expression import text
-from sqlalchemy_utils import Ltree
 from titlecase import titlecase
 
 from tildes.enums import TopicType
-from tildes.lib.database import ArrayOfLtree
+from tildes.lib.database import TagList
 from tildes.lib.datetime import utc_from_timestamp, utc_now
 from tildes.lib.id import id_to_id36
 from tildes.lib.markdown import convert_markdown_to_safe_html
@@ -121,9 +121,7 @@ class Topic(DatabaseModel):
     )
     num_comments: int = Column(Integer, nullable=False, server_default="0", index=True)
     num_votes: int = Column(Integer, nullable=False, server_default="0", index=True)
-    _tags: List[Ltree] = Column(
-        "tags", ArrayOfLtree, nullable=False, server_default="{}"
-    )
+    tags: List[str] = Column(TagList, nullable=False, server_default="{}")
     is_official: bool = Column(Boolean, nullable=False, server_default="false")
     is_locked: bool = Column(Boolean, nullable=False, server_default="false")
     search_tsv: Any = deferred(Column(TSVECTOR))
@@ -133,7 +131,7 @@ class Topic(DatabaseModel):
 
     # Create specialized indexes
     __table_args__ = (
-        Index("ix_topics_tags_gist", _tags, postgresql_using="gist"),
+        Index("ix_topics_tags_gist", tags, postgresql_using="gist"),
         Index("ix_topics_search_tsv_gin", "search_tsv", postgresql_using="gin"),
     )
 
@@ -160,23 +158,6 @@ class Topic(DatabaseModel):
         if self.age > EDIT_GRACE_PERIOD:
             self.last_edited_time = utc_now()
 
-    @hybrid_property
-    def tags(self) -> List[str]:
-        """Return the topic's tags."""
-        sorted_tags = [str(tag).replace("_", " ") for tag in self._tags]
-
-        # move special tags in front
-        # reverse so that tags at the start of the list appear first
-        for tag in reversed(SPECIAL_TAGS):
-            if tag in sorted_tags:
-                sorted_tags.insert(0, sorted_tags.pop(sorted_tags.index(tag)))
-
-        return sorted_tags
-
-    @tags.setter
-    def tags(self, new_tags: List[str]) -> None:
-        self._tags = new_tags
-
     @property
     def important_tags(self) -> List[str]:
         """Return only the topic's "important" tags."""
@@ -187,6 +168,15 @@ class Topic(DatabaseModel):
         """Return only the topic's tags that *aren't* considered "important"."""
         important_tags = set(self.important_tags)
         return [tag for tag in self.tags if tag not in important_tags]
+
+    @property
+    def tags_ordered(self) -> Iterable[str]:
+        """Return an iterator over the topic's tags, in a suitable order for display.
+
+        Currently, this puts the "important" tags first, but they're otherwise
+        ordered arbitrarily (whatever order they were entered).
+        """
+        return chain(self.important_tags, self.unimportant_tags)
 
     def __repr__(self) -> str:
         """Display the topic's title and ID as its repr format."""
