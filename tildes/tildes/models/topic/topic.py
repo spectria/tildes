@@ -356,16 +356,6 @@ class Topic(DatabaseModel):
         return self.topic_type is TopicType.LINK
 
     @property
-    def type_for_display(self) -> str:
-        """Return a string of the topic's type, suitable for display."""
-        if self.is_text_type:
-            return "Text"
-        elif self.is_link_type:
-            return "Link"
-
-        return "Topic"
-
-    @property
     def link_domain(self) -> str:
         """Return the link's domain (for link topics only)."""
         if not self.is_link_type or not self.link:
