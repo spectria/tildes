@@ -45,9 +45,6 @@ else:
 # edits inside this period after creation will not mark the topic as edited
 EDIT_GRACE_PERIOD = timedelta(minutes=5)
 
-# special tags to put at the front of the tag list
-SPECIAL_TAGS = ["nsfw", "spoiler"]
-
 
 class Topic(DatabaseModel):
     """Model for a topic on the site.
@@ -161,7 +158,16 @@ class Topic(DatabaseModel):
     @property
     def important_tags(self) -> List[str]:
         """Return only the topic's "important" tags."""
-        return [tag for tag in self.tags if tag in SPECIAL_TAGS]
+        global_important_tags = ["nsfw", "spoiler"]
+
+        # used with startswith() to check for sub-tags
+        global_important_prefixes = tuple([f"{tag}." for tag in global_important_tags])
+
+        return [
+            tag
+            for tag in self.tags
+            if tag in global_important_tags or tag.startswith(global_important_prefixes)
+        ]
 
     @property
     def unimportant_tags(self) -> List[str]:
