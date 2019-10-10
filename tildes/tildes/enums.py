@@ -115,6 +115,27 @@ class ScraperType(enum.Enum):
     YOUTUBE = enum.auto()
 
 
+class TopicContentType(enum.Enum):
+    """Enum for the different types of content for topics."""
+
+    ARTICLE = enum.auto()
+    ASK = enum.auto()
+    IMAGE = enum.auto()
+    PDF = enum.auto()
+    TEXT = enum.auto()
+    TWEET = enum.auto()
+    VIDEO = enum.auto()
+
+    @property
+    def display_name(self) -> str:
+        """Return the content type's name in a format more suitable for display."""
+
+        if self.name == "PDF":
+            return self.name
+
+        return self.name.capitalize()
+
+
 class TopicSortOption(enum.Enum):
     """Enum for the different methods topics can be sorted by.
 

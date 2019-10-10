@@ -81,6 +81,13 @@
   white-space: nowrap;
 }
 
+// This puts a bullet in front of the topic-content-type only when there's something
+// else in front of it (group name and/or tags)
+.topic-content-type:not(:first-child)::before {
+  content: "•";
+  margin-right: 0.4rem;
+}
+
 .topic-group {
   margin-right: 0.4rem;
 }

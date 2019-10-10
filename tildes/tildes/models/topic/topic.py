@@ -5,7 +5,9 @@
 
 from datetime import datetime, timedelta
 from itertools import chain
+from pathlib import PurePosixPath
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, TYPE_CHECKING
+from urllib.parse import urlparse
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
 from sqlalchemy import (
@@ -24,7 +26,7 @@ from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.expression import text
 from titlecase import titlecase
 
-from tildes.enums import TopicType
+from tildes.enums import TopicContentType, TopicType
 from tildes.lib.database import TagList
 from tildes.lib.datetime import utc_from_timestamp, utc_now
 from tildes.lib.id import id_to_id36
@@ -394,7 +396,46 @@ class Topic(DatabaseModel):
     @property
     def is_spoiler(self) -> bool:
         """Return whether the topic is marked as a spoiler."""
-        return "spoiler" in self.tags
+        return self.has_tag("spoiler")
+
+    def has_tag(self, check_tag: str) -> bool:
+        """Return whether the topic has a tag or any sub-tag of it."""
+        if check_tag in self.tags:
+            return True
+
+        if any(tag.startswith(f"{check_tag}.") for tag in self.tags):
+            return True
+
+        return False
+
+    @property
+    def content_type(self) -> TopicContentType:
+        """Return the content's type based on the topic's attributes."""
+        if self.is_text_type:
+            if self.has_tag("ask"):
+                return TopicContentType.ASK
+
+            return TopicContentType.TEXT
+        else:
+            parsed_url = urlparse(self.link)  # type: ignore
+            url_path = PurePosixPath(parsed_url.path)
+
+            if url_path.suffix.lower() == ".pdf":
+                return TopicContentType.PDF
+            elif url_path.suffix.lower() in (".gif", ".jpeg", ".jpg", ".png"):
+                return TopicContentType.IMAGE
+
+            # individual sites should be handled in a more general manner; fine for now
+            if self.link_domain == "youtube.com" and parsed_url.path == "/watch":
+                return TopicContentType.VIDEO
+
+            try:
+                if self.link_domain == "twitter.com" and url_path.parts[2] == "status":
+                    return TopicContentType.TWEET
+            except IndexError:
+                pass
+
+            return TopicContentType.ARTICLE
 
     def get_content_metadata(self, key: str) -> Any:
         """Get a piece of content metadata "safely".
