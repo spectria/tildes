@@ -32,7 +32,7 @@ from tildes.lib.datetime import utc_from_timestamp, utc_now
 from tildes.lib.id import id_to_id36
 from tildes.lib.markdown import convert_markdown_to_safe_html
 from tildes.lib.string import convert_to_url_slug
-from tildes.lib.url import get_domain_from_url, is_tweet
+from tildes.lib.url import get_domain_from_url
 from tildes.metrics import incr_counter
 from tildes.models import DatabaseModel
 from tildes.models.group import Group
@@ -492,7 +492,7 @@ class Topic(DatabaseModel):
         if self.is_text_type:
             return self.get_content_metadata("excerpt")
 
-        if self.link and is_tweet(self.link):
+        if self.content_type is TopicContentType.TWEET:
             authors = self.get_content_metadata("authors")
             tweet = self.get_content_metadata("description")
 
@@ -515,7 +515,7 @@ class Topic(DatabaseModel):
         if not self.is_link_type:
             return None
 
-        if self.link and is_tweet(self.link):
+        if self.content_type is TopicContentType.TWEET:
             authors = self.get_content_metadata("authors")
             tweet = self.get_content_metadata("description")
 
