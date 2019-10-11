@@ -408,15 +408,16 @@ class Topic(DatabaseModel):
 
         return False
 
-    @property
-    def content_type(self) -> TopicContentType:
+    @property  # noqa
+    def content_type(self) -> Optional[TopicContentType]:
         """Return the content's type based on the topic's attributes."""
         if self.is_text_type:
             if self.has_tag("ask"):
                 return TopicContentType.ASK
 
             return TopicContentType.TEXT
-        else:
+
+        if self.is_link_type:
             parsed_url = urlparse(self.link)  # type: ignore
             url_path = PurePosixPath(parsed_url.path)
 
@@ -435,7 +436,12 @@ class Topic(DatabaseModel):
             except IndexError:
                 pass
 
-            return TopicContentType.ARTICLE
+            # consider it an article if we picked up a word count of at least 200
+            word_count = self.get_content_metadata("word_count")
+            if word_count and word_count >= 200:
+                return TopicContentType.ARTICLE
+
+        return None
 
     def get_content_metadata(self, key: str) -> Any:
         """Get a piece of content metadata "safely".
