@@ -3,6 +3,7 @@
 
 """Contains the CommentTree and CommentInTree classes."""
 
+from collections import Counter
 from datetime import datetime
 from typing import Iterator, List, Optional, Sequence, Tuple
 
@@ -50,6 +51,8 @@ class CommentTree:
                 self.tree = self._sort_tree(self.tree, self.sort)
 
         self.tree = self._prune_empty_branches(self.tree)
+
+        self._add_removed_markers()
 
         self._count_children()
 
@@ -130,6 +133,37 @@ class CommentTree:
             pruned_tree.append(comment)
 
         return pruned_tree
+
+    def _add_removed_markers(self) -> None:
+        """Add markers to chains of removed comments with more info.
+
+        When displaying a comment tree, these markers should be displayed to users
+        that can't view the removed comment, and stop recursing down the branch.
+        """
+        # work backwards so all replies are always processed first
+        for comment in reversed(self.comments):
+            if not comment.is_removed:
+                continue
+
+            # we can only compress when all descendants are also removed - checking
+            # for this attr works because it's only added after passing this check
+            if not all(
+                hasattr(reply, "removed_comments_by_user") for reply in comment.replies
+            ):
+                continue
+
+            comment.removed_comments_by_user = Counter({comment.user: 1})
+
+            # add all the descendants' counts onto this comment's
+            for reply in comment.replies:
+                comment.removed_comments_by_user += reply.removed_comments_by_user
+
+            num_comments = sum(comment.removed_comments_by_user.values())
+            num_users = len(comment.removed_comments_by_user)
+            if num_comments > 1:
+                comment.removed_marker = (
+                    f"Removed by admin: {num_comments} comments by {num_users} users"
+                )
 
     def __iter__(self) -> Iterator[Comment]:
         """Iterate over the (top-level) Comments in the tree."""
