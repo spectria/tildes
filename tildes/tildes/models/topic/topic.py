@@ -78,6 +78,9 @@ class Topic(DatabaseModel):
     user_id: int = Column(
         Integer, ForeignKey("users.user_id"), nullable=False, index=True
     )
+    schedule_id: int = Column(
+        Integer, ForeignKey("topic_schedule.schedule_id"), index=True
+    )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,

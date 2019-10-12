@@ -8,7 +8,7 @@ from typing import List, Optional
 
 from dateutil.rrule import rrule
 from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Text, TIMESTAMP
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import backref, relationship
 from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import text
 
@@ -48,6 +48,8 @@ class TopicSchedule(DatabaseModel):
     group: Group = relationship("Group", innerjoin=True)
     user: Optional[User] = relationship("User")
 
+    topics: List[Topic] = relationship(Topic, backref=backref("schedule"))
+
     def __init__(
         self,
         group: Group,
@@ -82,6 +84,7 @@ class TopicSchedule(DatabaseModel):
 
         topic = Topic.create_text_topic(self.group, user, self.title, self.markdown)
         topic.tags = self.tags
+        topic.schedule = self
 
         return topic
 
