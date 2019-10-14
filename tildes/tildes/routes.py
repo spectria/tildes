@@ -64,6 +64,7 @@ def includeme(config: Configurator) -> None:
     with config.route_prefix_context("/user/{username}"):
         config.add_route("new_message", "/new_message", factory=user_by_username)
         config.add_route("user_messages", "/messages", factory=user_by_username)
+        config.add_route("user_search", "/search", factory=user_by_username)
 
     config.add_route("notifications", "/notifications", factory=LoggedInFactory)
     with config.route_prefix_context("/notifications"):

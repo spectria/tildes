@@ -19,3 +19,14 @@ CREATE TRIGGER delete_comment_set_deleted_time_update
     FOR EACH ROW
     WHEN (OLD.is_deleted IS DISTINCT FROM NEW.is_deleted)
     EXECUTE PROCEDURE set_comment_deleted_time();
+
+CREATE TRIGGER comment_update_search_tsv_insert
+    BEFORE INSERT ON comments
+    FOR EACH ROW
+    EXECUTE PROCEDURE tsvector_update_trigger(search_tsv, 'pg_catalog.english', markdown);
+
+CREATE TRIGGER comment_update_search_tsv_update
+    BEFORE UPDATE ON comments
+    FOR EACH ROW
+    WHEN (OLD.markdown IS DISTINCT FROM NEW.markdown)
+    EXECUTE PROCEDURE tsvector_update_trigger(search_tsv, 'pg_catalog.english', markdown);

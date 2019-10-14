@@ -107,8 +107,20 @@ textarea.form-input {
   display: block;
 }
 
-.form-search .form-input {
-  margin-right: 0.4rem;
+.form-search {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  .btn {
+    width: auto;
+    padding: 0 0.4rem;
+    font-weight: normal;
+  }
+
+  .form-input {
+    max-width: 15rem;
+    margin-right: 0.4rem;
+  }
 }
 
 #new-topic {

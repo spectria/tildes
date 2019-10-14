@@ -42,9 +42,13 @@
   {% if request.has_permission("view_history", user) %}
     <div class="listing-options">
       <menu class="tab tab-listing-order">
-        <li class="tab-item{{' active' if not post_type else ''}}">
-          <a href="{{ request.current_listing_normal_url() }}">All posts</a>
-        </li>
+        {# Don't show the "All posts" option in search results, since it can't be used #}
+        {% if search is not defined %}
+          <li class="tab-item{{' active' if not post_type else ''}}">
+            <a href="{{ request.current_listing_normal_url() }}">All posts</a>
+          </li>
+        {% endif %}
+
         <li class="tab-item{{' active' if post_type == 'topic' else ''}}">
           <a href="{{ request.current_listing_normal_url({'type': 'topic'}) }}">Topics</a>
         </li>
@@ -56,6 +60,10 @@
       {% if order_options %}
         <form class="form-listing-options" method="get">
           <input type="hidden" name="type" value="{{ post_type }}">
+          {% if search %}
+            <input type="hidden" name="q" value="{{ search }}">
+          {% endif %}
+
           <div class="form-group">
             <label for="order">sorted by</label>
             <select id="order" name="order" class="form-select" data-js-autosubmit-on-change>
@@ -77,6 +85,17 @@
       {% endif %}
 
     </div>
+  {% endif %}
+
+  {% if post_type and request.has_permission("search_posts", user) %}
+    <form class="form-search" method="get" action="{{ request.route_url("user_search", username=user.username) }}">
+      <input type="hidden" name="type" value="{{ post_type }}">
+
+      <div class="input-group">
+        <input type="text" class="form-input input-sm" name="q" id="q" placeholder="Search your {{ post_type }}s" value="{{ search }}">
+        <button class="btn btn-sm btn-link">Search</button>
+      </div>
+    </form>
   {% endif %}
 
   {% if posts %}
@@ -132,7 +151,9 @@
     {% endif %}
   {% else %}
     <div class="empty">
-      <h2 class="empty-title">This user hasn't made any posts</h2>
+      <h2 class="empty-title">
+        {% block no_posts_message %}This user hasn't made any posts{% endblock %}
+      </h2>
     </div>
   {% endif %}
 {% endif %}

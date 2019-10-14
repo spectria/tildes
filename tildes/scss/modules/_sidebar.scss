@@ -19,12 +19,10 @@
   }
 
   .form-search {
-    margin-bottom: 1rem;
+    margin-top: 0;
 
-    .btn {
-      width: auto;
-      padding: 0 0.4rem;
-      font-weight: normal;
+    .form-input {
+      max-width: unset;
     }
   }
 

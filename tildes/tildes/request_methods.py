@@ -96,6 +96,7 @@ def current_listing_base_url(
         "home": ("order", "period", "per_page", "tag", "unfiltered"),
         "search": ("order", "period", "per_page", "q"),
         "user": ("order", "per_page", "type"),
+        "user_search": ("order", "per_page", "type", "q"),
     }
 
     try:
@@ -130,6 +131,7 @@ def current_listing_normal_url(
         "notifications": ("per_page",),
         "search": ("order", "period", "per_page", "q"),
         "user": ("order", "per_page"),
+        "user_search": ("order", "per_page", "q"),
     }
 
     try:

@@ -8,7 +8,8 @@ from datetime import datetime, timedelta
 from typing import Any, Optional, Sequence, Tuple, TYPE_CHECKING, Union
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text, TIMESTAMP
+from sqlalchemy import Boolean, Column, ForeignKey, Index, Integer, Text, TIMESTAMP
+from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.expression import text
 
@@ -87,11 +88,16 @@ class Comment(DatabaseModel):
     rendered_html: str = Column(Text, nullable=False)
     excerpt: str = Column(Text, nullable=False, server_default="")
     num_votes: int = Column(Integer, nullable=False, server_default="0", index=True)
+    search_tsv: Any = deferred(Column(TSVECTOR))
 
     user: User = relationship("User", lazy=False, innerjoin=True)
     topic: Topic = relationship("Topic", innerjoin=True)
     parent_comment: Optional["Comment"] = relationship(
         "Comment", uselist=False, remote_side=[comment_id]
+    )
+
+    __table_args__ = (
+        Index("ix_comments_search_tsv_gin", "search_tsv", postgresql_using="gin"),
     )
 
     @hybrid_property

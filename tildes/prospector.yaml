@@ -39,5 +39,6 @@ pylint:
     - too-many-locals  # almost never helpful
     - too-many-public-methods  # almost never helpful
     - too-many-return-statements  # almost never helpful
+    - too-many-statements  # almost never helpful
     - ungrouped-imports  # let isort handle this
     - unnecessary-pass  # I prefer using pass, even when it's not technically necessary

@@ -86,6 +86,70 @@ def get_user(
     }
 
 
+@view_config(
+    route_name="user_search", renderer="user_search.jinja2", permission="search_posts"
+)
+@use_kwargs(MixedListingSchema())
+@use_kwargs(
+    {
+        "post_type": PostType(load_from="type", required=True),
+        "order_name": String(load_from="order", missing="new"),
+        "search": String(load_from="q", missing=""),
+    }
+)
+def get_user_search(
+    request: Request,
+    after: Optional[str],
+    before: Optional[str],
+    per_page: int,
+    anchor_type: Optional[str],
+    order_name: str,
+    post_type: Optional[str],
+    search: str,
+) -> dict:
+    """Generate the search results page for a user's posts."""
+    user = request.context
+
+    types_to_query: List[Union[Type[Topic], Type[Comment]]]
+    order_options: Union[Type[TopicSortOption], Type[CommentSortOption]]
+
+    if post_type == "topic":
+        types_to_query = [Topic]
+        order_options = TopicSortOption
+    elif post_type == "comment":
+        types_to_query = [Comment]
+        order_options = CommentSortOption
+
+    # try to get the specified order, but fall back to "newest"
+    order: Union[TopicSortOption, CommentSortOption]
+    try:
+        order = order_options[order_name.upper()]
+    except KeyError:
+        order = order_options["NEW"]
+
+    posts = _get_user_posts(
+        request=request,
+        user=user,
+        types_to_query=types_to_query,
+        anchor_type=anchor_type,
+        before=before,
+        after=after,
+        order=order,
+        per_page=per_page,
+        search=search,
+    )
+
+    return {
+        "user": user,
+        "search": search,
+        "posts": posts,
+        "post_type": post_type,
+        "order": order,
+        "order_options": order_options,
+        "comment_label_options": CommentLabelOption,
+    }
+
+
 @view_config(route_name="invite", renderer="invite.jinja2")
 def get_invite(request: Request) -> dict:
     """Generate the invite page."""
@@ -112,6 +176,7 @@ def _get_user_posts(
     after: Optional[str],
     order: Optional[Union[TopicSortOption, CommentSortOption]],
     per_page: int,
+    search: Optional[str] = None,
 ) -> Union[PaginatedResults, MixedPaginatedResults]:
     """Get the posts to display on a user page (topics, comments, or both)."""
     result_sets = []
@@ -129,6 +194,9 @@ def _get_user_posts(
 
         if order:
             query = query.apply_sort_option(order)
+
+        if search:
+            query = query.search(search)
 
         query = query.join_all_relationships()
 

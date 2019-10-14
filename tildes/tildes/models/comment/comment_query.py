@@ -6,6 +6,7 @@
 from typing import Any
 
 from pyramid.request import Request
+from sqlalchemy import func
 from sqlalchemy.sql.expression import and_
 
 from tildes.enums import CommentSortOption
@@ -92,6 +93,10 @@ class CommentQuery(PaginatedQuery):
         self.sort_desc = desc
 
         return self
+
+    def search(self, query: str) -> "CommentQuery":
+        """Restrict the comments to ones that match a search query (generative)."""
+        return self.filter(Comment.search_tsv.op("@@")(func.plainto_tsquery(query)))
 
     def only_bookmarked(self) -> "CommentQuery":
         """Restrict the comments to ones that the user has bookmarked (generative)."""
