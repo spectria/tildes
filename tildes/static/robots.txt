@@ -22,6 +22,10 @@ Disallow: /
 User-agent: Buck
 Disallow: /
 
+# https://cloudfindhq.com/
+User-agent: Cloudfind
+Disallow: /
+
 # https://moz.com/help/moz-procedures/crawlers/dotbot
 User-agent: dotbot
 Disallow: /
