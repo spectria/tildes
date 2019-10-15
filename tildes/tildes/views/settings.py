@@ -3,8 +3,9 @@
 
 """Views related to user settings."""
 
+from datetime import timedelta
 from io import BytesIO
-from typing import List, Optional
+import sys
 
 import pyotp
 import qrcode
@@ -12,11 +13,12 @@ from pyramid.httpexceptions import HTTPForbidden, HTTPUnprocessableEntity
 from pyramid.request import Request
 from pyramid.response import Response
 from pyramid.view import view_config
+from sqlalchemy import func
 from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import CommentLabelOption, CommentTreeSortOption
+from tildes.lib.datetime import utc_now
 from tildes.lib.string import separate_string
-from tildes.lib.datetime import utc_from_timestamp, utc_now
 from tildes.models.comment import Comment, CommentLabel, CommentTree
 from tildes.models.group import Group
 from tildes.models.topic import Topic
@@ -30,31 +32,29 @@ from tildes.schemas.user import (
 
 PASSWORD_FIELD = UserSchema(only=("password",)).fields["password"]
 
+THEME_OPTIONS = {
+    "white": "White",
+    "solarized-light": "Solarized Light",
+    "solarized-dark": "Solarized Dark",
+    "dracula": "Dracula",
+    "atom-one-dark": "Atom One Dark",
+    "black": "Black",
+    "zenburn": "Zenburn",
+    "gruvbox-light": "Gruvbox Light",
+    "gruvbox-dark": "Gruvbox Dark",
+}
+
 
 @view_config(route_name="settings", renderer="settings.jinja2")
 def get_settings(request: Request) -> dict:
     """Generate the user settings page."""
-    return generate_theme_chooser_dict(request)
-
-
-def generate_theme_chooser_dict(request: Request) -> dict:
-    """Generate the partial response dict necessary for the settings theme selector."""
     site_default_theme = "white"
     user_default_theme = request.user.theme_default or site_default_theme
 
     current_theme = request.cookies.get("theme", "") or user_default_theme
 
-    theme_options = {
-        "white": "White",
-        "solarized-light": "Solarized Light",
-        "solarized-dark": "Solarized Dark",
-        "dracula": "Dracula",
-        "atom-one-dark": "Atom One Dark",
-        "black": "Black",
-        "zenburn": "Zenburn",
-        "gruvbox-light": "Gruvbox Light",
-        "gruvbox-dark": "Gruvbox Dark",
-    }
+    # Make a copy of the theme options dict so we can add info to the names
+    theme_options = THEME_OPTIONS.copy()
 
     if site_default_theme == user_default_theme:
         theme_options[site_default_theme] += " (site and account default)"
@@ -162,122 +162,97 @@ def post_settings_password_change(
     route_name="settings_theme_previews", renderer="settings_theme_previews.jinja2"
 )
 def get_settings_theme_previews(request: Request) -> dict:
-    """Generate the theme preview page.
+    """Generate the theme preview page."""
+    # get the generic/unknown user and a random group to display on the example posts
+    fake_user = request.query(User).filter(User.user_id == -1).one()
+    group = request.query(Group).order_by(func.random()).limit(1).one()
 
-    On the site, the following data must not point to real data users could
-    inadvertently affect with the demo widgets:
-    - The user @Tildes
-    - The group ~groupname
-    - Topic ID 42_000_000_000
-    - Comment IDs 42_000_000_000 through 42_000_000_003
-    """
-
-    fake_old_timestamp = utc_from_timestamp(int(utc_now().timestamp() - 60 * 60 * 24))
-    fake_last_visit_timestamp = utc_from_timestamp(
-        int(utc_now().timestamp() - 60 * 60 * 12)
+    fake_link_topic = Topic.create_link_topic(
+        group, fake_user, "Example Link Topic", "https://tildes.net/"
     )
 
-    fake_user = User("Tildes", "a_very_safe_password")
-    fake_user.user_id = 0
-    fake_user_not_op = User("Tildes", "another_very_safe_password")
-    fake_user_not_op.user_id = -1
-    fake_group = Group("groupname")
-    fake_group.is_user_treated_as_topic_source = False
+    fake_text_topic = Topic.create_text_topic(
+        group, fake_user, "Example Text Topic", "No real text"
+    )
+    fake_text_topic.content_metadata = {
+        "excerpt": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+    }
 
-    fake_topics: List[Topic] = [
-        Topic.create_link_topic(
-            fake_group, fake_user, "Example Link Topic", "https://tildes.net/"
+    fake_topics = [fake_link_topic, fake_text_topic]
+
+    # manually add other necessary attributes to the fake topics
+    for fake_topic in fake_topics:
+        fake_topic.topic_id = sys.maxsize
+        fake_topic.tags = ["tag one", "tag two"]
+        fake_topic.num_comments = 123
+        fake_topic.num_votes = 12
+        fake_topic.created_time = utc_now() - timedelta(hours=12)
+
+    # create a fake top-level comment that appears to be written by the user
+    markdown = (
+        "This is what a regular comment written by yourself would look like.\n\n"
+        "It has **formatting** and a [link](https://tildes.net)."
+    )
+    fake_top_comment = Comment(fake_link_topic, request.user, markdown)
+    fake_top_comment.comment_id = sys.maxsize
+    fake_top_comment.created_time = utc_now() - timedelta(hours=12, minutes=30)
+
+    child_comments_markdown = [
+        (
+            "This reply has received an Exemplary label. It also has a blockquote:\n\n"
+            "> Hello World!"
         ),
-        Topic.create_text_topic(
-            fake_group, fake_user, "Example Text Topic", "empty string"
+        (
+            "This is a reply written by the topic's OP with a code block in it:\n\n"
+            "```js\n"
+            "function foo() {\n"
+            "    ['1', '2', '3'].map(parseInt);\n"
+            "}\n"
+            "```"
+        ),
+        (
+            "This reply is new and has the *Mark New Comments* stripe on its left "
+            "(even if you don't have that feature enabled)."
         ),
     ]
 
-    for fake_topic in fake_topics:
-        fake_topic.topic_id = 42_000_000_000
-        fake_topic.tags = ["a tag", "another tag"]
-        fake_topic.created_time = utc_now()
-        fake_topic.group = fake_group
-        fake_topic.num_comments = 0
-        fake_topic.num_votes = 0
-        fake_topic.content_metadata = {
-            "excerpt": """Lorem ipsum dolor sit amet,
-            consectetur adipiscing elit. Nunc auctor purus at diam tempor,
-            id viverra nunc vulputate.""",
-            "word_count": 42,
-        }
+    fake_comments = [fake_top_comment]
 
-    def make_comment(
-        markdown: str, comment_id: int, parent_id: Optional[int], is_op: bool
-    ) -> Comment:
-        """Create a fake comment with enough data to make the template render fine."""
-        fake_comment = Comment(fake_topics[0], fake_user_not_op, markdown)
-        fake_comment.comment_id = comment_id
-        if parent_id:
-            fake_comment.parent_comment_id = parent_id
-        fake_comment.created_time = fake_old_timestamp
+    # vary the ID and created_time on each fake comment so CommentTree works properly
+    current_comment_id = fake_top_comment.comment_id
+    current_created_time = fake_top_comment.created_time
+    for markdown in child_comments_markdown:
+        current_comment_id -= 1
+        current_created_time += timedelta(minutes=5)
+
+        fake_comment = Comment(
+            fake_link_topic, fake_user, markdown, parent_comment=fake_top_comment
+        )
+        fake_comment.comment_id = current_comment_id
+        fake_comment.created_time = current_created_time
+        fake_comment.parent_comment_id = fake_top_comment.comment_id
+
+        fake_comments.append(fake_comment)
+
+    # add other necessary attributes to all of the fake comments
+    for fake_comment in fake_comments:
         fake_comment.num_votes = 0
-        if is_op:
-            fake_comment.user = fake_user
-        return fake_comment
-
-    fake_comments: List[Comment] = []
-
-    fake_comments.append(
-        make_comment(
-            """This is a regular comment, written by yourself. \
-            It has **formatting** and a [link](https://tildes.net).""",
-            42_000_000_000,
-            None,
-            False,
-        )
-    )
-    fake_comments[-1].user = request.user
-    fake_comments.append(
-        make_comment(
-            """This is a reply written by the topic's OP. \
-            It's new and has the *Mark New Comments* stripe on its left, \
-            even if you didn't enable that feature.""",
-            42_000_000_001,
-            42_000_000_000,
-            True,
-        )
-    )
-    fake_comments[-1].created_time = utc_now()
-    fake_comments.append(
-        make_comment(
-            """This reply is Exemplary. It also has a blockquote:\
-            \n> Hello World!""",
-            42_000_000_002,
-            42_000_000_000,
-            False,
-        )
-    )
-    fake_comments[-1].labels.append(
-        CommentLabel(fake_comments[-1], fake_user, CommentLabelOption.EXEMPLARY, 1.0)
-    )
-    fake_comments.append(
-        make_comment(
-            """This is a regular reply with a code block in it:\
-            \n```js\
-            \nfunction foo() {\
-            \n    ['1', '2', '3'].map(parseInt);\
-            \n}\
-            \n```""",
-            42_000_000_003,
-            42_000_000_000,
-            False,
-        )
-    )
 
     fake_tree = CommentTree(
         fake_comments, CommentTreeSortOption.RELEVANCE, request.user
     )
 
+    # add a fake Exemplary label to the first child comment
+    fake_comments[1].labels = [
+        CommentLabel(fake_comments[1], fake_user, CommentLabelOption.EXEMPLARY, 1.0)
+    ]
+
+    # the comment to mark as new is the last one, so set a visit time just before it
+    fake_last_visit_time = fake_comments[-1].created_time - timedelta(minutes=1)
+
     return {
-        **generate_theme_chooser_dict(request),
+        "theme_options": THEME_OPTIONS,
         "fake_topics": fake_topics,
         "fake_comment_tree": fake_tree,
-        "comment_label_options": [label for label in CommentLabelOption],
-        "last_visit": fake_last_visit_timestamp,
+        "last_visit": fake_last_visit_time,
     }

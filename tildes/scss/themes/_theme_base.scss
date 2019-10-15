@@ -919,11 +919,9 @@
 }
 
 @mixin theme-preview-block($theme, $name) {
-  .theme-preview-blocks {
-    .theme-preview-block-#{$name} {
-      background-color: map-get($theme, "background-primary");
-      color: map-get($theme, "foreground-primary");
-      border: 1px solid map-get($theme, "background-secondary");
-    }
+  .theme-preview-block-#{$name} {
+    background-color: map-get($theme, "background-primary");
+    color: map-get($theme, "foreground-primary");
+    border: 1px solid;
   }
 }

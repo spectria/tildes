@@ -39,6 +39,5 @@ $theme-zenburn: (
 body.theme-zenburn {
   @include use-theme($theme-zenburn);
 }
-body {
-  @include theme-preview-block($theme-zenburn, "zenburn");
-}
+
+@include theme-preview-block($theme-zenburn, "zenburn");

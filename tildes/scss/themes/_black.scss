@@ -26,6 +26,5 @@ $theme-black: (
 body.theme-black {
   @include use-theme($theme-black);
 }
-body {
-  @include theme-preview-block($theme-black, "black");
-}
+
+@include theme-preview-block($theme-black, "black");

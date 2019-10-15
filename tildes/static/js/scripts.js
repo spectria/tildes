@@ -89,3 +89,18 @@ $(function() {
 if (!window.Tildes) {
     window.Tildes = {};
 }
+
+Tildes.changeTheme = function(newThemeName) {
+    // remove any theme classes currently on the body
+    var $body = $("body").first();
+    var bodyClasses = $body[0].className.split(" ");
+    for (var i = 0; i < bodyClasses.length; i++) {
+        var cls = bodyClasses[i];
+        if (cls.indexOf("theme-") === 0) {
+            $body.removeClass(cls);
+        }
+    }
+
+    // add the class for the new theme to the body
+    $body.addClass("theme-" + newThemeName);
+};

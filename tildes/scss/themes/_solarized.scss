@@ -67,9 +67,11 @@ $solarized-dark: (
 body.theme-solarized-dark {
   @include use-theme(map-merge($solarized-base, $solarized-dark));
 }
-body {
-  @include theme-preview-block(map-merge($solarized-base, $solarized-dark), "solarized-dark");
-}
+
+@include theme-preview-block(
+  map-merge($solarized-base, $solarized-dark),
+  "solarized-dark"
+);
 
 // Light theme definition
 $solarized-light: (
@@ -87,6 +89,8 @@ $solarized-light: (
 body.theme-solarized-light {
   @include use-theme(map-merge($solarized-base, $solarized-light));
 }
-body {
-  @include theme-preview-block(map-merge($solarized-base, $solarized-light), "solarized-light");
-}
+
+@include theme-preview-block(
+  map-merge($solarized-base, $solarized-light),
+  "solarized-light"
+);

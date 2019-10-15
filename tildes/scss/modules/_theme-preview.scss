@@ -1,0 +1,28 @@
+// Copyright (c) 2019 Tildes contributors <code@tildes.net>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+.theme-preview-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: $paragraph-max-width;
+}
+
+.theme-preview-block {
+  min-width: 6rem;
+  margin: 0.4rem;
+  padding: 1rem;
+
+  text-align: center;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.theme-preview-fake-posts {
+  // Disables all click events (and hover) on the fake posts so links/buttons don't work
+  pointer-events: none;
+
+  // Set a max width on the fake topics so the vote button isn't way off to the right
+  .topic {
+    max-width: $paragraph-max-width;
+  }
+}

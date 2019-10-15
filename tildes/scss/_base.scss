@@ -35,6 +35,10 @@ body {
   @include font-shrink-on-mobile(0.8rem);
 }
 
+button {
+  cursor: pointer;
+}
+
 code {
   display: inline-block;
   font-size: inherit;

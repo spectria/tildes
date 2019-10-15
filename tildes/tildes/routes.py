@@ -18,7 +18,6 @@ from tildes.resources.user import user_by_username
 
 def includeme(config: Configurator) -> None:
     """Set up application routes."""
-    # pylint: disable=too-many-statements
     config.add_route("home", "/")
 
     config.add_route("search", "/search")

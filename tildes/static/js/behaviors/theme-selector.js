@@ -25,18 +25,7 @@ $.onmount("[data-js-theme-selector]", function() {
             "path=/;max-age=315360000;secure;domain=" +
             document.location.hostname;
 
-        // remove any theme classes currently on the body
-        var $body = $("body").first();
-        var bodyClasses = $body[0].className.split(" ");
-        for (var i = 0; i < bodyClasses.length; i++) {
-            var cls = bodyClasses[i];
-            if (cls.indexOf("theme-") === 0) {
-                $body.removeClass(cls);
-            }
-        }
-
-        // add the class for the new theme to the body
-        $body.addClass("theme-" + new_theme);
+        Tildes.changeTheme(new_theme);
 
         // set visibility of 'Set as account default' button
         if (selected_text.indexOf("account default") === -1) {

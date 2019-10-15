@@ -110,9 +110,8 @@ $gruvbox-dark: (
 body.theme-gruvbox-dark {
   @include use-theme(map-merge($gruvbox-base, $gruvbox-dark));
 }
-body {
-  @include theme-preview-block(map-merge($gruvbox-base, $gruvbox-dark), "gruvbox-dark");
-}
+
+@include theme-preview-block(map-merge($gruvbox-base, $gruvbox-dark), "gruvbox-dark");
 
 // Light theme definition
 $gruvbox-light: (
@@ -133,6 +132,5 @@ $gruvbox-light: (
 body.theme-gruvbox-light {
   @include use-theme(map-merge($gruvbox-base, $gruvbox-light));
 }
-body {
-  @include theme-preview-block(map-merge($gruvbox-base, $gruvbox-light), "gruvbox-light");
-}
+
+@include theme-preview-block(map-merge($gruvbox-base, $gruvbox-light), "gruvbox-light");
