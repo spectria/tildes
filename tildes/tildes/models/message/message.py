@@ -193,7 +193,7 @@ class MessageConversation(DatabaseModel):
             raise ValueError("User is not a participant in this conversation.")
 
         user_id = user.user_id
-        self.unread_user_ids = (  # type: ignore
+        self.unread_user_ids = (
             MessageConversation.unread_user_ids - user_id  # type: ignore
         )
 

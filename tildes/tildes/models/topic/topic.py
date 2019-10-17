@@ -420,8 +420,8 @@ class Topic(DatabaseModel):
             return TopicContentType.TEXT
 
         if self.is_link_type:
-            parsed_url = urlparse(self.link)  # type: ignore
-            url_path = PurePosixPath(parsed_url.path)
+            parsed_url = urlparse(self.link)
+            url_path = PurePosixPath(str(parsed_url.path))
 
             if url_path.suffix.lower() == ".pdf":
                 return TopicContentType.PDF

@@ -196,11 +196,15 @@ class WikipediaMobileConverter(UrlTransformer):
     @classmethod
     def is_applicable(cls, parsed_url: ParseResult) -> bool:
         """Return whether this transformation should be applied to the url."""
+        assert parsed_url.hostname is not None  # mypy workaround
+
         return parsed_url.hostname.endswith(".m.wikipedia.org") and has_path(parsed_url)
 
     @classmethod
     def apply_transformation(cls, parsed_url: ParseResult) -> ParseResult:
         """Apply the actual transformation process to the url."""
+        assert parsed_url.hostname is not None  # mypy workaround
+
         new_domain = parsed_url.hostname.replace(".m.wikipedia.org", ".wikipedia.org")
         return parsed_url._replace(netloc=new_domain)
 
