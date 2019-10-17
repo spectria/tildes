@@ -7,7 +7,7 @@ from typing import Callable, Type
 
 from pyramid.config import Configurator
 from pyramid.request import Request
-from sqlalchemy import engine_from_config
+from sqlalchemy import engine_from_config, event
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.pool import NullPool
@@ -90,6 +90,15 @@ def includeme(config: Configurator) -> None:
         ),
         "db_session",
         reify=True,
+    )
+
+    # add a listener to the session to update database model creation metrics when
+    # any object goes through the "pending to persistent" state change
+    event.listen(
+        session_factory,
+        "pending_to_persistent",
+        # pylint: disable=protected-access
+        lambda session, instance: instance._update_creation_metric(),
     )
 
     config.add_request_method(query_factory, "query")

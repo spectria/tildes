@@ -48,4 +48,5 @@ class CommentVote(DatabaseModel):
         self.user = user
         self.comment = comment
 
+    def _update_creation_metric(self) -> None:
         incr_counter("votes", target_type="comment")

@@ -141,6 +141,7 @@ class Comment(DatabaseModel):
         self.markdown = markdown
         self.parent_comment = parent_comment
 
+    def _update_creation_metric(self) -> None:
         incr_counter("comments")
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:

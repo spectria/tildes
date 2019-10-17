@@ -64,7 +64,8 @@ class CommentLabel(DatabaseModel):
         self.weight = weight
         self.reason = reason
 
-        incr_counter("comment_labels", label=label.name)
+    def _update_creation_metric(self) -> None:
+        incr_counter("comment_labels", label=self.label.name)
 
     @property
     def name(self) -> str:

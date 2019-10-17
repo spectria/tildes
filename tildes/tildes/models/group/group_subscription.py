@@ -48,4 +48,5 @@ class GroupSubscription(DatabaseModel):
         self.user = user
         self.group = group
 
+    def _update_creation_metric(self) -> None:
         incr_counter("subscriptions")

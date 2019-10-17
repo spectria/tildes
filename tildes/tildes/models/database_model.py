@@ -97,6 +97,18 @@ class DatabaseModelBase:
 
         return utc_now() - self.created_time  # type: ignore
 
+    def _update_creation_metric(self) -> None:
+        """Update the metric tracking creations of this model type.
+
+        This function will be attached to the SQLAlchemy Object Lifecycle event for the
+        "pending to persistent" transition, which occurs when an object is persisted to
+        the database. This ensures that the metric is only updated when an object is
+        truly created in the database, not just whenever the model class is initialized.
+
+        Model classes that have a creation metric should override this method.
+        """
+        pass
+
     def _validate_new_value(self, attribute: str, value: Any) -> Any:
         """Validate the new value for a column.
 

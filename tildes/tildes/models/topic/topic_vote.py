@@ -48,4 +48,5 @@ class TopicVote(DatabaseModel):
         self.user = user
         self.topic = topic
 
+    def _update_creation_metric(self) -> None:
         incr_counter("votes", target_type="topic")

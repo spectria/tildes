@@ -118,6 +118,7 @@ class MessageConversation(DatabaseModel):
         self.markdown = markdown
         self.rendered_html = convert_markdown_to_safe_html(markdown)
 
+    def _update_creation_metric(self) -> None:
         incr_counter("messages", type="conversation")
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
@@ -243,6 +244,7 @@ class MessageReply(DatabaseModel):
         self.markdown = markdown
         self.rendered_html = convert_markdown_to_safe_html(markdown)
 
+    def _update_creation_metric(self) -> None:
         incr_counter("messages", type="reply")
 
     @property

@@ -217,8 +217,6 @@ class Topic(DatabaseModel):
         new_topic.topic_type = TopicType.TEXT
         new_topic.markdown = markdown
 
-        incr_counter("topics", type="text")
-
         return new_topic
 
     @classmethod
@@ -230,9 +228,10 @@ class Topic(DatabaseModel):
         new_topic.topic_type = TopicType.LINK
         new_topic.link = link
 
-        incr_counter("topics", type="link")
-
         return new_topic
+
+    def _update_creation_metric(self) -> None:
+        incr_counter("topics", type=self.topic_type.name.lower())
 
     def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
         """Pyramid security ACL."""
