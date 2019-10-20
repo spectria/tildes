@@ -3,7 +3,7 @@ ssl_cert_path: /etc/letsencrypt/live/tildes.net/fullchain.pem
 ssl_private_key_path: /etc/letsencrypt/live/tildes.net/privkey.pem
 hsts_max_age: 63072000
 nginx_worker_processes: auto
-postgresql_version: 10
+postgresql_version: 12
 prometheus_ips: ['144.217.93.123']
 site_hostname: tildes.net
 ipv6_address: '2607:5300:0203:2dd8::'
