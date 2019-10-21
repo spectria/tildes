@@ -96,7 +96,9 @@ class CommentQuery(PaginatedQuery):
 
     def search(self, query: str) -> "CommentQuery":
         """Restrict the comments to ones that match a search query (generative)."""
-        return self.filter(Comment.search_tsv.op("@@")(func.plainto_tsquery(query)))
+        return self.filter(
+            Comment.search_tsv.op("@@")(func.websearch_to_tsquery(query))
+        )
 
     def only_bookmarked(self) -> "CommentQuery":
         """Restrict the comments to ones that the user has bookmarked (generative)."""
