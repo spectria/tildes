@@ -33,6 +33,13 @@ test-db-enable-pg_trgm:
     - require:
       - postgres_database: tildes_test
 
+test-db-enable-plpython3u:
+  postgres_extension.present:
+    - name: plpython3u
+    - maintenance_db: tildes_test
+    - require:
+      - postgres_database: tildes_test
+
 test-db-pg_hba-lines:
   file.accumulated:
     - name: pg_hba_lines

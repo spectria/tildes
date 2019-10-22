@@ -1,6 +1,8 @@
 site-db-user:
   postgres_user.present:
     - name: tildes
+    # set the tildes user to a database superuser in the dev environment only
+    - superuser: {{ grains['id'] == 'dev' }}
     - require:
       - service: postgresql
 
@@ -42,6 +44,13 @@ site-db-enable-pg_stat_statements:
 site-db-enable-pg_trgm:
   postgres_extension.present:
     - name: pg_trgm
+    - maintenance_db: tildes
+    - require:
+      - postgres_database: tildes
+
+site-db-enable-plpython3u:
+  postgres_extension.present:
+    - name: plpython3u
     - maintenance_db: tildes
     - require:
       - postgres_database: tildes

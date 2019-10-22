@@ -1,3 +1,5 @@
+{% from 'common.jinja2' import app_dir, venv_dir %}
+
 postgresql:
   pkgrepo.managed:
     - name: deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main
@@ -15,6 +17,13 @@ postgresql:
     - reload: True
     - watch:
       - file: /etc/postgresql/{{ pillar['postgresql_version'] }}/main/*.conf
+
+install-plpython3:
+  pkg.installed:
+    - name: postgresql-plpython3-{{ pillar['postgresql_version'] }}
+    - refresh: True
+    - require:
+      - pkgrepo: postgresql
 
 set-lock-timeout:
   file.replace:
@@ -60,3 +69,17 @@ enable-pg-stat-statements:
     - mode: 640
   require:
     - service: postgresql
+
+# set PYTHONPATH env var in postgresql so PL/Python can access all the modules
+set-postgresql-pythonpath:
+  file.managed:
+    - name: /etc/postgresql/{{ pillar['postgresql_version'] }}/main/environment
+    - contents: "PYTHONPATH='{{ venv_dir }}/lib/python3.7/site-packages:{{ app_dir }}'"
+    - user: postgres
+    - group: postgres
+    - mode: 644
+    - watch_in:
+      - module: set-postgresql-pythonpath
+  module.wait:
+    - service.restart:
+      - name: postgresql.service

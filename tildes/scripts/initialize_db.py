@@ -21,7 +21,12 @@ from tildes.models.user import User
 
 
 def initialize_db(config_path: str, alembic_config_path: Optional[str] = None) -> None:
-    """Load the app config and create the database tables."""
+    """Load the app config and create the database tables.
+
+    This function will probably only complete successfully when run as user postgres,
+    since the run_sql_scripts_in_dir method runs psql through that user to be able to
+    create functions using untrusted languages (PL/Python specifically).
+    """
     db_session = get_session_from_config(config_path)
     engine = db_session.bind
 
@@ -57,7 +62,7 @@ def create_tables(connectable: Connectable) -> None:
 
 
 def run_sql_scripts_in_dir(path: str, engine: Engine) -> None:
-    """Run all sql scripts in a directory."""
+    """Run all sql scripts in a directory, as the database superuser."""
     for root, _, files in os.walk(path):
         sql_files = [filename for filename in files if filename.endswith(".sql")]
         for sql_file in sql_files:
@@ -65,7 +70,7 @@ def run_sql_scripts_in_dir(path: str, engine: Engine) -> None:
                 [
                     "psql",
                     "-U",
-                    engine.url.username,
+                    "postgres",
                     "-f",
                     os.path.join(root, sql_file),
                     engine.url.database,
