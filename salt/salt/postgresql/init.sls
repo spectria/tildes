@@ -1,4 +1,4 @@
-{% from 'common.jinja2' import app_dir, venv_dir %}
+{% from 'common.jinja2' import app_dir, python_version, venv_dir %}
 
 postgresql:
   pkgrepo.managed:
@@ -74,7 +74,7 @@ enable-pg-stat-statements:
 set-postgresql-pythonpath:
   file.managed:
     - name: /etc/postgresql/{{ pillar['postgresql_version'] }}/main/environment
-    - contents: "PYTHONPATH='{{ venv_dir }}/lib/python3.7/site-packages:{{ app_dir }}'"
+    - contents: "PYTHONPATH='{{ venv_dir }}/lib/python{{ python_version }}/site-packages:{{ app_dir }}'"
     - user: postgres
     - group: postgres
     - mode: 644
