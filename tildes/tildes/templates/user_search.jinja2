@@ -3,8 +3,8 @@
 
 {% extends 'user.jinja2' %}
 
-{% block title %}Search {{ user }}'s posts for "{{ search }}"{% endblock %}
+{% block title %}Search {{ user }}'s posts: {{ search }}{% endblock %}
 
-{% block main_heading %}Search results for "{{ search }}"{% endblock %}
+{% block main_heading %}Search results: {{ search }}{% endblock %}
 
 {% block no_posts_message %}No results found{% endblock %}

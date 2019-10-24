@@ -6,7 +6,7 @@
 {% from 'macros/forms.jinja2' import search_form %}
 {% from 'macros/links.jinja2' import link_to_group %}
 
-{% block title %}Search results for "{{ search }}"{% endblock %}
+{% block title %}Search results: {{ search }}{% endblock %}
 
 {% block header_context_link %}
   <span class="site-header-context">
@@ -15,7 +15,7 @@
     {% else %}
       Search:
     {% endif %}
-    "{{ search }}"
+    {{ search }}
   </span>
 {% endblock %}
 
