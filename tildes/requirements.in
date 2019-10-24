@@ -2,45 +2,37 @@ ago
 alembic
 amqpy
 argon2_cffi
-black
+beautifulsoup4
 bleach
 click
 cornice
-freezegun
 gunicorn
 html5lib
-ipython
 marshmallow<3.0  # 3.0+ requires significant updates
-mypy
-mypy-extensions
 Pillow
+pip-tools
 prometheus-client
-prospector
 psycopg2
 publicsuffix2==2.20160818
 pygit2
 Pygments
 pyotp
 pyramid
-pyramid-debugtoolbar
-pyramid-ipython
 pyramid-jinja2
 pyramid-session-redis==1.5.0  # 1.5.1 has a change that will invalidate current sessions
 pyramid-tm
 pyramid-webassets
-pytest
-pytest-mock
 python-dateutil
 PyYAML  # needs to be installed separately for webassets
 qrcode
+pip-tools
+redis
 requests
 sentry-sdk
 SQLAlchemy
 SQLAlchemy-Utils
 stripe
-testing.redis
 titlecase
 webargs<5.0  # 5.0.0 breaks many views, will require significant updates
-webtest
 wrapt
 zope.sqlalchemy

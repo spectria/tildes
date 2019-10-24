@@ -32,7 +32,11 @@ psycopg2-deps:
 
 pip-installs:
   pip.installed:
+    {% if grains['id'] == 'dev' %}
+    - requirements: {{ app_dir }}/requirements-dev.txt
+    {% else %}
     - requirements: {{ app_dir }}/requirements.txt
+    {% endif %}
     - bin_env: {{ venv_dir }}
   require:
     - cmd: venv-setup

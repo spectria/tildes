@@ -1,0 +1,13 @@
+-r requirements.in
+black
+freezegun
+ipython
+mypy
+mypy-extensions
+prospector
+pyramid-debugtoolbar
+pyramid-ipython
+pytest
+pytest-mock
+testing.redis
+webtest
