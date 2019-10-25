@@ -4,9 +4,8 @@
 """Contains the User class."""
 
 from datetime import datetime, timedelta
-from typing import Any, List, Optional, Sequence, Tuple
+from typing import Any, List, NoReturn, Optional, Sequence, Tuple
 
-from mypy_extensions import NoReturn
 from pyotp import TOTP
 from pyramid.security import (
     ALL_PERMISSIONS,

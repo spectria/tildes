@@ -3,10 +3,10 @@
 
 """Views related to logging in/out."""
 
+from typing import NoReturn
 from urllib.parse import unquote_plus
 
 from marshmallow.fields import String
-from mypy_extensions import NoReturn
 from pyramid.httpexceptions import HTTPFound, HTTPUnauthorized, HTTPUnprocessableEntity
 from pyramid.renderers import render_to_response
 from pyramid.request import Request

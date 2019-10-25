@@ -3,7 +3,8 @@
 
 """Views related to the link shortener."""
 
-from mypy_extensions import NoReturn
+from typing import NoReturn
+
 from pyramid.httpexceptions import HTTPMovedPermanently
 from pyramid.request import Request
 from pyramid.security import NO_PERMISSION_REQUIRED

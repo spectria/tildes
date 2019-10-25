@@ -3,7 +3,6 @@ black
 freezegun
 ipython
 mypy
-mypy-extensions
 prospector
 pyramid-debugtoolbar
 pyramid-ipython
