@@ -29,7 +29,7 @@ boussole.service:
   service.running:
     - enable: True
     - require:
-      - pip: pip-installs
+      - cmd: boussole-pip-installs
 
 create-css-directory:
   file.directory:
