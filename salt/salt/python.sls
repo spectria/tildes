@@ -1,4 +1,4 @@
-{% from 'common.jinja2' import app_dir, bin_dir, python_version, venv_dir %}
+{% from 'common.jinja2' import app_dir, app_username, bin_dir, python_version, venv_dir %}
 
 deadsnakes:
   pkgrepo.managed:
@@ -6,6 +6,12 @@ deadsnakes:
   pkg.installed:
     - name: python{{ python_version }}
     - refresh: True
+
+/opt/venvs:
+  file.directory:
+    - user: {{ app_username }}
+    - group: {{ app_username }}
+    - dir_mode: 755
 
 delete-obsolete-venv:
   file.absent:
@@ -19,6 +25,7 @@ venv-setup:
   cmd.run:
     - name: python{{ python_version }} -m venv {{ venv_dir }}
     - creates: {{ venv_dir }}
+    - runas: {{ app_username }}
     - require:
       - pkg: python{{ python_version }}-venv
 
@@ -37,6 +44,7 @@ pip-installs:
     {% else %}
     - requirements: {{ app_dir }}/requirements.txt
     {% endif %}
+    - user: {{ app_username }}
     - bin_env: {{ venv_dir }}
   require:
     - cmd: venv-setup
