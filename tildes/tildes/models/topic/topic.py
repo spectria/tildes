@@ -165,13 +165,15 @@ class Topic(DatabaseModel):
         """Return only the topic's "important" tags."""
         global_important_tags = ["nsfw", "spoiler"]
 
+        important_tags = set(self.group.important_topic_tags + global_important_tags)
+
         # used with startswith() to check for sub-tags
-        global_important_prefixes = tuple([f"{tag}." for tag in global_important_tags])
+        important_prefixes = tuple([f"{tag}." for tag in important_tags])
 
         return [
             tag
             for tag in self.tags
-            if tag in global_important_tags or tag.startswith(global_important_prefixes)
+            if tag in important_tags or tag.startswith(important_prefixes)
         ]
 
     @property

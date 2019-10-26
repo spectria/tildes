@@ -57,6 +57,9 @@ class Group(DatabaseModel):
         Boolean, nullable=False, server_default="false"
     )
     common_topic_tags: List[str] = Column(TagList, nullable=False, server_default="{}")
+    important_topic_tags: List[str] = Column(
+        TagList, nullable=False, server_default="{}"
+    )
 
     # Create a GiST index on path as well as the btree one that will be created by the
     # index=True/unique=True keyword args to Column above. The GiST index supports
