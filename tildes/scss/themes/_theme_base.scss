@@ -577,6 +577,7 @@
 
 @mixin theme-special-label($color, $is-light) {
   padding: 0 0.2rem;
+  line-height: 0.9rem;
 
   @if $is-light {
     background-color: $color;
