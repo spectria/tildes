@@ -333,12 +333,12 @@
   }
 
   .label-topic-tag {
-    color: map-get($theme, "foreground-middle");
+    padding: 0;
 
     a,
     a:hover,
     a:visited {
-      color: map-get($theme, "foreground-middle");
+      color: map-get($theme, "foreground-primary");
     }
   }
 
@@ -576,6 +576,8 @@
 }
 
 @mixin theme-special-label($color, $is-light) {
+  padding: 0 0.2rem;
+
   @if $is-light {
     background-color: $color;
     color: #fff;
