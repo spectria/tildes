@@ -1,0 +1,13 @@
+{% extends 'bookmarks.jinja2' %}
+
+{% block title %}Votes{% endblock %}
+
+{% block main_heading %}Votes{% endblock %}
+
+{% block empty_message %}
+  {% if post_type == 'topic' %}
+    You haven't voted on any topics
+  {% elif post_type == 'comment' %}
+    You haven't voted on any comments
+  {% endif %}
+{% endblock %}

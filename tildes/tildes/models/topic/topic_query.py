@@ -8,6 +8,7 @@ from typing import Any, Sequence
 from pyramid.request import Request
 from sqlalchemy import func
 from sqlalchemy.sql.expression import and_, null
+from sqlalchemy.orm import aliased
 
 from tildes.enums import TopicSortOption
 from tildes.lib.datetime import SimpleHoursPeriod, utc_now
@@ -34,6 +35,7 @@ class TopicQuery(PaginatedQuery):
         super().__init__(Topic, request)
 
         self._only_bookmarked = False
+        self._only_user_voted = False
 
     def _attach_extra_data(self) -> "TopicQuery":
         """Attach the extra user data to the query."""
@@ -46,7 +48,7 @@ class TopicQuery(PaginatedQuery):
     def _attach_vote_data(self) -> "TopicQuery":
         """Add a subquery to include whether the user has voted."""
         vote_subquery = (
-            self.request.query(TopicVote)
+            self.request.query(aliased(TopicVote))
             .filter(
                 TopicVote.topic_id == Topic.topic_id,
                 TopicVote.user == self.request.user,
@@ -54,7 +56,14 @@ class TopicQuery(PaginatedQuery):
             .exists()
             .label("user_voted")
         )
-        return self.add_columns(vote_subquery)
+
+        query = self.add_columns(vote_subquery)
+
+        if self._only_user_voted:
+            query = query.filter(vote_subquery)
+            query = query.add_columns(TopicVote.created_time)
+
+        return query
 
     def _attach_bookmark_data(self) -> "TopicQuery":
         """Join the data related to whether the user has bookmarked the topic."""
@@ -180,4 +189,9 @@ class TopicQuery(PaginatedQuery):
     def only_bookmarked(self) -> "TopicQuery":
         """Restrict the topics to ones that the user has bookmarked (generative)."""
         self._only_bookmarked = True
+        return self
+
+    def only_user_voted(self) -> "TopicQuery":
+        """Restrict the topics to ones that the user has voted on (generative)."""
+        self._only_user_voted = True
         return self

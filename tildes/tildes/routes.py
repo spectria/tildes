@@ -106,6 +106,7 @@ def includeme(config: Configurator) -> None:
         )
 
     config.add_route("bookmarks", "/bookmarks", factory=LoggedInFactory)
+    config.add_route("votes", "/votes", factory=LoggedInFactory)
 
     config.add_route("invite", "/invite", factory=LoggedInFactory)
 

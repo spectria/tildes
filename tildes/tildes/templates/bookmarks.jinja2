@@ -53,11 +53,13 @@
 {% else %}
   <div class="empty">
     <h2 class="empty-title">
+      {% block empty_message %}
       {% if post_type == 'topic' %}
         You haven't bookmarked any topics
       {% elif post_type == 'comment' %}
         You haven't bookmarked any comments
       {% endif %}
+      {% endblock %}
     </h2>
   </div>
 {% endif %}

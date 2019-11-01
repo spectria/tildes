@@ -7,6 +7,7 @@ from typing import Any
 
 from pyramid.request import Request
 from sqlalchemy import func
+from sqlalchemy.orm import aliased
 from sqlalchemy.sql.expression import and_
 
 from tildes.enums import CommentSortOption
@@ -29,6 +30,7 @@ class CommentQuery(PaginatedQuery):
         super().__init__(Comment, request)
 
         self._only_bookmarked = False
+        self._only_user_voted = False
 
     def _attach_extra_data(self) -> "CommentQuery":
         """Attach the extra user data to the query."""
@@ -41,7 +43,7 @@ class CommentQuery(PaginatedQuery):
     def _attach_vote_data(self) -> "CommentQuery":
         """Add a subquery to include whether the user has voted."""
         vote_subquery = (
-            self.request.query(CommentVote)
+            self.request.query(aliased(CommentVote))
             .filter(
                 CommentVote.comment_id == Comment.comment_id,
                 CommentVote.user_id == self.request.user.user_id,
@@ -49,7 +51,14 @@ class CommentQuery(PaginatedQuery):
             .exists()
             .label("user_voted")
         )
-        return self.add_columns(vote_subquery)
+
+        query = self.add_columns(vote_subquery)
+
+        if self._only_user_voted:
+            query = query.add_columns(CommentVote.created_time)
+            query = query.filter(vote_subquery)
+
+        return query
 
     def _attach_bookmark_data(self) -> "CommentQuery":
         """Join the data related to whether the user has bookmarked the comment."""
@@ -103,4 +112,9 @@ class CommentQuery(PaginatedQuery):
     def only_bookmarked(self) -> "CommentQuery":
         """Restrict the comments to ones that the user has bookmarked (generative)."""
         self._only_bookmarked = True
+        return self
+
+    def only_user_voted(self) -> "CommentQuery":
+        """Restrict the comments to ones that the user has voted on (generative)."""
+        self._only_user_voted = True
         return self
