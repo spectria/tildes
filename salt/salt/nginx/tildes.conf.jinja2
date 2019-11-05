@@ -21,6 +21,9 @@ server {
     }
     rewrite ^/(.*)/$ https://$host$port/$1 permanent;
 
+    # redirect /donate to the page on the Docs site
+    rewrite ^/donate$ https://docs.tildes.net/donate redirect;
+
     # redirect /u/username to /user/username
     rewrite ^/u/(.*)$ https://$host$port/user/$1;
 
