@@ -189,8 +189,6 @@ class Comment(DatabaseModel):
         # reply:
         #  - removed comments can't be replied to by anyone
         #  - if the topic is locked, only admins can reply
-        #  - if the user has "comment.reply_slow", they can't reply to comments less
-        #    than 2 hours old
         #  - otherwise, logged-in users can reply
         if self.is_removed:
             acl.append((Deny, Everyone, "reply"))
@@ -198,9 +196,6 @@ class Comment(DatabaseModel):
         if self.topic.is_locked:
             acl.append((Allow, "admin", "reply"))
             acl.append((Deny, Everyone, "reply"))
-
-        if self.age < timedelta(hours=2):
-            acl.append((Deny, "comment.reply_slow", "reply"))
 
         acl.append((Allow, Authenticated, "reply"))
 
