@@ -80,6 +80,14 @@ class CommentLabelOption(enum.Enum):
         return None
 
 
+class FinancialEntryType(enum.Enum):
+    """Enum for entry types in the Financials table."""
+
+    EXPENSE = enum.auto()
+    GOAL = enum.auto()
+    INCOME = enum.auto()
+
+
 class LogEventType(enum.Enum):
     """Enum for the types of events stored in logs."""
 

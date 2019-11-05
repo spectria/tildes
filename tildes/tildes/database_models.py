@@ -12,6 +12,7 @@ from tildes.models.comment import (
     CommentNotification,
     CommentVote,
 )
+from tildes.models.financials import Financials
 from tildes.models.group import Group, GroupSubscription
 from tildes.models.log import Log
 from tildes.models.message import MessageConversation, MessageReply
