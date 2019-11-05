@@ -194,8 +194,8 @@ class RateLimitedAction:
         if max_burst:
             self.max_burst = max_burst
         else:
-            # if a max burst wasn't specified, set it to half the limit
-            self.max_burst = limit // 2
+            # if max burst wasn't specified, set it to half the limit (no lower than 1)
+            self.max_burst = max(limit // 2, 1)
 
         self.by_user = by_user
         self.by_ip = by_ip

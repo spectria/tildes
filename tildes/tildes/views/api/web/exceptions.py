@@ -86,10 +86,14 @@ def httptoomanyrequests(request: Request) -> Response:
     """Update a 429 error to show wait time info in the response text."""
     response = request.exception
 
-    retry_seconds = request.exception.headers["Retry-After"]
-    response.text = (
-        f"Rate limit exceeded. Please wait {retry_seconds} seconds before retrying."
-    )
+    retry_seconds = int(request.exception.headers["Retry-After"])
+
+    if retry_seconds >= 60:
+        retry_wait = f"{retry_seconds // 60} minutes"
+    else:
+        retry_wait = f"{retry_seconds} seconds"
+
+    response.text = f"Rate limit exceeded. Please wait {retry_wait} before retrying."
 
     return response
 

@@ -23,4 +23,4 @@ from tildes.models.topic import (
     TopicVisit,
     TopicVote,
 )
-from tildes.models.user import User, UserGroupSettings, UserInviteCode
+from tildes.models.user import User, UserGroupSettings, UserInviteCode, UserRateLimit

@@ -46,6 +46,13 @@ def test_check_by_ip_disabled():
         action.check_for_ip("123.123.123.123")
 
 
+def test_max_burst_with_limit_1():
+    """Ensure an action with limit 1 also has its max_burst set to 1."""
+    action = RateLimitedAction("test", timedelta(hours=1), 1)
+
+    assert action.max_burst == 1
+
+
 def test_simple_rate_limiting_by_user_id(redis):
     """Ensure simple rate-limiting by user_id is working."""
     limit = 5
