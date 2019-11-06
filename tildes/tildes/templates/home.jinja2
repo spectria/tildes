@@ -54,7 +54,7 @@
         <li>Groups</li>
       {% endif %}
 
-      <ul class="nav">
+      <ul class="nav nav-group-list">
       {% for group in groups|sort %}
         <li class="nav-item"><a href="/~{{ group.path }}">~{{ group.path }}</a></li>
       {% endfor %}

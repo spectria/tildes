@@ -3,6 +3,8 @@
 
 .nav {
   li {
+    @include min-touch-size;
+
     margin-bottom: 0;
     font-size: 0.6rem;
     font-weight: bold;
@@ -41,5 +43,11 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+
+.nav .nav-group-list {
+  li {
+    font-size: 0.7rem;
   }
 }
