@@ -13,3 +13,6 @@
   {%- endtrans %}
 {% endmacro %}
 
+{% macro format_money(amount) %}
+  {{ "${:,.2f}".format(amount) }}
+{% endmacro %}

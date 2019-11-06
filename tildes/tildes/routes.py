@@ -22,6 +22,8 @@ def includeme(config: Configurator) -> None:
 
     config.add_route("search", "/search")
 
+    config.add_route("financials", "/financials")
+
     config.add_route("groups", "/groups")
 
     config.add_route("login", "/login")

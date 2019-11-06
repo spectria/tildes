@@ -1,0 +1,64 @@
+{# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends 'base_no_sidebar.jinja2' %}
+
+{% from "macros/utils.jinja2" import format_money %}
+
+{% block title %}Tildes financials{% endblock %}
+
+{% block main_classes %}text-formatted{% endblock %}
+
+{% block main_heading %}Tildes financials{% endblock %}
+
+{% block content %}
+<p>This page is a view into Tildes's financials: operating expenses, income from the various donation methods, and the overall goal for monthly donations. Currently, it only contains data for November 2019, but more historical data will be available eventually.</p>
+
+<p>Amounts on this page are in USD unless otherwise noted. Even though Tildes is a Canadian non-profit, many of its costs and donations are in USD. People from other parts of the world are also generally most familiar with the relative value of USD, so using it makes this info more understandable to everyone.</p>
+
+<p>This page and the donation goal meter on the home page <em>do not</em> update in real-time. I will generally try to keep them current within a day or two (and automate some pieces eventually), but new donations will not show up immediately, and this information may be incomplete or outdated.</p>
+
+<div class="divider"></div>
+
+<p><strong>The current donation goal is {{ format_money(entries["goal"]|sum(attribute="amount")) }} per month.</strong></p>
+
+<p>The actual <em>costs</em> solely to keep Tildes running are much lower than this (see table below), but this represents the amount that I believe will make Tildes truly independently sustainable. It will cover all of the operating costs and also allow me (<a href="/user/Deimos">Deimos</a>) to pay myself a somewhat respectable (but low) salary of about $35,000/year. This goal may not be achievable in the near term, but it is the point where I will be comfortable focusing on Tildes without still needing to find additional outside income.</p>
+
+<p><a href="https://docs.tildes.net/donate">Please donate&mdash;any amount will help get us closer to the goal!</a></p>
+
+<div class="divider"></div>
+
+<h2>{{ current_time.strftime("%B %Y") }} expenses and income</h2>
+
+<table class="table table-financials">
+<tr><th colspan="2">Expenses</th></tr>
+
+{% for entry in entries["expense"] %}
+  {{ entry_table_row(entry.description, entry.amount, entry.is_approximate) }}
+{% endfor %}
+
+{{ entry_table_row("{} total expenses".format(current_time.strftime("%B %Y")), entries["expense"]|sum(attribute="amount"), is_summary=True) }}
+</table>
+
+<table class="table table-financials">
+<tr><th colspan="2">Income</th></tr>
+
+{% for entry in entries["income"] %}
+  {{ entry_table_row(entry.description, entry.amount, entry.is_approximate) }}
+{% endfor %}
+
+{{ entry_table_row("{} total income (so far)".format(current_time.strftime("%B %Y")), entries["income"]|sum(attribute="amount"), is_summary=True) }}
+</table>
+
+<small>* Approximate, due to currency conversion, incomplete data, or uncertain fees.</small>
+{% endblock %}
+
+{% macro entry_table_row(description, amount, is_approximate=False, is_summary=False) %}
+  <tr{{ ' class="tr-summary"'|safe if is_summary }}>
+    <td>{{ description }}</td>
+    <td class="text-right">
+      {% if is_approximate %}*{% endif %}
+      {{ format_money(amount) }}
+    </td>
+  </tr>
+{% endmacro %}
