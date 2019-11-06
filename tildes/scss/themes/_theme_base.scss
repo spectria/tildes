@@ -82,6 +82,40 @@
     background-color: map-get($theme, "background-primary");
   }
 
+  meter {
+    // Crazy styles to get this to work adapted from Spectre.css's _meters.scss
+    background: map-get($theme, "background-secondary");
+
+    &::-webkit-meter-bar {
+      background: map-get($theme, "background-secondary");
+    }
+
+    // For some mysterious reason, none of the below rules can be merged
+    &::-webkit-meter-optimum-value {
+      background: map-get($theme, "success");
+    }
+
+    &:-moz-meter-optimum::-moz-meter-bar {
+      background: map-get($theme, "success");
+    }
+
+    &::-webkit-meter-suboptimum-value {
+      background: map-get($theme, "warning");
+    }
+
+    &:-moz-meter-sub-optimum::-moz-meter-bar {
+      background: map-get($theme, "warning");
+    }
+
+    &::-webkit-meter-even-less-good-value {
+      background: map-get($theme, "error");
+    }
+
+    &:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+      background: map-get($theme, "error");
+    }
+  }
+
   tbody tr:nth-of-type(2n + 1) {
     background-color: map-get($theme, "background-secondary");
   }
