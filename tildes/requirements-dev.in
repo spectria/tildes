@@ -1,7 +1,6 @@
 -r requirements.in
 black
 freezegun
-ipython
 mypy
 prospector
 pyramid-debugtoolbar
