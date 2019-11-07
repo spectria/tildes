@@ -39,6 +39,7 @@ pycparser==2.19           # via cffi
 pygit2==0.28.2
 pygments==2.4.2
 pyotp==2.3.0
+pyramid-ipython==0.2
 pyramid-jinja2==2.8
 pyramid-session-redis==1.5.0
 pyramid-tm==2.3

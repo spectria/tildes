@@ -4,7 +4,6 @@ freezegun
 mypy
 prospector
 pyramid-debugtoolbar
-pyramid-ipython
 pytest
 pytest-mock
 testing.redis
