@@ -231,6 +231,17 @@
     </ul>
   {% endif %}
 
+  {% if most_recent_scheduled_topics %}
+    <ul class="nav">
+      <li>Recurring scheduled topics</li>
+      <ul class="nav">
+      {% for scheduled_topic in most_recent_scheduled_topics %}
+        <li class="nav-item"><a href="{{ scheduled_topic.permalink }}">{{ scheduled_topic.title }}</a></li>
+      {% endfor %}
+      </ul>
+    </ul>
+  {% endif %}
+
   {% if wiki_pages or wiki_has_index %}
     <ul class="nav">
       <li>Group wiki pages</li>

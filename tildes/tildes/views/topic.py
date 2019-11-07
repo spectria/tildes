@@ -15,7 +15,7 @@ from pyramid.request import Request
 from pyramid.response import Response
 from pyramid.view import view_config
 from sqlalchemy import cast
-from sqlalchemy.sql.expression import any_, desc
+from sqlalchemy.sql.expression import any_, desc, text
 from sqlalchemy_utils import Ltree
 from webargs.pyramidparser import use_kwargs
 from zope.sqlalchemy import mark_changed
@@ -32,7 +32,7 @@ from tildes.lib.datetime import SimpleHoursPeriod
 from tildes.models.comment import Comment, CommentNotification, CommentTree
 from tildes.models.group import Group, GroupWikiPage
 from tildes.models.log import LogComment, LogTopic
-from tildes.models.topic import Topic, TopicVisit
+from tildes.models.topic import Topic, TopicSchedule, TopicVisit
 from tildes.models.user import UserGroupSettings
 from tildes.schemas.comment import CommentSchema
 from tildes.schemas.fields import Enum, ShortTimePeriod
@@ -240,6 +240,28 @@ def get_group_topics(
         wiki_pages = None
         wiki_has_index = False
 
+    if isinstance(request.context, Group):
+        # Get the most recent topic from each scheduled topic in this group
+        # I'm not even going to attempt to write this query in pure SQLAlchemy
+        topic_id_subquery = """
+            SELECT topic_id FROM (SELECT topic_id, schedule_id, row_number() OVER
+            (PARTITION BY schedule_id ORDER BY created_time DESC) AS rownum FROM topics)
+            AS t WHERE schedule_id IS NOT NULL AND rownum = 1
+        """
+        most_recent_scheduled_topics = (
+            request.query(Topic)
+            .join(TopicSchedule)
+            .filter(
+                Topic.topic_id.in_(text(topic_id_subquery)),  # type: ignore
+                TopicSchedule.group == request.context,
+                TopicSchedule.next_post_time != None,  # noqa
+            )
+            .order_by(TopicSchedule.next_post_time)
+            .all()
+        )
+    else:
+        most_recent_scheduled_topics = None
+
     return {
         "group": request.context,
         "groups": groups,
@@ -258,6 +280,7 @@ def get_group_topics(
         "wiki_pages": wiki_pages,
         "wiki_has_index": wiki_has_index,
         "subgroups": subgroups,
+        "most_recent_scheduled_topics": most_recent_scheduled_topics,
     }
 
 
