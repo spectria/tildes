@@ -49,6 +49,8 @@
   }
 
   .topic-title {
+    @include force-text-wrap-if-needed;
+
     display: inline;
     margin: 0;
     margin-right: 0.2rem;
@@ -248,6 +250,10 @@
   .topic-voting {
     float: right;
   }
+
+  header h1 {
+    @include force-text-wrap-if-needed;
+  }
 }
 
 .topic-full-byline {
@@ -269,9 +275,10 @@
 }
 
 .topic-full-link {
+  @include force-text-wrap-if-needed;
+
   display: flex;
   align-items: first baseline;
-  word-break: break-all;
 }
 
 .topic-full-content {

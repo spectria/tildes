@@ -20,3 +20,16 @@
     min-height: 0;
   }
 }
+
+// Forcibly wrap text in the element if it can't be done "naturally", necessary for
+// handling long "words" in places like titles that might otherwise mess up the layout
+@mixin force-text-wrap-if-needed() {
+  overflow-wrap: anywhere;
+
+  @supports not (overflow-wrap: anywhere) {
+    // Only Firefox supports overflow-wrap: anywhere so far, these two rules should be
+    // fairly similar for other browsers
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}
