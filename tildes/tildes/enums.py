@@ -118,12 +118,6 @@ class ContentMetadataFields(enum.Enum):
 
     def format_value(self, value: Any) -> str:
         """Format a value stored in this field into a string for display."""
-        if self.name == "WORD_COUNT":
-            if value == 1:
-                return "1 word"
-
-            return f"{value} words"
-
         if self.name == "DURATION":
             delta = timedelta(seconds=value)
 
@@ -140,6 +134,18 @@ class ContentMetadataFields(enum.Enum):
             published = utc_from_timestamp(value)
             date_str = published.strftime("%b %-d %Y")
             return f"published {date_str}"
+
+        if self.name == "WORD_COUNT":
+            if value == 1:
+                return "1 word"
+
+            if value >= 10_000:
+                # dirty way of using non-breaking thin spaces as thousands separators
+                word_count = f"{value:,}".replace(",", "\u202F")
+            else:
+                word_count = str(value)
+
+            return f"{word_count} words"
 
         return str(value)
 
