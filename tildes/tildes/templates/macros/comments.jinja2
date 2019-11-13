@@ -212,7 +212,16 @@
         {% endif %}
 
         {% if request.has_permission('reply', comment) %}
-          <li><button class="btn-post-action" name="reply" data-js-comment-reply-button>Reply</button></li>
+          <li>
+            <button
+              class="btn-post-action"
+              name="reply"
+              data-js-comment-reply-button
+              {% if comment.age.days >= 7 %}
+              data-js-old-warning-age="{{ comment.age|vague_timedelta_description }}"
+              {% endif %}
+            >Reply</button>
+          </li>
         {% endif %}
       </menu>
     {% endif %}

@@ -227,9 +227,9 @@
       data-js-prevent-double-submit
       data-js-confirm-leave-page-unsaved
     >
-      {% if old_topic_warning %}
+      {% if topic.age.days >= 7 %}
       <div class="warning-old-reply">
-        <p class="text-warning text-small">This topic is over a week old. Replying to old topics is fine as long as you're contributing to the discussion.</p>
+        <p class="text-warning text-small">This topic is {{ topic.age|vague_timedelta_description }} old. Replying to old topics is fine as long as you're contributing to the discussion.</p>
       </div>
       {% endif %}
       <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">

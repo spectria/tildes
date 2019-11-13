@@ -8,7 +8,11 @@ from urllib.parse import quote_plus
 
 from pyramid.config import Configurator
 
-from tildes.lib.datetime import adaptive_date, descriptive_timedelta
+from tildes.lib.datetime import (
+    adaptive_date,
+    descriptive_timedelta,
+    vague_timedelta_description,
+)
 from tildes.models.comment import Comment
 from tildes.models.group import Group
 from tildes.models.topic import Topic
@@ -46,6 +50,7 @@ def includeme(config: Configurator) -> None:
         "adaptive_date": adaptive_date,
         "ago": descriptive_timedelta,
         "quote_plus": do_quote_plus,
+        "vague_timedelta_description": vague_timedelta_description,
     }
 
     # add custom jinja tests

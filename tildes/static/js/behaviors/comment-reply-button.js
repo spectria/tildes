@@ -79,21 +79,17 @@ $.onmount("[data-js-comment-reply-button]", function() {
             }
         }
 
-        var parentCommentTimestamp = new Date(
-            $parentComment
-                .find(".comment-posted-time")
-                .first()
-                .attr("datetime")
-        );
-
-        // add a warning if the comment being replied to is over a week old
-        if (Date.now() - parentCommentTimestamp > 1000 * 3600 * 24 * 7) {
+        // add a warning about the comment's age, if necessary (determined by backend)
+        var warningAge = $(this).attr("data-js-old-warning-age");
+        if (warningAge) {
             var warningDiv = document.createElement("div");
             warningDiv.classList.add("warning-old-reply");
             warningDiv.innerHTML =
                 '<p class="text-warning text-small">The comment you\'re replying to ' +
-                "is over a week old. Replying to old comments is fine as long as " +
-                "you're contributing to the discussion.</p>";
+                "is " +
+                warningAge +
+                " old. Replying to old comments is fine as long as you're " +
+                "contributing to the discussion.</p>";
             clone.querySelector("form").prepend(warningDiv);
         }
 

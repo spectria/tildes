@@ -137,6 +137,36 @@ def descriptive_timedelta(
     return result
 
 
+def vague_timedelta_description(delta: timedelta) -> str:
+    """Vaguely describe how long a timedelta refers to, like "over 2 weeks"."""
+    if delta.days < 1:
+        raise ValueError("The timedelta must be at least a day.")
+
+    day_thresholds = {
+        "year": 365,
+        "month": 30,
+        "week": 7,
+        "day": 1,
+    }
+
+    for threshold, days in day_thresholds.items():
+        if delta.days >= days:
+            largest_threshold = threshold
+            break
+
+    count = str(delta.days // day_thresholds[largest_threshold])
+
+    # set the strings we'll output based on count - change count of 1 to "a", otherwise
+    # pluralize the threshold name (e.g. change "week" to "weeks")
+    if count == "1":
+        count = "a"
+        period = largest_threshold
+    else:
+        period = largest_threshold + "s"
+
+    return f"over {count} {period}"
+
+
 def adaptive_date(
     target: datetime, abbreviate: bool = False, precision: Optional[int] = None
 ) -> str:
