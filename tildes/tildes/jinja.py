@@ -3,7 +3,6 @@
 
 """Contains configuration, functions, etc. for the Jinja template system."""
 
-from typing import Any
 from urllib.parse import quote_plus
 
 from pyramid.config import Configurator
@@ -18,26 +17,6 @@ from tildes.models.group import Group
 from tildes.models.topic import Topic
 
 
-def is_comment(item: Any) -> bool:
-    """Return whether the item is a Comment."""
-    return isinstance(item, Comment)
-
-
-def is_group(item: Any) -> bool:
-    """Return whether the item is a Group."""
-    return isinstance(item, Group)
-
-
-def is_topic(item: Any) -> bool:
-    """Return whether the item is a Topic."""
-    return isinstance(item, Topic)
-
-
-def do_quote_plus(string: str) -> str:
-    """Escape the string using the urllib quote_plus function."""
-    return quote_plus(string)
-
-
 def includeme(config: Configurator) -> None:
     """Configure Jinja2 template renderer."""
     settings = config.get_settings()
@@ -49,15 +28,15 @@ def includeme(config: Configurator) -> None:
     settings["jinja2.filters"] = {
         "adaptive_date": adaptive_date,
         "ago": descriptive_timedelta,
-        "quote_plus": do_quote_plus,
+        "quote_plus": quote_plus,
         "vague_timedelta_description": vague_timedelta_description,
     }
 
     # add custom jinja tests
     settings["jinja2.tests"] = {
-        "comment": is_comment,
-        "group": is_group,
-        "topic": is_topic,
+        "comment": lambda obj: isinstance(obj, Comment),
+        "group": lambda obj: isinstance(obj, Group),
+        "topic": lambda obj: isinstance(obj, Topic),
     }
 
     config.include("pyramid_jinja2")
