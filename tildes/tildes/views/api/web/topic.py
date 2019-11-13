@@ -8,13 +8,10 @@ from marshmallow.fields import String
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.request import Request
 from pyramid.response import Response
-from sqlalchemy import cast, Text
-from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.exc import IntegrityError
 from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import LogEventType
-from tildes.lib.link_metadata import METADATA_KEYS
 from tildes.models.group import Group
 from tildes.models.log import LogTopic
 from tildes.models.topic import Topic, TopicBookmark, TopicVote
@@ -393,22 +390,8 @@ def patch_topic_link(request: Request, link: str) -> dict:
         )
     )
 
-    # Wipe any old metadata from scrapers so we don't leave behind remnants
-    # (this probably really shouldn't be done here, but it's fine for now)
-    (
-        request.query(Topic)
-        .filter(Topic.topic_id == topic.topic_id)
-        .update(
-            {
-                "content_metadata": Topic.content_metadata.op("-")(  # type: ignore
-                    cast(METADATA_KEYS, ARRAY(Text))
-                )
-            },
-            synchronize_session=False,
-        )
-    )
-
     topic.link = link
+    topic.content_metadata = None
 
     return Response(f'<a href="{topic.link}">{topic.link}</a>')
 

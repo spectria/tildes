@@ -26,7 +26,7 @@ from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.expression import text
 from titlecase import titlecase
 
-from tildes.enums import TopicContentType, TopicType
+from tildes.enums import ContentMetadataFields, TopicContentType, TopicType
 from tildes.lib.database import TagList
 from tildes.lib.datetime import utc_from_timestamp, utc_now
 from tildes.lib.id import id_to_id36
@@ -461,38 +461,25 @@ class Topic(DatabaseModel):
     @property
     def content_metadata_for_display(self) -> str:
         """Return a string of the content's metadata, suitable for display."""
+        if not self.content_type:
+            return ""
+
         metadata_strings = []
 
-        # display word count (if we have it) with either type of topic
-        word_count = self.get_content_metadata("word_count")
-        if word_count is not None:
-            if word_count == 1:
-                metadata_strings.append("1 word")
-            else:
-                metadata_strings.append(f"{word_count} words")
+        fields = ContentMetadataFields.detail_fields_for_content_type(self.content_type)
 
-        if self.is_link_type:
-            # display the duration if we have it
-            duration = self.get_content_metadata("duration")
-            if duration:
-                duration_delta = timedelta(seconds=duration)
+        for field in fields:
+            value = self.get_content_metadata(field.key)
+            if not value:
+                continue
 
-                # When converted to str, timedelta always includes hours and minutes,
-                # so we want to strip off all the excess zeros and/or colons. However,
-                # if it's less than a minute we'll need to add one back.
-                duration_str = str(duration_delta).lstrip("0:")
-                if duration < 60:
-                    duration_str = f"0:{duration_str}"
+            # only show published date if it's more than 3 days before the topic
+            if field is ContentMetadataFields.PUBLISHED:
+                published = utc_from_timestamp(value)
+                if self.created_time - published < timedelta(days=3):
+                    continue
 
-                metadata_strings.append(duration_str)
-
-            # display the published date if it's more than 3 days before the topic
-            published_timestamp = self.get_content_metadata("published")
-            if published_timestamp:
-                published = utc_from_timestamp(published_timestamp)
-                if self.created_time - published > timedelta(days=3):
-                    date_str = published.strftime("%b %-d %Y")
-                    metadata_strings.append(f"published {date_str}")
+            metadata_strings.append(field.format_value(value))
 
         return ", ".join(metadata_strings)
 

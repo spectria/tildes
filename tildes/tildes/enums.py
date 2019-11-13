@@ -4,7 +4,10 @@
 """Contains Enum classes."""
 
 import enum
-from typing import Optional
+from datetime import timedelta
+from typing import Any, List, Optional
+
+from tildes.lib.datetime import utc_from_timestamp
 
 
 class CommentNotificationType(enum.Enum):
@@ -78,6 +81,67 @@ class CommentLabelOption(enum.Enum):
             return "Why is this malicious? (required, will only be visible to admins)"
 
         return None
+
+
+class ContentMetadataFields(enum.Enum):
+    """Enum for the fields of content metadata stored and used (for topics)."""
+
+    AUTHORS = enum.auto()
+    DESCRIPTION = enum.auto()
+    DOMAIN = enum.auto()
+    DURATION = enum.auto()
+    EXCERPT = enum.auto()
+    PUBLISHED = enum.auto()
+    TITLE = enum.auto()
+    WORD_COUNT = enum.auto()
+
+    @property
+    def key(self) -> str:
+        """Return the key to store this field under."""
+        return self.name.lower()
+
+    @classmethod
+    def detail_fields_for_content_type(
+        cls, content_type: "TopicContentType",
+    ) -> List["ContentMetadataFields"]:
+        """Return a list of fields to display for detail about a particular type."""
+        if content_type is TopicContentType.ARTICLE:
+            return [cls.WORD_COUNT, cls.PUBLISHED]
+
+        if content_type is TopicContentType.TEXT:
+            return [cls.WORD_COUNT]
+
+        if content_type is TopicContentType.VIDEO:
+            return [cls.DURATION, cls.PUBLISHED]
+
+        return []
+
+    def format_value(self, value: Any) -> str:
+        """Format a value stored in this field into a string for display."""
+        if self.name == "WORD_COUNT":
+            if value == 1:
+                return "1 word"
+
+            return f"{value} words"
+
+        if self.name == "DURATION":
+            delta = timedelta(seconds=value)
+
+            # When converted to str, timedelta always includes hours and minutes,
+            # so we want to strip off all the excess zeros and/or colons. However,
+            # if it's less than a minute we'll need to add one back.
+            duration_str = str(delta).lstrip("0:")
+            if value < 60:
+                duration_str = f"0:{duration_str}"
+
+            return duration_str
+
+        if self.name == "PUBLISHED":
+            published = utc_from_timestamp(value)
+            date_str = published.strftime("%b %-d %Y")
+            return f"published {date_str}"
+
+        return str(value)
 
 
 class FinancialEntryType(enum.Enum):
