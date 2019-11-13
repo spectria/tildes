@@ -49,7 +49,7 @@
       <span class="topic-content-type">{{ topic.content_type.display_name if topic.content_type else "Link" }}</span>
 
       {% if topic.content_metadata_for_display %}
-        <span class="topic-content-metadata">: {{ topic.content_metadata_for_display }}</span>
+        <span class="topic-content-metadata">{{ topic.content_metadata_for_display }}</span>
       {% endif %}
 
       {% if topic.unimportant_tags and request.user and request.user.show_tags_in_listings %}

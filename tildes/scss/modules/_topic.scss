@@ -90,6 +90,12 @@
   margin-right: 0.4rem;
 }
 
+// Add a colon after the topic-content-type only when there's metadata after it
+.topic-content-type:not(:last-child)::after {
+  content: ": ";
+  margin-right: 0.2rem;
+}
+
 .topic-group {
   margin-right: 0.4rem;
 }
