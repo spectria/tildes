@@ -65,7 +65,7 @@ translationstring==1.3    # via pyramid
 urllib3==1.25.7           # via requests, sentry-sdk
 venusian==3.0.0           # via cornice, pyramid
 wcwidth==0.1.7            # via prompt-toolkit
-webargs==4.4.1
+webargs==5.1.3
 webassets==0.12.1         # via pyramid-webassets
 webencodings==0.5.1       # via bleach, html5lib
 webob==1.8.5              # via pyramid
