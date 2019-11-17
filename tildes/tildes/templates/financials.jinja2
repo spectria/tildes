@@ -56,7 +56,7 @@
 {% macro entry_table_row(description, amount, is_approximate=False, is_summary=False) %}
   <tr{{ ' class="tr-summary"'|safe if is_summary }}>
     <td>{{ description }}</td>
-    <td class="text-right">
+    <td class="td-money">
       {% if is_approximate %}*{% endif %}
       {{ format_money(amount) }}
     </td>
