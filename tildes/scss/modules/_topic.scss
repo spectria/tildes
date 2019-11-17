@@ -233,16 +233,17 @@
 
   grid-column-gap: 0.4rem;
 
+  align-items: end;
   max-width: 32rem;
   white-space: nowrap;
 }
 
 .topic-info-comments {
   white-space: normal;
-}
 
-.topic-info-comments-new {
-  white-space: nowrap;
+  span {
+    white-space: nowrap;
+  }
 }
 
 .topic-info-source {

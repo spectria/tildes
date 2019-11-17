@@ -80,7 +80,7 @@
 
           {% if request.user.open_new_tab_internal %}target="_blank"{% endif %}
         >
-          {{ pluralize(topic.num_comments, "comment") }}
+          <span>{{ pluralize(topic.num_comments, "comment") }}</span>
 
           {% if topic.comments_since_last_visit %}
             <span class="topic-info-comments-new" title="Last visit {{ topic.last_visit_time|ago }}">
