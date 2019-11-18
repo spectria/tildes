@@ -95,14 +95,18 @@
 {% macro donation_goal(financial_data, current_time) %}
   <div class="donation-goal">
     <header>{{ current_time.strftime("%B %Y") }} donation goal</header>
-    <meter
-      max="{{ financial_data["goal"] }}"
-      low="{{ financial_data["expense"] }}"
-      high="{{ financial_data["goal"] // 4 * 3 }}" {# 3/4 of the goal #}
-      optimum="{{ financial_data["goal"] - 1 }}" {# just needs to be between high and max #}
-      value="{{ financial_data["income"] }}"
-      title="${{ financial_data["income"] }} / ${{ financial_data["goal"] }} (USD)"
-    ></meter>
+    <div class="donation-goal-progress">
+      <meter
+        class="donation-goal-meter"
+        max="{{ financial_data["goal"] }}"
+        low="{{ financial_data["expense"] }}"
+        high="{{ financial_data["goal"] // 4 * 3 }}" {# 3/4 of the goal #}
+        optimum="{{ financial_data["goal"] - 1 }}" {# just needs to be between high and max #}
+        value="{{ financial_data["income"] }}"
+        title="${{ financial_data["income"] }} / ${{ financial_data["goal"] }} (USD)"
+      ></meter>
+      <span class="donation-goal-percentage">{{ financial_data["goal_percentage"] }}%</span>
+    </div>
 
     <p>
       Tildes is a non-profit site with no ads or investors, funded entirely by donations.<br>

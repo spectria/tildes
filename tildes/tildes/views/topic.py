@@ -512,4 +512,8 @@ def _get_financial_data(db_session: Session) -> Optional[Dict[str, Decimal]]:
     if any(key not in financial_data for key in ("expense", "goal", "income")):
         return None
 
+    financial_data["goal_percentage"] = round(
+        financial_data["income"] / financial_data["goal"] * 100
+    )
+
     return financial_data

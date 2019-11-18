@@ -17,10 +17,23 @@
   header {
     font-weight: bold;
   }
+}
 
-  meter {
-    width: 100%;
-    height: 0.4rem;
-    margin: 0.4rem 0 0.2rem;
-  }
+.donation-goal-meter {
+  width: 100%;
+  height: 0.4rem;
+}
+
+.donation-goal-progress {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 0.2rem 0;
+}
+
+.donation-goal-percentage {
+  font-size: 0.6rem;
+  line-height: 0.6rem;
+  font-weight: bold;
+  margin-left: 0.4rem;
 }
