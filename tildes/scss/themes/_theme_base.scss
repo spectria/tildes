@@ -331,6 +331,14 @@
     background-color: map-get($theme, "background-primary");
   }
 
+  .donation-goal-meter-over-goal {
+    background: map-get($theme, "comment-label-exemplary");
+
+    &::-webkit-meter-bar {
+      background: map-get($theme, "comment-label-exemplary");
+    }
+  }
+
   .empty-subtitle {
     color: map-get($theme, "foreground-secondary");
   }

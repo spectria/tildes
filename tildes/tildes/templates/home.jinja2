@@ -97,12 +97,19 @@
     <header>{{ current_time.strftime("%B %Y") }} donation goal</header>
     <div class="donation-goal-progress">
       <meter
+      {% if financial_data["goal_percentage"] <= 100 %}
         class="donation-goal-meter"
         max="{{ financial_data["goal"] }}"
         low="{{ financial_data["expense"] }}"
         high="{{ financial_data["goal"] // 4 * 3 }}" {# 3/4 of the goal #}
         optimum="{{ financial_data["goal"] - 1 }}" {# just needs to be between high and max #}
         value="{{ financial_data["income"] }}"
+      {% else %}
+        {# Above 100%, this creates an effect of "extra" bar being added to the end #}
+        class="donation-goal-meter donation-goal-meter-over-goal"
+        max="{{ financial_data["income"] }}"
+        value="{{ financial_data["goal"] }}"
+      {% endif %}
         title="${{ financial_data["income"] }} / ${{ financial_data["goal"] }} (USD)"
       ></meter>
       <span class="donation-goal-percentage">{{ financial_data["goal_percentage"] }}%</span>
