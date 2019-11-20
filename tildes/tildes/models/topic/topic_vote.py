@@ -22,7 +22,7 @@ class TopicVote(DatabaseModel):
     Trigger behavior:
       Outgoing:
         - Inserting or deleting a row will increment or decrement the num_votes column
-          for the relevant topic.
+          for the relevant topic (but no decrementing if its voting is closed).
     """
 
     __tablename__ = "topic_votes"

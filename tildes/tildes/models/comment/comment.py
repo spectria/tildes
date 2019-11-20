@@ -31,6 +31,9 @@ else:
 # edits inside this period after creation will not mark the comment as edited
 EDIT_GRACE_PERIOD = timedelta(minutes=5)
 
+# comments can no longer be voted on when they're older than this
+VOTING_PERIOD = timedelta(days=30)
+
 
 class Comment(DatabaseModel):
     """Model for a comment on the site.
@@ -38,7 +41,7 @@ class Comment(DatabaseModel):
     Trigger behavior:
       Incoming:
         - num_votes will be incremented and decremented by insertions and deletions in
-          comment_votes.
+          comment_votes (but no decrementing if voting is closed).
       Outgoing:
         - Inserting or deleting rows, or updating is_deleted/is_removed to change
           visibility will increment or decrement num_comments accordingly on the
@@ -88,6 +91,9 @@ class Comment(DatabaseModel):
     rendered_html: str = Column(Text, nullable=False)
     excerpt: str = Column(Text, nullable=False, server_default="")
     num_votes: int = Column(Integer, nullable=False, server_default="0", index=True)
+    _is_voting_closed: bool = Column(
+        "is_voting_closed", Boolean, nullable=False, server_default="false", index=True
+    )
     search_tsv: Any = deferred(Column(TSVECTOR))
 
     user: User = relationship("User", lazy=False, innerjoin=True)
@@ -170,8 +176,12 @@ class Comment(DatabaseModel):
 
         # vote:
         #  - removed comments can't be voted on by anyone
+        #  - if voting has been closed, nobody can vote
         #  - otherwise, logged-in users except the author can vote
         if self.is_removed:
+            acl.append((Deny, Everyone, "vote"))
+
+        if self.is_voting_closed:
             acl.append((Deny, Everyone, "vote"))
 
         acl.append((Deny, self.user_id, "vote"))
@@ -258,6 +268,21 @@ class Comment(DatabaseModel):
             raise AttributeError
 
         return f"{self.topic.permalink}#comment-{self.parent_comment_id36}"
+
+    @property
+    def is_voting_closed(self) -> bool:
+        """Return whether voting on the comment is closed.
+
+        Note that if any logic is changed in here, the close_voting_on_old posts script
+        should be updated to match.
+        """
+        if self._is_voting_closed:
+            return True
+
+        if self.age > VOTING_PERIOD:
+            return True
+
+        return False
 
     @property
     def label_counts(self) -> Counter:

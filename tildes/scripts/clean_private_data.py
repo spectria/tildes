@@ -4,7 +4,6 @@
 """Script for cleaning up private/deleted data.
 
 Other things that should probably be added here eventually:
-    - Delete individual votes on comments/topics after voting has been closed
     - Delete which users labeled comments after labeling has been closed
     - Delete old used invite codes (30 days after used?)
 """
@@ -65,6 +64,7 @@ class DataCleaner:
 
         self.delete_old_log_entries()
         self.delete_old_topic_visits()
+        self.delete_old_votes()
 
         self.clean_old_deleted_comments()
         self.clean_old_deleted_topics()
@@ -95,6 +95,25 @@ class DataCleaner:
         )
         self.db_session.commit()
         logging.info(f"Deleted {deleted} old topic visits.")
+
+    def delete_old_votes(self) -> None:
+        """Delete individual votes on posts with their voting closed."""
+        self.db_session.execute(
+            """
+            DELETE FROM comment_votes USING comments
+            WHERE comments.comment_id = comment_votes.comment_id
+                AND comments.is_voting_closed = TRUE
+            """
+        )
+        self.db_session.execute(
+            """
+            DELETE FROM topic_votes USING topics
+            WHERE topics.topic_id = topic_votes.topic_id
+                AND topics.is_voting_closed = TRUE
+            """
+        )
+
+        self.db_session.commit()
 
     def clean_old_deleted_comments(self) -> None:
         """Clean the data of old deleted comments.

@@ -47,6 +47,9 @@ else:
 # edits inside this period after creation will not mark the topic as edited
 EDIT_GRACE_PERIOD = timedelta(minutes=5)
 
+# topics can no longer be voted on when they're older than this
+VOTING_PERIOD = timedelta(days=30)
+
 
 class Topic(DatabaseModel):
     """Model for a topic on the site.
@@ -54,7 +57,7 @@ class Topic(DatabaseModel):
     Trigger behavior:
       Incoming:
         - num_votes will be incremented and decremented by insertions and deletions in
-          topic_votes.
+          topic_votes (but no decrementing if voting is closed).
         - num_comments will be incremented and decremented by insertions, deletions, and
           updates to is_deleted in comments.
         - last_activity_time will be updated by insertions, deletions, and updates to
@@ -123,6 +126,9 @@ class Topic(DatabaseModel):
     )
     num_comments: int = Column(Integer, nullable=False, server_default="0", index=True)
     num_votes: int = Column(Integer, nullable=False, server_default="0", index=True)
+    _is_voting_closed: bool = Column(
+        "is_voting_closed", Boolean, nullable=False, server_default="false", index=True
+    )
     tags: List[str] = Column(TagList, nullable=False, server_default="{}")
     is_official: bool = Column(Boolean, nullable=False, server_default="false")
     is_locked: bool = Column(Boolean, nullable=False, server_default="false")
@@ -235,7 +241,7 @@ class Topic(DatabaseModel):
     def _update_creation_metric(self) -> None:
         incr_counter("topics", type=self.topic_type.name.lower())
 
-    def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
+    def __acl__(self) -> Sequence[Tuple[str, Any, str]]:  # noqa
         """Pyramid security ACL."""
         acl = []
 
@@ -274,8 +280,12 @@ class Topic(DatabaseModel):
 
         # vote:
         #  - removed topics can't be voted on by anyone
+        #  - if voting has been closed, nobody can vote
         #  - otherwise, logged-in users except the author can vote
         if self.is_removed:
+            acl.append((Deny, Everyone, "vote"))
+
+        if self.is_voting_closed:
             acl.append((Deny, Everyone, "vote"))
 
         acl.append((Deny, self.user_id, "vote"))
@@ -401,6 +411,21 @@ class Topic(DatabaseModel):
     def is_spoiler(self) -> bool:
         """Return whether the topic is marked as a spoiler."""
         return self.has_tag("spoiler")
+
+    @property
+    def is_voting_closed(self) -> bool:
+        """Return whether voting on the topic is closed.
+
+        Note that if any logic is changed in here, the close_voting_on_old posts script
+        should be updated to match.
+        """
+        if self._is_voting_closed:
+            return True
+
+        if self.age > VOTING_PERIOD:
+            return True
+
+        return False
 
     def has_tag(self, check_tag: str) -> bool:
         """Return whether the topic has a tag or any sub-tag of it."""

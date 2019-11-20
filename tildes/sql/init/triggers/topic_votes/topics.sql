@@ -8,9 +8,12 @@ BEGIN
             SET num_votes = num_votes + 1
             WHERE topic_id = NEW.topic_id;
     ELSIF (TG_OP = 'DELETE') THEN
+        -- Exclude topics with closed voting from decrements so that individual vote
+        -- records can be deleted while retaining the final vote total.
         UPDATE topics
             SET num_votes = num_votes - 1
-            WHERE topic_id = OLD.topic_id;
+            WHERE topic_id = OLD.topic_id
+                AND is_voting_closed = FALSE;
     END IF;
 
     RETURN NULL;

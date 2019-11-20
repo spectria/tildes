@@ -144,12 +144,12 @@
         {{ comment.rendered_html|safe }}
       </div>
 
-      {# Show votes at the bottom only if the viewer is logged out #}
-      {% if not request.user and comment.num_votes > 0 %}
-        <div class="comment-votes">{{ pluralize(comment.num_votes, "vote") }}</div>
-      {% endif %}
-
       <menu class="btn-post">
+        {# Show non-button vote count if the viewer can't vote and it's not their comment #}
+        {% if not request.has_permission("vote", comment) and comment.num_votes > 0 and comment.user != request.user %}
+          <div class="comment-votes">{{ pluralize(comment.num_votes, "vote") }}</div>
+        {% endif %}
+
         {% if request.has_permission('vote', comment) %}
           {% if comment.user_voted is defined and comment.user_voted %}
             <li><button class="btn-post-action btn-post-action-used" name="unvote"

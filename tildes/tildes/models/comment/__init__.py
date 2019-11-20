@@ -1,6 +1,6 @@
 """Contains models related to comments."""
 
-from .comment import Comment, EDIT_GRACE_PERIOD
+from .comment import Comment, EDIT_GRACE_PERIOD, VOTING_PERIOD
 from .comment_bookmark import CommentBookmark
 from .comment_label import CommentLabel
 from .comment_notification import CommentNotification
