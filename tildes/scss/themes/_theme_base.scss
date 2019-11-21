@@ -277,10 +277,6 @@
     color: map-get($theme, "warning");
   }
 
-  .comment-votes {
-    color: map-get($theme, "foreground-secondary");
-  }
-
   .label-comment-exemplary {
     @include theme-special-label(map-get($theme, "comment-label-exemplary"), $is-light);
   }
