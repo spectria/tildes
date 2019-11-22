@@ -167,6 +167,11 @@
 .comment-votes {
   font-size: 0.6rem;
   margin: 0.2rem 0.4rem;
+
+  // remove the bottom margin on your own comments (when votes are at the top)
+  .is-comment-mine > .comment-itself & {
+    margin-bottom: 0;
+  }
 }
 
 .is-comment-by-op {
