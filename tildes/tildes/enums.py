@@ -201,6 +201,9 @@ class TopicContentType(enum.Enum):
 
     ARTICLE = enum.auto()
     ASK = enum.auto()
+    ASK_ADVICE = enum.auto()
+    ASK_RECOMMENDATIONS = enum.auto()
+    ASK_SURVEY = enum.auto()
     IMAGE = enum.auto()
     PDF = enum.auto()
     TEXT = enum.auto()
@@ -213,6 +216,10 @@ class TopicContentType(enum.Enum):
 
         if self.name == "PDF":
             return self.name
+
+        if self.name.startswith("ASK_"):
+            subtype_name = self.name.partition("_")[-1].capitalize()
+            return f"Ask ({subtype_name})"
 
         return self.name.capitalize()
 

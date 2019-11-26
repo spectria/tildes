@@ -440,6 +440,15 @@ class Topic(DatabaseModel):
     def content_type(self) -> Optional[TopicContentType]:
         """Return the content's type based on the topic's attributes."""
         if self.is_text_type:
+            if self.has_tag("ask.survey"):
+                return TopicContentType.ASK_SURVEY
+
+            if self.has_tag("ask.recommendations"):
+                return TopicContentType.ASK_RECOMMENDATIONS
+
+            if self.has_tag("ask.advice"):
+                return TopicContentType.ASK_ADVICE
+
             if self.has_tag("ask"):
                 return TopicContentType.ASK
 
@@ -465,6 +474,14 @@ class Topic(DatabaseModel):
                 return TopicContentType.ARTICLE
 
         return None
+
+    @property
+    def content_type_for_display(self) -> str:
+        """Return a string of the topic's content type, suitable for display."""
+        if not self.content_type:
+            return "Link"
+
+        return self.content_type.display_name
 
     def get_content_metadata(self, key: str) -> Any:
         """Get a piece of content metadata "safely".
