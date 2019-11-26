@@ -218,7 +218,7 @@ class TopicContentType(enum.Enum):
             return self.name
 
         if self.name.startswith("ASK_"):
-            subtype_name = self.name.partition("_")[-1].capitalize()
+            subtype_name = self.name.partition("_")[-1].lower()
             return f"Ask ({subtype_name})"
 
         return self.name.capitalize()
