@@ -35,6 +35,9 @@ class SiteInfo:
 
 
 SITE_INFO_BY_DOMAIN = {
+    "medium.com": SiteInfo(
+        "Medium", show_author=True, content_type=TopicContentType.ARTICLE
+    ),
     "twitter.com": SiteInfo(
         "Twitter", show_author=True, content_type=TopicContentType.TWEET
     ),
