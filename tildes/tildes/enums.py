@@ -118,6 +118,9 @@ class ContentMetadataFields(enum.Enum):
 
     def format_value(self, value: Any) -> str:
         """Format a value stored in this field into a string for display."""
+        if self.name == "AUTHORS":
+            return ", ".join(value)
+
         if self.name == "DURATION":
             delta = timedelta(seconds=value)
 

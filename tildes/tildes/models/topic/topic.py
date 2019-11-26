@@ -31,6 +31,7 @@ from tildes.lib.database import TagList
 from tildes.lib.datetime import utc_from_timestamp, utc_now
 from tildes.lib.id import id_to_id36
 from tildes.lib.markdown import convert_markdown_to_safe_html
+from tildes.lib.site_info import SITE_INFO_BY_DOMAIN
 from tildes.lib.string import convert_to_url_slug
 from tildes.lib.url import get_domain_from_url
 from tildes.metrics import incr_counter
@@ -397,15 +398,13 @@ class Topic(DatabaseModel):
         if not self.is_link_type:
             raise ValueError("Non-link topics do not have a link source")
 
-        domain = self.link_domain
-        authors = self.get_content_metadata("authors")
+        # if there's no SiteInfo object for this domain, just return the domain itself
+        try:
+            site = SITE_INFO_BY_DOMAIN[self.link_domain]
+        except KeyError:
+            return self.link_domain
 
-        if domain == "twitter.com" and authors:
-            return f"Twitter: @{authors[0]}"
-        elif domain == "youtube.com" and authors:
-            return f"YouTube: {authors[0]}"
-
-        return domain
+        return site.content_source(self.get_content_metadata("authors"))
 
     @property
     def is_spoiler(self) -> bool:
@@ -455,15 +454,10 @@ class Topic(DatabaseModel):
             elif url_path.suffix.lower() in (".gif", ".jpeg", ".jpg", ".png"):
                 return TopicContentType.IMAGE
 
-            # individual sites should be handled in a more general manner; fine for now
-            if self.link_domain == "youtube.com" and parsed_url.path == "/watch":
-                return TopicContentType.VIDEO
-
-            try:
-                if self.link_domain == "twitter.com" and url_path.parts[2] == "status":
-                    return TopicContentType.TWEET
-            except IndexError:
-                pass
+            # if the site has its own logic in a SiteInfo object, use that
+            site = SITE_INFO_BY_DOMAIN.get(self.link_domain)
+            if site:
+                return site.content_type
 
             # consider it an article if we picked up a word count of at least 200
             word_count = self.get_content_metadata("word_count")
