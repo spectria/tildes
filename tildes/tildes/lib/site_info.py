@@ -38,6 +38,9 @@ SITE_INFO_BY_DOMAIN = {
     "twitter.com": SiteInfo(
         "Twitter", show_author=True, content_type=TopicContentType.TWEET
     ),
+    "vimeo.com": SiteInfo(
+        "Vimeo", show_author=True, content_type=TopicContentType.VIDEO
+    ),
     "youtube.com": SiteInfo(
         "YouTube", show_author=True, content_type=TopicContentType.VIDEO
     ),
