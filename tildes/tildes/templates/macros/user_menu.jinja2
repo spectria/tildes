@@ -13,9 +13,14 @@
           Your posts
         </a>
       </li>
+      <li class="nav-item {{ 'active' if route == 'bookmarks' else '' }}">
+        <a href="/bookmarks">
+          Your bookmarks
+        </a>
+      </li>
       <li class="nav-item {{ 'active' if route == 'votes' else '' }}">
         <a href="/votes">
-          Votes
+          Your votes
         </a>
       </li>
     </ul>
@@ -59,11 +64,6 @@
 
     <li>Misc</li>
     <ul class="nav">
-      <li class="nav-item {{ 'active' if route == 'bookmarks' else '' }}">
-        <a href="/bookmarks">
-          Bookmarks
-        </a>
-      </li>
       <li class="nav-item {{ 'active' if route == 'invite' else '' }}">
         {% if request.user.invite_codes_remaining %}<strong>{% endif %}
         <a href="/invite">
