@@ -7,8 +7,7 @@ from typing import Any
 
 from pyramid.request import Request
 from sqlalchemy import func
-from sqlalchemy.orm import aliased
-from sqlalchemy.sql.expression import and_
+from sqlalchemy.sql.expression import and_, label
 
 from tildes.enums import CommentSortOption
 from tildes.models.pagination import PaginatedQuery
@@ -41,22 +40,16 @@ class CommentQuery(PaginatedQuery):
         return self._attach_vote_data()._attach_bookmark_data()
 
     def _attach_vote_data(self) -> "CommentQuery":
-        """Add a subquery to include whether the user has voted."""
-        vote_subquery = (
-            self.request.query(aliased(CommentVote))
-            .filter(
+        """Join the data related to whether the user has voted on the comment."""
+        query = self.join(
+            CommentVote,
+            and_(
                 CommentVote.comment_id == Comment.comment_id,
-                CommentVote.user_id == self.request.user.user_id,
-            )
-            .exists()
-            .label("user_voted")
+                CommentVote.user == self.request.user,
+            ),
+            isouter=(not self._only_user_voted),
         )
-
-        query = self.add_columns(vote_subquery)
-
-        if self._only_user_voted:
-            query = query.add_columns(CommentVote.created_time)
-            query = query.filter(vote_subquery)
+        query = query.add_columns(label("voted_time", CommentVote.created_time))
 
         return query
 
@@ -70,7 +63,9 @@ class CommentQuery(PaginatedQuery):
             ),
             isouter=(not self._only_bookmarked),
         )
-        query = query.add_columns(CommentBookmark.created_time)
+        query = query.add_columns(
+            label("bookmarked_time", CommentBookmark.created_time)
+        )
 
         return query
 
@@ -81,12 +76,11 @@ class CommentQuery(PaginatedQuery):
             # the result is already a Comment, no merging needed
             comment = result
             comment.user_voted = False
-            comment.bookmark_created_time = None
+            comment.user_bookmarked = False
         else:
             comment = result.Comment
-            comment.user_voted = result.user_voted
-
-            comment.bookmark_created_time = result.created_time
+            comment.user_voted = bool(result.voted_time)
+            comment.user_bookmarked = bool(result.bookmarked_time)
 
         return comment
 

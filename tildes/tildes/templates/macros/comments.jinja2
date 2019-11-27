@@ -151,7 +151,7 @@
         {% endif %}
 
         {% if request.has_permission('vote', comment) %}
-          {% if comment.user_voted is defined and comment.user_voted %}
+          {% if comment.user_voted %}
             <li><button class="btn-post-action btn-post-action-used" name="unvote"
               data-ic-delete-from="{{ request.route_url(
                 'ic_comment_vote',
@@ -204,7 +204,7 @@
         {% endif %}
 
         {% if request.has_permission('bookmark', comment) %}
-          {{ post_action_toggle_button("bookmark", comment, is_toggled=comment.bookmark_created_time) }}
+          {{ post_action_toggle_button("bookmark", comment, is_toggled=comment.user_bookmarked) }}
         {% endif %}
 
         {% if request.has_permission("remove", comment) %}

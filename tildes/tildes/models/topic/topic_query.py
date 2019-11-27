@@ -7,8 +7,7 @@ from typing import Any, Sequence
 
 from pyramid.request import Request
 from sqlalchemy import func
-from sqlalchemy.sql.expression import and_, null
-from sqlalchemy.orm import aliased
+from sqlalchemy.sql.expression import and_, label, null
 
 from tildes.enums import TopicSortOption
 from tildes.lib.datetime import SimpleHoursPeriod, utc_now
@@ -46,22 +45,16 @@ class TopicQuery(PaginatedQuery):
         return self._attach_vote_data()._attach_visit_data()._attach_bookmark_data()
 
     def _attach_vote_data(self) -> "TopicQuery":
-        """Add a subquery to include whether the user has voted."""
-        vote_subquery = (
-            self.request.query(aliased(TopicVote))
-            .filter(
+        """Join the data related to whether the user has voted on the topic."""
+        query = self.join(
+            TopicVote,
+            and_(
                 TopicVote.topic_id == Topic.topic_id,
                 TopicVote.user == self.request.user,
-            )
-            .exists()
-            .label("user_voted")
+            ),
+            isouter=(not self._only_user_voted),
         )
-
-        query = self.add_columns(vote_subquery)
-
-        if self._only_user_voted:
-            query = query.filter(vote_subquery)
-            query = query.add_columns(TopicVote.created_time)
+        query = query.add_columns(label("voted_time", TopicVote.created_time))
 
         return query
 
@@ -75,7 +68,7 @@ class TopicQuery(PaginatedQuery):
             ),
             isouter=(not self._only_bookmarked),
         )
-        query = query.add_columns(TopicBookmark.created_time)
+        query = query.add_columns(label("bookmarked_time", TopicBookmark.created_time))
 
         return query
 
@@ -112,9 +105,8 @@ class TopicQuery(PaginatedQuery):
         else:
             topic = result.Topic
 
-            topic.user_voted = result.user_voted
-
-            topic.bookmark_created_time = result.created_time
+            topic.user_voted = bool(result.voted_time)
+            topic.user_bookmarked = bool(result.bookmarked_time)
 
             topic.last_visit_time = result.visit_time
 

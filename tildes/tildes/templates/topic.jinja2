@@ -153,7 +153,7 @@
     {% endif %}
 
     {% if request.has_permission('bookmark', topic) %}
-      {{ post_action_toggle_button("bookmark", topic, is_toggled=topic.bookmark_created_time) }}
+      {{ post_action_toggle_button("bookmark", topic, is_toggled=topic.user_bookmarked) }}
     {% endif %}
 
     {% if request.has_permission("remove", topic) %}
