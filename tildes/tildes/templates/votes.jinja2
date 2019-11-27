@@ -4,6 +4,11 @@
 
 {% block main_heading %}Votes{% endblock %}
 
+{% block content %}
+  <div class="toast toast-minor toast-warning">Tildes only retains individual voting data until each post is 30 days old, so don't use this page to keep track of posts longer-term. For that purpose, use the "Bookmark" button available on every post.</div>
+  {{ super() }}
+{% endblock %}
+
 {% block empty_message %}
   {% if post_type == 'topic' %}
     You haven't voted on any topics
