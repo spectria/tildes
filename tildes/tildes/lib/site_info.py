@@ -44,6 +44,9 @@ SITE_INFO_BY_DOMAIN = {
     "vimeo.com": SiteInfo(
         "Vimeo", show_author=True, content_type=TopicContentType.VIDEO
     ),
+    "wordpress.com": SiteInfo(
+        "WordPress", show_author=True, content_type=TopicContentType.ARTICLE
+    ),
     "youtube.com": SiteInfo(
         "YouTube", show_author=True, content_type=TopicContentType.VIDEO
     ),
