@@ -13,6 +13,7 @@ from pyramid.view import view_config
 from webargs.pyramidparser import use_kwargs
 
 from tildes.metrics import incr_counter
+from tildes.views.decorators import rate_limit_view
 
 
 @view_config(
@@ -40,6 +41,7 @@ def get_donate_stripe(request: Request) -> dict:
         "interval": String(required=True, validate=OneOf(("onetime", "month", "year"))),
     }
 )
+@rate_limit_view("donate_stripe")
 def post_donate_stripe(
     request: Request, amount: int, currency: str, interval: str
 ) -> dict:

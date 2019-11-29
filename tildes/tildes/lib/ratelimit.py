@@ -284,6 +284,7 @@ _RATE_LIMITED_ACTIONS = (
     RateLimitedAction("register", timedelta(hours=1), 50),
     RateLimitedAction("topic_post", timedelta(hours=1), 6, max_burst=4),
     RateLimitedAction("comment_post", timedelta(hours=1), 30, max_burst=20),
+    RateLimitedAction("donate_stripe", timedelta(hours=1), 5, by_user=False),
 )
 
 # (public) dict to be able to look up the actions by name
