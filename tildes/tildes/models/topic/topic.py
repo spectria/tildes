@@ -515,7 +515,12 @@ class Topic(DatabaseModel):
                 if self.created_time - published < timedelta(days=3):
                     continue
 
-            metadata_strings.append(field.format_value(value))
+            formatted_value = field.format_value(value)
+
+            if field is ContentMetadataFields.PUBLISHED:
+                formatted_value = f"published {formatted_value}"
+
+            metadata_strings.append(formatted_value)
 
         return ", ".join(metadata_strings)
 

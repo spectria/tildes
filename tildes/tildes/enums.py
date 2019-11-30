@@ -140,8 +140,7 @@ class ContentMetadataFields(enum.Enum):
 
         if self.name == "PUBLISHED":
             published = utc_from_timestamp(value)
-            date_str = published.strftime("%b %-d %Y")
-            return f"published {date_str}"
+            return published.strftime("%b %-d %Y")
 
         if self.name == "WORD_COUNT":
             if value == 1:
