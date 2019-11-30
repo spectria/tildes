@@ -100,6 +100,11 @@ class ContentMetadataFields(enum.Enum):
         """Return the key to store this field under."""
         return self.name.lower()
 
+    @property
+    def display_name(self) -> str:
+        """Return the field's name in a format more suitable for display."""
+        return self.name.replace("_", " ").capitalize()
+
     @classmethod
     def detail_fields_for_content_type(
         cls, content_type: "TopicContentType",

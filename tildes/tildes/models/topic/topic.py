@@ -520,6 +520,23 @@ class Topic(DatabaseModel):
         return ", ".join(metadata_strings)
 
     @property
+    def content_metadata_fields_for_display(self) -> Dict[str, str]:
+        """Return a dict of the metadata fields and values, suitable for display."""
+        if not self.content_metadata:
+            return {}
+
+        output_fields = {}
+        for field_name, value in self.content_metadata.items():
+            try:
+                field = ContentMetadataFields[field_name.upper()]
+            except KeyError:
+                continue
+
+            output_fields[field.display_name] = field.format_value(value)
+
+        return output_fields
+
+    @property
     def content_excerpt(self) -> Optional[str]:
         """Return the topic's content excerpt (if it has one)."""
         if self.is_text_type:
