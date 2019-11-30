@@ -388,6 +388,13 @@ def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
     )
     tree = CommentTree(comments, comment_order, request.user)
 
+    # check for link information (content metadata) to display
+    if topic.is_link_type:
+        content_metadata = topic.content_metadata_fields_for_display.copy()
+        content_metadata.pop("Domain", None)
+    else:
+        content_metadata = None
+
     # check if there are any items in the log to show
     visible_events = (
         LogEventType.TOPIC_LINK_EDIT,
@@ -423,6 +430,7 @@ def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
 
     return {
         "topic": topic,
+        "content_metadata": content_metadata,
         "log": log,
         "comments": tree,
         "comment_order": comment_order,

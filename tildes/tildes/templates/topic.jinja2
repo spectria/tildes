@@ -80,8 +80,8 @@
       <div class="topic-full-content">{{ topic.additional_content_html|safe }}</div>
     {% endif %}
 
-    {% if topic.content_metadata %}
-      {{ content_metadata(topic) }}
+    {% if content_metadata %}
+      {{ topic_content_metadata(content_metadata) }}
     {% endif %}
   {% endif %}
 {% endif %}
@@ -305,12 +305,12 @@
 </dl>
 {% endblock %}
 
-{% macro content_metadata(topic) %}
+{% macro topic_content_metadata(content_metadata) %}
   <section class="topic-full-content-metadata">
   <h2>Link information</h2>
   <p class="text-small text-secondary">This data is scraped automatically and may be incorrect.</p>
   <dl>
-  {% for field, value in topic.content_metadata_fields_for_display.items() %}
+  {% for field, value in content_metadata.items() %}
     <dt>{{ field }}</dt>
     <dd>{{ value }}</dd>
   {% endfor %}
