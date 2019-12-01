@@ -5,6 +5,7 @@
 
 from typing import List, Optional, Type, Union
 
+from enum import Enum
 from marshmallow.fields import String
 from pyramid.request import Request
 from pyramid.view import view_config
@@ -121,7 +122,6 @@ def get_user_search(
         order_options = CommentSortOption
 
     # try to get the specified order, but fall back to "newest"
-    order: Union[TopicSortOption, CommentSortOption]
     try:
         order = order_options[order_name.upper()]
     except KeyError:
@@ -174,7 +174,7 @@ def _get_user_posts(
     anchor_type: Optional[str],
     before: Optional[str],
     after: Optional[str],
-    order: Optional[Union[TopicSortOption, CommentSortOption]],
+    order: Optional[Enum],
     per_page: int,
     search: Optional[str] = None,
 ) -> Union[PaginatedResults, MixedPaginatedResults]:
