@@ -290,6 +290,8 @@
   }
 
   dd {
+    @include force-text-wrap-if-needed;
+
     grid-column-start: 2;
     margin: 0;
     padding: 0.2rem;
