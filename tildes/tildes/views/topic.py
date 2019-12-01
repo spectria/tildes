@@ -391,7 +391,10 @@ def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
     # check for link information (content metadata) to display
     if topic.is_link_type:
         content_metadata = topic.content_metadata_fields_for_display.copy()
-        content_metadata.pop("Domain", None)
+
+        fields_to_hide = ("Domain", "Description")
+        for field in fields_to_hide:
+            content_metadata.pop(field, None)
     else:
         content_metadata = None
 
