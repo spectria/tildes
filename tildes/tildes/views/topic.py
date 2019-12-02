@@ -5,6 +5,7 @@
 
 from collections import namedtuple
 from decimal import Decimal
+from difflib import SequenceMatcher
 from typing import Any, Dict, Optional, Union
 
 from marshmallow import missing, ValidationError
@@ -395,6 +396,12 @@ def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
         fields_to_hide = ("Domain", "Description")
         for field in fields_to_hide:
             content_metadata.pop(field, None)
+
+        # don't include the title if it's pretty similar to the topic's title
+        if "Title" in content_metadata:
+            similarity = SequenceMatcher(a=content_metadata["Title"], b=topic.title)
+            if similarity.ratio() >= 0.6:
+                del content_metadata["Title"]
     else:
         content_metadata = None
 
