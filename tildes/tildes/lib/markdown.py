@@ -293,7 +293,7 @@ class LinkifyFilter(Filter):
     # Regex that finds probable references to users. As above, this isn't "perfect"
     # either but works as an initial pass with the validity of the username checked more
     # carefully later.
-    USERNAME_REFERENCE_REGEX = re.compile(r"(?<!\w)(?:/?u/|@)([\w-]+)\b")
+    USERNAME_REFERENCE_REGEX = re.compile(r"(?<![\w\\])(?:/?u/|@)([\w-]+)\b")
 
     def __init__(
         self, source: NonRecursiveTreeWalker, skip_tags: Optional[List[str]] = None

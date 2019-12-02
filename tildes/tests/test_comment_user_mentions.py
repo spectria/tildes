@@ -36,6 +36,14 @@ def test_get_mentions_for_comment(db, user_list, comment):
         assert mentions[index].user == user
 
 
+def test_get_mentions_for_comment_escapes_with_backslash(db, user_list, comment):
+    """Test that backslash escaped mentions are ignored."""
+    comment.markdown = "@foo @bar. \@baz!"
+    mentions = CommentNotification.get_mentions_for_comment(db, comment)
+    assert len(mentions) == 2
+    assert "baz" not in [mention.user for mention in mentions]
+
+
 def test_mention_filtering_parent_comment(db, topic, user_list):
     """Test notification filtering for parent comments."""
     parent_comment = Comment(topic, user_list[0], "Comment content.")
