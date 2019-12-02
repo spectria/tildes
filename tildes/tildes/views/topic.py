@@ -4,9 +4,8 @@
 """Views related to posting/viewing topics and comments on them."""
 
 from collections import namedtuple
-from decimal import Decimal
 from difflib import SequenceMatcher
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from marshmallow import missing, ValidationError
 from marshmallow.fields import Boolean, String
@@ -15,8 +14,7 @@ from pyramid.renderers import render_to_response
 from pyramid.request import Request
 from pyramid.response import Response
 from pyramid.view import view_config
-from sqlalchemy import cast, func, or_
-from sqlalchemy.orm.session import Session
+from sqlalchemy import cast, or_
 from sqlalchemy.sql.expression import any_, desc, text
 from sqlalchemy_utils import Ltree
 from webargs.pyramidparser import use_kwargs
@@ -31,7 +29,6 @@ from tildes.enums import (
 from tildes.lib.database import TagList
 from tildes.lib.datetime import SimpleHoursPeriod, utc_now
 from tildes.models.comment import Comment, CommentNotification, CommentTree
-from tildes.models.financials import Financials
 from tildes.models.group import Group, GroupWikiPage
 from tildes.models.log import LogComment, LogTopic
 from tildes.models.topic import Topic, TopicSchedule, TopicVisit
@@ -41,6 +38,7 @@ from tildes.schemas.fields import Enum, ShortTimePeriod
 from tildes.schemas.listing import TopicListingSchema
 from tildes.schemas.topic import TopicSchema
 from tildes.views.decorators import rate_limit_view
+from tildes.views.financials import get_financial_data
 
 
 DefaultSettings = namedtuple("DefaultSettings", ["order", "period"])
@@ -307,7 +305,7 @@ def get_group_topics(  # noqa
         most_recent_scheduled_topics = None
 
     if is_home_page:
-        financial_data = _get_financial_data(request.db_session)
+        financial_data = get_financial_data(request.db_session)
     else:
         financial_data = None
 
@@ -560,26 +558,3 @@ def _get_default_settings(
             default_period = None
 
     return DefaultSettings(order=default_order, period=default_period)
-
-
-def _get_financial_data(db_session: Session) -> Optional[Dict[str, Decimal]]:
-    """Return financial data used to render the donation goal box."""
-    # get the total sum for each entry type in the financials table relevant to today
-    financial_totals = (
-        db_session.query(Financials.entry_type, func.sum(Financials.amount))
-        .filter(Financials.date_range.op("@>")(text("CURRENT_DATE")))
-        .group_by(Financials.entry_type)
-        .all()
-    )
-
-    financial_data = {entry[0].name.lower(): entry[1] for entry in financial_totals}
-
-    # if any of the entry types were missing, the data won't be usable
-    if any(key not in financial_data for key in ("expense", "goal", "income")):
-        return None
-
-    financial_data["goal_percentage"] = round(
-        financial_data["income"] / financial_data["goal"] * 100
-    )
-
-    return financial_data

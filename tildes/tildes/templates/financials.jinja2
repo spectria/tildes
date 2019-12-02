@@ -4,6 +4,7 @@
 {% extends 'base_no_sidebar.jinja2' %}
 
 {% from "macros/utils.jinja2" import format_money %}
+{% from "macros/donation_goal.jinja2" import donation_goal %}
 
 {% block title %}Tildes financials{% endblock %}
 
@@ -12,6 +13,7 @@
 {% block main_heading %}Tildes financials{% endblock %}
 
 {% block content %}
+
 <p>This page is a view into Tildes's financials: operating expenses, income from the various donation methods, and the overall goal for monthly donations. Currently, it only contains data for {{ current_time.strftime("%B %Y") }}, but more historical data will be available eventually.</p>
 
 <p>Amounts on this page are in USD unless otherwise noted. Even though Tildes is a Canadian non-profit, many of its costs and donations are in USD. People from other parts of the world are also generally most familiar with the relative value of USD, so using it makes this info more understandable to everyone.</p>
@@ -21,6 +23,10 @@
 <div class="divider"></div>
 
 <p><strong>The current donation goal is {{ format_money(entries["goal"]|sum(attribute="amount")) }} per month.</strong></p>
+
+{% if financial_data %}
+  {{ donation_goal(financial_data, current_time) }}
+{% endif %}
 
 <p>The actual <em>costs</em> solely to keep Tildes running are much lower than this (see table below), but this represents the amount that I believe will make Tildes truly independently sustainable. It will cover all of the operating costs and also allow me (<a href="/user/Deimos">Deimos</a>) to pay myself a somewhat respectable (but low) salary of about $35,000/year. This goal may not be achievable in the near term, but it is the point where I will be comfortable focusing on Tildes without still needing to find additional outside income.</p>
 

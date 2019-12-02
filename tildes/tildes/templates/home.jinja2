@@ -4,6 +4,7 @@
 {% extends 'topic_listing.jinja2' %}
 
 {% from 'macros/forms.jinja2' import search_form %}
+{% from 'macros/donation_goal.jinja2' import donation_goal %}
 
 {% block title_full %}Tildes{% endblock %}
 
@@ -109,35 +110,3 @@
     </ul>
   {% endif %}
 {% endblock %}
-
-{% macro donation_goal(financial_data, current_time) %}
-  <div class="donation-goal">
-    <header>Tildes's progress to sustainability</header>
-
-    <div class="donation-goal-progress">
-      <meter
-      {% if financial_data["goal_percentage"] <= 100 %}
-        class="donation-goal-meter"
-        max="{{ financial_data["goal"] }}"
-        low="{{ financial_data["expense"] }}"
-        high="{{ financial_data["goal"] // 4 * 3 }}" {# 3/4 of the goal #}
-        optimum="{{ financial_data["goal"] - 1 }}" {# just needs to be between high and max #}
-        value="{{ financial_data["income"] }}"
-      {% else %}
-        {# Above 100%, this creates an effect of "extra" bar being added to the end #}
-        class="donation-goal-meter donation-goal-meter-over-goal"
-        max="{{ financial_data["income"] }}"
-        value="{{ financial_data["goal"] }}"
-      {% endif %}
-        title="${{ financial_data["income"] }} of ${{ financial_data["goal"] }} goal (USD)"
-      ></meter>
-      <span class="donation-goal-percentage">{{ financial_data["goal_percentage"] }}%</span>
-    </div>
-
-    <p class="text-secondary">{{ current_time.strftime("%B %Y") }} donations</p>
-
-    <p>Tildes is a non-profit site with no ads or investors, funded entirely by donations.</p>
-
-    <p><a href="https://docs.tildes.net/donate">Please donate</a> to support its continued development! (<a href="/financials">more details</a>)</p>
-  </div>
-{% endmacro %}

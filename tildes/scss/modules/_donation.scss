@@ -5,8 +5,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: $paragraph-max-width;
 
-  padding: 0.4rem 0.4rem 0;
+  padding: 0.4rem;
   margin: 1rem 0;
   border: 1px solid;
   border-color: inherit;
