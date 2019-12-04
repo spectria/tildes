@@ -51,6 +51,10 @@ Disallow: /
 User-agent: SemrushBot-BA
 Disallow: /
 
+# https://serpstatbot.com/
+User-agent: serpstatbot
+Disallow: /
+
 # https://www.zoominfo.com/
 User-agent: ZoominfoBot
 Disallow: /
