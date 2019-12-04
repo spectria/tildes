@@ -307,9 +307,14 @@ class Topic(DatabaseModel):
         acl.append((Allow, Authenticated, "comment"))
 
         # edit:
-        #  - only text topics can be edited, only by the author
+        #  - only text topics can be edited
+        #  - authors can edit their own topics
+        #  - admins can edit topics belonging to the generic/automatic user
         if self.is_text_type:
             acl.append((Allow, self.user_id, "edit"))
+
+            if self.user_id == -1:
+                acl.append((Allow, "admin", "edit"))
 
         # delete:
         #  - only the author can delete
