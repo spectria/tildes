@@ -151,29 +151,7 @@
         {% endif %}
 
         {% if request.has_permission('vote', comment) %}
-          {% if comment.user_voted %}
-            <li><button class="btn-post-action btn-post-action-used" name="unvote"
-              data-ic-delete-from="{{ request.route_url(
-                'ic_comment_vote',
-                comment_id36=comment.comment_id36,
-              ) }}"
-              data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
-              data-ic-replace-target="true"
-              >Voted
-          {% else %}
-            <li><button class="btn-post-action" name="vote"
-              data-ic-put-to="{{ request.route_url(
-                'ic_comment_vote',
-                comment_id36=comment.comment_id36,
-              ) }}"
-              data-ic-target="#comment-{{ comment.comment_id36 }} .comment-itself:first"
-              data-ic-replace-target="true"
-              >Vote
-          {% endif %}
-          {% if comment.num_votes > 0 %}
-            ({{ comment.num_votes }})
-          {% endif %}
-          </button></li>
+          {{ post_action_toggle_button("vote", comment, is_toggled=comment.user_voted) }}
         {% endif %}
 
         {% if request.has_permission('label', comment) %}

@@ -213,7 +213,7 @@ def delete_comment(request: Request) -> dict:
     route_name="comment_vote",
     request_method="PUT",
     permission="vote",
-    renderer="comment_contents.jinja2",
+    renderer="post_action_toggle_button.jinja2",
 )
 def put_vote_comment(request: Request) -> dict:
     """Vote on a comment with Intercooler."""
@@ -237,22 +237,17 @@ def put_vote_comment(request: Request) -> dict:
         # the user has already voted on this comment
         savepoint.rollback()
 
-    # re-query the comment to get complete data
-    comment = (
-        request.query(Comment)
-        .join_all_relationships()
-        .filter_by(comment_id=comment.comment_id)
-        .one()
-    )
+    # a trigger updates this - set it manually so the button displays the correct number
+    comment.num_votes += 1
 
-    return {"comment": comment}
+    return {"name": "vote", "subject": comment, "is_toggled": True}
 
 
 @ic_view_config(
     route_name="comment_vote",
     request_method="DELETE",
     permission="vote",
-    renderer="comment_contents.jinja2",
+    renderer="post_action_toggle_button.jinja2",
 )
 def delete_vote_comment(request: Request) -> dict:
     """Remove the user's vote from a comment with Intercooler."""
@@ -269,15 +264,10 @@ def delete_vote_comment(request: Request) -> dict:
     # manually commit the transaction so triggers will execute
     request.tm.commit()
 
-    # re-query the comment to get complete data
-    comment = (
-        request.query(Comment)
-        .join_all_relationships()
-        .filter_by(comment_id=comment.comment_id)
-        .one()
-    )
+    # a trigger updates this - set it manually so the button displays the correct number
+    comment.num_votes -= 1
 
-    return {"comment": comment}
+    return {"name": "vote", "subject": comment, "is_toggled": False}
 
 
 @ic_view_config(

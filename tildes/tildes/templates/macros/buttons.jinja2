@@ -22,6 +22,15 @@
     {% set toggled_label = "Un-remove" %}
     {% set normal_confirm = "Remove this " + type_name + "?" %}
     {% set toggled_confirm = "Un-remove this " + type_name + "?" %}
+  {% elif name == "vote" %}
+    {% set normal_label = "Vote" %}
+    {% set toggled_label = "Voted" %}
+
+    {% if subject.num_votes > 0 %}
+      {# Append the vote count in parentheses #}
+      {% set normal_label = normal_label~" ("~subject.num_votes~")" %}
+      {% set toggled_label = toggled_label~" ("~subject.num_votes~")" %}
+    {% endif %}
   {% endif %}
 
   <li>
