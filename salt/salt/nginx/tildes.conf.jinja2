@@ -13,6 +13,11 @@ map $sent_http_content_type $expires_type_map {
 }
 
 server {
+    # block bots that don't obey robots.txt
+    if ($http_user_agent ~* (SemrushBot)) {
+        return 403;
+    }
+
     # remove trailing slash from addresses, the $port thing is a hack for
     # development in Vagrant, so the port forwarding from the host is kept
     set $port '';
