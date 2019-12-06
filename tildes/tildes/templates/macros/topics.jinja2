@@ -94,7 +94,9 @@
       {% if topic.is_user_treated_as_source %}
         aria-label="Posted by">{{ link_to_user(topic.user) }}
       {% else %}
-        aria-label="Link source">
+        aria-label="Link source"
+        title="{{ topic.link_domain }}"
+        >
         {% if topic.is_link_type %}
           <div class="topic-icon topic-icon-{{ topic.link_domain.replace('.', '_') }}"></div>
         {% endif %}
