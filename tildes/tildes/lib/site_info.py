@@ -15,7 +15,7 @@ class SiteInfo:
         self,
         name: str,
         show_author: bool = False,
-        content_type: Optional[TopicContentType] = None,
+        content_type: Optional[TopicContentType] = TopicContentType.ARTICLE,
     ) -> None:
         """Initialize info for a site."""
         self.name = name
@@ -35,18 +35,14 @@ class SiteInfo:
 
 
 SITE_INFO_BY_DOMAIN = {
-    "medium.com": SiteInfo(
-        "Medium", show_author=True, content_type=TopicContentType.ARTICLE
-    ),
+    "medium.com": SiteInfo("Medium", show_author=True),
     "twitter.com": SiteInfo(
         "Twitter", show_author=True, content_type=TopicContentType.TWEET
     ),
     "vimeo.com": SiteInfo(
         "Vimeo", show_author=True, content_type=TopicContentType.VIDEO
     ),
-    "wordpress.com": SiteInfo(
-        "WordPress", show_author=True, content_type=TopicContentType.ARTICLE
-    ),
+    "wordpress.com": SiteInfo("WordPress", show_author=True),
     "youtube.com": SiteInfo(
         "YouTube", show_author=True, content_type=TopicContentType.VIDEO
     ),
