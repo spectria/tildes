@@ -13,7 +13,7 @@ certifi==2019.11.28       # via requests, sentry-sdk
 cffi==1.13.2              # via argon2-cffi, pygit2
 chardet==3.0.4            # via requests
 click==7.0
-cornice==3.6.1
+cornice==4.0.1
 decorator==4.4.1          # via ipython, traitlets
 dodgy==0.1.9              # via prospector
 freezegun==0.3.12
@@ -21,9 +21,9 @@ gunicorn==20.0.4
 html5lib==1.0.1
 hupper==1.9.1             # via pyramid
 idna==2.8                 # via requests
-importlib-metadata==1.0.0  # via pluggy, pytest
+importlib-metadata==1.2.0  # via pluggy, pytest
 ipython-genutils==0.2.0   # via traitlets
-ipython==7.10.0
+ipython==7.10.1
 isort==4.3.21             # via pylint
 jedi==0.15.1              # via ipython
 jinja2==2.10.3            # via pyramid-jinja2
@@ -32,7 +32,7 @@ mako==1.1.0               # via alembic, pyramid-mako
 markupsafe==1.1.1         # via jinja2, mako, pyramid-jinja2
 marshmallow==2.20.5
 mccabe==0.6.1             # via prospector, pylint
-more-itertools==8.0.0     # via pytest, zipp
+more-itertools==8.0.2     # via pytest, zipp
 mypy-extensions==0.4.3    # via mypy
 mypy==0.750
 packaging==19.2           # via pytest
@@ -58,7 +58,7 @@ pycodestyle==2.4.0        # via prospector
 pycparser==2.19           # via cffi
 pydocstyle==4.0.1         # via prospector
 pyflakes==1.6.0           # via prospector
-pygit2==0.28.2
+pygit2==1.0.0
 pygments==2.5.2
 pylint-celery==0.3        # via prospector
 pylint-django==2.0.10     # via prospector
@@ -75,21 +75,21 @@ pyramid-session-redis==1.5.0
 pyramid-tm==2.3
 pyramid-webassets==0.10
 pyramid==1.10.4
-pytest-mock==1.12.1
+pytest-mock==1.13.0
 pytest==5.3.1
 python-dateutil==2.8.1
 python-editor==1.0.4      # via alembic
-pyyaml==5.1.2
+pyyaml==5.2
 qrcode==6.1
 redis==3.3.11
 regex==2019.11.1          # via black
 repoze.lru==0.7           # via pyramid-debugtoolbar
 requests==2.22.0
 requirements-detector==0.6  # via prospector
-sentry-sdk==0.13.4
+sentry-sdk==0.13.5
 setoptconf==0.2.0         # via prospector
 simplejson==3.17.0        # via cornice
-six==1.13.0               # via amqpy, argon2-cffi, astroid, bleach, cornice, freezegun, html5lib, packaging, pip-tools, pygit2, pyramid-session-redis, pyramid-webassets, python-dateutil, qrcode, sqlalchemy-utils, traitlets, webtest
+six==1.13.0               # via amqpy, argon2-cffi, astroid, bleach, cornice, freezegun, html5lib, packaging, pip-tools, pyramid-session-redis, pyramid-webassets, python-dateutil, qrcode, sqlalchemy-utils, traitlets, webtest
 snowballstemmer==2.0.0    # via pydocstyle
 soupsieve==1.9.5          # via beautifulsoup4
 sqlalchemy-utils==0.35.0
@@ -120,4 +120,4 @@ zope.interface==4.7.1     # via pyramid, pyramid-webassets, transaction, zope.sq
 zope.sqlalchemy==1.2
 
 # The following packages are considered to be unsafe in a requirements file:
-# setuptools==42.0.1        # via gunicorn, ipython, plaster, pyramid, zope.deprecation, zope.interface, zope.sqlalchemy
+# setuptools
