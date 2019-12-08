@@ -3,6 +3,8 @@
 
 """Views related to notifications."""
 
+from typing import Optional
+
 from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.sql.expression import desc
@@ -39,7 +41,7 @@ def get_user_unread_notifications(request: Request) -> dict:
 @view_config(route_name="notifications", renderer="notifications.jinja2")
 @use_kwargs(PaginatedListingSchema())
 def get_user_notifications(
-    request: Request, after: str, before: str, per_page: int
+    request: Request, after: Optional[str], before: Optional[str], per_page: int
 ) -> dict:
     """Show the logged-in user's previously-read notifications."""
     query = (

@@ -21,11 +21,6 @@ class MessageConversationSchema(Schema):
     rendered_html = String(dump_only=True)
     created_time = DateTime(dump_only=True)
 
-    class Meta:
-        """Always use strict checking so error handlers are invoked."""
-
-        strict = True
-
 
 class MessageReplySchema(Schema):
     """Marshmallow schema for message replies."""
@@ -34,8 +29,3 @@ class MessageReplySchema(Schema):
     markdown = Markdown()
     rendered_html = String(dump_only=True)
     created_time = DateTime(dump_only=True)
-
-    class Meta:
-        """Always use strict checking so error handlers are invoked."""
-
-        strict = True

@@ -16,11 +16,11 @@
 {% block pre_main_heading %}
 <ol class="breadcrumb">
   <li class="breadcrumb-item">
-    <a href="{{ request.route_url("group_wiki", group_path=page.group.path) }}">~{{ page.group.path }} wiki</a>
+    <a href="{{ request.route_url("group_wiki", path=page.group.path) }}">~{{ page.group.path }} wiki</a>
   </li>
   {% for folder in page.folders %}
     <li class="breadcrumb-item">
-      <a href="{{ request.route_url("group_wiki_page", group_path=page.group.path, wiki_page_path=folder|string) }}">{{ folder.name }}</a>
+      <a href="{{ request.route_url("group_wiki_page", path=page.group.path, wiki_page_path=folder|string) }}">{{ folder.name }}</a>
     </li>
   {% endfor %}
 </ol>
@@ -34,7 +34,7 @@
 <hr>
 <p class="text-small text-secondary">The text of this wiki page is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0</a>.</p>
 
-<a href="{{ request.route_url("group_wiki", group_path=page.group.path) }}">Back to wiki page list</a>
+<a href="{{ request.route_url("group_wiki", path=page.group.path) }}">Back to wiki page list</a>
 {% endblock %}
 
 {% block sidebar %}
@@ -49,17 +49,17 @@
 </dl>
 
 {% if request.has_permission("edit", page) %}
-  <a href="{{ request.route_url("group_wiki_edit_page", group_path=page.group.path, wiki_page_path=page.path) }}" class="btn btn-primary">Edit this page</a>
+  <a href="{{ request.route_url("group_wiki_edit_page", path=page.group.path, wiki_page_path=page.path) }}" class="btn btn-primary">Edit this page</a>
 {% endif %}
 
 <ul class="nav">
   <li>Page list</li>
   <ul class="nav">
   {% if has_index_page %}
-    <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=page.group.path, wiki_page_path="index") }}" class="text-bold">index</a></li>
+    <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", path=page.group.path, wiki_page_path="index") }}" class="text-bold">index</a></li>
   {% endif %}
   {% for other_page in page_list %}
-    <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=other_page.group.path, wiki_page_path=other_page.path) }}">{{ other_page.page_name }}</a></li>
+    <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", path=other_page.group.path, wiki_page_path=other_page.path) }}">{{ other_page.page_name }}</a></li>
   {% endfor %}
   </ul>
 </ul>

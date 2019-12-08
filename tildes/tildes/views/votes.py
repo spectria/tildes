@@ -1,6 +1,6 @@
 """Views relating to voted posts."""
 
-from typing import Type, Union
+from typing import Optional, Type, Union
 
 from pyramid.request import Request
 from pyramid.view import view_config
@@ -15,9 +15,13 @@ from tildes.schemas.listing import PaginatedListingSchema
 
 @view_config(route_name="votes", renderer="votes.jinja2")
 @use_kwargs(PaginatedListingSchema)
-@use_kwargs({"post_type": PostType(load_from="type", missing="topic")})
+@use_kwargs({"post_type": PostType(data_key="type", missing="topic")})
 def get_voted_posts(
-    request: Request, after: str, before: str, per_page: int, post_type: str
+    request: Request,
+    after: Optional[str],
+    before: Optional[str],
+    per_page: int,
+    post_type: str,
 ) -> dict:
     """Generate the voted posts page."""
     # pylint: disable=unused-argument

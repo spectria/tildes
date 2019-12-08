@@ -277,7 +277,8 @@ def delete_vote_comment(request: Request) -> dict:
     renderer="comment_contents.jinja2",
 )
 @use_kwargs(CommentLabelSchema(only=("name",)), locations=("matchdict",))
-@use_kwargs(CommentLabelSchema(only=("reason",)))
+# need to specify only "form" location for reason, or it will crash by looking for JSON
+@use_kwargs(CommentLabelSchema(only=("reason",)), locations=("form",))
 def put_label_comment(
     request: Request, name: CommentLabelOption, reason: str
 ) -> Response:
@@ -352,7 +353,7 @@ def delete_label_comment(request: Request, name: CommentLabelOption) -> Response
 @ic_view_config(
     route_name="comment_mark_read", request_method="PUT", permission="mark_read"
 )
-@use_kwargs({"mark_all_previous": Boolean(missing=False)})
+@use_kwargs({"mark_all_previous": Boolean(missing=False)}, locations=("query",))
 def put_mark_comments_read(request: Request, mark_all_previous: bool) -> Response:
     """Mark comment(s) read, clearing notifications.
 

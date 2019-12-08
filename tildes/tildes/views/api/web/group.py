@@ -12,6 +12,7 @@ from webargs.pyramidparser import use_kwargs
 from zope.sqlalchemy import mark_changed
 
 from tildes.enums import TopicSortOption
+from tildes.lib.datetime import SimpleHoursPeriod
 from tildes.models.group import Group, GroupSubscription
 from tildes.models.user import UserGroupSettings
 from tildes.schemas.fields import Enum, ShortTimePeriod
@@ -84,10 +85,14 @@ def delete_subscribe_group(request: Request) -> dict:
 
 @ic_view_config(route_name="group_user_settings", request_method="PATCH")
 @use_kwargs(
-    {"order": Enum(TopicSortOption), "period": ShortTimePeriod(allow_none=True)}
+    {
+        "order": Enum(TopicSortOption),
+        "period": ShortTimePeriod(allow_none=True, missing=None),
+    },
+    locations=("form",),  # will crash due to trying to find JSON data without this
 )
 def patch_group_user_settings(
-    request: Request, order: TopicSortOption, period: Optional[ShortTimePeriod]
+    request: Request, order: TopicSortOption, period: Optional[SimpleHoursPeriod]
 ) -> dict:
     """Set the user's default listing options."""
     if period:

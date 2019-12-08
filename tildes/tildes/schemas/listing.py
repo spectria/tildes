@@ -3,6 +3,8 @@
 
 """Validation schema for topic listing views."""
 
+from typing import Any
+
 from marshmallow import pre_load, Schema, validates_schema, ValidationError
 from marshmallow.fields import Boolean, Integer
 from marshmallow.validate import Range
@@ -14,36 +16,38 @@ from tildes.schemas.fields import Enum, ID36, Ltree, PostType, ShortTimePeriod
 class PaginatedListingSchema(Schema):
     """Marshmallow schema to validate arguments for a paginated listing page."""
 
-    after = ID36()
-    before = ID36()
+    after = ID36(missing=None)
+    before = ID36(missing=None)
     per_page = Integer(validate=Range(min=1, max=100), missing=50)
 
     @validates_schema
-    def either_after_or_before(self, data: dict) -> None:
+    def either_after_or_before(self, data: dict, many: bool, partial: Any) -> None:
         """Fail validation if both after and before were specified."""
+        # pylint: disable=unused-argument
         if data.get("after") and data.get("before"):
             raise ValidationError("Can't specify both after and before.")
-
-    class Meta:
-        """Always use strict checking so error handlers are invoked."""
-
-        strict = True
 
 
 class TopicListingSchema(PaginatedListingSchema):
     """Marshmallow schema to validate arguments for a topic listing page."""
 
     period = ShortTimePeriod(allow_none=True)
-    order = Enum(TopicSortOption)
+    order = Enum(TopicSortOption, missing=None)
     tag = Ltree(missing=None)
     unfiltered = Boolean(missing=False)
-    rank_start = Integer(load_from="n", validate=Range(min=1), missing=None)
+    rank_start = Integer(data_key="n", validate=Range(min=1), missing=None)
 
     @pre_load
-    def reset_rank_start_on_first_page(self, data: dict) -> dict:
+    def reset_rank_start_on_first_page(
+        self, data: dict, many: bool, partial: Any
+    ) -> dict:
         """Reset rank_start to 1 if this is a first page (no before/after)."""
+        # pylint: disable=unused-argument
+        if "rank_start" not in self.fields:
+            return data
+
         if not (data.get("before") or data.get("after")):
-            data["rank_start"] = 1
+            data["n"] = 1
 
         return data
 
@@ -55,15 +59,18 @@ class MixedListingSchema(PaginatedListingSchema):
     of just one or the other.
     """
 
-    anchor_type = PostType()
+    anchor_type = PostType(missing=None)
 
     @pre_load
-    def set_anchor_type_from_before_or_after(self, data: dict) -> dict:
+    def set_anchor_type_from_before_or_after(
+        self, data: dict, many: bool, partial: Any
+    ) -> dict:
         """Set the anchor_type if before or after has a special value indicating type.
 
         For example, if after or before looks like "t-123" that means it is referring
         to the topic with ID36 "123". "c-123" also works, for comments.
         """
+        # pylint: disable=unused-argument
         keys = ("after", "before")
 
         for key in keys:

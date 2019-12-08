@@ -25,8 +25,8 @@ from tildes.schemas.listing import MixedListingSchema
 @use_kwargs(MixedListingSchema())
 @use_kwargs(
     {
-        "post_type": PostType(load_from="type"),
-        "order_name": String(load_from="order", missing="new"),
+        "post_type": PostType(data_key="type", missing=None),
+        "order_name": String(data_key="order", missing="new"),
     }
 )
 def get_user(
@@ -36,7 +36,7 @@ def get_user(
     per_page: int,
     anchor_type: Optional[str],
     order_name: str,
-    post_type: Optional[str] = None,
+    post_type: Optional[str],
 ) -> dict:
     """Generate the main user history page."""
     user = request.context
@@ -93,9 +93,9 @@ def get_user(
 @use_kwargs(MixedListingSchema())
 @use_kwargs(
     {
-        "post_type": PostType(load_from="type", required=True),
-        "order_name": String(load_from="order", missing="new"),
-        "search": String(load_from="q", missing=""),
+        "post_type": PostType(data_key="type", required=True),
+        "order_name": String(data_key="order", missing="new"),
+        "search": String(data_key="q", missing=""),
     }
 )
 def get_user_search(

@@ -76,7 +76,7 @@ def post_group_wiki(request: Request, page_name: str, markdown: str) -> HTTPFoun
 
     raise HTTPFound(
         location=request.route_url(
-            "group_wiki_page", group_path=group.path, wiki_page_path=new_page.path
+            "group_wiki_page", path=group.path, wiki_page_path=new_page.path
         )
     )
 
@@ -104,6 +104,6 @@ def post_group_wiki_page(request: Request, markdown: str, edit_message: str) -> 
 
     raise HTTPFound(
         location=request.route_url(
-            "group_wiki_page", group_path=page.group.path, wiki_page_path=page.path
+            "group_wiki_page", path=page.group.path, wiki_page_path=page.path
         )
     )

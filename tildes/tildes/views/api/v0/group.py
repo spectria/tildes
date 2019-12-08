@@ -9,7 +9,7 @@ from tildes.api import APIv0
 from tildes.resources.group import group_by_path
 
 
-ONE = APIv0(name="group", path="/groups/{group_path}", factory=group_by_path)
+ONE = APIv0(name="group", path="/groups/{path}", factory=group_by_path)
 
 
 @ONE.get()

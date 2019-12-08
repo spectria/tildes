@@ -19,10 +19,10 @@ def process_string(string):
     This also works for testing validation since .load() will raise a ValidationError if
     an invalid string is attempted.
     """
-    schema = SimpleStringTestSchema(strict=True)
+    schema = SimpleStringTestSchema()
     result = schema.load({"subject": string})
 
-    return result.data["subject"]
+    return result["subject"]
 
 
 def test_changing_max_length():

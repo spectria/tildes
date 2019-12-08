@@ -15,7 +15,7 @@ class MarkdownFieldTestSchema(Schema):
 
 def validate_string(string):
     """Validate a string against a standard Markdown field."""
-    MarkdownFieldTestSchema(strict=True).validate({"markdown": string})
+    MarkdownFieldTestSchema().load({"markdown": string})
 
 
 def test_normal_text_validates():
@@ -61,7 +61,7 @@ def test_carriage_returns_stripped():
     """Ensure loading a value strips out carriage returns from the string."""
     test_string = "some\r\nreturns\r\nin\nhere"
 
-    schema = MarkdownFieldTestSchema(strict=True)
+    schema = MarkdownFieldTestSchema()
     result = schema.load({"markdown": test_string})
 
-    assert "\r" not in result.data["markdown"]
+    assert "\r" not in result["markdown"]

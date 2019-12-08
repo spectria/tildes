@@ -115,7 +115,7 @@ def post_login(
 )
 @not_logged_in
 @rate_limit_view("login_two_factor")
-@use_kwargs({"code": String(), "from_url": String(missing="")})
+@use_kwargs({"code": String(missing=""), "from_url": String(missing="")})
 def post_login_two_factor(request: Request, code: str, from_url: str) -> NoReturn:
     """Process a log in request with 2FA."""
     # Look up the user for the supplied username

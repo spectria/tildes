@@ -11,10 +11,10 @@ from tildes.schemas.user import PASSWORD_MIN_LENGTH, UserSchema
 
 
 def test_creation_validates_schema(mocker):
-    """Ensure that model creation goes through schema validation."""
-    mocker.spy(UserSchema, "validate")
+    """Ensure that model creation goes through schema validation (via load())."""
+    mocker.spy(UserSchema, "load")
     User("testing", "testpassword")
-    call_args = [call[0] for call in UserSchema.validate.call_args_list]
+    call_args = [call[0] for call in UserSchema.load.call_args_list]
     expected_args = {"username": "testing", "password": "testpassword"}
     assert any(expected_args in call for call in call_args)
 

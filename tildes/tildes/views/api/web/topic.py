@@ -68,7 +68,7 @@ def delete_topic(request: Request) -> Response:
 
     response = Response()
     response.headers["X-IC-Redirect"] = request.route_url(
-        "group", group_path=topic.group.path
+        "group", path=topic.group.path
     )
 
     return response
@@ -158,7 +158,7 @@ def get_topic_tags(request: Request) -> dict:
     renderer="topic_tags.jinja2",
     permission="tag",
 )
-@use_kwargs({"tags": String(), "conflict_check": String()})
+@use_kwargs({"tags": String(missing=""), "conflict_check": String(missing="")})
 def put_tag_topic(request: Request, tags: str, conflict_check: str) -> dict:
     """Apply tags to a topic with Intercooler."""
     topic = request.context

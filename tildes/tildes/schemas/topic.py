@@ -5,6 +5,7 @@
 
 import re
 import typing
+from typing import Any
 from urllib.parse import urlparse
 
 from marshmallow import pre_load, Schema, validates, validates_schema, ValidationError
@@ -36,8 +37,9 @@ class TopicSchema(Schema):
     group = Nested(GroupSchema, dump_only=True)
 
     @pre_load
-    def prepare_tags(self, data: dict) -> dict:
+    def prepare_tags(self, data: dict, many: bool, partial: Any) -> dict:
         """Prepare the tags before they're validated."""
+        # pylint: disable=unused-argument
         if "tags" not in data:
             return data
 
@@ -87,13 +89,14 @@ class TopicSchema(Schema):
         group_schema = GroupSchema(partial=True)
         for tag in value:
             try:
-                group_schema.validate({"path": tag})
+                group_schema.load({"path": tag})
             except ValidationError:
                 raise ValidationError("Tag %s is invalid" % tag)
 
     @pre_load
-    def prepare_markdown(self, data: dict) -> dict:
+    def prepare_markdown(self, data: dict, many: bool, partial: Any) -> dict:
         """Prepare the markdown value before it's validated."""
+        # pylint: disable=unused-argument
         if "markdown" not in data:
             return data
 
@@ -104,8 +107,9 @@ class TopicSchema(Schema):
         return data
 
     @pre_load
-    def prepare_link(self, data: dict) -> dict:
+    def prepare_link(self, data: dict, many: bool, partial: Any) -> dict:
         """Prepare the link value before it's validated."""
+        # pylint: disable=unused-argument
         if "link" not in data:
             return data
 
@@ -125,8 +129,9 @@ class TopicSchema(Schema):
         return data
 
     @validates_schema
-    def link_or_markdown(self, data: dict) -> None:
+    def link_or_markdown(self, data: dict, many: bool, partial: Any) -> None:
         """Fail validation unless at least one of link or markdown were set."""
+        # pylint: disable=unused-argument
         if "link" not in data and "markdown" not in data:
             return
 
@@ -135,8 +140,3 @@ class TopicSchema(Schema):
 
         if not (markdown or link):
             raise ValidationError("Topics must have either markdown or a link.")
-
-    class Meta:
-        """Always use strict checking so error handlers are invoked."""
-
-        strict = True

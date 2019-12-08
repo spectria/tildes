@@ -76,7 +76,7 @@
       {% if is_single_group %}
         data-ic-patch-to="{{ request.route_url(
           'ic_group_user_settings',
-          group_path=request.context.path,
+          path=request.context.path,
         ) }}"
       {% else %}
         data-ic-put-to="{{ request.route_url(
@@ -247,10 +247,10 @@
       <li>Group wiki pages</li>
       <ul class="nav">
       {% if wiki_has_index %}
-        <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=group.path, wiki_page_path="index") }}" class="text-bold">index</a></li>
+        <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", path=group.path, wiki_page_path="index") }}" class="text-bold">index</a></li>
       {% endif %}
       {% for page in wiki_pages %}
-        <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", group_path=group.path, wiki_page_path=page.path) }}">{{ page.page_name }}</a></li>
+        <li class="nav-item"><a href="{{ request.route_url("group_wiki_page", path=group.path, wiki_page_path=page.path) }}">{{ page.page_name }}</a></li>
       {% endfor %}
       </ul>
     </ul>

@@ -4,6 +4,7 @@
 """Validation/dumping schema for users."""
 
 import re
+from typing import Any
 
 from marshmallow import post_dump, pre_load, Schema, validates, validates_schema
 from marshmallow.exceptions import ValidationError
@@ -60,16 +61,20 @@ class UserSchema(Schema):
     bio_markdown = Markdown(max_length=BIO_MAX_LENGTH, allow_none=True)
 
     @post_dump
-    def anonymize_username(self, data: dict) -> dict:
+    def anonymize_username(self, data: dict, many: bool) -> dict:
         """Hide the username if the dumping context specifies to do so."""
+        # pylint: disable=unused-argument
         if "username" in data and self.context.get("hide_username"):
             data["username"] = "<unknown>"
 
         return data
 
     @validates_schema
-    def username_pass_not_substrings(self, data: dict) -> None:
+    def username_pass_not_substrings(
+        self, data: dict, many: bool, partial: Any
+    ) -> None:
         """Ensure the username isn't in the password and vice versa."""
+        # pylint: disable=unused-argument
         username = data.get("username")
         password = data.get("password")
         if not (username and password):
@@ -97,11 +102,12 @@ class UserSchema(Schema):
             raise ValidationError("That password exists in a data breach (see sidebar)")
 
     @pre_load
-    def username_trim_whitespace(self, data: dict) -> dict:
+    def username_trim_whitespace(self, data: dict, many: bool, partial: Any) -> dict:
         """Trim leading/trailing whitespace around the username.
 
         Requires username_trim_whitespace be True in the schema's context.
         """
+        # pylint: disable=unused-argument
         if not self.context.get("username_trim_whitespace"):
             return data
 
@@ -113,8 +119,9 @@ class UserSchema(Schema):
         return data
 
     @pre_load
-    def prepare_email_address(self, data: dict) -> dict:
+    def prepare_email_address(self, data: dict, many: bool, partial: Any) -> dict:
         """Prepare the email address value before it's validated."""
+        # pylint: disable=unused-argument
         if "email_address" not in data:
             return data
 
@@ -128,8 +135,9 @@ class UserSchema(Schema):
         return data
 
     @pre_load
-    def prepare_bio_markdown(self, data: dict) -> dict:
+    def prepare_bio_markdown(self, data: dict, many: bool, partial: Any) -> dict:
         """Prepare the bio_markdown value before it's validated."""
+        # pylint: disable=unused-argument
         if "bio_markdown" not in data:
             return data
 
@@ -138,11 +146,6 @@ class UserSchema(Schema):
             data["bio_markdown"] = None
 
         return data
-
-    class Meta:
-        """Always use strict checking so error handlers are invoked."""
-
-        strict = True
 
 
 def is_valid_username(username: str) -> bool:
@@ -153,9 +156,5 @@ def is_valid_username(username: str) -> bool:
     specific reason for invalidity.
     """
     schema = UserSchema(partial=True)
-    try:
-        schema.validate({"username": username})
-    except ValidationError:
-        return False
-
-    return True
+    errors = schema.validate({"username": username})
+    return not errors

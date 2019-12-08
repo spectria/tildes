@@ -16,8 +16,3 @@ class GroupWikiPageSchema(Schema):
 
     page_name = SimpleString(max_length=PAGE_NAME_MAX_LENGTH)
     markdown = Markdown(max_length=1_000_000)
-
-    class Meta:
-        """Always use strict checking so error handlers are invoked."""
-
-        strict = True

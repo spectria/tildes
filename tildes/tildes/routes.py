@@ -32,8 +32,8 @@ def includeme(config: Configurator) -> None:
 
     config.add_route("register", "/register")
 
-    config.add_route("group", "/~{group_path}", factory=group_by_path)
-    with config.route_prefix_context("/~{group_path}"):
+    config.add_route("group", "/~{path}", factory=group_by_path)
+    with config.route_prefix_context("/~{path}"):
         config.add_route("new_topic", "/new_topic", factory=group_by_path)
 
         config.add_route("group_topics", "/topics", factory=group_by_path)
@@ -123,7 +123,7 @@ def includeme(config: Configurator) -> None:
 
     # Add routes for the link-shortener under the /shortener path
     with config.route_prefix_context("/shortener"):
-        config.add_route("shortener_group", "/~{group_path}", factory=group_by_path)
+        config.add_route("shortener_group", "/~{path}", factory=group_by_path)
         config.add_route("shortener_topic", "/{topic_id36}", factory=topic_by_id36)
 
 
@@ -135,7 +135,7 @@ def add_intercooler_routes(config: Configurator) -> None:
         name = "ic_" + name
         config.add_route(name, path, header="X-IC-Request:true", **kwargs)
 
-    with config.route_prefix_context("/group/{group_path}"):
+    with config.route_prefix_context("/group/{path}"):
         add_ic_route("group_subscribe", "/subscribe", factory=group_by_path)
         add_ic_route("group_user_settings", "/user_settings", factory=group_by_path)
 

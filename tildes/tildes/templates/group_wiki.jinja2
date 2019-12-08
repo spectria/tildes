@@ -18,7 +18,7 @@
 <ul>
   {% for page in page_list %}
     <li>
-      <a href="{{ request.route_url("group_wiki_page", group_path=group.path, wiki_page_path=page.path) }}">{{ page.page_name }}</a>
+      <a href="{{ request.route_url("group_wiki_page", path=group.path, wiki_page_path=page.path) }}">{{ page.page_name }}</a>
       <div class="text-small text-secondary">Last edited: {{ adaptive_date_responsive(page.last_edited_time) }}</div>
     </li>
   {% endfor %}
@@ -29,6 +29,6 @@
 
 {% if request.has_permission("wiki_page_create", group) %}
 <hr>
-<a href="{{ request.route_url("group_wiki_new_page", group_path=group.path) }}">Create new wiki page</a>
+<a href="{{ request.route_url("group_wiki_new_page", path=group.path) }}">Create new wiki page</a>
 {% endif %}
 {% endblock %}

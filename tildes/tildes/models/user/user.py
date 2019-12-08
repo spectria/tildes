@@ -222,7 +222,7 @@ class User(DatabaseModel):
     def password(self, value: str) -> None:
         # need to do manual validation since some password checks depend on checking the
         # username at the same time (for similarity)
-        self.schema.validate({"username": self.username, "password": value})
+        self.schema.load({"username": self.username, "password": value})
 
         self.password_hash = hash_string(value)
 

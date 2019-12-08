@@ -4,6 +4,7 @@
 """Validation/dumping schema for groups."""
 
 import re
+from typing import Any
 
 import sqlalchemy_utils
 from marshmallow import pre_load, Schema, validates
@@ -32,7 +33,7 @@ SHORT_DESCRIPTION_MAX_LENGTH = 200
 class GroupSchema(Schema):
     """Marshmallow schema for groups."""
 
-    path = Ltree(required=True, load_from="group_path")
+    path = Ltree(required=True)
     created_time = DateTime(dump_only=True)
     short_description = SimpleString(
         max_length=SHORT_DESCRIPTION_MAX_LENGTH, allow_none=True
@@ -40,17 +41,14 @@ class GroupSchema(Schema):
     sidebar_markdown = Markdown(allow_none=True)
 
     @pre_load
-    def prepare_path(self, data: dict) -> dict:
+    def prepare_path(self, data: dict, many: bool, partial: Any) -> dict:
         """Prepare the path value before it's validated."""
+        # pylint: disable=unused-argument
         if not self.context.get("fix_path_capitalization"):
             return data
 
-        # path can also be loaded from group_path, so we need to check both
-        keys = ("path", "group_path")
-
-        for key in keys:
-            if key in data and isinstance(data[key], str):
-                data[key] = data[key].lower()
+        if "path" in data and isinstance(data["path"], str):
+            data["path"] = data["path"].lower()
 
         return data
 
@@ -67,8 +65,9 @@ class GroupSchema(Schema):
                 raise ValidationError("Path element %s is invalid" % element)
 
     @pre_load
-    def prepare_sidebar_markdown(self, data: dict) -> dict:
+    def prepare_sidebar_markdown(self, data: dict, many: bool, partial: Any) -> dict:
         """Prepare the sidebar_markdown value before it's validated."""
+        # pylint: disable=unused-argument
         if "sidebar_markdown" not in data:
             return data
 
@@ -78,18 +77,9 @@ class GroupSchema(Schema):
 
         return data
 
-    class Meta:
-        """Always use strict checking so error handlers are invoked."""
-
-        strict = True
-
 
 def is_valid_group_path(path: str) -> bool:
     """Return whether the group path is valid or not."""
     schema = GroupSchema(partial=True)
-    try:
-        schema.validate({"path": path})
-    except ValidationError:
-        return False
-
-    return True
+    errors = schema.validate({"path": path})
+    return not errors

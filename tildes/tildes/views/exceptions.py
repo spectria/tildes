@@ -28,7 +28,7 @@ from tildes.models.group import Group
 
 def errors_from_validationerror(validation_error: ValidationError) -> Sequence[str]:
     """Extract errors from a marshmallow ValidationError into a displayable format."""
-    errors_by_field = validation_error.messages
+    errors_by_field = validation_error.normalized_messages()
 
     error_strings = []
     for field, errors in errors_by_field.items():
@@ -47,7 +47,7 @@ def errors_from_validationerror(validation_error: ValidationError) -> Sequence[s
 def group_not_found(request: Request) -> dict:
     """Show the user a customized 404 page for group names."""
     request.response.status_int = 404
-    supplied_name = request.matchdict.get("group_path")
+    supplied_name = request.matchdict.get("path")
     # the 'word_similarity' function here is from the 'pg_trgm' extension
     group_suggestions = (
         request.query(Group)

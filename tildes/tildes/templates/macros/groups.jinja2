@@ -12,7 +12,7 @@
         <button class="btn btn-sm btn-used"
           data-ic-delete-from="{{ request.route_url(
             'ic_group_subscribe',
-            group_path=group.path,
+            path=group.path,
           ) }}"
           data-ic-target="closest .group-subscription"
           data-ic-replace-target="true"
@@ -21,7 +21,7 @@
         <button class="btn btn-sm"
           data-ic-put-to="{{ request.route_url(
             'ic_group_subscribe',
-            group_path=group.path,
+            path=group.path,
           ) }}"
           data-ic-target="closest .group-subscription"
           data-ic-replace-target="true"

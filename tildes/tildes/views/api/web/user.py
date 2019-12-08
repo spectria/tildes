@@ -20,6 +20,7 @@ from sqlalchemy.exc import IntegrityError
 from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import LogEventType, TopicSortOption
+from tildes.lib.datetime import SimpleHoursPeriod
 from tildes.lib.string import separate_string
 from tildes.models.log import Log
 from tildes.models.user import User, UserInviteCode
@@ -321,10 +322,14 @@ def get_invite_code(request: Request) -> dict:
     permission="edit_default_listing_options",
 )
 @use_kwargs(
-    {"order": Enum(TopicSortOption), "period": ShortTimePeriod(allow_none=True)}
+    {
+        "order": Enum(TopicSortOption),
+        "period": ShortTimePeriod(allow_none=True, missing=None),
+    },
+    locations=("form",),  # will crash due to trying to find JSON data without this
 )
 def put_default_listing_options(
-    request: Request, order: TopicSortOption, period: Optional[ShortTimePeriod]
+    request: Request, order: TopicSortOption, period: Optional[SimpleHoursPeriod]
 ) -> dict:
     """Set the user's default listing options."""
     user = request.context
@@ -358,7 +363,7 @@ def put_filtered_topic_tags(request: Request, tags: str) -> dict:
     except ValidationError:
         raise ValidationError({"tags": ["Invalid tags"]})
 
-    request.user.filtered_topic_tags = result.data["tags"]
+    request.user.filtered_topic_tags = result["tags"]
 
     return IC_NOOP
 

@@ -140,7 +140,7 @@ class DatabaseModelBase:
             return value
 
         result = self.schema.load({attribute: value})
-        return result.data[attribute]
+        return result[attribute]
 
 
 DatabaseModel = declarative_base(

@@ -49,7 +49,10 @@ DefaultSettings = namedtuple("DefaultSettings", ["order", "period"])
 
 @view_config(route_name="group_topics", request_method="POST", permission="post_topic")
 @use_kwargs(TopicSchema(only=("title", "markdown", "link")))
-@use_kwargs({"tags": String(missing=""), "confirm_repost": Boolean(missing=False)})
+@use_kwargs(
+    {"tags": String(missing=""), "confirm_repost": Boolean(missing=False)},
+    locations=("form",),  # will crash due to trying to find JSON data without this
+)
 def post_group_topics(
     request: Request,
     title: str,
@@ -142,16 +145,19 @@ def post_group_topics(
 @use_kwargs(TopicListingSchema())
 def get_group_topics(
     request: Request,
-    order: Any,  # more specific would be better, but missing isn't typed
-    period: Any,  # more specific would be better, but missing isn't typed
-    after: str,
-    before: str,
+    after: Optional[str],
+    before: Optional[str],
+    order: Optional[TopicSortOption],
     per_page: int,
     rank_start: Optional[int],
     tag: Optional[Ltree],
     unfiltered: bool,
+    **kwargs: Any
 ) -> dict:
     """Get a listing of topics in the group."""
+    # period needs special treatment so we can distinguish between missing and None
+    period = kwargs.get("period", missing)
+
     is_home_page = request.matched_route.name == "home"
 
     if is_home_page:
@@ -179,7 +185,7 @@ def get_group_topics(
 
     default_settings = _get_default_settings(request, order)
 
-    if order is missing:
+    if not order:
         order = default_settings.order
 
     if period is missing:
@@ -297,22 +303,25 @@ def get_group_topics(
 @view_config(route_name="search", renderer="search.jinja2")
 @view_config(route_name="group_search", renderer="search.jinja2")
 @use_kwargs(TopicListingSchema(only=("after", "before", "order", "per_page", "period")))
-@use_kwargs({"search": String(load_from="q", missing="")})
+@use_kwargs({"search": String(data_key="q", missing="")})
 def get_search(
     request: Request,
-    order: Any,
-    period: Any,
-    after: str,
-    before: str,
+    order: Optional[TopicSortOption],
+    after: Optional[str],
+    before: Optional[str],
     per_page: int,
     search: str,
+    **kwargs: Any
 ) -> dict:
     """Get a list of search results."""
+    # period needs special treatment so we can distinguish between missing and None
+    period = kwargs.get("period", missing)
+
     group = None
     if isinstance(request.context, Group):
         group = request.context
 
-    if order is missing:
+    if not order:
         order = TopicSortOption.NEW
 
     if period is missing:
@@ -372,7 +381,13 @@ def get_new_topic_form(request: Request) -> dict:
 
 @view_config(route_name="topic", renderer="topic.jinja2")
 @view_config(route_name="topic_no_title", renderer="topic.jinja2")
-@use_kwargs({"comment_order": Enum(CommentTreeSortOption, missing="relevance")})
+@use_kwargs(
+    {
+        "comment_order": Enum(
+            CommentTreeSortOption, missing=CommentTreeSortOption.RELEVANCE
+        )
+    }
+)
 def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
     """View a single topic."""
     topic = request.context
@@ -470,7 +485,9 @@ def post_comment_on_topic(request: Request, markdown: str) -> HTTPFound:
     raise HTTPFound(location=topic.permalink)
 
 
-def _get_default_settings(request: Request, order: Any) -> DefaultSettings:  # noqa
+def _get_default_settings(
+    request: Request, order: Optional[TopicSortOption]
+) -> DefaultSettings:
     if isinstance(request.context, Group) and request.user:
         user_settings = (
             request.query(UserGroupSettings)
@@ -492,7 +509,7 @@ def _get_default_settings(request: Request, order: Any) -> DefaultSettings:  # n
 
     # the default period depends on what the order is, so we need to see if we're going
     # to end up using the default order here as well
-    if order is missing:
+    if not order:
         order = default_order
 
     if user_settings and user_settings.default_period:

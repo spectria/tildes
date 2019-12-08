@@ -9,7 +9,7 @@ cornice
 gunicorn
 html5lib
 ipython
-marshmallow<3.0  # 3.0+ requires significant updates
+marshmallow
 Pillow
 pip-tools
 prometheus-client
@@ -35,6 +35,6 @@ SQLAlchemy
 SQLAlchemy-Utils
 stripe
 titlecase
-webargs<5.0  # 5.0.0 breaks many views, will require significant updates
+webargs
 wrapt
 zope.sqlalchemy
