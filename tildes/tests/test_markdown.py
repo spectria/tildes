@@ -331,6 +331,77 @@ def test_group_ref_inside_other_tags_linkified():
     assert soup.find("a", href="/~group.reference")
 
 
+def test_subreddit_without_leading_forward_slash_linkified():
+    """Ensure subreddit without leading forward slash is linkified."""
+    markdown = "Check out: r/antarctica"
+    processed = convert_markdown_to_safe_html(markdown)
+
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert soup.find("a", href="https://www.reddit.com/r/antarctica/")
+
+
+def test_subreddit_with_leading_forward_slash_linkified():
+    """Ensure subreddit with leading forward slash is linkified."""
+    markdown = "Check out: /r/antarctica"
+    processed = convert_markdown_to_safe_html(markdown)
+
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert soup.find("a", href="https://www.reddit.com/r/antarctica/")
+
+
+def test_subreddit_linkified_without_punctuation():
+    """Ensure subreddit is linkified without punctuation."""
+    markdown = "Check out: /r/antarctica!"
+    processed = convert_markdown_to_safe_html(markdown)
+
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert soup.find("a", href="https://www.reddit.com/r/antarctica/")
+
+
+def test_multiple_subreddits_linkify():
+    """Ensure multiple subreddits linkify."""
+    markdown = (
+        "Here are a couple of my favorite subreddits:\n\n"
+        "* r/antarctica\n"
+        "* /r/emacs\n"
+    )
+    processed = convert_markdown_to_safe_html(markdown)
+
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert len(soup.find_all("a")) == 2
+
+
+def test_subreddit_inside_pre_ignored():
+    """Ensure a subreddit link inside a <pre> tag doesn't get linked."""
+    markdown = (
+        "```\n"
+        "# This is a code block\n"
+        "# I found this code on r/python, hopefully it works\n"
+        "```\n"
+    )
+    processed = convert_markdown_to_safe_html(markdown)
+
+    assert "<a" not in processed
+
+
+def test_subreddit_lookalike_conjunction_not_linkified():
+    """Ensure where forward slash used for conjunction, text doesn't linkify."""
+    markdown = "water/ocean"
+    processed = convert_markdown_to_safe_html(markdown)
+
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert len(soup.find_all("a")) == 0
+
+
+def test_subreddit_followed_by_apostrophe_not_linkified():
+    """Ensure we don't linkify apostrophes after subreddit references."""
+    markdown = "/r/funny's moderators"
+    processed = convert_markdown_to_safe_html(markdown)
+
+    soup = BeautifulSoup(processed, features="html5lib")
+    assert soup.find("a", href="https://www.reddit.com/r/funny/")
+
+
 def test_username_reference_linkified():
     """Ensure a basic username reference gets linkified."""
     markdown = "Hey @SomeUser, what do you think of this?"

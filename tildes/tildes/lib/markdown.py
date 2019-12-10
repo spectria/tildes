@@ -295,6 +295,10 @@ class LinkifyFilter(Filter):
     # carefully later.
     USERNAME_REFERENCE_REGEX = re.compile(r"(?<![\w\\])(?:/?u/|@)([\w-]+)\b")
 
+    # Regex that finds probable references to subreddits. Matches with or without the
+    # preceding slash (e.g. either of "r/emacs" or "/r/emacs").
+    SUBREDDIT_REFERENCE_REGEX = re.compile(r"(?<!\w)/?r/(\w+)\b")
+
     def __init__(
         self, source: NonRecursiveTreeWalker, skip_tags: Optional[List[str]] = None
     ):
@@ -334,7 +338,7 @@ class LinkifyFilter(Filter):
                 # text token not inside a skipped tag - do the actual linkification
                 # replacements
 
-                # Note: doing the two replacements "iteratively" like this only works
+                # Note: doing the replacements "iteratively" like this only works
                 # because they are "disjoint" and we know they're not competing to
                 # replace the same text. If more replacements are added in the future
                 # that might conflict with each other, this will need to be reworked
@@ -344,10 +348,17 @@ class LinkifyFilter(Filter):
                     filter_regex=self.GROUP_REFERENCE_REGEX,
                     linkify_function=self._tokenize_group_match,
                 )
+
                 replaced_tokens = self._linkify_tokens(
                     replaced_tokens,
                     filter_regex=self.USERNAME_REFERENCE_REGEX,
                     linkify_function=self._tokenize_username_match,
+                )
+
+                replaced_tokens = self._linkify_tokens(
+                    replaced_tokens,
+                    filter_regex=self.SUBREDDIT_REFERENCE_REGEX,
+                    linkify_function=self._tokenize_subreddit_match,
                 )
 
                 # yield all the tokens returned from the replacement process (will be
@@ -462,6 +473,19 @@ class LinkifyFilter(Filter):
 
         # the username wasn't valid, so just keep it as the original text
         return [{"type": "Characters", "data": match[0]}]
+
+    @staticmethod
+    def _tokenize_subreddit_match(match: Match) -> List[dict]:
+        """Convert a subreddit reference into HTML tokens."""
+        return [
+            {
+                "type": "StartTag",
+                "name": "a",
+                "data": {(None, "href"): f"https://www.reddit.com/r/{match[1]}/"},
+            },
+            {"type": "Characters", "data": match[0]},
+            {"type": "EndTag", "name": "a"},
+        ]
 
 
 def linkify_and_sanitize_html(
