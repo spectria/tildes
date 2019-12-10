@@ -591,3 +591,8 @@ class Topic(DatabaseModel):
             return True
 
         return self.is_text_type
+
+    @property
+    def was_posted_by_scheduler(self) -> bool:
+        """Return whether this topic was posted automatically by the topic scheduler."""
+        return bool(self.schedule_id)

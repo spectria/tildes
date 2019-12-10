@@ -90,20 +90,25 @@
         </a>
       </div>
 
-      <div class="topic-info-source"
       {% if topic.is_user_treated_as_source %}
-        aria-label="Posted by">{{ link_to_user(topic.user) }}
+        {% if topic.was_posted_by_scheduler and topic.user_id == -1 %}
+          <div class="topic-info-source topic-info-source-scheduled">
+            Scheduled topic
+          </div>
+        {% else %}
+          <div class="topic-info-source" aria-label="Posted by">
+            {{ link_to_user(topic.user) }}
+          </div>
+        {% endif %}
       {% else %}
-        aria-label="Link source"
-        title="{{ topic.link_domain }}"
-        >
+        <div class="topic-info-source" aria-label="Link source" title="{{ topic.link_domain }}">
         {% if topic.is_link_type %}
           <div class="topic-icon topic-icon-{{ topic.link_domain.replace('.', '_') }}"></div>
         {% endif %}
 
         {{ topic.link_source }}
+        </div>
       {% endif %}
-      </div>
 
       <div aria-label="Post time">{{ adaptive_date_responsive(topic.created_time, precision=1) }}</div>
     </footer>

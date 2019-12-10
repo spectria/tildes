@@ -35,11 +35,16 @@
 <header>
   {{ topic_voting(topic) }}
   <h1>{{ topic.title }}</h1>
-  <div class="topic-full-byline">Posted {{ adaptive_date_responsive(topic.created_time) }} by
-    {% if request.has_permission('view_author', topic) %}
-      {{ link_to_user(topic.user) }}
+  <div class="topic-full-byline">
+    {% if topic.was_posted_by_scheduler and topic.user_id == -1 %}
+      Automatically posted {{ adaptive_date_responsive(topic.created_time) }}
     {% else %}
-      unknown user
+      Posted {{ adaptive_date_responsive(topic.created_time) }} by
+      {% if request.has_permission('view_author', topic) %}
+        {{ link_to_user(topic.user) }}
+      {% else %}
+        unknown user
+      {% endif %}
     {% endif %}
 
     {% if topic.last_edited_time %}

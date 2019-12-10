@@ -546,6 +546,10 @@
     color: map-get($theme, "alert");
   }
 
+  .topic-info-source-scheduled {
+    color: map-get($theme, "foreground-secondary");
+  }
+
   .topic-log-entry-time {
     color: map-get($theme, "foreground-secondary");
   }
