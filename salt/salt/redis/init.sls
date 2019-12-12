@@ -1,4 +1,4 @@
-{% set redis_version = '4.0.9' %}
+{% set redis_version = '5.0.7' %}
 
 unpack-redis:
   archive.extracted:
@@ -6,7 +6,7 @@ unpack-redis:
     - source:
       - salt://redis/{{ redis_version }}.tar.gz
       - https://github.com/antirez/redis/archive/{{ redis_version }}.tar.gz
-    - source_hash: sha256=e18eebc08a4ccf48ac28aed692c69cf7b03f188d890803e7ccc6889c049f10b4
+    - source_hash: sha256=2761422599f8969559e66797cd7f606c16e907bf82d962345a7d366c5d1278df
     - unless: /usr/local/bin/redis-server --version | grep v={{ redis_version }}
     - options: --strip-components=1
     - enforce_toplevel: False
