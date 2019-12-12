@@ -58,12 +58,16 @@ SITE_INFO_BY_DOMAIN = {
     "dev.to": SiteInfo("DEV"),
     "dw.com": SiteInfo("DW"),
     "eater.com": SiteInfo("Eater"),
+    "eff.org": SiteInfo("Electronic Frontier Foundation"),
     "eurogamer.net": SiteInfo("Eurogamer"),
+    "fivethirtyeight.com": SiteInfo("FiveThirtyEight"),
     "forbes.com": SiteInfo("Forbes"),
+    "ftc.gov": SiteInfo("Federal Trade Commission"),
     "gamasutra.com": SiteInfo("Gamasutra"),
     "github.com": SiteInfo("GitHub", show_author=True, content_type=None),
     "gizmodo.com": SiteInfo("Gizmodo"),
     "gq.com": SiteInfo("GQ"),
+    "hackaday.com": SiteInfo("Hackaday"),
     "hackernoon.com": SiteInfo("Hacker Noon"),
     "hpe.com": SiteInfo("Hewlett Packard Enterprise"),
     "huffpost.com": SiteInfo("HuffPost"),
@@ -135,4 +139,5 @@ SITE_INFO_BY_DOMAIN = {
     "youtube.com": SiteInfo(
         "YouTube", show_author=True, content_type=TopicContentType.VIDEO
     ),
+    "zdnet.com": SiteInfo("ZDNet"),
 }
