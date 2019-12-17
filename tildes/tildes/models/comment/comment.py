@@ -106,7 +106,7 @@ class Comment(DatabaseModel):
         Index("ix_comments_search_tsv_gin", "search_tsv", postgresql_using="gin"),
     )
 
-    @hybrid_property
+    @hybrid_property  # pylint: disable=used-before-assignment
     def markdown(self) -> str:
         """Return the comment's markdown."""
         return self._markdown

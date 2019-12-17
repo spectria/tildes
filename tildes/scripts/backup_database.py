@@ -36,11 +36,14 @@ def create_encrypted_backup(gpg_recipient: str) -> str:
     # dump the database to a file
     with open(f"{filename}.sql", "w") as dump_file:
         subprocess.run(
-            ["pg_dump", "-U", "tildes", "tildes"], stdout=dump_file, text=True
+            ["pg_dump", "-U", "tildes", "tildes"],
+            stdout=dump_file,
+            text=True,
+            check=True,
         )
 
     # gzip the dump file (replaces it)
-    subprocess.run(["gzip", "-9", f"{filename}.sql"])
+    subprocess.run(["gzip", "-9", f"{filename}.sql"], check=True)
 
     # encrypt the compressed dump file using gpg
     subprocess.run(
@@ -52,7 +55,8 @@ def create_encrypted_backup(gpg_recipient: str) -> str:
             "--recipient",
             gpg_recipient,
             f"{filename}.sql.gz",
-        ]
+        ],
+        check=True,
     )
 
     # delete the unencrypted dump file
@@ -65,7 +69,7 @@ def upload_new_backup(host: str, gpg_recipient: str) -> None:
     """Create a new (encrypted) backup and then upload it to the FTP."""
     new_filename = create_encrypted_backup(gpg_recipient)
 
-    subprocess.run(["lftp", "-e", f"put {new_filename}; bye", host])
+    subprocess.run(["lftp", "-e", f"put {new_filename}; bye", host], check=True)
     logging.info(f"Successfully uploaded {new_filename} to FTP.")
 
 

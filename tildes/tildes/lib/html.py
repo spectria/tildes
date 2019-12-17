@@ -16,7 +16,7 @@ def add_anchors_to_headings(html: str) -> str:
 
     for heading in headings:
         # generate an anchor from the string contents of the heading
-        anchor = convert_to_url_slug("".join([string for string in heading.strings]))
+        anchor = convert_to_url_slug("".join(heading.strings))
 
         # create a link to that anchor, and put the heading's contents inside it
         link = soup.new_tag("a", href=f"#{anchor}")

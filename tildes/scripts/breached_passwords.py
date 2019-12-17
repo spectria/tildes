@@ -128,7 +128,7 @@ def addhashes(filename: str) -> None:
 
     # call wc to count the number of lines in the file for the progress bar
     click.echo("Determining hash count...")
-    result = subprocess.run(["wc", "-l", filename], stdout=subprocess.PIPE)
+    result = subprocess.run(["wc", "-l", filename], stdout=subprocess.PIPE, check=True)
     line_count = int(result.stdout.split(b" ")[0])
 
     progress_bar: Any = click.progressbar(length=line_count)

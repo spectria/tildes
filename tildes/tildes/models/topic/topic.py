@@ -144,7 +144,7 @@ class Topic(DatabaseModel):
         Index("ix_topics_search_tsv_gin", "search_tsv", postgresql_using="gin"),
     )
 
-    @hybrid_property
+    @hybrid_property  # pylint: disable=used-before-assignment
     def markdown(self) -> Optional[str]:
         """Return the topic's markdown."""
         if not self.is_text_type:

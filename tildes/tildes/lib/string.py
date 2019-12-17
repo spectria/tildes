@@ -243,7 +243,7 @@ def extract_text_from_html(html: str, skip_tags: Optional[List[str]] = None) -> 
     html_tree = HTMLParser(namespaceHTMLElements=False).parseFragment(html)
 
     # extract the text from all of the HTML elements
-    extracted_text = "".join([text for text in extract_text(html_tree, skip_tags)])
+    extracted_text = "".join(extract_text(html_tree, skip_tags))
 
     # sanitize unicode, remove leading/trailing whitespace, etc.
     return simplify_string(extracted_text)
