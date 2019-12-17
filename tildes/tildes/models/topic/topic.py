@@ -441,8 +441,8 @@ class Topic(DatabaseModel):
 
         return False
 
-    @property  # noqa
-    def content_type(self) -> Optional[TopicContentType]:
+    @property
+    def content_type(self) -> Optional[TopicContentType]:  # noqa
         """Return the content's type based on the topic's attributes."""
         if self.is_text_type:
             if self.has_tag("ask.survey"):

@@ -140,10 +140,10 @@ def post_group_topics(
     raise HTTPFound(location=new_topic.permalink)
 
 
-@view_config(route_name="home", renderer="home.jinja2")  # noqa
+@view_config(route_name="home", renderer="home.jinja2")
 @view_config(route_name="group", renderer="topic_listing.jinja2")
 @use_kwargs(TopicListingSchema())
-def get_group_topics(
+def get_group_topics(  # noqa
     request: Request,
     after: Optional[str],
     before: Optional[str],
