@@ -39,9 +39,3 @@ api_keys.embedly = embedlykeygoeshere
 api_keys.stripe.publishable = pk_live_ActualKeyShouldGoHere
 api_keys.stripe.secret = sk_live_ActualKeyShouldGoHere
 api_keys.youtube = youtubekeygoeshere
-
-[server:main]
-use = egg:gunicorn#main
-bind = unix:/run/gunicorn/socket
-workers = 8
-pidfile = /run/gunicorn/pid

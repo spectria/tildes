@@ -1,3 +1,4 @@
+gunicorn_args: --reload
 ini_file: development.ini
 ssl_cert_path: /etc/pki/tls/certs/localhost.crt
 ssl_private_key_path: /etc/pki/tls/certs/localhost.key
