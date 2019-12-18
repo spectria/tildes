@@ -291,7 +291,7 @@ class User(DatabaseModel):
     @property
     def auth_principals(self) -> List[str]:
         """Return the user's authorization principals (used for permissions)."""
-        principals: List[str] = []
+        principals = []
 
         # start with any principals manually defined in the permissions column
         if not self.permissions:
