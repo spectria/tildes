@@ -51,6 +51,10 @@ Disallow: /
 User-agent: SemrushBot-BA
 Disallow: /
 
+# https://www.seokicks.de/robot.html
+User-agent: SEOkicks
+Disallow: /
+
 # https://serpstatbot.com/
 User-agent: serpstatbot
 Disallow: /
