@@ -1,6 +1,6 @@
 """Views relating to ignored topics."""
 
-from typing import Optional, Type, Union
+from typing import Optional
 
 from pyramid.request import Request
 from pyramid.view import view_config

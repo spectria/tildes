@@ -56,10 +56,11 @@ class TopicQuery(PaginatedQuery):
 
     def _finalize(self) -> "TopicQuery":
         """Finalize the query before it's executed."""
+        # pylint: disable=self-cls-assignment
         self = super()._finalize()
 
         if self.filter_ignored:
-            self = self.filter(TopicIgnore.created_time == None)
+            self = self.filter(TopicIgnore.created_time == None)  # noqa
 
         return self
 
@@ -225,6 +226,7 @@ class TopicQuery(PaginatedQuery):
 
     def only_ignored(self) -> "TopicQuery":
         """Restrict the topics to ones that the user has ignored (generative)."""
+        # pylint: disable=self-cls-assignment
         self._only_ignored = True
         self = self.include_ignored()
 

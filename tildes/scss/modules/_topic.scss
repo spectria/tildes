@@ -15,7 +15,7 @@
   grid-template-areas:
     "title    voting"
     "metadata voting"
-    "info     voting";
+    "info     actions";
   grid-template-columns: 1fr auto;
   grid-gap: 0.2rem;
 
@@ -71,6 +71,37 @@
 
   .topic-voting {
     grid-area: voting;
+  }
+
+  .topic-actions {
+    grid-area: actions;
+  }
+}
+
+.topic-actions {
+  .btn {
+    height: auto;
+    padding: 0 0.2rem;
+    font-weight: normal;
+    border: 0;
+  }
+
+  .btn-post-action {
+    width: 100%;
+    justify-content: left;
+    font-weight: normal;
+  }
+
+  .dropdown-toggle .icon {
+    margin-left: 0.2rem;
+  }
+
+  .menu {
+    padding: 0.2rem;
+
+    li {
+      margin-top: 0;
+    }
   }
 }
 
@@ -149,8 +180,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0.2rem;
-  margin-bottom: auto;
   padding: 0.2rem;
   height: auto;
   font-weight: normal;
@@ -361,7 +390,7 @@
       "title    voting"
       "metadata voting"
       "content  voting"
-      "info     voting";
+      "info     actions";
   }
 }
 

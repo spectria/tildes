@@ -1,6 +1,7 @@
 {# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
+{% from 'macros/buttons.jinja2' import post_action_toggle_button with context %}
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
 {% from 'macros/links.jinja2' import link_to_group, link_to_user %}
 {% from 'utils.jinja2' import pluralize %}
@@ -115,6 +116,7 @@
 
     {{ topic_voting(topic) }}
 
+    {{ topic_actions(topic) }}
   </article>
 {% endmacro %}
 
@@ -186,6 +188,26 @@
   {% if request.has_permission('vote', topic) %}
     </button>
   {% else %}
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro topic_actions(topic) %}
+  {% if request.has_any_permission(("bookmark", "ignore"), topic) %}
+    <div class="dropdown dropdown-right topic-actions">
+      <button class="btn dropdown-toggle">
+        Actions
+        <i class="icon icon-caret"></i>
+      </button>
+      <menu class="menu">
+        {% if request.has_permission("bookmark", topic) %}
+          {{ post_action_toggle_button("bookmark", topic, is_toggled=topic.user_bookmarked) }}
+        {% endif %}
+
+        {% if request.has_permission("ignore", topic) %}
+          {{ post_action_toggle_button("ignore", topic, is_toggled=topic.user_ignored) }}
+        {% endif %}
+      </ul>
     </div>
   {% endif %}
 {% endmacro %}

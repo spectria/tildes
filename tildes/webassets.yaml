@@ -19,5 +19,6 @@ bundles:
     contents:
       # keep styles.css at the bottom so it can override Spectre
       - css/spectre-0.5.1/spectre.css
+      - css/spectre-0.5.1/spectre-icons.css
       - css/styles.css
     output: css/tildes.css
