@@ -116,3 +116,15 @@ redis.service:
     - require:
       - user: redis-user
       - cmd: install-redis
+
+/etc/systemd/system/postgresql_redis_bridge.service:
+  file.managed:
+    - source: salt://redis/postgresql_redis_bridge.service.jinja2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: 644
+
+postgresql_redis_bridge.service:
+  service.running:
+    - enable: True

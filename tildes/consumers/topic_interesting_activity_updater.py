@@ -6,21 +6,19 @@
 from datetime import datetime
 from typing import Optional
 
-from amqpy import Message
-
 from tildes.enums import CommentTreeSortOption
-from tildes.lib.amqp import PgsqlQueueConsumer
+from tildes.lib.event_stream import EventStreamConsumer, Message
 from tildes.models.comment import Comment, CommentInTree, CommentTree
 
 
-class TopicInterestingActivityUpdater(PgsqlQueueConsumer):
+class TopicInterestingActivityUpdater(EventStreamConsumer):
     """Consumer that updates topics' last_interesting_activity_time."""
 
-    def run(self, msg: Message) -> None:
-        """Process a delivered message."""
+    def process_message(self, message: Message) -> None:
+        """Process a message from the stream."""
         trigger_comment = (
             self.db_session.query(Comment)
-            .filter_by(comment_id=msg.body["comment_id"])
+            .filter_by(comment_id=message.fields["comment_id"])
             .one()
         )
 
@@ -82,15 +80,13 @@ class TopicInterestingActivityUpdater(PgsqlQueueConsumer):
 
 if __name__ == "__main__":
     TopicInterestingActivityUpdater(
-        queue_name="topic_interesting_activity_updater.q",
-        routing_keys=[
-            "comment.created",
-            "comment.deleted",
-            "comment.edited",
-            "comment.removed",
-            "comment.undeleted",
-            "comment.unremoved",
-            "comment_label.created",
-            "comment_label.deleted",
+        "topic_interesting_activity_updater",
+        source_streams=[
+            "comments.insert",
+            "comments.update.is_deleted",
+            "comments.update.markdown",
+            "comments.update.is_removed",
+            "comment_labels.insert",
+            "comment_labels.delete",
         ],
-    ).consume_queue()
+    ).consume_streams()

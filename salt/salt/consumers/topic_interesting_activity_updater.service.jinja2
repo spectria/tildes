@@ -1,9 +1,9 @@
 {% from 'common.jinja2' import app_dir, bin_dir -%}
 [Unit]
 Description=Topic Interesting Activity Updater (Queue Consumer)
-Requires=rabbitmq-server.service
-After=rabbitmq-server.service
-PartOf=rabbitmq-server.service
+Requires=redis.service
+After=redis.service
+PartOf=redis.service
 
 [Service]
 WorkingDirectory={{ app_dir }}/consumers

@@ -7,15 +7,14 @@ import os
 from datetime import timedelta
 from typing import Sequence
 
-from amqpy import Message
 from pyramid.paster import get_appsettings
 from requests.exceptions import HTTPError, Timeout
 from sqlalchemy import cast, desc, func
 from sqlalchemy.dialects.postgresql import JSONB
 
 from tildes.enums import ScraperType
-from tildes.lib.amqp import PgsqlQueueConsumer
 from tildes.lib.datetime import utc_now
+from tildes.lib.event_stream import EventStreamConsumer, Message
 from tildes.models.scraper import ScraperResult
 from tildes.models.topic import Topic
 from tildes.scrapers import ScraperError, YoutubeScraper
@@ -25,19 +24,23 @@ from tildes.scrapers import ScraperError, YoutubeScraper
 RESCRAPE_DELAY = timedelta(hours=24)
 
 
-class TopicYoutubeScraper(PgsqlQueueConsumer):
+class TopicYoutubeScraper(EventStreamConsumer):
     """Consumer that fetches data from YouTube's data API for relevant link topics."""
 
-    def __init__(self, api_key: str, queue_name: str, routing_keys: Sequence[str]):
+    def __init__(
+        self, api_key: str, consumer_group: str, source_streams: Sequence[str]
+    ):
         """Initialize the consumer, including creating a scraper instance."""
-        super().__init__(queue_name, routing_keys)
+        super().__init__(consumer_group, source_streams)
 
         self.scraper = YoutubeScraper(api_key)
 
-    def run(self, msg: Message) -> None:
-        """Process a delivered message."""
+    def process_message(self, message: Message) -> None:
+        """Process a message from the stream."""
         topic = (
-            self.db_session.query(Topic).filter_by(topic_id=msg.body["topic_id"]).one()
+            self.db_session.query(Topic)
+            .filter_by(topic_id=message.fields["topic_id"])
+            .one()
         )
 
         if not topic.is_link_type:
@@ -95,6 +98,6 @@ if __name__ == "__main__":
 
     TopicYoutubeScraper(
         youtube_api_key,
-        queue_name="topic_youtube_scraper.q",
-        routing_keys=["topic.created", "topic.link_edited"],
-    ).consume_queue()
+        consumer_group="topic_youtube_scraper",
+        source_streams=["topics.insert", "topics.update.link"],
+    ).consume_streams()

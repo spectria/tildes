@@ -3,20 +3,18 @@
 
 """Consumer that generates user mentions for comments."""
 
-from amqpy import Message
-
-from tildes.lib.amqp import PgsqlQueueConsumer
+from tildes.lib.event_stream import EventStreamConsumer, Message
 from tildes.models.comment import Comment, CommentNotification
 
 
-class CommentUserMentionGenerator(PgsqlQueueConsumer):
+class CommentUserMentionGenerator(EventStreamConsumer):
     """Consumer that generates user mentions for comments."""
 
-    def run(self, msg: Message) -> None:
-        """Process a delivered message."""
+    def process_message(self, message: Message) -> None:
+        """Process a message from the stream."""
         comment = (
             self.db_session.query(Comment)
-            .filter_by(comment_id=msg.body["comment_id"])
+            .filter_by(comment_id=message.fields["comment_id"])
             .one()
         )
 
@@ -28,10 +26,10 @@ class CommentUserMentionGenerator(PgsqlQueueConsumer):
             self.db_session, comment
         )
 
-        if msg.delivery_info["routing_key"] == "comment.created":
+        if message.stream == "comments.insert":
             for user_mention in new_mentions:
                 self.db_session.add(user_mention)
-        elif msg.delivery_info["routing_key"] == "comment.edited":
+        elif message.stream == "comments.update.markdown":
             to_delete, to_add = CommentNotification.prevent_duplicate_notifications(
                 self.db_session, comment, new_mentions
             )
@@ -45,6 +43,6 @@ class CommentUserMentionGenerator(PgsqlQueueConsumer):
 
 if __name__ == "__main__":
     CommentUserMentionGenerator(
-        queue_name="comment_user_mentions_generator.q",
-        routing_keys=["comment.created", "comment.edited"],
-    ).consume_queue()
+        "comment_user_mentions_generator",
+        source_streams=["comments.insert", "comments.update.markdown"],
+    ).consume_streams()

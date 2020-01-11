@@ -6,31 +6,32 @@
 from typing import Any, Dict, Sequence
 
 import publicsuffix
-from amqpy import Message
 from sqlalchemy import cast, func
 from sqlalchemy.dialects.postgresql import JSONB
 
-from tildes.lib.amqp import PgsqlQueueConsumer
+from tildes.lib.event_stream import EventStreamConsumer, Message
 from tildes.lib.string import extract_text_from_html, truncate_string, word_count
 from tildes.lib.url import get_domain_from_url
 from tildes.models.topic import Topic
 
 
-class TopicMetadataGenerator(PgsqlQueueConsumer):
+class TopicMetadataGenerator(EventStreamConsumer):
     """Consumer that generates content_metadata for topics."""
 
-    def __init__(self, queue_name: str, routing_keys: Sequence[str]):
+    def __init__(self, consumer_group: str, source_streams: Sequence[str]):
         """Initialize the consumer, including the public suffix list."""
-        super().__init__(queue_name, routing_keys)
+        super().__init__(consumer_group, source_streams)
 
         # download the public suffix list (would be good to add caching here)
         psl_file = publicsuffix.fetch()
         self.public_suffix_list = publicsuffix.PublicSuffixList(psl_file)
 
-    def run(self, msg: Message) -> None:
-        """Process a delivered message."""
+    def process_message(self, message: Message) -> None:
+        """Process a message from the stream."""
         topic = (
-            self.db_session.query(Topic).filter_by(topic_id=msg.body["topic_id"]).one()
+            self.db_session.query(Topic)
+            .filter_by(topic_id=message.fields["topic_id"])
+            .one()
         )
 
         if topic.is_deleted:
@@ -76,6 +77,10 @@ class TopicMetadataGenerator(PgsqlQueueConsumer):
 
 if __name__ == "__main__":
     TopicMetadataGenerator(
-        queue_name="topic_metadata_generator.q",
-        routing_keys=["topic.created", "topic.edited", "topic.link_edited"],
-    ).consume_queue()
+        "topic_metadata_generator",
+        source_streams=[
+            "topics.insert",
+            "topics.update.markdown",
+            "topics.update.link",
+        ],
+    ).consume_streams()

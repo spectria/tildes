@@ -9,33 +9,32 @@ from typing import Optional, Sequence
 
 import publicsuffix
 import requests
-from amqpy import Message
 from PIL import Image
 
 from tildes.enums import ScraperType
-from tildes.lib.amqp import PgsqlQueueConsumer
+from tildes.lib.event_stream import EventStreamConsumer, Message
 from tildes.lib.url import get_domain_from_url
 from tildes.models.scraper import ScraperResult
 
 
-class SiteIconDownloader(PgsqlQueueConsumer):
+class SiteIconDownloader(EventStreamConsumer):
     """Consumer that generates content_metadata for topics."""
 
     ICON_FOLDER = "/opt/tildes/static/images/site-icons"
 
-    def __init__(self, queue_name: str, routing_keys: Sequence[str]):
+    def __init__(self, consumer_group: str, source_streams: Sequence[str]):
         """Initialize the consumer, including the public suffix list."""
-        super().__init__(queue_name, routing_keys)
+        super().__init__(consumer_group, source_streams)
 
         # download the public suffix list (would be good to add caching here)
         psl_file = publicsuffix.fetch()
         self.public_suffix_list = publicsuffix.PublicSuffixList(psl_file)
 
-    def run(self, msg: Message) -> None:
-        """Process a delivered message."""
+    def process_message(self, message: Message) -> None:
+        """Process a message from the stream."""
         result = (
             self.db_session.query(ScraperResult)
-            .filter_by(result_id=msg.body["result_id"])
+            .filter_by(result_id=message.fields["result_id"])
             .one()
         )
 
@@ -97,5 +96,5 @@ class SiteIconDownloader(PgsqlQueueConsumer):
 
 if __name__ == "__main__":
     SiteIconDownloader(
-        queue_name="site_icon_downloader.q", routing_keys=["scraper_result.created"]
-    ).consume_queue()
+        "site_icon_downloader", source_streams=["scraper_results.insert"]
+    ).consume_streams()
