@@ -42,6 +42,9 @@ def get_bookmarks(
         .order_by(desc(bookmark_cls.created_time))
     )
 
+    if post_cls == Topic:
+        query = query.include_ignored()
+
     if before:
         query = query.before_id36(before)
 
