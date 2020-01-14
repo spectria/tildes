@@ -401,7 +401,7 @@
 
   .menu {
     background-color: map-get($theme, "background-primary");
-    box-shadow: 0 0.1rem 0.2rem map-get($theme, "foreground-secondary");
+    border-color: map-get($theme, "border");
   }
 
   .message {

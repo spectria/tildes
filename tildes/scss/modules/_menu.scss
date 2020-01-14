@@ -2,6 +2,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 .menu {
+  box-shadow: none;
+  border: 1px outset;
+
   .menu-item {
     > a:hover,
     > a:focus {
