@@ -60,7 +60,7 @@ class TopicQuery(PaginatedQuery):
         self = super()._finalize()
 
         if self.filter_ignored:
-            self = self.filter(TopicIgnore.created_time == None)  # noqa
+            self = self.filter(TopicIgnore.topic_id == None)  # noqa
 
         return self
 
