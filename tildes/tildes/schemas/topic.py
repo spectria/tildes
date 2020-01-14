@@ -113,8 +113,11 @@ class TopicSchema(Schema):
         if "link" not in data:
             return data
 
+        # remove leading/trailing whitespace
+        data["link"] = data["link"].strip()
+
         # if the value is empty, convert it to None
-        if not data["link"] or data["link"].isspace():
+        if not data["link"]:
             data["link"] = None
             return data
 
