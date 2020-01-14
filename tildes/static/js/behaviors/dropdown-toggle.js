@@ -12,5 +12,17 @@ $.onmount(".dropdown-toggle", function() {
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#Clicking_and_focus
         // This should make the behavior consistent across all browsers
         $(this).focus();
+
+        $(this).toggleClass("active");
+
+        // If toggleClass removed the class, that means that the click was on an
+        // already-active button, so we should hide the menu (via losing focus).
+        if (!$(this).hasClass("active")) {
+            $(this).blur();
+        }
+    });
+
+    $(this).blur(function() {
+        $(this).removeClass("active");
     });
 });
