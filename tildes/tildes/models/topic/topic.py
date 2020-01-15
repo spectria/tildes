@@ -23,7 +23,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import ENUM, JSONB, TSVECTOR
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm import deferred, relationship
-from sqlalchemy.sql.expression import text
+from sqlalchemy.sql.expression import desc, text
 from titlecase import titlecase
 
 from tildes.enums import ContentMetadataFields, TopicContentType, TopicType
@@ -86,23 +86,14 @@ class Topic(DatabaseModel):
         Integer, ForeignKey("topic_schedule.schedule_id"), index=True
     )
     created_time: datetime = Column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        index=True,
-        server_default=text("NOW()"),
+        TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()"),
     )
     last_edited_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     last_activity_time: datetime = Column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        index=True,
-        server_default=text("NOW()"),
+        TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()"),
     )
     last_interesting_activity_time: datetime = Column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        index=True,
-        server_default=text("NOW()"),
+        TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()"),
     )
     is_deleted: bool = Column(
         Boolean, nullable=False, server_default="false", index=True
@@ -125,8 +116,8 @@ class Topic(DatabaseModel):
     content_metadata: Dict[str, Any] = Column(
         MutableDict.as_mutable(JSONB(none_as_null=True))
     )
-    num_comments: int = Column(Integer, nullable=False, server_default="0", index=True)
-    num_votes: int = Column(Integer, nullable=False, server_default="0", index=True)
+    num_comments: int = Column(Integer, nullable=False, server_default="0")
+    num_votes: int = Column(Integer, nullable=False, server_default="0")
     _is_voting_closed: bool = Column(
         "is_voting_closed", Boolean, nullable=False, server_default="false", index=True
     )
@@ -142,6 +133,20 @@ class Topic(DatabaseModel):
     __table_args__ = (
         Index("ix_topics_tags_gist", tags, postgresql_using="gist"),
         Index("ix_topics_search_tsv_gin", "search_tsv", postgresql_using="gin"),
+        # Indexes for keyset pagination
+        Index("ix_topics_created_time_keyset", desc(created_time), desc(topic_id)),
+        Index(
+            "ix_topics_last_activity_time_keyset",
+            desc(last_activity_time),
+            desc(topic_id),
+        ),
+        Index(
+            "ix_topics_last_interesting_activity_time_keyset",
+            desc(last_interesting_activity_time),
+            desc(topic_id),
+        ),
+        Index("ix_topics_num_comments_keyset", desc(num_comments), desc(topic_id)),
+        Index("ix_topics_num_votes_keyset", desc(num_votes), desc(topic_id)),
     )
 
     @hybrid_property  # pylint: disable=used-before-assignment
