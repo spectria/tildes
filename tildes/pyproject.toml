@@ -1,5 +1,5 @@
 [tool.black]
-exclude = "(\\.mypy_cache|node_modules|scss|sql|static)"
+exclude = "/(\\.mypy_cache|node_modules|scss|sql|static)/"
 
 [tool.isort]
 skip = "alembic"
