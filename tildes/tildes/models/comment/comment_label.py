@@ -26,7 +26,6 @@ class CommentLabel(DatabaseModel):
       Outgoing:
         - Inserting a row for an exemplary label will set last_exemplary_label_time for
           the relevant user.
-        - Inserting a row will send a "comment_label.created" rabbitmq message.
     """
 
     __tablename__ = "comment_labels"

@@ -63,10 +63,6 @@ class Topic(DatabaseModel):
           updates to is_deleted in comments.
         - last_activity_time will be updated by insertions, deletions, and updates to
           is_deleted in comments.
-      Outgoing:
-        - Inserting a row will send a rabbitmq "topic.created" message.
-        - Updating markdown will send a rabbitmq "topic.edited" message.
-        - Updating link will send a rabbitmq "topic.link_edited" message.
       Internal:
         - deleted_time will be set when is_deleted is set to true
     """

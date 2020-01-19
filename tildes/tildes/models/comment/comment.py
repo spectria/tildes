@@ -55,8 +55,6 @@ class Comment(DatabaseModel):
         - Changing is_deleted or is_removed will adjust num_comments on all topic_visit
           rows for the relevant topic, where the visit_time was after the time the
           comment was originally posted.
-        - Inserting a row or updating markdown will send a rabbitmq message for
-          "comment.created" or "comment.edited" respectively.
       Internal:
         - deleted_time will be set or unset when is_deleted is changed
     """
