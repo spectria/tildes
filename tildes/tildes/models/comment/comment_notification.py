@@ -16,6 +16,7 @@ from sqlalchemy.sql.expression import text
 from tildes.enums import CommentNotificationType
 from tildes.lib.markdown import LinkifyFilter
 from tildes.models import DatabaseModel
+from tildes.models.topic import TopicIgnore
 from tildes.models.user import User
 
 from .comment import Comment
@@ -82,6 +83,18 @@ class CommentNotification(DatabaseModel):
         if not comment.parent.user.is_real_user:
             return False
 
+        # check if the parent's author is ignoring the topic
+        if (
+            Session.object_session(comment)
+            .query(TopicIgnore)
+            .filter(
+                TopicIgnore.user == comment.parent.user,
+                TopicIgnore.topic == comment.topic,
+            )
+            .one_or_none()
+        ):
+            return False
+
         return True
 
     @property
@@ -121,6 +134,14 @@ class CommentNotification(DatabaseModel):
             # prevent mentioning the user they're replying to
             # (they'll already get a reply notification)
             if comment.parent.user == user:
+                continue
+
+            # prevent mentioning users ignoring the topic
+            if (
+                db_session.query(TopicIgnore)
+                .filter(TopicIgnore.user == user, TopicIgnore.topic == comment.topic)
+                .one_or_none()
+            ):
                 continue
 
             mention_notification = cls(
