@@ -205,7 +205,7 @@
         {% endif %}
 
         {% if request.has_permission("ignore", topic) %}
-          {{ post_action_toggle_button("ignore", topic, is_toggled=topic.user_ignored) }}
+          {{ post_action_toggle_button("ignore", topic, is_toggled=topic.user_ignored, trigger_name="topic-actions-ignore") }}
         {% endif %}
       </ul>
     </div>

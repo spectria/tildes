@@ -1,7 +1,7 @@
 {# Copyright (c) 2019 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
-{% macro post_action_toggle_button(name, subject, is_toggled) %}
+{% macro post_action_toggle_button(name, subject, is_toggled, trigger_name=None) %}
   {% if subject is comment %}
     {% set type_name = "comment" %}
   {% elif subject is topic %}
@@ -9,12 +9,21 @@
   {% endif %}
   {% set route_name = "ic_" + type_name + "_" + name %}
 
+  {# If not specified, set the trigger_name from the one in the request (if any) #}
+  {% set trigger_name = trigger_name or request.params.get("ic-trigger-name") %}
+
   {% if name == "bookmark" %}
     {% set normal_label = "Bookmark" %}
     {% set toggled_label = "Unbookmark" %}
   {% elif name == "ignore" %}
     {% set normal_label = "Ignore" %}
     {% set toggled_label = "Unignore" %}
+
+    {% if trigger_name and trigger_name.startswith("topic-actions-") %}
+      {# For the topic actions menu, say "(Un)ignore this post" for clarity" #}
+      {% set normal_label = "Ignore this post" %}
+      {% set toggled_label = "Unignore this post" %}
+    {% endif %}
   {% elif name == "lock" %}
     {% set normal_label = "Lock" %}
     {% set toggled_label = "Unlock" %}
@@ -39,12 +48,14 @@
   <li>
   {% if not is_toggled %}
     <button class="btn-post-action"
+      {% if trigger_name %}name="{{ trigger_name }}"{% endif %}
       data-ic-put-to="{{ _post_action_toggle_button_url(route_name, subject) }}"
       data-ic-replace-target="true"
       {% if normal_confirm %}data-ic-confirm="{{ normal_confirm }}"{% endif %}
     >{{ normal_label }}</button>
   {% else %}
     <button class="btn-post-action btn-post-action-used"
+      {% if trigger_name %}name="{{ trigger_name }}"{% endif %}
       data-ic-delete-from="{{ _post_action_toggle_button_url(route_name, subject) }}"
       data-ic-replace-target="true"
       {% if toggled_confirm %}data-ic-confirm="{{ toggled_confirm }}"{% endif %}
