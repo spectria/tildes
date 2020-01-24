@@ -20,6 +20,11 @@ from tildes.lib.event_stream import REDIS_KEY_PREFIX
 
 NOTIFY_CHANNEL = "postgresql_events"
 
+# Stream entries seem to generally require about 20-50 bytes each, depending on which
+# data fields they include. A max length of a million should mean that any individual
+# stream shouldn't be able to take up more memory than 50 MB or so.
+STREAM_MAX_LENGTH = 1_000_000
+
 
 def postgresql_redis_bridge(config_path: str) -> None:
     """Listen for NOTIFY events and add them to Redis streams."""
@@ -61,7 +66,12 @@ def postgresql_redis_bridge(config_path: str) -> None:
                 except json.decoder.JSONDecodeError:
                     continue
 
-                pipe.xadd(f"{REDIS_KEY_PREFIX}{stream_name}", fields)
+                pipe.xadd(
+                    f"{REDIS_KEY_PREFIX}{stream_name}",
+                    fields,
+                    maxlen=STREAM_MAX_LENGTH,
+                    approximate=True,
+                )
 
             pipe.execute()
 
