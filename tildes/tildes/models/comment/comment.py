@@ -195,10 +195,11 @@ class Comment(DatabaseModel):
         acl.append((Allow, "comment.label", "label"))
 
         # reply:
-        #  - removed comments can't be replied to by anyone
+        #  - removed comments can only be replied to by admins
         #  - if the topic is locked, only admins can reply
         #  - otherwise, logged-in users can reply
         if self.is_removed:
+            acl.append((Allow, "admin", "reply"))
             acl.append((Deny, Everyone, "reply"))
 
         if self.topic.is_locked:
