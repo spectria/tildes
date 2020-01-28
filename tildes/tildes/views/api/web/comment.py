@@ -50,32 +50,30 @@ def _mark_comment_read_from_interaction(request: Request, comment: Comment) -> N
 def _increment_topic_comments_seen(request: Request, comment: Comment) -> None:
     """Increment the number of comments in a topic the user has viewed.
 
-    If the user has the "track comment visits" feature enabled, we want to increment the
-    number of comments they've seen in the thread that the comment came from, so that
-    they don't *both* get a notification as well as have the thread highlight with "(1
-    new)". This should only happen if their last visit was before the comment was
-    posted, however.  Below, this is implemented as a INSERT ... ON CONFLICT DO UPDATE
-    so that it will insert a new topic visit with 1 comment if they didn't previously
-    have one at all.
+    We want to increment the number of comments they've seen in the thread that the
+    comment came from, so that they don't *both* get a notification as well as have the
+    thread highlight with "(1 new)". This should only happen if their last visit was
+    before the comment was posted, however.  Below, this is implemented as a
+    INSERT ... ON CONFLICT DO UPDATE so that it will insert a new topic visit with
+    1 comment if they didn't previously have one at all.
     """
-    if request.user.track_comment_visits:
-        statement = (
-            insert(TopicVisit.__table__)
-            .values(
-                user_id=request.user.user_id,
-                topic_id=comment.topic_id,
-                visit_time=utc_now(),
-                num_comments=1,
-            )
-            .on_conflict_do_update(
-                constraint=TopicVisit.__table__.primary_key,
-                set_={"num_comments": TopicVisit.num_comments + 1},
-                where=TopicVisit.visit_time < comment.created_time,
-            )
+    statement = (
+        insert(TopicVisit.__table__)
+        .values(
+            user_id=request.user.user_id,
+            topic_id=comment.topic_id,
+            visit_time=utc_now(),
+            num_comments=1,
         )
+        .on_conflict_do_update(
+            constraint=TopicVisit.__table__.primary_key,
+            set_={"num_comments": TopicVisit.num_comments + 1},
+            where=TopicVisit.visit_time < comment.created_time,
+        )
+    )
 
-        request.db_session.execute(statement)
-        mark_changed(request.db_session)
+    request.db_session.execute(statement)
+    mark_changed(request.db_session)
 
 
 @ic_view_config(

@@ -216,22 +216,6 @@ def patch_change_open_links_new_tab(request: Request) -> Response:
 @ic_view_config(
     route_name="user",
     request_method="PATCH",
-    request_param="ic-trigger-name=comment-visits",
-    permission="change_comment_visits_setting",
-)
-def patch_change_track_comment_visits(request: Request) -> Response:
-    """Change the user's "track comment visits" setting."""
-    user = request.context
-
-    track_comment_visits = bool(request.params.get("track_comment_visits"))
-    user.track_comment_visits = track_comment_visits
-
-    return IC_NOOP
-
-
-@ic_view_config(
-    route_name="user",
-    request_method="PATCH",
     request_param="ic-trigger-name=collapse-old-comments",
     permission="change_collapse_old_comments_setting",
 )

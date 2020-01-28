@@ -188,10 +188,9 @@
       <div class="btn-group">
         <button class="btn btn-sm btn-light" data-js-comment-collapse-all-button>Collapse replies</button>
 
-        {# Display the "Collapse read" button if the user is tracking comment visits
-           but not automatically collapsing old comments, and there are new comments #}
+        {# Display the "Collapse read" button if the user is not automatically
+           collapsing old comments, and there are new comments #}
         {% if request.user
-             and request.user.track_comment_visits
              and not request.user.collapse_old_comments
              and topic.comments_since_last_visit %}
           <button class="btn btn-sm btn-light" data-js-comment-collapse-read-button>Collapse read</button>

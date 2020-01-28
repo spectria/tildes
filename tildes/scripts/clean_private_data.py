@@ -192,7 +192,6 @@ class DataCleaner:
                     "two_factor_backup_codes": DEFAULT,
                     "inviter_id": DEFAULT,
                     "invite_codes_remaining": DEFAULT,
-                    "track_comment_visits": DEFAULT,
                     "collapse_old_comments": DEFAULT,
                     "auto_mark_notifications_read": DEFAULT,
                     "open_new_tab_external": DEFAULT,

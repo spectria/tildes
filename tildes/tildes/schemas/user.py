@@ -8,7 +8,7 @@ from typing import Any
 
 from marshmallow import post_dump, pre_load, Schema, validates, validates_schema
 from marshmallow.exceptions import ValidationError
-from marshmallow.fields import Boolean, DateTime, Email, String
+from marshmallow.fields import DateTime, Email, String
 from marshmallow.validate import Length, Regexp
 
 from tildes.lib.password import is_breached_password
@@ -57,7 +57,6 @@ class UserSchema(Schema):
     email_address = Email(allow_none=True, load_only=True)
     email_address_note = String(validate=Length(max=EMAIL_ADDRESS_NOTE_MAX_LENGTH))
     created_time = DateTime(dump_only=True)
-    track_comment_visits = Boolean()
     bio_markdown = Markdown(max_length=BIO_MAX_LENGTH, allow_none=True)
 
     @post_dump

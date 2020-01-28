@@ -89,7 +89,6 @@ class User(DatabaseModel):
     num_unread_notifications: int = Column(Integer, nullable=False, server_default="0")
     inviter_id: int = Column(Integer, ForeignKey("users.user_id"))
     invite_codes_remaining: int = Column(Integer, nullable=False, server_default="0")
-    track_comment_visits: bool = Column(Boolean, nullable=False, server_default="false")
     collapse_old_comments: bool = Column(Boolean, nullable=False, server_default="true")
     auto_mark_notifications_read: bool = Column(
         Boolean, nullable=False, server_default="false"

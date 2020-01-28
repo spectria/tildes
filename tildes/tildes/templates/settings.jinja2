@@ -74,8 +74,24 @@
 
   <ul class="settings-list">
     <li>
-      <a href="/settings/comment_visits">Configure marking new comments (currently {{ 'enabled' if request.user.track_comment_visits else 'disabled' }})</a>
-      <div class="text-small text-secondary">Marks new comments in topics since your last visit, and which topics have any</div>
+      <form
+        name="collapse-old-comments"
+        autocomplete="off"
+        data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+      >
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input
+              type="checkbox"
+              id="collapse_old_comments"
+              name="collapse_old_comments"
+              data-js-autosubmit-on-change
+              {% if request.user.collapse_old_comments %}checked{% endif %}
+            >
+            <i class="form-icon"></i> Collapse old comments when I return to a topic
+          </label>
+        </div>
+      </form>
     </li>
 
     <li>

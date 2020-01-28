@@ -22,7 +22,6 @@ There's a page on the Docs site that explains the basic mechanics on Tildes: htt
 There are multiple useful links in the sidebar on your user page&mdash;get there by clicking your username in the top right, or in the sidebar if you're on mobile. You can access the settings page from there, which includes multiple things you'll probably want to do:
 
 * Check the available options for display themes (including dark themes)
-* [Enable marking new comments in threads](https://tildes.net/settings/comment_visits)
 * [Set up account recovery in case you lose access to your account](https://tildes.net/settings/account_recovery)
 
 # Please post topics and comments

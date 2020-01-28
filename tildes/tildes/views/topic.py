@@ -440,8 +440,7 @@ def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
 
     tree.collapse_from_labels()
 
-    # if the user has the "mark new comments" feature enabled
-    if request.user and request.user.track_comment_visits:
+    if request.user:
         # update their last visit time for this topic
         statement = TopicVisit.generate_insert_statement(request.user, topic)
         request.db_session.execute(statement)

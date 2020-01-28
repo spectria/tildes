@@ -86,15 +86,6 @@ def get_settings_two_factor(request: Request) -> dict:
     }
 
 
-@view_config(
-    route_name="settings_comment_visits", renderer="settings_comment_visits.jinja2"
-)
-def get_settings_comment_visits(request: Request) -> dict:
-    """Generate the comment visits settings page."""
-    # pylint: disable=unused-argument
-    return {}
-
-
 @view_config(route_name="settings_filters", renderer="settings_filters.jinja2")
 def get_settings_filters(request: Request) -> dict:
     """Generate the filters settings page."""

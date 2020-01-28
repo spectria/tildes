@@ -7,7 +7,7 @@ from typing import Any, Sequence
 
 from pyramid.request import Request
 from sqlalchemy import func
-from sqlalchemy.sql.expression import and_, label, null
+from sqlalchemy.sql.expression import and_, label
 
 from tildes.enums import TopicSortOption
 from tildes.lib.datetime import SimpleHoursPeriod, utc_now
@@ -94,21 +94,14 @@ class TopicQuery(PaginatedQuery):
 
     def _attach_visit_data(self) -> "TopicQuery":
         """Join the data related to the user's last visit to the topic(s)."""
-        # pylint: disable=assignment-from-no-return
-        if self.request.user.track_comment_visits:
-            query = self.outerjoin(
-                TopicVisit,
-                and_(
-                    TopicVisit.topic_id == Topic.topic_id,
-                    TopicVisit.user == self.request.user,
-                ),
-            )
-            query = query.add_columns(TopicVisit.visit_time, TopicVisit.num_comments)
-        else:
-            # if the user has the feature disabled, just add literal NULLs
-            query = self.add_columns(
-                null().label("visit_time"), null().label("num_comments")
-            )
+        query = self.outerjoin(
+            TopicVisit,
+            and_(
+                TopicVisit.topic_id == Topic.topic_id,
+                TopicVisit.user == self.request.user,
+            ),
+        )
+        query = query.add_columns(TopicVisit.visit_time, TopicVisit.num_comments)
 
         return query
 
