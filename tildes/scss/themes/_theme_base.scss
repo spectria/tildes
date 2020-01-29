@@ -70,6 +70,11 @@
   blockquote {
     border-color: map-get($theme, "foreground-highlight");
     background-color: map-get($theme, "background-secondary");
+
+    code,
+    pre {
+      background-color: map-get($theme, "background-primary");
+    }
   }
 
   code,
