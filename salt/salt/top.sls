@@ -31,6 +31,7 @@ base:
   'prod':
     - nginx.shortener-config
     - nginx.static-sites-config
+    - postgresql.prod-config
     - prod-config
   'monitoring':
     - nginx
