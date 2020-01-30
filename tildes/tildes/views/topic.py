@@ -20,7 +20,6 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import any_, desc, text
 from sqlalchemy_utils import Ltree
 from webargs.pyramidparser import use_kwargs
-from zope.sqlalchemy import mark_changed
 
 from tildes.enums import (
     CommentLabelOption,
@@ -441,10 +440,7 @@ def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
     tree.collapse_from_labels()
 
     if request.user:
-        # update their last visit time for this topic
-        statement = TopicVisit.generate_insert_statement(request.user, topic)
-        request.db_session.execute(statement)
-        mark_changed(request.db_session)
+        request.db_session.add(TopicVisit(request.user, topic))
 
         # collapse old comments if the user has a previous visit to the topic
         # (and doesn't have that behavior disabled)

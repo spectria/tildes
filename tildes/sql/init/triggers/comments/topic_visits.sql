@@ -7,7 +7,13 @@ BEGIN
     UPDATE topic_visits
         SET num_comments = num_comments + 1
         WHERE user_id = NEW.user_id
-            AND topic_id = NEW.topic_id;
+            AND topic_id = NEW.topic_id
+            AND visit_time = (
+                SELECT MAX(visit_time)
+                FROM topic_visits
+                WHERE topic_id = NEW.topic_id
+                    AND user_id = NEW.user_id
+            );
 
     RETURN NULL;
 END;

@@ -7,7 +7,7 @@ from typing import Any, Sequence
 
 from pyramid.request import Request
 from sqlalchemy import func
-from sqlalchemy.sql.expression import and_, label
+from sqlalchemy.sql.expression import and_, desc, label, text
 
 from tildes.enums import TopicSortOption
 from tildes.lib.datetime import SimpleHoursPeriod, utc_now
@@ -94,14 +94,26 @@ class TopicQuery(PaginatedQuery):
 
     def _attach_visit_data(self) -> "TopicQuery":
         """Join the data related to the user's last visit to the topic(s)."""
-        query = self.outerjoin(
-            TopicVisit,
-            and_(
+        # subquery using LATERAL to select only the newest visit for each topic
+        lateral_subquery = (
+            self.request.db_session.query(
+                TopicVisit.visit_time, TopicVisit.num_comments
+            )
+            .filter(
                 TopicVisit.topic_id == Topic.topic_id,
                 TopicVisit.user == self.request.user,
-            ),
+            )
+            .order_by(desc(TopicVisit.visit_time))
+            .limit(1)
+            .correlate(Topic)
+            .subquery()
+            .lateral()
         )
-        query = query.add_columns(TopicVisit.visit_time, TopicVisit.num_comments)
+
+        # join on "true" since the subquery already restricts to the row we want
+        query = self.outerjoin(lateral_subquery, text("true"))
+
+        query = query.add_columns(lateral_subquery)
 
         return query
 
@@ -148,7 +160,7 @@ class TopicQuery(PaginatedQuery):
         return topic
 
     def apply_sort_option(
-        self, sort: TopicSortOption, desc: bool = True
+        self, sort: TopicSortOption, is_desc: bool = True
     ) -> "TopicQuery":
         """Apply a TopicSortOption sorting method (generative)."""
         if sort == TopicSortOption.VOTES:
@@ -162,7 +174,7 @@ class TopicQuery(PaginatedQuery):
         elif sort == TopicSortOption.ALL_ACTIVITY:
             self._sort_column = Topic.last_activity_time
 
-        self.sort_desc = desc
+        self.sort_desc = is_desc
 
         return self
 
