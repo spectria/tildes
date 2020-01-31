@@ -33,11 +33,12 @@ def _mark_comment_read_from_interaction(request: Request, comment: Comment) -> N
     if not request.user.interact_mark_notifications_read:
         return
 
-    request.query(CommentNotification).filter(
-        CommentNotification.user == request.user,
-        CommentNotification.comment == comment,
-        CommentNotification.is_unread == True,  # noqa
-    ).update({"is_unread": False}, synchronize_session=False)
+    with request.db_session.no_autoflush:
+        request.query(CommentNotification).filter(
+            CommentNotification.user == request.user,
+            CommentNotification.comment == comment,
+            CommentNotification.is_unread == True,  # noqa
+        ).update({"is_unread": False}, synchronize_session=False)
 
 
 @ic_view_config(
@@ -199,8 +200,13 @@ def put_vote_comment(request: Request) -> dict:
         # the user has already voted on this comment
         savepoint.rollback()
 
-    # a trigger updates this - set it manually so the button displays the correct number
-    comment.num_votes += 1
+    # re-query the comment to get updated data
+    comment = (
+        request.query(Comment)
+        .join_all_relationships()
+        .filter_by(comment_id=comment.comment_id)
+        .one()
+    )
 
     return {"name": "vote", "subject": comment, "is_toggled": True}
 
@@ -226,8 +232,13 @@ def delete_vote_comment(request: Request) -> dict:
     # manually commit the transaction so triggers will execute
     request.tm.commit()
 
-    # a trigger updates this - set it manually so the button displays the correct number
-    comment.num_votes -= 1
+    # re-query the comment to get updated data
+    comment = (
+        request.query(Comment)
+        .join_all_relationships()
+        .filter_by(comment_id=comment.comment_id)
+        .one()
+    )
 
     return {"name": "vote", "subject": comment, "is_toggled": False}
 
