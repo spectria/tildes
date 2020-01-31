@@ -282,6 +282,13 @@ class User(DatabaseModel):
         value = value.lower()
         self.email_address_hash = hash_string(value)
 
+    def is_correct_email_address(self, email_address: str) -> bool:
+        """Check if the email address is correct for this user."""
+        if not self.email_address_hash:
+            raise ValueError("User has not set an email address")
+
+        return is_match_for_hash(email_address.lower(), self.email_address_hash)
+
     @property
     def num_unread_total(self) -> int:
         """Return total number of unread items (notifications + messages)."""

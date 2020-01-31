@@ -118,6 +118,24 @@ def test_change_password_to_username(session_user):
         session_user.change_password("session user password", session_user.username)
 
 
+def test_user_email_check():
+    """Ensure checking a user's email address works correctly."""
+    user = User("Some_User", "Some_Password")
+    user.email_address = "some_user@example.com"
+
+    assert user.is_correct_email_address("some_user@example.com")
+
+    assert not user.is_correct_email_address("someuser@example.com")
+
+
+def test_user_email_check_case_insensitive():
+    """Ensure the user email address check isn't case-sensitive."""
+    user = User("Some_User", "Some_Password")
+    user.email_address = "Some_User@example.com"
+
+    assert user.is_correct_email_address("some_user@example.com")
+
+
 def test_deleted_user_no_message_permission():
     """Ensure nobody can message a deleted user."""
     deleted_user = User("Deleted_User", "password")
