@@ -3,6 +3,7 @@
 
 """Views related to sending and viewing messages."""
 
+from marshmallow.fields import String
 from pyramid.httpexceptions import HTTPFound
 from pyramid.request import Request
 from pyramid.view import view_config
@@ -17,9 +18,14 @@ from tildes.schemas.message import MessageConversationSchema, MessageReplySchema
 @view_config(
     route_name="new_message", renderer="new_message.jinja2", permission="message"
 )
-def get_new_message_form(request: Request) -> dict:
+@use_kwargs({"subject": String(missing=""), "message": String(missing="")})
+def get_new_message_form(request: Request, subject: str, message: str) -> dict:
     """Form for entering a new private message to send."""
-    return {"user": request.context}
+    return {
+        "user": request.context,
+        "subject": subject,
+        "message": message,
+    }
 
 
 @view_config(route_name="messages", renderer="messages.jinja2")
