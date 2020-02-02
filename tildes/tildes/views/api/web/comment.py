@@ -428,3 +428,15 @@ def delete_comment_bookmark(request: Request) -> dict:
     _mark_comment_read_from_interaction(request, comment)
 
     return {"name": "bookmark", "subject": comment, "is_toggled": False}
+
+
+@ic_view_config(
+    route_name="comment",
+    request_method="GET",
+    request_param="ic-trigger-name=markdown-source",
+    renderer="markdown_source.jinja2",
+    permission="view",
+)
+def get_comment_markdown_source(request: Request) -> dict:
+    """Get the Markdown source for a comment with Intercooler."""
+    return {"post": request.context}

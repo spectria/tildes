@@ -4,5 +4,14 @@
 .dropdown {
   .menu {
     animation: none;
+
+    .btn-post-action {
+      justify-content: left;
+      width: 100%;
+    }
+  }
+
+  &-toggle.btn-post-action {
+    height: auto;
   }
 }

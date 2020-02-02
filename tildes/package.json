@@ -28,6 +28,7 @@
     "globals": {
       "$": "readonly",
       "Intercooler": "readonly",
+      "Promise": "readonly",
       "Tildes": "readonly"
     }
   },

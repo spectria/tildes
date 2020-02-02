@@ -172,6 +172,29 @@
     {% if request.has_permission("remove", topic) %}
       {{ post_action_toggle_button("remove", topic, topic.is_removed) }}
     {% endif %}
+
+    {% if topic.is_text_type and request.has_permission("view_content", topic) %}
+      <li>
+        <div class="dropdown dropdown-right">
+          <button class="btn-post-action dropdown-toggle">
+            More...
+            <i class="icon icon-caret"></i>
+          </button>
+          <menu class="menu">
+            <li>
+              <button class="btn-post-action" name="markdown-source"
+                data-ic-get-from="{{ request.route_url(
+                  'ic_topic',
+                  topic_id36=topic.topic_id36,
+                ) }}"
+                data-ic-swap-style="replace"
+                data-ic-target=".topic-full .btn-post:first + .btn-post-settings"
+              >View Markdown</button>
+            </li>
+          </menu>
+        </div>
+      </li>
+    {% endif %}
   </menu>
   <div class="btn-post-settings"></div>
 

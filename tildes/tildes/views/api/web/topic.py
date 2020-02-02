@@ -482,3 +482,15 @@ def delete_topic_ignore(request: Request) -> dict:
     ).delete(synchronize_session=False)
 
     return {"name": "ignore", "subject": topic, "is_toggled": False}
+
+
+@ic_view_config(
+    route_name="topic",
+    request_method="GET",
+    request_param="ic-trigger-name=markdown-source",
+    renderer="markdown_source.jinja2",
+    permission="view_content",
+)
+def get_topic_markdown_source(request: Request) -> dict:
+    """Get the Markdown source for a topic with Intercooler."""
+    return {"post": request.context}

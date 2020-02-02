@@ -201,7 +201,29 @@
             >Reply</button>
           </li>
         {% endif %}
+
+        <li>
+          <div class="dropdown dropdown-right">
+            <button class="btn-post-action dropdown-toggle">
+              More...
+              <i class="icon icon-caret"></i>
+            </button>
+            <menu class="menu">
+              <li>
+                <button class="btn-post-action" name="markdown-source"
+                  data-ic-get-from="{{ request.route_url(
+                    'ic_comment',
+                    comment_id36=comment.comment_id36,
+                  ) }}"
+                  data-ic-swap-style="replace"
+                  data-ic-target="#comment-{{ comment.comment_id36 }} .btn-post:first + .btn-post-settings"
+                >View Markdown</button>
+              </li>
+            </menu>
+          </div>
+        </li>
       </menu>
+      <div class="btn-post-settings"></div>
     {% endif %}
   </div>
 {% endmacro %}

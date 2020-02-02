@@ -1,0 +1,30 @@
+{# Copyright (c) 2020 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+<form class="form-markdown-source">
+  <label class="form-label" for="markdown-source">
+    {% if post is topic %}
+      Topic Markdown (read-only)
+    {% elif post is comment %}
+      Comment Markdown (read-only)
+    {% endif %}
+  </label>
+  <textarea
+    class="form-input"
+    name="markdown-source"
+    placeholder="Text (Markdown)"
+    readonly
+  >{{ post.markdown }}</textarea>
+  <div class="form-buttons">
+    <button
+      class="btn btn-primary"
+      data-js-copy-button
+      type="button"
+    >Copy Markdown</button>
+    <button
+      class="btn btn-link"
+      data-js-cancel-button
+      type="button"
+    >Hide</button>
+  </div>
+</form>
