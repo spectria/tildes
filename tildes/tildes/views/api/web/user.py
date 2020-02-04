@@ -147,6 +147,29 @@ def post_disable_two_factor(request: Request, code: str) -> Response:
 
 @ic_view_config(
     route_name="user",
+    request_method="POST",
+    request_param="ic-trigger-name=view-two-factor-backup-codes",
+    renderer="two_factor_backup_codes.jinja2",
+    permission="change_two_factor",
+)
+@use_kwargs({"code": String()})
+def post_view_two_factor_backup_codes(request: Request, code: str) -> Response:
+    """Show the user their two-factor authentication backup codes."""
+    user = request.context
+
+    if not user.is_correct_two_factor_code(code):
+        raise HTTPUnauthorized(body="Invalid code")
+
+    # format the backup codes to be easier to read for output
+    backup_codes = [
+        separate_string(code, " ", 4) for code in user.two_factor_backup_codes
+    ]
+
+    return {"backup_codes": backup_codes}
+
+
+@ic_view_config(
+    route_name="user",
     request_method="PATCH",
     request_param="ic-trigger-name=show-tags-in-listings",
     permission="change_show_tags_in_listings_setting",

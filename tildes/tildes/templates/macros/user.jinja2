@@ -31,3 +31,15 @@
     {% endif %}
   </div>
 {% endmacro %}
+
+{% macro two_factor_backup_codes() %}
+  <p>These are your backup codes. In the event that you lose access to your authenticator device, you will need one of these codes to regain access to your account (or disable two-factor authentication). Each code can only be used once.</p>
+
+  <p><strong class="text-warning">Make sure to write them down and store them in a safe place.</strong></p>
+
+  <ol>
+  {% for code in backup_codes %}
+    <li><code>{{ code }}</code></li>
+  {% endfor %}
+  </ol>
+{% endmacro %}

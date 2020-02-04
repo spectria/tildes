@@ -9,7 +9,29 @@
 
 {% block settings %}
 {% if request.user.two_factor_enabled %}
-<p>You already have two-factor authentication enabled. To disable it, enter a code from your authenticator device below and click the button. If you do not have access to your authenticator device, enter a backup code.</p>
+<section>
+<p>To view your backup codes, enter a code from your authenticator device below and click the button. If you do not have access to your authenticator device, enter a backup code.</p>
+
+<form
+  name="view-two-factor-backup-codes"
+  autocomplete="off"
+  data-ic-post-to="{{ request.route_url('ic_user', username=request.user.username) }}"
+  data-ic-target="closest section"
+>
+  <div class="form-group">
+    <label class="form-label" for="code">TOTP or backup code</label>
+    <input class="form-input" id="code" name="code" type="text" placeholder="Code" required>
+  </div>
+
+  <div class="form-buttons">
+    <button class="btn btn-primary" type="submit">View backup codes</button>
+  </div>
+</form>
+</section>
+
+<div class="divider"></div>
+
+<p>To disable two-factor authentication, enter a code from your authenticator device below and click the button. If you do not have access to your authenticator device, enter a backup code.</p>
 
 <form
   name="disable-two-factor"

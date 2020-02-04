@@ -1,8 +1,6 @@
-{# Copyright (c) 2018 Tildes contributors <code@tildes.net> #}
+{# Copyright (c) 2020 Tildes contributors <code@tildes.net> #}
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% from 'macros/user.jinja2' import two_factor_backup_codes with context %}
-
-<p>Congratulations! Two-factor authentication has been enabled.</p>
 
 {{ two_factor_backup_codes() }}
