@@ -84,6 +84,15 @@ def test_link_domain_on_link_topic(link_topic):
     assert link_topic.link_domain == "example.com"
 
 
+def test_link_ip_address_on_link_topic(session_user, session_group):
+    """Ensure IP addresses are recognized as domains."""
+    ip_addr_topic = Topic.create_link_topic(
+        session_group, session_user, "IP address topic", "http://1.1.1.1"
+    )
+
+    assert ip_addr_topic.link_domain == "1.1.1.1"
+
+
 def test_edit_markdown_errors_on_link_topic(link_topic):
     """Ensure trying to edit the markdown of a link topic is an error."""
     with raises(AttributeError):

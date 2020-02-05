@@ -4,6 +4,7 @@
 """Consumer that generates content_metadata for topics."""
 
 from typing import Any, Dict, Sequence
+from ipaddress import ip_address
 
 import publicsuffix
 from sqlalchemy import cast, func
@@ -67,10 +68,22 @@ class TopicMetadataGenerator(EventStreamConsumer):
 
         return {"word_count": word_count(extracted_text), "excerpt": excerpt}
 
+    def _domain_is_ip_address(self, domain: str) -> bool:
+        """Return whether a "domain" is actually an IP address."""
+        try:
+            ip_address(domain)
+            return True
+        except ValueError:
+            return False
+
     def _generate_link_metadata(self, topic: Topic) -> Dict[str, Any]:
         """Generate metadata for a link topic (domain)."""
         parsed_domain = get_domain_from_url(topic.link)
-        domain = self.public_suffix_list.get_public_suffix(parsed_domain)
+
+        if self._domain_is_ip_address(parsed_domain):
+            domain = parsed_domain
+        else:
+            domain = self.public_suffix_list.get_public_suffix(parsed_domain)
 
         return {"domain": domain}
 
