@@ -4,7 +4,7 @@
 {% extends 'topic_listing.jinja2' %}
 
 {% from 'macros/forms.jinja2' import search_form %}
-{% from 'macros/links.jinja2' import link_to_group %}
+{% from 'macros/links.jinja2' import link_to_group with context %}
 
 {% block title %}Search results: {{ search }}{% endblock %}
 

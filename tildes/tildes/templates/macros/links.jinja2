@@ -3,12 +3,20 @@
 
 {% macro link_to_user(user) -%}
   {% if user.is_real_user %}
-    <a href="/user/{{ user.username }}" class="link-user">{{ user.username }}</a>
+    <a
+      href="/user/{{ user.username }}"
+      class="link-user"
+      {% if request.user.open_new_tab_user %}target="_blank"{% endif %}
+    >{{ user.username }}</a>
   {% else %}
     {{ user.username }}
   {% endif %}
 {%- endmacro %}
 
 {% macro link_to_group(group) -%}
-  <a href="/~{{ group.path }}" class="link-group">~{{ group.path }}</a>
+  <a
+    href="/~{{ group.path }}"
+    class="link-group"
+    {% if request.user.open_new_tab_group %}target="_blank"{% endif %}
+  >~{{ group.path }}</a>
 {%- endmacro %}

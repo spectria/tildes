@@ -103,6 +103,8 @@ class User(DatabaseModel):
         Boolean, nullable=False, server_default="false"
     )
     open_new_tab_text: bool = Column(Boolean, nullable=False, server_default="false")
+    open_new_tab_group: bool = Column(Boolean, nullable=False, server_default="false")
+    open_new_tab_user: bool = Column(Boolean, nullable=False, server_default="false")
     theme_default: str = Column(Text)
     show_tags_in_listings: bool = Column(
         Boolean, nullable=False, server_default="false"

@@ -5,7 +5,7 @@
 
 {% from 'macros/forms.jinja2' import search_form %}
 {% from 'macros/groups.jinja2' import group_segmented_link, render_group_subscription_box with context %}
-{% from 'macros/links.jinja2' import link_to_group %}
+{% from 'macros/links.jinja2' import link_to_group with context %}
 {% from 'macros/topics.jinja2' import render_topic_for_listing with context %}
 
 {% block title %}Topics in ~{{ group.path }}{% endblock %}

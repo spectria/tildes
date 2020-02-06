@@ -144,6 +144,34 @@
               </label>
             </div>
           </li>
+          <li>
+            <div class="form-group">
+              <label class="form-checkbox">
+                <input
+                  type="checkbox"
+                  id="open_new_tab_group"
+                  name="open_new_tab_group"
+                  data-js-autosubmit-on-change
+                  {% if request.user.open_new_tab_group %}checked{% endif %}
+                >
+                <i class="form-icon"></i> Links to groups on Tildes
+              </label>
+            </div>
+          </li>
+          <li>
+            <div class="form-group">
+              <label class="form-checkbox">
+                <input
+                  type="checkbox"
+                  id="open_new_tab_user"
+                  name="open_new_tab_user"
+                  data-js-autosubmit-on-change
+                  {% if request.user.open_new_tab_user %}checked{% endif %}
+                >
+                <i class="form-icon"></i> Links to users on Tildes
+              </label>
+            </div>
+          </li>
         </ul>
       </form>
     </li>

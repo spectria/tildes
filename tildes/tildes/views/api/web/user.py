@@ -229,9 +229,13 @@ def patch_change_open_links_new_tab(request: Request) -> Response:
     external = bool(request.params.get("open_new_tab_external"))
     internal = bool(request.params.get("open_new_tab_internal"))
     text = bool(request.params.get("open_new_tab_text"))
+    group = bool(request.params.get("open_new_tab_group"))
+    open_new_tab_user = bool(request.params.get("open_new_tab_user"))
     user.open_new_tab_external = external
     user.open_new_tab_internal = internal
     user.open_new_tab_text = text
+    user.open_new_tab_group = group
+    user.open_new_tab_user = open_new_tab_user
 
     return IC_NOOP
 

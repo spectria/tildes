@@ -3,7 +3,7 @@
 
 {% from 'macros/buttons.jinja2' import post_action_toggle_button with context %}
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
-{% from 'macros/links.jinja2' import link_to_group, link_to_user %}
+{% from 'macros/links.jinja2' import link_to_group, link_to_user with context %}
 {% from 'utils.jinja2' import pluralize %}
 
 {% macro render_topic_for_listing(topic, show_group=False, rank=None) %}

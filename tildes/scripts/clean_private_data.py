@@ -197,6 +197,8 @@ class DataCleaner:
                     "open_new_tab_external": DEFAULT,
                     "open_new_tab_internal": DEFAULT,
                     "open_new_tab_text": DEFAULT,
+                    "open_new_tab_group": DEFAULT,
+                    "open_new_tab_user": DEFAULT,
                     "theme_default": DEFAULT,
                     "permissions": DEFAULT,
                     "home_default_order": DEFAULT,

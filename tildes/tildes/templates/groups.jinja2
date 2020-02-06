@@ -4,7 +4,7 @@
 {% extends 'base_no_sidebar.jinja2' %}
 
 {% from 'macros/groups.jinja2' import render_group_subscription_box with context %}
-{% from 'macros/links.jinja2' import link_to_group %}
+{% from 'macros/links.jinja2' import link_to_group with context %}
 
 {% block title %}Browse groups{% endblock %}
 
