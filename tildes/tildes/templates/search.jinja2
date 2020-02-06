@@ -35,16 +35,23 @@
 
   <p><a href="/">Back to home page</a></p>
 
-  {% if request.user and request.user.subscriptions %}
+  {% if request.user %}
     <div class="divider"></div>
-    <ul class="nav">
-      <li>Subscriptions</li>
+
+    {% if request.has_permission('post_topic', group) %}
+      <a href="/~{{ group.path }}/new_topic" class="btn btn-primary">Post a new topic</a>
+    {% endif %}
+
+    {% if request.user.subscriptions %}
       <ul class="nav">
-      {% for subscription in request.user.subscriptions|sort(attribute='group') %}
-        <li class="nav-item"><a href="/~{{ subscription.group.path }}">~{{ subscription.group.path }}</a></li>
-      {% endfor %}
+        <li>Subscriptions</li>
+        <ul class="nav">
+        {% for subscription in request.user.subscriptions|sort(attribute='group') %}
+          <li class="nav-item"><a href="/~{{ subscription.group.path }}">~{{ subscription.group.path }}</a></li>
+        {% endfor %}
+        </ul>
       </ul>
-    </ul>
+    {% endif %}
   {% endif %}
 
 {% endblock %}
