@@ -2,7 +2,7 @@
 {# SPDX-License-Identifier: AGPL-3.0-or-later #}
 
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive %}
-{% from 'macros/links.jinja2' import link_to_user %}
+{% from 'macros/links.jinja2' import link_to_user with context %}
 
 {% macro render_message(message) %}
   {% if message.sender == request.user %}
