@@ -7,7 +7,7 @@ begin
     perform * from topic_visits
         where user_id = NEW.user_id
             and topic_id = NEW.topic_id
-            and visit_time >= now() - interval '2 minutes';
+            and visit_time >= now() - interval '30 seconds';
 
     if (FOUND) then
         return null;
