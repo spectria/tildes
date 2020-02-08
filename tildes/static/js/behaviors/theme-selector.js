@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 $.onmount("[data-js-theme-selector]", function() {
+    Tildes.toggleSetDefaultThemeButton($(this));
+
     $(this).change(function(event) {
         event.preventDefault();
 
@@ -12,10 +14,6 @@ $.onmount("[data-js-theme-selector]", function() {
             .hide();
 
         var new_theme = $(this).val();
-        var selected_text = $(this)
-            .find("option:selected")
-            .text();
-        var $setDefaultButton = $("#button-set-default-theme");
 
         // persist the new theme for the user in their cookie
         document.cookie =
@@ -26,12 +24,19 @@ $.onmount("[data-js-theme-selector]", function() {
             document.location.hostname;
 
         Tildes.changeTheme(new_theme);
-
-        // set visibility of 'Set as account default' button
-        if (selected_text.indexOf("account default") === -1) {
-            $setDefaultButton.removeClass("d-none");
-        } else {
-            $setDefaultButton.addClass("d-none");
-        }
+        Tildes.toggleSetDefaultThemeButton($(this));
     });
 });
+
+Tildes.toggleSetDefaultThemeButton = function(element) {
+    var selected_text = $(element)
+        .find("option:selected")
+        .text();
+    var $setDefaultButton = $("#button-set-default-theme");
+    // set visibility of 'Set as account default' button
+    if (selected_text.indexOf("account default") === -1) {
+        $setDefaultButton.removeClass("d-none");
+    } else {
+        $setDefaultButton.addClass("d-none");
+    }
+};
