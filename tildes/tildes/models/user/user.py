@@ -30,7 +30,12 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import text
 
-from tildes.enums import CommentLabelOption, HTMLSanitizationContext, TopicSortOption
+from tildes.enums import (
+    CommentLabelOption,
+    CommentTreeSortOption,
+    HTMLSanitizationContext,
+    TopicSortOption,
+)
 from tildes.lib.database import CIText, TagList
 from tildes.lib.datetime import utc_now
 from tildes.lib.hash import hash_string, is_match_for_hash
@@ -90,6 +95,9 @@ class User(DatabaseModel):
     inviter_id: int = Column(Integer, ForeignKey("users.user_id"))
     invite_codes_remaining: int = Column(Integer, nullable=False, server_default="0")
     collapse_old_comments: bool = Column(Boolean, nullable=False, server_default="true")
+    comment_sort_order_default: Optional[CommentTreeSortOption] = Column(
+        ENUM(CommentTreeSortOption)
+    )
     auto_mark_notifications_read: bool = Column(
         Boolean, nullable=False, server_default="false"
     )

@@ -380,16 +380,15 @@ def get_new_topic_form(request: Request) -> dict:
 
 @view_config(route_name="topic", renderer="topic.jinja2")
 @view_config(route_name="topic_no_title", renderer="topic.jinja2")
-@use_kwargs(
-    {
-        "comment_order": Enum(
-            CommentTreeSortOption, missing=CommentTreeSortOption.RELEVANCE
-        )
-    }
-)
+@use_kwargs({"comment_order": Enum(CommentTreeSortOption, missing=None)})
 def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
     """View a single topic."""
     topic = request.context
+    if comment_order is None:
+        if request.user and request.user.comment_sort_order_default:
+            comment_order = request.user.comment_sort_order_default
+        else:
+            comment_order = CommentTreeSortOption.RELEVANCE
 
     # deleted and removed comments need to be included since they're necessary for
     # building the tree if they have replies

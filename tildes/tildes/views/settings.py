@@ -62,7 +62,17 @@ def get_settings(request: Request) -> dict:
         theme_options[user_default_theme] += " (account default)"
         theme_options[site_default_theme] += " (site default)"
 
-    return {"current_theme": current_theme, "theme_options": theme_options}
+    if request.user.comment_sort_order_default:
+        current_comment_sort_order = request.user.comment_sort_order_default
+    else:
+        current_comment_sort_order = CommentTreeSortOption.RELEVANCE
+
+    return {
+        "current_comment_sort_order": current_comment_sort_order,
+        "comment_sort_order_options": CommentTreeSortOption,
+        "current_theme": current_theme,
+        "theme_options": theme_options,
+    }
 
 
 @view_config(

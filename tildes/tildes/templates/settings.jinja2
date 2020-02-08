@@ -75,6 +75,31 @@
   <ul class="settings-list">
     <li>
       <form
+        name="account-default-comment-sort-order"
+        data-ic-patch-to="{{ request.route_url(
+          'ic_user',
+          username=request.user.username
+        ) }}"
+      >
+        <label class="form-label" for="comment-sort-order">Choose a default comment sort order:</label>
+        <select
+          class="form-select"
+          name="comment-sort-order"
+          id="comment-sort-order"
+          data-js-autosubmit-on-change
+        >
+          {% for sort_option in comment_sort_order_options %}
+            <option
+              value="{{ sort_option.name }}"
+              {{ 'selected' if current_comment_sort_order == sort_option else '' }}
+            >{{ sort_option.description|capitalize }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </li>
+
+    <li>
+      <form
         name="collapse-old-comments"
         autocomplete="off"
         data-ic-patch-to="{{ request.route_url('ic_user', username=request.user.username) }}"
