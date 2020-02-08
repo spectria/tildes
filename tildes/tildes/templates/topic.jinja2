@@ -65,8 +65,16 @@
 {% if request.has_permission('view_content', topic) %}
   {% if topic.is_text_type %}
     <div class="topic-full-text"
-      {% if request.user and request.user.open_new_tab_text %}
-      data-js-external-links-new-tabs
+      {% if request.user %}
+        {% if request.user.open_new_tab_text %}
+          data-js-external-links-new-tabs
+        {% endif %}
+        {% if request.user.open_new_tab_group %}
+          data-js-group-links-new-tabs
+        {% endif %}
+        {% if request.user.open_new_tab_user %}
+          data-js-user-links-new-tabs
+        {% endif %}
       {% endif %}
     >{{ topic.rendered_html|safe }}</div>
   {% elif topic.is_link_type %}

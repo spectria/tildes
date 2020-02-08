@@ -138,8 +138,16 @@
 
   {% if is_expandable %}
     <details class="topic-text-excerpt"
-      {% if request.user and request.user.open_new_tab_text %}
-      data-js-external-links-new-tabs
+      {% if request.user %}
+        {% if request.user.open_new_tab_text %}
+          data-js-external-links-new-tabs
+        {% endif %}
+        {% if request.user.open_new_tab_group %}
+          data-js-group-links-new-tabs
+        {% endif %}
+        {% if request.user.open_new_tab_user %}
+          data-js-user-links-new-tabs
+        {% endif %}
       {% endif %}
     >
       <summary><span>{{ excerpt }}</span></summary>
