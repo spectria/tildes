@@ -36,6 +36,7 @@
     image-rendering: crisp-edges;
   }
 
+  margin-right: 1rem;
   padding-left: 40px;
   padding-right: 8px;
   line-height: 32px;
@@ -47,10 +48,6 @@
   &:active,
   &:focus {
     text-decoration: none;
-  }
-
-  @media (min-width: $size-xs) {
-    margin-right: 1rem;
   }
 }
 
