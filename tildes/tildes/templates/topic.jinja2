@@ -173,7 +173,11 @@
       {{ post_action_toggle_button("remove", topic, topic.is_removed) }}
     {% endif %}
 
-    {% if topic.is_text_type and request.has_permission("view_content", topic) %}
+    {# Only show "View Markdown" (and dropdown) when it's a text topic and the user is
+       allowed to view the content, but can't edit it #}
+    {% if topic.is_text_type
+        and request.has_permission("view_content", topic)
+        and not request.has_permission("edit", topic) %}
       <li>
         <div class="dropdown dropdown-right">
           <button class="btn-post-action dropdown-toggle">
