@@ -10,7 +10,7 @@
 {% block settings %}
 {% if request.user.two_factor_enabled %}
 <section>
-<p>To view your backup codes, enter a code from your authenticator device below and click the button. If you do not have access to your authenticator device, enter a backup code.</p>
+<p>You have {{ request.user.two_factor_backup_codes|length }} unused backup codes. To view them, enter a two-factor code (or one of the backup codes). If you need to invalidate this set of backup codes and generate new ones, please disable two-factor authentication below, and then re-enable it.</p>
 
 <form
   name="view-two-factor-backup-codes"
