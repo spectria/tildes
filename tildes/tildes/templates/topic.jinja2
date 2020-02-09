@@ -166,19 +166,19 @@
     {% endif %}
 
     {% if request.has_permission('lock', topic) %}
-      {{ post_action_toggle_button("lock", topic, topic.is_locked) }}
+      <li>{{ post_action_toggle_button("lock", topic, topic.is_locked) }}</li>
     {% endif %}
 
     {% if request.has_permission('bookmark', topic) %}
-      {{ post_action_toggle_button("bookmark", topic, is_toggled=topic.user_bookmarked) }}
+      <li>{{ post_action_toggle_button("bookmark", topic, is_toggled=topic.user_bookmarked) }}</li>
     {% endif %}
 
     {% if request.has_permission("ignore", topic) %}
-      {{ post_action_toggle_button("ignore", topic, is_toggled=topic.user_ignored) }}
+      <li>{{ post_action_toggle_button("ignore", topic, is_toggled=topic.user_ignored) }}</li>
     {% endif %}
 
     {% if request.has_permission("remove", topic) %}
-      {{ post_action_toggle_button("remove", topic, topic.is_removed) }}
+      <li>{{ post_action_toggle_button("remove", topic, topic.is_removed) }}</li>
     {% endif %}
 
     {# Only show "View Markdown" (and dropdown) when it's a text topic and the user is

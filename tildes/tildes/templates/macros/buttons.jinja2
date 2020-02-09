@@ -45,7 +45,6 @@
     {% endif %}
   {% endif %}
 
-  <li>
   {% if not is_toggled %}
     <button class="btn-post-action"
       {% if trigger_name %}name="{{ trigger_name }}"{% endif %}
@@ -61,7 +60,6 @@
       {% if toggled_confirm %}data-ic-confirm="{{ toggled_confirm }}"{% endif %}
     >{{ toggled_label }}</button>
   {% endif %}
-  </li>
 {% endmacro %}
 
 {% macro _post_action_toggle_button_url(route_name, subject) %}

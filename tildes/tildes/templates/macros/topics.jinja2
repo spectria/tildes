@@ -209,11 +209,11 @@
       </button>
       <menu class="menu">
         {% if request.has_permission("bookmark", topic) %}
-          {{ post_action_toggle_button("bookmark", topic, is_toggled=topic.user_bookmarked) }}
+          <li>{{ post_action_toggle_button("bookmark", topic, is_toggled=topic.user_bookmarked) }}</li>
         {% endif %}
 
         {% if request.has_permission("ignore", topic) %}
-          {{ post_action_toggle_button("ignore", topic, is_toggled=topic.user_ignored, trigger_name="topic-actions-ignore") }}
+          <li>{{ post_action_toggle_button("ignore", topic, is_toggled=topic.user_ignored, trigger_name="topic-actions-ignore") }}</li>
         {% endif %}
       </ul>
     </div>

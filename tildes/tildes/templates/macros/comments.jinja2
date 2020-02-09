@@ -159,7 +159,7 @@
         {% endif %}
 
         {% if request.has_permission('vote', comment) %}
-          {{ post_action_toggle_button("vote", comment, is_toggled=comment.user_voted) }}
+          <li>{{ post_action_toggle_button("vote", comment, is_toggled=comment.user_voted) }}</li>
         {% endif %}
 
         {% if request.has_permission('label', comment) %}
@@ -190,11 +190,11 @@
         {% endif %}
 
         {% if request.has_permission('bookmark', comment) %}
-          {{ post_action_toggle_button("bookmark", comment, is_toggled=comment.user_bookmarked) }}
+          <li>{{ post_action_toggle_button("bookmark", comment, is_toggled=comment.user_bookmarked) }}</li>
         {% endif %}
 
         {% if request.has_permission("remove", comment) %}
-          {{ post_action_toggle_button("remove", comment, comment.is_removed) }}
+          <li>{{ post_action_toggle_button("remove", comment, comment.is_removed) }}</li>
         {% endif %}
 
         {% if request.has_permission('reply', comment) %}
