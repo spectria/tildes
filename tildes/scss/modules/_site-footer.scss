@@ -12,16 +12,18 @@
 .site-footer-links {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
 
   list-style-type: none;
-  margin: 0;
+  margin: 0 auto;
+  max-width: 50rem;
 }
 
 .site-footer-link {
   @include min-touch-size;
 
   margin: 0;
+  padding: 0 0.4rem;
   white-space: nowrap;
 
   & + & {
