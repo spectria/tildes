@@ -3,7 +3,10 @@
 
 #site-footer {
   padding: 0.2rem;
-  padding-bottom: 1rem;
+
+  @media (min-width: $size-md) {
+    padding-bottom: 1rem;
+  }
 
   font-size: 0.6rem;
   text-align: center;
@@ -25,10 +28,6 @@
   margin: 0;
   padding: 0 0.4rem;
   white-space: nowrap;
-
-  & + & {
-    margin-left: 1rem;
-  }
 }
 
 .site-footer-theme-selection {
