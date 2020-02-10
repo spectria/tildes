@@ -197,19 +197,6 @@
           <li>{{ post_action_toggle_button("remove", comment, comment.is_removed) }}</li>
         {% endif %}
 
-        {% if request.has_permission('reply', comment) %}
-          <li>
-            <button
-              class="btn-post-action"
-              name="reply"
-              data-js-comment-reply-button
-              {% if comment.age.days >= 7 %}
-              data-js-old-warning-age="{{ comment.age|vague_timedelta_description }}"
-              {% endif %}
-            >Reply</button>
-          </li>
-        {% endif %}
-
         {# Don't show the "View Markdown" button (or dropdown) if the user can edit #}
         {% if not request.has_permission("edit", comment) %}
         <li>
@@ -232,6 +219,19 @@
             </menu>
           </div>
         </li>
+        {% endif %}
+
+        {% if request.has_permission('reply', comment) %}
+          <li>
+            <button
+              class="btn-post-action"
+              name="reply"
+              data-js-comment-reply-button
+              {% if comment.age.days >= 7 %}
+              data-js-old-warning-age="{{ comment.age|vague_timedelta_description }}"
+              {% endif %}
+            >Reply</button>
+          </li>
         {% endif %}
       </menu>
       <div class="btn-post-settings"></div>
