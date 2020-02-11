@@ -505,10 +505,10 @@ class Topic(DatabaseModel):
         return self.content_metadata.get(key)
 
     @property
-    def content_metadata_for_display(self) -> str:
-        """Return a string of the content's metadata, suitable for display."""
+    def content_metadata_for_display(self) -> List[str]:
+        """Return a list of the content's metadata strings, suitable for display."""
         if not self.content_type:
-            return ""
+            return []
 
         metadata_strings = []
 
@@ -532,7 +532,7 @@ class Topic(DatabaseModel):
 
             metadata_strings.append(formatted_value)
 
-        return ", ".join(metadata_strings)
+        return metadata_strings
 
     @property
     def content_metadata_fields_for_display(self) -> Dict[str, str]:
