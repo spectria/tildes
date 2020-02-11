@@ -198,7 +198,7 @@
         {% endif %}
 
         {# Don't show the "View Markdown" button (or dropdown) if the user can edit #}
-        {% if not request.has_permission("edit", comment) %}
+        {% if request.user and not request.has_permission("edit", comment) %}
         <li>
           <div class="dropdown dropdown-right">
             <button class="btn-post-action dropdown-toggle">
