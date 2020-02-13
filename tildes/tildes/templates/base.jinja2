@@ -37,7 +37,9 @@
   {% assets "css" %}
   <link rel="stylesheet" href="{{ ASSET_URL }}">
   {% endassets %}
-  <link rel="stylesheet" href="/css/site-icons.css">
+  {% assets "site-icons-css" %}
+  <link rel="stylesheet" href="{{ ASSET_URL }}">
+  {% endassets %}
 
   {# Favicons and other data for "pinning" the site on various platforms #}
   <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">

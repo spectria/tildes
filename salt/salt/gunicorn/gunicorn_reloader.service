@@ -1,0 +1,10 @@
+[Unit]
+Description=gunicorn reloader
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl reload gunicorn.service
+
+[Install]
+WantedBy=multi-user.target

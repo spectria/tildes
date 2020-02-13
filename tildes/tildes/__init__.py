@@ -33,6 +33,7 @@ def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
     config.add_webasset("javascript", Bundle(output="js/tildes.js"))
     config.add_webasset("javascript-third-party", Bundle(output="js/third_party.js"))
     config.add_webasset("css", Bundle(output="css/tildes.css"))
+    config.add_webasset("site-icons-css", Bundle(output="css/site-icons.css"))
 
     config.scan("tildes.views")
 

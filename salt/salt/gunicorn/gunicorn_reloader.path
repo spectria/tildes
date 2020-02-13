@@ -1,0 +1,5 @@
+[Path]
+PathChanged=/opt/tildes/static/css/site-icons.css
+
+[Install]
+WantedBy=multi-user.target
