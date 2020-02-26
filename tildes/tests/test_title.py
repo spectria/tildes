@@ -45,6 +45,13 @@ def test_whitespace_trimmed(title_schema):
     assert result["title"] == "actual title"
 
 
+def test_trailing_periods_trimmed(title_schema):
+    """Ensure trailing periods on a title are removed."""
+    title = "This is an interesting story."
+    result = title_schema.load({"title": title})
+    assert not result["title"].endswith(".")
+
+
 def test_consecutive_whitespace_removed(title_schema):
     """Ensure consecutive whitespace in a title is compressed."""
     title = "sure   are  \n  a  lot    of     spaces"

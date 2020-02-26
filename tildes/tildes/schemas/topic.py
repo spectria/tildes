@@ -37,6 +37,18 @@ class TopicSchema(Schema):
     group = Nested(GroupSchema, dump_only=True)
 
     @pre_load
+    def prepare_title(self, data: dict, many: bool, partial: Any) -> dict:
+        """Prepare the title before it's validated."""
+        # pylint: disable=unused-argument
+        if "title" not in data:
+            return data
+
+        # strip any trailing periods
+        data["title"] = data["title"].rstrip(".")
+
+        return data
+
+    @pre_load
     def prepare_tags(self, data: dict, many: bool, partial: Any) -> dict:
         """Prepare the tags before they're validated."""
         # pylint: disable=unused-argument
