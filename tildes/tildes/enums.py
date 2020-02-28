@@ -281,3 +281,10 @@ class HTMLSanitizationContext(enum.Enum):
     """Enum for the possible contexts for HTML sanitization."""
 
     USER_BIO = enum.auto()
+
+
+class UserPermissionType(enum.Enum):
+    """Enum for the types of user permissions."""
+
+    ALLOW = enum.auto()
+    DENY = enum.auto()

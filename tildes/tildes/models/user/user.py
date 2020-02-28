@@ -25,7 +25,7 @@ from sqlalchemy import (
     Text,
     TIMESTAMP,
 )
-from sqlalchemy.dialects.postgresql import ARRAY, ENUM, JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, ENUM
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import text
@@ -126,7 +126,6 @@ class User(DatabaseModel):
     deleted_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     is_banned: bool = Column(Boolean, nullable=False, server_default="false")
     banned_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
-    permissions: Any = Column(JSONB(none_as_null=True))
     home_default_order: Optional[TopicSortOption] = Column(ENUM(TopicSortOption))
     home_default_period: Optional[str] = Column(Text)
     filtered_topic_tags: List[str] = Column(
@@ -307,17 +306,7 @@ class User(DatabaseModel):
     @property
     def auth_principals(self) -> List[str]:
         """Return the user's authorization principals (used for permissions)."""
-        principals = []
-
-        # start with any principals manually defined in the permissions column
-        if not self.permissions:
-            pass
-        elif isinstance(self.permissions, str):
-            principals = [self.permissions]
-        elif isinstance(self.permissions, list):
-            principals = self.permissions
-        else:
-            raise ValueError("Unknown permissions format")
+        principals = [permission.auth_principal for permission in self.permissions]
 
         # give the user the "comment.label" permission if they're over a week old
         if self.age > timedelta(days=7):

@@ -11,6 +11,7 @@ from pyramid.config import Configurator
 from pyramid.httpexceptions import HTTPFound
 from pyramid.request import Request
 from pyramid.security import Allow, Everyone
+from sqlalchemy.orm import joinedload
 
 from tildes.models.user import User
 
@@ -37,7 +38,11 @@ def get_authenticated_user(request: Request) -> Optional[User]:
     if not user_id:
         return None
 
-    query = request.query(User).filter_by(user_id=user_id)
+    query = (
+        request.query(User)
+        .options(joinedload("permissions"))
+        .filter_by(user_id=user_id)
+    )
 
     return query.one_or_none()
 
