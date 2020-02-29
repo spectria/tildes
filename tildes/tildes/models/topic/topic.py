@@ -6,7 +6,7 @@
 from datetime import datetime, timedelta
 from itertools import chain
 from pathlib import PurePosixPath
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, TYPE_CHECKING
+from typing import Any, Dict, Iterable, List, Optional, TYPE_CHECKING
 from urllib.parse import urlparse
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
@@ -27,6 +27,7 @@ from sqlalchemy.sql.expression import desc, text
 from titlecase import titlecase
 
 from tildes.enums import ContentMetadataFields, TopicContentType, TopicType
+from tildes.lib.auth import aces_for_permission
 from tildes.lib.database import TagList
 from tildes.lib.datetime import utc_from_timestamp, utc_now
 from tildes.lib.id import id_to_id36
@@ -39,6 +40,7 @@ from tildes.models import DatabaseModel
 from tildes.models.group import Group
 from tildes.models.user import User
 from tildes.schemas.topic import TITLE_MAX_LENGTH, TopicSchema
+from tildes.typing import AclType
 
 if TYPE_CHECKING:  # workaround for mypy issues with @hybrid_property
     from builtins import property as hybrid_property
@@ -243,39 +245,51 @@ class Topic(DatabaseModel):
     def _update_creation_metric(self) -> None:
         incr_counter("topics", type=self.topic_type.name.lower())
 
-    def __acl__(self) -> Sequence[Tuple[str, Any, str]]:  # noqa
+    def __acl__(self) -> AclType:  # noqa
         """Pyramid security ACL."""
-        acl = []
-
         # deleted topics allow "general" viewing, but nothing else
         if self.is_deleted:
-            acl.append((Allow, Everyone, "view"))
-            acl.append(DENY_ALL)
+            return [(Allow, Everyone, "view"), DENY_ALL]
+
+        acl = []
+
+        # permissions that need to be granted specifically
+        acl.extend(aces_for_permission("topic.move", self.group_id))
+        acl.extend(aces_for_permission("topic.remove", self.group_id))
+        acl.extend(aces_for_permission("topic.lock", self.group_id))
 
         # view:
         #  - everyone gets "general" viewing permission for all topics
         acl.append((Allow, Everyone, "view"))
 
         # view_author:
-        #  - removed topics' author is only visible to the author, admins, and users
-        #    with remove permission
+        #  - removed topics' author is only visible to author and users who can remove
         #  - otherwise, everyone can view the author
         if self.is_removed:
-            acl.append((Allow, "admin", "view_author"))
             acl.append((Allow, self.user_id, "view_author"))
-            acl.append((Allow, "topic.remove", "view_author"))
+            acl.extend(
+                aces_for_permission(
+                    required_permission="topic.remove",
+                    granted_permission="view_author",
+                    group_id=self.group_id,
+                )
+            )
             acl.append((Deny, Everyone, "view_author"))
 
         acl.append((Allow, Everyone, "view_author"))
 
         # view_content:
-        #  - removed topics' content is only visible to the author, admins and users
-        #    with remove permissions
+        #  - removed topics' content is only visible to author and users who can remove
         #  - otherwise, everyone can view the content
         if self.is_removed:
-            acl.append((Allow, "admin", "view_content"))
             acl.append((Allow, self.user_id, "view_content"))
-            acl.append((Allow, "topic.remove", "view_content"))
+            acl.extend(
+                aces_for_permission(
+                    required_permission="topic.remove",
+                    granted_permission="view_content",
+                    group_id=self.group_id,
+                )
+            )
             acl.append((Deny, Everyone, "view_content"))
 
         acl.append((Allow, Everyone, "view_content"))
@@ -294,15 +308,27 @@ class Topic(DatabaseModel):
         acl.append((Allow, Authenticated, "vote"))
 
         # comment:
-        #  - removed topics can only be commented on by admins
-        #  - locked topics can only be commented on by admins
+        #  - removed topics can only be commented on by users who can remove
+        #  - locked topics can only be commented on by users who can lock
         #  - otherwise, logged-in users can comment
         if self.is_removed:
-            acl.append((Allow, "admin", "comment"))
+            acl.extend(
+                aces_for_permission(
+                    required_permission="topic.remove",
+                    granted_permission="comment",
+                    group_id=self.group_id,
+                )
+            )
             acl.append((Deny, Everyone, "comment"))
 
         if self.is_locked:
-            acl.append((Allow, "admin", "comment"))
+            acl.extend(
+                aces_for_permission(
+                    required_permission="topic.lock",
+                    granted_permission="comment",
+                    group_id=self.group_id,
+                )
+            )
             acl.append((Deny, Everyone, "comment"))
 
         acl.append((Allow, Authenticated, "comment"))
@@ -310,22 +336,27 @@ class Topic(DatabaseModel):
         # edit:
         #  - only text topics can be edited
         #  - authors can edit their own topics
-        #  - admins can edit topics belonging to the generic/automatic user
+        #  - topics by the generic/automatic user can be edited with permission
         if self.is_text_type:
             acl.append((Allow, self.user_id, "edit"))
 
             if self.user_id == -1:
-                acl.append((Allow, "admin", "edit"))
+                acl.extend(
+                    aces_for_permission(
+                        required_permission="topic.edit_by_generic_user",
+                        granted_permission="edit",
+                        group_id=self.group_id,
+                    )
+                )
 
         # delete:
         #  - only the author can delete
         acl.append((Allow, self.user_id, "delete"))
 
         # tag:
-        #  - allow tagging by the author, admins, and people with "topic.tag" principal
+        #  - allow tagging by the author, and users specifically granted permission
         acl.append((Allow, self.user_id, "tag"))
-        acl.append((Allow, "admin", "tag"))
-        acl.append((Allow, "topic.tag", "tag"))
+        acl.extend(aces_for_permission("topic.tag", self.group_id))
 
         # bookmark:
         #  - logged-in users can bookmark topics
@@ -336,28 +367,16 @@ class Topic(DatabaseModel):
         acl.append((Allow, Authenticated, "ignore"))
 
         # edit_title:
-        #  - allow admins or people with the "topic.edit_title" permission to always
-        #    edit titles
         #  - allow users to edit their own topic's title for the first 5 minutes
-        acl.append((Allow, "admin", "edit_title"))
-        acl.append((Allow, "topic.edit_title", "edit_title"))
-
+        #  - otherwise, only if granted permission specifically
         if self.age < timedelta(minutes=5):
             acl.append((Allow, self.user_id, "edit_title"))
+        acl.extend(aces_for_permission("topic.edit_title", self.group_id))
 
-        # tools that require specifically granted permissions
-        acl.append((Allow, "admin", "lock"))
-        acl.append((Allow, "topic.lock", "lock"))
-
-        acl.append((Allow, "admin", "remove"))
-        acl.append((Allow, "topic.remove", "remove"))
-
-        acl.append((Allow, "admin", "move"))
-        acl.append((Allow, "topic.move", "move"))
-
+        # edit_link:
+        #  - only if granted specifically, only on link topics
         if self.is_link_type:
-            acl.append((Allow, "admin", "edit_link"))
-            acl.append((Allow, "topic.edit_link", "edit_link"))
+            acl.extend(aces_for_permission("topic.edit_link", self.group_id))
 
         acl.append(DENY_ALL)
 

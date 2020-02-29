@@ -13,9 +13,9 @@ but it simplifies a lot of things when organizing them into threads.
 """
 
 from datetime import datetime
-from typing import Any, List, Optional, Sequence, Tuple
+from typing import List, Optional, Sequence
 
-from pyramid.security import ALL_PERMISSIONS, Allow, DENY_ALL
+from pyramid.security import Allow, DENY_ALL
 from sqlalchemy import (
     CheckConstraint,
     Column,
@@ -39,6 +39,7 @@ from tildes.schemas.message import (
     MessageReplySchema,
     SUBJECT_MAX_LENGTH,
 )
+from tildes.typing import AclType
 
 
 class MessageConversation(DatabaseModel):
@@ -121,12 +122,14 @@ class MessageConversation(DatabaseModel):
     def _update_creation_metric(self) -> None:
         incr_counter("messages", type="conversation")
 
-    def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
+    def __acl__(self) -> AclType:
         """Pyramid security ACL."""
-        acl = [
-            (Allow, self.sender_id, ALL_PERMISSIONS),
-            (Allow, self.recipient_id, ALL_PERMISSIONS),
-        ]
+        acl = []
+
+        # grant permissions to both sender and receiver
+        for principal in (self.sender_id, self.recipient_id):
+            acl.append((Allow, principal, "view"))
+            acl.append((Allow, principal, "reply"))
 
         acl.append(DENY_ALL)
 

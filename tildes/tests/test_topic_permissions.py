@@ -1,7 +1,20 @@
 # Copyright (c) 2018 Tildes contributors <code@tildes.net>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from pyramid.security import Authenticated, Everyone, principals_allowed_by_permission
+from pyramid.security import (
+    Allow,
+    Authenticated,
+    Everyone,
+    principals_allowed_by_permission,
+)
+
+from tildes.lib.auth import aces_for_permission
+
+
+def _principals_granted_permission(permission, group_id):
+    aces = aces_for_permission(permission, group_id)
+
+    return set([ace[1] for ace in aces if ace[0] == Allow])
 
 
 def test_topic_viewing_permission(text_topic):
@@ -46,10 +59,11 @@ def test_topic_view_author_permission(text_topic):
 
 
 def test_removed_topic_view_author_permission(topic):
-    """Ensure only a removed topic's author can only be viewed by certain users."""
+    """Ensure removed topic's author can only be viewed by certain users."""
     topic.is_removed = True
-    principals = principals_allowed_by_permission(topic, "view_author")
-    assert principals == {"admin", topic.user_id, "topic.remove"}
+    allowed = principals_allowed_by_permission(topic, "view_author")
+    granted = _principals_granted_permission("topic.remove", topic.group_id)
+    assert allowed == granted | {topic.user_id}
 
 
 def test_topic_view_content_permission(text_topic):
@@ -61,8 +75,9 @@ def test_topic_view_content_permission(text_topic):
 def test_removed_topic_view_content_permission(topic):
     """Ensure a removed topic's content can only be viewed by certain users."""
     topic.is_removed = True
-    principals = principals_allowed_by_permission(topic, "view_content")
-    assert principals == {"admin", topic.user_id, "topic.remove"}
+    allowed = principals_allowed_by_permission(topic, "view_content")
+    granted = _principals_granted_permission("topic.remove", topic.group_id)
+    assert allowed == granted | {topic.user_id}
 
 
 def test_topic_comment_permission(text_topic):
@@ -72,12 +87,16 @@ def test_topic_comment_permission(text_topic):
 
 
 def test_locked_topic_comment_permission(topic):
-    """Ensure only admins can post (top-level) comments on locked topics."""
+    """Ensure only users with lock permission can post comments on locked topics."""
     topic.is_locked = True
-    assert principals_allowed_by_permission(topic, "comment") == {"admin"}
+    allowed = principals_allowed_by_permission(topic, "comment")
+    granted = _principals_granted_permission("topic.lock", topic.group_id)
+    assert allowed == granted
 
 
 def test_removed_topic_comment_permission(topic):
-    """Ensure only admins can post (top-level) comments on removed topics."""
+    """Ensure only users with remove permission can post comments on removed topics."""
     topic.is_removed = True
-    assert principals_allowed_by_permission(topic, "comment") == {"admin"}
+    allowed = principals_allowed_by_permission(topic, "comment")
+    granted = _principals_granted_permission("topic.remove", topic.group_id)
+    assert allowed == granted

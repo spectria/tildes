@@ -5,7 +5,7 @@
 
 from datetime import datetime
 from pathlib import Path, PurePath
-from typing import Any, List, Optional, Sequence, Tuple
+from typing import List, Optional
 
 from pygit2 import Repository, Signature
 from pyramid.security import Allow, DENY_ALL, Everyone
@@ -13,6 +13,7 @@ from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Text, TIMES
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
+from tildes.lib.auth import aces_for_permission
 from tildes.lib.database import CIText
 from tildes.lib.datetime import utc_now
 from tildes.lib.html import add_anchors_to_headings
@@ -21,6 +22,7 @@ from tildes.lib.string import convert_to_url_slug
 from tildes.models import DatabaseModel
 from tildes.models.user import User
 from tildes.schemas.group_wiki_page import GroupWikiPageSchema, PAGE_NAME_MAX_LENGTH
+from tildes.typing import AclType
 
 from .group import Group
 
@@ -72,7 +74,7 @@ class GroupWikiPage(DatabaseModel):
 
         self.edit(markdown, user, "Create page")
 
-    def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
+    def __acl__(self) -> AclType:
         """Pyramid security ACL."""
         acl = []
 
@@ -80,10 +82,7 @@ class GroupWikiPage(DatabaseModel):
         #  - all wiki pages can be viewed by everyone
         acl.append((Allow, Everyone, "view"))
 
-        # edit:
-        #  - permission must be granted specifically
-        acl.append((Allow, "admin", "edit"))
-        acl.append((Allow, "wiki", "edit"))
+        acl.extend(aces_for_permission("wiki.edit", self.group_id))
 
         acl.append(DENY_ALL)
 

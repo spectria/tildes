@@ -4,13 +4,25 @@
 from datetime import timedelta
 
 from freezegun import freeze_time
-from pyramid.security import Authenticated, Everyone, principals_allowed_by_permission
+from pyramid.security import (
+    Allow,
+    Authenticated,
+    Everyone,
+    principals_allowed_by_permission,
+)
 
 from tildes.enums import CommentTreeSortOption
+from tildes.lib.auth import aces_for_permission
 from tildes.lib.datetime import utc_now
 from tildes.models.comment import Comment, CommentTree, EDIT_GRACE_PERIOD
 from tildes.schemas.comment import CommentSchema
 from tildes.schemas.fields import Markdown
+
+
+def _principals_granted_permission(permission, group_id):
+    aces = aces_for_permission(permission, group_id)
+
+    return set([ace[1] for ace in aces if ace[0] == Allow])
 
 
 def test_comment_creation_validates_schema(mocker, session_user, topic):
@@ -68,9 +80,12 @@ def test_comment_replying_permission(comment):
 
 
 def test_comment_reply_locked_thread_permission(comment):
-    """Ensure that only admins can reply in locked threads."""
+    """Ensure that only users with lock permission can reply in locked threads."""
     comment.topic.is_locked = True
-    assert principals_allowed_by_permission(comment, "reply") == {"admin"}
+
+    allowed = principals_allowed_by_permission(comment, "reply")
+    granted = _principals_granted_permission("topic.lock", comment.topic.group_id)
+    assert allowed == granted
 
 
 def test_deleted_comment_permissions_removed(comment):
@@ -85,8 +100,9 @@ def test_deleted_comment_permissions_removed(comment):
 def test_removed_comment_view_permission(comment):
     """Ensure a removed comment can only be viewed by certain users."""
     comment.is_removed = True
-    principals = principals_allowed_by_permission(comment, "view")
-    assert principals == {"admin", comment.user_id, "comment.remove"}
+    allowed = principals_allowed_by_permission(comment, "view")
+    granted = _principals_granted_permission("comment.remove", comment.topic.group_id)
+    assert allowed == granted | {comment.user_id}
 
 
 def test_edit_grace_period(comment):

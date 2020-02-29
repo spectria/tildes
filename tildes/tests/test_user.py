@@ -154,9 +154,9 @@ def test_banned_user_no_message_permission():
     assert not principals
 
 
-def test_only_admin_has_ban_permission():
-    """Ensure only admins have ban permissions."""
+def test_ban_permission_manually_granted():
+    """Ensure it requires manually granting ban permissions."""
     user = User("Test_User", "password")
 
     principals = principals_allowed_by_permission(user, "ban")
-    assert principals == {"admin"}
+    assert principals == {"*:user.ban"}

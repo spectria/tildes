@@ -33,12 +33,23 @@ class UserPermissions(DatabaseModel):
     def auth_principal(self) -> str:
         """Return the permission as a string usable as an auth principal.
 
-        WARNING: This isn't currently complete, and only handles ALLOW for all groups.
+        The principal is made up of two parts, separated by a colon. The first part is
+        the group_id the permission applies to, or a * for all groups. The second part
+        is the permission name, prefixed by a ! if the permission is being denied
+        instead of allowed:
+
+          - "5:topic.tag" for allowing the topic.tag permission in group id 5
+          - "*:topic.tag" for allowing the topic.tag permission in all groups
+          - "3:!topic.tag" for denying the topic.tag permission in group id 3
         """
-        if self.permission_type != UserPermissionType.ALLOW:
-            raise ValueError("Not an ALLOW permission.")
-
         if self.group_id:
-            raise ValueError("Not an all-groups permission.")
+            principal = f"{self.group_id}:"
+        else:
+            principal = "*:"
 
-        return self.permission
+        if self.permission_type == UserPermissionType.DENY:
+            principal += "!"
+
+        principal += self.permission
+
+        return principal

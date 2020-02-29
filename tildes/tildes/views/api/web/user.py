@@ -38,7 +38,7 @@ PASSWORD_FIELD = UserSchema(only=("password",)).fields["password"]
     route_name="user",
     request_method="PATCH",
     request_param="ic-trigger-name=password-change",
-    permission="change_password",
+    permission="change_settings",
 )
 @use_kwargs(
     {
@@ -68,7 +68,7 @@ def patch_change_password(
     route_name="user",
     request_method="PATCH",
     request_param="ic-trigger-name=account-recovery-email",
-    permission="change_email_address",
+    permission="change_settings",
 )
 @use_kwargs(UserSchema(only=("email_address", "email_address_note")))
 def patch_change_email_address(
@@ -100,7 +100,7 @@ def patch_change_email_address(
     request_method="POST",
     request_param="ic-trigger-name=enable-two-factor",
     renderer="two_factor_enabled.jinja2",
-    permission="change_two_factor",
+    permission="change_settings",
 )
 @use_kwargs({"code": String()})
 def post_enable_two_factor(request: Request, code: str) -> dict:
@@ -130,7 +130,7 @@ def post_enable_two_factor(request: Request, code: str) -> dict:
     request_method="POST",
     request_param="ic-trigger-name=disable-two-factor",
     renderer="two_factor_disabled.jinja2",
-    permission="change_two_factor",
+    permission="change_settings",
 )
 @use_kwargs({"code": String()})
 def post_disable_two_factor(request: Request, code: str) -> Response:
@@ -150,7 +150,7 @@ def post_disable_two_factor(request: Request, code: str) -> Response:
     request_method="POST",
     request_param="ic-trigger-name=view-two-factor-backup-codes",
     renderer="two_factor_backup_codes.jinja2",
-    permission="change_two_factor",
+    permission="change_settings",
 )
 @use_kwargs({"code": String()})
 def post_view_two_factor_backup_codes(request: Request, code: str) -> Response:
@@ -172,7 +172,7 @@ def post_view_two_factor_backup_codes(request: Request, code: str) -> Response:
     route_name="user",
     request_method="PATCH",
     request_param="ic-trigger-name=show-tags-in-listings",
-    permission="change_show_tags_in_listings_setting",
+    permission="change_settings",
 )
 def patch_change_show_tags_in_listings(request: Request) -> Response:
     """Change the user's "show tags in listings" setting."""
@@ -188,7 +188,7 @@ def patch_change_show_tags_in_listings(request: Request) -> Response:
     route_name="user",
     request_method="PATCH",
     request_param="ic-trigger-name=account-default-comment-sort-order",
-    permission="change_comment_sort_order_setting",
+    permission="change_settings",
 )
 def patch_change_comment_sort_order(request: Request) -> Response:
     """Change the user's default comment sort order setting."""
@@ -204,7 +204,7 @@ def patch_change_comment_sort_order(request: Request) -> Response:
     route_name="user",
     request_method="PATCH",
     request_param="ic-trigger-name=auto-mark-notifications-read",
-    permission="change_auto_mark_notifications_read_setting",
+    permission="change_settings",
 )
 def patch_change_auto_mark_notifications(request: Request) -> Response:
     """Change the user's "automatically mark notifications read" setting."""
@@ -220,7 +220,7 @@ def patch_change_auto_mark_notifications(request: Request) -> Response:
     route_name="user",
     request_method="PATCH",
     request_param="ic-trigger-name=interact-mark-notifications-read",
-    permission="change_interact_mark_notifications_read_setting",
+    permission="change_settings",
 )
 def patch_change_interact_mark_notifications(request: Request) -> Response:
     """Change the user's "automatically mark notifications read on interact" setting."""
@@ -236,7 +236,7 @@ def patch_change_interact_mark_notifications(request: Request) -> Response:
     route_name="user",
     request_method="PATCH",
     request_param="ic-trigger-name=open-links-new-tab",
-    permission="change_open_links_new_tab_setting",
+    permission="change_settings",
 )
 def patch_change_open_links_new_tab(request: Request) -> Response:
     """Change the user's "open links in new tabs" setting."""
@@ -260,7 +260,7 @@ def patch_change_open_links_new_tab(request: Request) -> Response:
     route_name="user",
     request_method="PATCH",
     request_param="ic-trigger-name=collapse-old-comments",
-    permission="change_collapse_old_comments_setting",
+    permission="change_settings",
 )
 def patch_change_collapse_old_comments(request: Request) -> Response:
     """Change the user's "collapse old comments" setting."""
@@ -276,7 +276,7 @@ def patch_change_collapse_old_comments(request: Request) -> Response:
     route_name="user",
     request_method="PATCH",
     request_param="ic-trigger-name=account-default-theme",
-    permission="change_account_default_theme_setting",
+    permission="change_settings",
 )
 def patch_change_account_default_theme(request: Request) -> Response:
     """Change the user's "theme account default" setting."""
@@ -292,7 +292,7 @@ def patch_change_account_default_theme(request: Request) -> Response:
     route_name="user",
     request_method="PATCH",
     request_param="ic-trigger-name=user-bio",
-    permission="edit_bio",
+    permission="change_settings",
 )
 @use_kwargs({"markdown": String()})
 def patch_change_user_bio(request: Request, markdown: str) -> dict:
@@ -307,7 +307,7 @@ def patch_change_user_bio(request: Request, markdown: str) -> dict:
 @ic_view_config(
     route_name="user_invite_code",
     request_method="GET",
-    permission="view_invite_code",
+    permission="generate_invite",
     renderer="invite_code.jinja2",
 )
 def get_invite_code(request: Request) -> dict:
@@ -346,7 +346,7 @@ def get_invite_code(request: Request) -> dict:
 @ic_view_config(
     route_name="user_default_listing_options",
     request_method="PUT",
-    permission="edit_default_listing_options",
+    permission="change_settings",
 )
 @use_kwargs(
     {
@@ -373,7 +373,7 @@ def put_default_listing_options(
 @ic_view_config(
     route_name="user_filtered_topic_tags",
     request_method="PUT",
-    permission="edit_filtered_topic_tags",
+    permission="change_settings",
 )
 @use_kwargs({"tags": String()})
 def put_filtered_topic_tags(request: Request, tags: str) -> dict:

@@ -5,7 +5,7 @@
 
 import re
 from datetime import datetime
-from typing import Any, List, Sequence, Tuple
+from typing import List, Tuple
 
 from pyramid.security import Allow, DENY_ALL
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, TIMESTAMP
@@ -18,6 +18,7 @@ from tildes.lib.markdown import LinkifyFilter
 from tildes.models import DatabaseModel
 from tildes.models.topic import TopicIgnore
 from tildes.models.user import User
+from tildes.typing import AclType
 
 from .comment import Comment
 
@@ -66,7 +67,7 @@ class CommentNotification(DatabaseModel):
         self.comment = comment
         self.notification_type = notification_type
 
-    def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
+    def __acl__(self) -> AclType:
         """Pyramid security ACL."""
         acl = []
         acl.append((Allow, self.user_id, "mark_read"))

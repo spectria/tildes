@@ -4,11 +4,10 @@
 """Contains the User class."""
 
 from datetime import datetime, timedelta
-from typing import Any, List, NoReturn, Optional, Sequence, Tuple
+from typing import List, NoReturn, Optional
 
 from pyotp import TOTP
 from pyramid.security import (
-    ALL_PERMISSIONS,
     Allow,
     Authenticated,
     Deny,
@@ -46,6 +45,7 @@ from tildes.schemas.user import (
     EMAIL_ADDRESS_NOTE_MAX_LENGTH,
     UserSchema,
 )
+from tildes.typing import AclType
 
 
 class User(DatabaseModel):
@@ -177,7 +177,7 @@ class User(DatabaseModel):
         self.username = username
         self.password = password  # type: ignore
 
-    def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
+    def __acl__(self) -> AclType:
         """Pyramid security ACL."""
         acl = []
 
@@ -207,15 +207,24 @@ class User(DatabaseModel):
         acl.append((Allow, Authenticated, "message"))
 
         # ban:
-        #  - admins can ban non-deleted users except themselves
+        #  - deleted users can't be banned, otherwise only when permission granted
         if self.is_deleted:
             acl.append((Deny, Everyone, "ban"))
 
-        acl.append((Deny, self.user_id, "ban"))  # required so users can't self-ban
-        acl.append((Allow, "admin", "ban"))
+        acl.append((Allow, "*:user.ban", "ban"))
 
-        # grant the user all other permissions on themself
-        acl.append((Allow, self.user_id, ALL_PERMISSIONS))
+        # view_removed_posts:
+        #  - must be granted specifically
+        acl.append((Allow, "*:user.view_removed_posts", "view_removed_posts"))
+
+        # grant the user the various permissions they need on themself
+        for permission in (
+            "change_settings",
+            "generate_invite",
+            "search_posts",
+            "view_removed_posts",
+        ):
+            acl.append((Allow, self.user_id, permission))
 
         acl.append(DENY_ALL)
 
@@ -310,7 +319,7 @@ class User(DatabaseModel):
 
         # give the user the "comment.label" permission if they're over a week old
         if self.age > timedelta(days=7):
-            principals.append("comment.label")
+            principals.append("*:comment.label")
 
         return principals
 
@@ -318,11 +327,6 @@ class User(DatabaseModel):
     def is_real_user(self) -> bool:
         """Return whether this is a "real" user (not a special-purpose internal one)."""
         return self.user_id > 0
-
-    @property
-    def is_admin(self) -> bool:
-        """Return whether the user has admin permissions."""
-        return "admin" in self.auth_principals
 
     def is_label_available(self, label: CommentLabelOption) -> bool:
         """Return whether the user has a particular label available."""

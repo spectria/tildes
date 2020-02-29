@@ -5,14 +5,22 @@
 
 from collections import Counter
 from datetime import datetime, timedelta
-from typing import Any, Optional, Sequence, Tuple, TYPE_CHECKING, Union
+from typing import Any, Optional, Sequence, TYPE_CHECKING, Union
 
-from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
+from pyramid.security import (
+    Allow,
+    Authenticated,
+    Deny,
+    DENY_ALL,
+    Everyone,
+    principals_allowed_by_permission,
+)
 from sqlalchemy import Boolean, Column, ForeignKey, Index, Integer, Text, TIMESTAMP
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.expression import text
 
+from tildes.lib.auth import aces_for_permission
 from tildes.lib.datetime import utc_now
 from tildes.lib.id import id_to_id36
 from tildes.lib.markdown import convert_markdown_to_safe_html
@@ -22,6 +30,7 @@ from tildes.models import DatabaseModel
 from tildes.models.topic import Topic
 from tildes.models.user import User
 from tildes.schemas.comment import CommentSchema
+from tildes.typing import AclType
 
 if TYPE_CHECKING:  # workaround for mypy issues with @hybrid_property
     from builtins import property as hybrid_property
@@ -148,28 +157,36 @@ class Comment(DatabaseModel):
     def _update_creation_metric(self) -> None:
         incr_counter("comments")
 
-    def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
+    def __acl__(self) -> AclType:
         """Pyramid security ACL."""
-        acl = []
-
         # nobody has any permissions on deleted comments
         if self.is_deleted:
-            acl.append(DENY_ALL)
+            return [DENY_ALL]
+
+        acl = []
+
+        acl.extend(aces_for_permission("comment.view_labels", self.topic.group_id))
+        acl.extend(aces_for_permission("comment.remove", self.topic.group_id))
 
         # view:
-        #  - removed comments can only be viewed by admins, the author, and users with
-        #    remove permission
+        #  - removed comments can only be viewed by the author, and users with remove
+        #    permission
         #  - otherwise, everyone can view
         if self.is_removed:
-            acl.append((Allow, "admin", "view"))
             acl.append((Allow, self.user_id, "view"))
-            acl.append((Allow, "comment.remove", "view"))
+            acl.extend(
+                aces_for_permission(
+                    required_permission="comment.remove",
+                    granted_permission="view",
+                    group_id=self.topic.group_id,
+                )
+            )
             acl.append((Deny, Everyone, "view"))
 
         acl.append((Allow, Everyone, "view"))
 
         # view exemplary reasons:
-        #  - only author gets shown the reasons (admins can see as well with all labels)
+        #  - only author gets shown the reasons ("view_labels" does this too)
         acl.append((Allow, self.user_id, "view_exemplary_reasons"))
 
         # vote:
@@ -195,15 +212,22 @@ class Comment(DatabaseModel):
         acl.append((Allow, "comment.label", "label"))
 
         # reply:
-        #  - removed comments can only be replied to by admins
-        #  - if the topic is locked, only admins can reply
+        #  - removed comments can only be replied to by users who can remove
+        #  - if the topic is locked, only users that can lock the topic can reply
         #  - otherwise, logged-in users can reply
         if self.is_removed:
-            acl.append((Allow, "admin", "reply"))
+            acl.extend(
+                aces_for_permission(
+                    required_permission="comment.remove",
+                    granted_permission="reply",
+                    group_id=self.topic.group_id,
+                )
+            )
             acl.append((Deny, Everyone, "reply"))
 
         if self.topic.is_locked:
-            acl.append((Allow, "admin", "reply"))
+            lock_principals = principals_allowed_by_permission(self.topic, "lock")
+            acl.extend([(Allow, principal, "reply") for principal in lock_principals])
             acl.append((Deny, Everyone, "reply"))
 
         acl.append((Allow, Authenticated, "reply"))
@@ -223,12 +247,6 @@ class Comment(DatabaseModel):
         # bookmark:
         #  - logged-in users can bookmark comments
         acl.append((Allow, Authenticated, "bookmark"))
-
-        # tools that require specifically granted permissions
-        acl.append((Allow, "admin", "remove"))
-        acl.append((Allow, "comment.remove", "remove"))
-
-        acl.append((Allow, "admin", "view_labels"))
 
         acl.append(DENY_ALL)
 

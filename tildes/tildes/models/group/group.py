@@ -4,7 +4,7 @@
 """Contains the Group class."""
 
 from datetime import datetime
-from typing import Any, List, Optional, Sequence, Tuple
+from typing import List, Optional
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
 from sqlalchemy import Boolean, CheckConstraint, Column, Index, Integer, Text, TIMESTAMP
@@ -13,10 +13,12 @@ from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import text
 from sqlalchemy_utils import Ltree, LtreeType
 
+from tildes.lib.auth import aces_for_permission
 from tildes.lib.database import TagList
 from tildes.lib.markdown import convert_markdown_to_safe_html
 from tildes.models import DatabaseModel
 from tildes.schemas.group import GroupSchema, SHORT_DESCRIPTION_MAX_LENGTH
+from tildes.typing import AclType
 
 
 class Group(DatabaseModel):
@@ -50,7 +52,7 @@ class Group(DatabaseModel):
     _sidebar_markdown: str = deferred(Column("sidebar_markdown", Text))
     sidebar_rendered_html: str = deferred(Column(Text))
     num_subscriptions: int = Column(Integer, nullable=False, server_default="0")
-    is_admin_posting_only: bool = Column(
+    requires_permission_to_post_topics: bool = Column(
         Boolean, nullable=False, server_default="false"
     )
     is_user_treated_as_topic_source: bool = Column(
@@ -101,7 +103,7 @@ class Group(DatabaseModel):
         self.path = path
         self.short_description = short_desc
 
-    def __acl__(self) -> Sequence[Tuple[str, Any, str]]:
+    def __acl__(self) -> AclType:
         """Pyramid security ACL."""
         acl = []
 
@@ -114,18 +116,24 @@ class Group(DatabaseModel):
         acl.append((Allow, Authenticated, "subscribe"))
 
         # post_topic:
-        #  - only admins can post in admin-posting-only groups
+        #  - only users with specifically-granted permission can post topics in groups
+        #    that require permission to post
         #  - otherwise, all logged-in users can post
-        if self.is_admin_posting_only:
-            acl.append((Allow, "admin", "post_topic"))
+        if self.requires_permission_to_post_topics:
+            acl.append((Allow, f"{self.group_id}:post_topic", "post_topic"))
             acl.append((Deny, Everyone, "post_topic"))
 
         acl.append((Allow, Authenticated, "post_topic"))
 
-        # wiki_page_create
-        #  - permission must be granted specifically
-        acl.append((Allow, "admin", "wiki_page_create"))
-        acl.append((Allow, "wiki", "wiki_page_create"))
+        # wiki_page_create:
+        #  - requires being granted the "wiki.edit" permission
+        acl.extend(
+            aces_for_permission(
+                required_permission="wiki.edit",
+                granted_permission="wiki_page_create",
+                group_id=self.group_id,
+            )
+        )
 
         acl.append(DENY_ALL)
 
