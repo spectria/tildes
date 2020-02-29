@@ -25,7 +25,7 @@ from tildes.models.comment import (
 from tildes.models.group import GroupSubscription
 from tildes.models.log import Log
 from tildes.models.topic import Topic, TopicBookmark, TopicVisit, TopicVote
-from tildes.models.user import User, UserGroupSettings
+from tildes.models.user import User, UserGroupSettings, UserPermissions
 
 
 # sensitive data older than this should be removed
@@ -200,7 +200,6 @@ class DataCleaner:
                     "open_new_tab_group": DEFAULT,
                     "open_new_tab_user": DEFAULT,
                     "theme_default": DEFAULT,
-                    "permissions": DEFAULT,
                     "home_default_order": DEFAULT,
                     "home_default_period": DEFAULT,
                     "filtered_topic_tags": DEFAULT,
@@ -226,6 +225,7 @@ class DataCleaner:
             TopicBookmark,
             TopicVote,
             UserGroupSettings,
+            UserPermissions,
         ]
 
         user_id_subquery = (
