@@ -155,7 +155,7 @@ def test_banned_user_no_message_permission():
 
 
 def test_ban_permission_manually_granted():
-    """Ensure it requires manually granting ban permissions."""
+    """Ensure ban permissions must be granted manually."""
     user = User("Test_User", "password")
 
     principals = principals_allowed_by_permission(user, "ban")

@@ -1,4 +1,4 @@
-"""Rename column for restricted-posting groups
+"""Rename column for restricted-posting groups and wiki permission
 
 Revision ID: 84dc19f6e876
 Revises: 054aaef690cd
