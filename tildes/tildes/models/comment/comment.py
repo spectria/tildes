@@ -209,7 +209,7 @@ class Comment(DatabaseModel):
             acl.append((Deny, Everyone, "label"))
 
         acl.append((Deny, self.user_id, "label"))
-        acl.append((Allow, "comment.label", "label"))
+        acl.extend(aces_for_permission("comment.label", self.topic.group_id))
 
         # reply:
         #  - removed comments can only be replied to by users who can remove
