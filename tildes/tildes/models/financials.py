@@ -6,7 +6,7 @@
 from decimal import Decimal
 
 from psycopg2.extras import DateRange
-from sqlalchemy import Boolean, Column, Index, Integer, Numeric, Text
+from sqlalchemy import Column, Index, Integer, Numeric, Text
 from sqlalchemy.dialects.postgresql import DATERANGE, ENUM
 
 from tildes.enums import FinancialEntryType
@@ -23,7 +23,6 @@ class Financials(DatabaseModel):
     description: str = Column(Text)
     amount: Decimal = Column(Numeric(scale=2), nullable=False)
     date_range: DateRange = Column(DATERANGE, nullable=False)
-    is_approximate: bool = Column(Boolean, nullable=False, server_default="false")
 
     # Add a GiST index on the date_range column for range operators
     __table_args__ = (

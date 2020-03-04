@@ -30,11 +30,13 @@
 
 <h2>{{ current_time.strftime("%B %Y") }} expenses and income</h2>
 
+<small>Note: Most amounts are approximate, due to currency conversion, incomplete data, or uncertain fees.</small>
+
 <table class="table table-financials">
 <tr><th colspan="2">Expenses</th></tr>
 
 {% for entry in entries["expense"] %}
-  {{ entry_table_row(entry.description, entry.amount, entry.is_approximate) }}
+  {{ entry_table_row(entry.description, entry.amount) }}
 {% endfor %}
 
 {{ entry_table_row("{} total expenses".format(current_time.strftime("%B %Y")), entries["expense"]|sum(attribute="amount"), is_summary=True) }}
@@ -44,20 +46,17 @@
 <tr><th colspan="2">Income</th></tr>
 
 {% for entry in entries["income"] %}
-  {{ entry_table_row(entry.description, entry.amount, entry.is_approximate) }}
+  {{ entry_table_row(entry.description, entry.amount) }}
 {% endfor %}
 
 {{ entry_table_row("{} total income (so far)".format(current_time.strftime("%B %Y")), entries["income"]|sum(attribute="amount"), is_summary=True) }}
 </table>
-
-<small>* Approximate, due to currency conversion, incomplete data, or uncertain fees.</small>
 {% endblock %}
 
-{% macro entry_table_row(description, amount, is_approximate=False, is_summary=False) %}
+{% macro entry_table_row(description, amount, is_summary=False) %}
   <tr{{ ' class="tr-summary"'|safe if is_summary }}>
     <td>{{ description }}</td>
     <td class="td-money">
-      {% if is_approximate %}*{% endif %}
       {{ format_money(amount) }}
     </td>
   </tr>
