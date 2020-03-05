@@ -6,7 +6,7 @@ $.onmount("[data-js-autocomplete-chip-clear]", function() {
         var $tagsHiddenInput = $("[data-js-autocomplete-hidden-input]");
         var $autocompleteInput = $("[data-js-autocomplete-input]");
 
-        var textToReplace = new RegExp($chip.text() + ",");
+        var textToReplace = new RegExp("(^|,)" + $chip.text() + ",");
         $tagsHiddenInput.val($tagsHiddenInput.val().replace(textToReplace, ""));
         $chip.remove();
         $autocompleteInput.focus();
