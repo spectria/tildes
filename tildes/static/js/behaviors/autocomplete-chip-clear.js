@@ -6,8 +6,17 @@ $.onmount("[data-js-autocomplete-chip-clear]", function() {
         var $tagsHiddenInput = $("[data-js-autocomplete-hidden-input]");
         var $autocompleteInput = $("[data-js-autocomplete-input]");
 
-        var textToReplace = new RegExp($chip.text() + ",");
-        $tagsHiddenInput.val($tagsHiddenInput.val().replace(textToReplace, ""));
+        var tags = $tagsHiddenInput.val().split(",");
+        var tagToRemove = $chip.text();
+
+        $tagsHiddenInput.val(
+            tags
+                .filter(function(tag) {
+                    return tag !== tagToRemove;
+                })
+                .join(",")
+        );
+
         $chip.remove();
         $autocompleteInput.focus();
     }
