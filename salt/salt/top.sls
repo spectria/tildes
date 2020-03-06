@@ -1,5 +1,6 @@
 base:
   'dev or prod':
+    - general-config
     - gunicorn
     - nginx
     - nginx.site-config
