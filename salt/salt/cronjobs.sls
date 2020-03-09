@@ -13,6 +13,13 @@ data-cleanup-cronjob:
     - hour: 4
     - minute: 10
 
+generate-group-stats-for-yesterday-cronjob:
+  cron.present:
+    - name: {{ bin_dir }}/python -c "from scripts.generate_group_stats_for_yesterday import generate_stats; generate_stats('{{ app_dir }}/{{ pillar['ini_file'] }}')"
+    - user: {{ app_username }}
+    - hour: 0
+    - minute: 10
+
 generate-site-icons-css-cronjob:
   cron.present:
     - name: {{ bin_dir }}/python -c "from scripts.generate_site_icons_css import generate_css; generate_css()"

@@ -165,6 +165,13 @@ class FinancialEntryType(enum.Enum):
     INCOME = enum.auto()
 
 
+class GroupStatType(enum.Enum):
+    """Enum for types of group statistics."""
+
+    TOPICS_POSTED = enum.auto()
+    COMMENTS_POSTED = enum.auto()
+
+
 class LogEventType(enum.Enum):
     """Enum for the types of events stored in logs."""
 
