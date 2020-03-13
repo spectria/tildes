@@ -5,6 +5,7 @@
 
 {% from 'macros/groups.jinja2' import render_group_subscription_box with context %}
 {% from 'macros/links.jinja2' import link_to_group with context %}
+{% from 'macros/utils.jinja2' import pluralize %}
 
 {% block title %}Browse groups{% endblock %}
 
@@ -13,25 +14,49 @@
 {% endblock %}
 
 {% block content %}
-  <table class="table group-list">
-    <thead>
-      <tr>
-        <th>Group</th>
-        <th class="text-center">Subscribe</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for group in groups %}
-        <tr class="group-level-{{ group.path|length - 1 }}">
-          <td>
-            {{ link_to_group(group) }}
-            {% if group.short_description %}
-              <p class="group-list-description">{{ group.short_description }}</p>
-            {% endif %}
-          </td>
-          <td>{{ render_group_subscription_box(group) }}</td>
-        </tr>
+{% if request.user %}
+  <small>Group name colors: <span class="text-link">subscribed</span> / <span class="text-warning">not subscribed</span>. You can change your subscription status to a group in its sidebar when you are viewing it directly.</small>
+{% endif %}
+
+<div class="divider"></div>
+
+<ol class="group-list">
+  {% for group in groups %}
+    {# nest a list if it's a sub-group #}
+    {% if loop.previtem and group.path|length > loop.previtem.path|length %}<ol>{% endif %}
+
+    {# check in this order so logged-out users get the "subscribed" style #}
+    {% if request.user and not group.user_subscribed %}
+      <li class="group-list-item-not-subscribed">
+    {% else %}
+      <li class="group-list-item-subscribed">
+    {% endif %}
+
+      {{ link_to_group(group) }}
+      {% if group.short_description %}
+        - <span class="group-list-description">{{ group.short_description }}</span>
+      {% endif %}
+
+      {% if group.path in daily_topic_counts and group.path in daily_comment_counts %}
+        <br>
+        <span class="group-list-activity">Approx. daily activity:
+          {{ pluralize(daily_topic_counts[group.path], "topic") }},
+          {{ pluralize(daily_comment_counts[group.path], "comment") }}
+        </span>
+      {% endif %}
+    </li>
+
+    {# close any nested lists #}
+    {% if loop.nextitem and group.path|length > loop.nextitem.path|length %}
+      </ol>
+    {% elif not loop.nextitem %}
+      {% for _ in range(group.path|length - 1) %}
+        </ol>
       {% endfor %}
-    </tbody>
-  </table>
+    {% endif %}
+  {% endfor %}
+</ol>
+
+<div class="divider"></div>
+<small class="text-secondary">Activity numbers are based on posts in the group over the last week, and only update once per day, shortly after 00:00 UTC.</small>
 {% endblock %}

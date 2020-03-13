@@ -374,6 +374,12 @@
     background-color: map-get($theme, "background-input");
   }
 
+  .group-list-item-not-subscribed {
+    a.link-group {
+      color: map-get($theme, "warning");
+    }
+  }
+
   .input-group-addon {
     background-color: map-get($theme, "background-secondary");
     color: map-get($theme, "foreground-highlight");
@@ -480,6 +486,10 @@
 
   .text-error {
     color: map-get($theme, "error");
+  }
+
+  .text-link {
+    color: map-get($theme, "link");
   }
 
   .text-secondary {

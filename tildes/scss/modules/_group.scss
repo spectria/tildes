@@ -2,29 +2,24 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 .group-list {
+  margin: 1rem 0;
+
+  ol {
+    margin-left: 1rem;
+  }
+
+  li {
+    text-indent: -1rem;
+    margin-left: 1rem;
+  }
+
   .link-group {
     font-weight: bold;
   }
-
-  .group-subscription {
-    flex-direction: column;
-    margin: 0;
-  }
-
-  .group-subscription-count {
-    margin-bottom: 0.2rem;
-  }
-
-  @for $indent-level from 1 through 4 {
-    tr.group-level-#{$indent-level} td:first-child {
-      padding-left: #{$indent-level}rem;
-    }
-  }
 }
 
-.group-list-description {
+.group-list-activity {
   font-style: italic;
-  margin-left: 1rem;
   font-size: 0.6rem;
   line-height: 0.8rem;
 }
