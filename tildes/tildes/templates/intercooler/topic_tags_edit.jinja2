@@ -14,7 +14,7 @@
     data-js-remove-on-success
 >
   <input type="hidden" name="conflict_check" id="conflict_check" value="{{ topic.tags|join(",") }}">
-  {{ topic_tagging(value=topic.tags|join(', '), auto_focus=True, autocomplete_options=topic.group.common_topic_tags) }}
+  {{ topic_tagging(value=topic.tags|join(', '), auto_focus=True, autocomplete_options=topic.group.autocomplete_topic_tags) }}
   <div class="form-buttons">
     <button class="btn btn-primary" type="submit">Save tags</button>
     <button type="button" class="btn btn-link" data-js-cancel-button>Cancel</button>

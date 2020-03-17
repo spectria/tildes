@@ -48,11 +48,11 @@
 
   {# Hide the tag-adding form in a <details> unless it should be shown for this user #}
   {% if request.user.show_tags_on_new_topic %}
-    {{ topic_tagging(autocomplete_options=group.common_topic_tags, value=tags) }}
+    {{ topic_tagging(autocomplete_options=group.autocomplete_topic_tags, value=tags) }}
   {% else %}
     <details>
       <summary>Add tags (optional)</summary>
-      {{ topic_tagging(autocomplete_options=group.common_topic_tags, value=tags) }}
+      {{ topic_tagging(autocomplete_options=group.autocomplete_topic_tags, value=tags) }}
     </details>
   {% endif %}
 

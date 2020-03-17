@@ -86,6 +86,15 @@ class Group(DatabaseModel):
         else:
             self.sidebar_rendered_html = None
 
+    @property
+    def autocomplete_topic_tags(self) -> List[str]:
+        """Return the topic tags that should be offered as autocomplete options."""
+        global_options = ["nsfw", "spoiler", "coronaviruses.covid19"]
+
+        return self.common_topic_tags + [
+            tag for tag in global_options if tag not in self.common_topic_tags
+        ]
+
     def __repr__(self) -> str:
         """Display the group's path and ID as its repr format."""
         return f"<Group {self.path} ({self.group_id})>"
