@@ -49,6 +49,10 @@
       <input type="hidden" name="q" value="{{ search }}">
     {% endif %}
 
+    {% if view is defined %}
+      <input type="hidden" name="view" value="{{ view }}">
+    {% endif %}
+
     <div class="form-group">
       <label for="period">from</label>
       <select id="period" name="period" class="form-select" data-js-time-period-select>

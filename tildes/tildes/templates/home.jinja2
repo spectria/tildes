@@ -14,7 +14,25 @@
 
 {% block header_context_link %}{% endblock %}
 
+{% block filter_info %}
+  {% if view %}
+    <div class="topic-listing-filter">
+      {% if view == "coronavirus-only" %}
+        Showing only topics related to coronavirus.
+      {% elif view == "coronavirus-filtered" %}
+        Showing only topics <em>not</em> related to coronavirus.
+      {% endif %}
+
+      <a href="/">Back to normal view</a>
+    </div>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
+  {% if not view %}
+    <div class="toast toast-minor">Specialized views: <a href="/?view=coronavirus-filtered">No coronavirus topics</a> / <a href="/?view=coronavirus-only">Only coronavirus topics</a></div>
+  {% endif %}
+
   {% if request.user %}
     {% if request.user.subscriptions %}
       {{ super() }}

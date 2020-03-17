@@ -121,7 +121,7 @@ def current_listing_base_url(
         "bookmarks": ("per_page", "type"),
         "group": ("order", "period", "per_page", "tag", "unfiltered"),
         "group_search": ("order", "period", "per_page", "q"),
-        "home": ("order", "period", "per_page", "tag", "unfiltered"),
+        "home": ("order", "period", "per_page", "tag", "unfiltered", "view"),
         "ignored_topics": ("per_page",),
         "search": ("order", "period", "per_page", "q"),
         "user": ("order", "per_page", "type"),

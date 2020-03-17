@@ -516,6 +516,10 @@
   .toast {
     color: map-get($theme, "foreground-highlight");
     background-color: map-get($theme, "background-secondary");
+
+    a {
+      color: map-get($theme, "link");
+    }
   }
 
   // Toasts should have colored border + text for dark themes, instead of a

@@ -15,7 +15,7 @@ from pyramid.renderers import render_to_response
 from pyramid.request import Request
 from pyramid.response import Response
 from pyramid.view import view_config
-from sqlalchemy import cast, func
+from sqlalchemy import cast, func, or_
 from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import any_, desc, text
 from sqlalchemy_utils import Ltree
@@ -142,6 +142,7 @@ def post_group_topics(
 @view_config(route_name="home", renderer="home.jinja2")
 @view_config(route_name="group", renderer="topic_listing.jinja2")
 @use_kwargs(TopicListingSchema())
+@use_kwargs({"view": String(missing=None)})
 def get_group_topics(  # noqa
     request: Request,
     after: Optional[str],
@@ -151,6 +152,7 @@ def get_group_topics(  # noqa
     rank_start: Optional[int],
     tag: Optional[Ltree],
     unfiltered: bool,
+    view: Optional[str],
     **kwargs: Any
 ) -> dict:
     """Get a listing of topics in the group."""
@@ -159,11 +161,31 @@ def get_group_topics(  # noqa
 
     is_home_page = request.matched_route.name == "home"
 
+    # only allow the special coronavirus views on the home page
+    if not is_home_page:
+        view = None
+
+    if view:
+        coronavirus_group = (
+            request.query(Group)
+            .filter(Group.path == Ltree("health.coronavirus"))
+            .one_or_none()
+        )
+    else:
+        coronavirus_group = None
+
     if is_home_page:
         # on the home page, include topics from the user's subscribed groups
         # (or all groups, if logged-out)
         if request.user:
             groups = [sub.group for sub in request.user.subscriptions]
+
+            if (
+                view == "coronavirus-only"
+                and coronavirus_group
+                and coronavirus_group not in groups
+            ):
+                groups.append(coronavirus_group)
         else:
             groups = [
                 group for group in request.query(Group).all() if group.path != "test"
@@ -197,6 +219,20 @@ def get_group_topics(  # noqa
         .inside_groups(groups, include_subgroups=not is_home_page)
         .apply_sort_option(order)
     )
+
+    if view and coronavirus_group:
+        if view == "coronavirus-only":
+            query = query.filter(  # noqa
+                or_(
+                    Topic.group_id == coronavirus_group.group_id,
+                    Topic.tags.contains(["coronaviruses.covid19"]),  # type: ignore
+                )
+            )
+        elif view == "coronavirus-filtered":
+            query = query.filter(
+                Topic.group_id != coronavirus_group.group_id,
+                ~Topic.tags.contains(["coronaviruses.covid19"]),  # type: ignore
+            )
 
     # restrict the time period, if not set to "all time"
     if period:
@@ -296,6 +332,7 @@ def get_group_topics(  # noqa
         "most_recent_scheduled_topics": most_recent_scheduled_topics,
         "financial_data": financial_data,
         "current_time": utc_now(),
+        "view": view,
     }
 
 
