@@ -30,7 +30,7 @@
 
 {% block content %}
   {% if not view %}
-    <div class="toast toast-minor">Specialized views: <a href="/?view=coronavirus-filtered">No coronavirus topics</a> / <a href="/?view=coronavirus-only">Only coronavirus topics</a></div>
+    <div class="toast toast-minor" id="coronavirus-views">Specialized views: <a href="/?view=coronavirus-filtered">No coronavirus topics</a> / <a href="/?view=coronavirus-only">Only coronavirus topics</a></div>
   {% endif %}
 
   {% if request.user %}
