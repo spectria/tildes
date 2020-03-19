@@ -13,6 +13,10 @@
     margin-left: 1rem;
   }
 
+  li + li {
+    margin-top: 1rem;
+  }
+
   .link-group {
     font-weight: bold;
   }
