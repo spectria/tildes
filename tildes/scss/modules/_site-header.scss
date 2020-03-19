@@ -19,13 +19,17 @@
 
   .toast {
     width: auto;
-    margin: 0 0.2rem 0 0;
-    padding: 0.2rem 0.4rem 0.2rem 1.4rem;
-    text-indent: -1rem;
-    overflow: hidden;
+    margin: 0 0.2rem 0 -1rem;
+    padding: 0.2rem 0.4rem;
 
-    a {
-      white-space: nowrap;
+    @media (min-width: $size-xs) {
+      margin-left: 0;
+      text-indent: -1rem;
+      padding-left: 1.4rem;
+
+      a {
+        white-space: nowrap;
+      }
     }
   }
 }
