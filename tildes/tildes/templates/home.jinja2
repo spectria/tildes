@@ -12,7 +12,11 @@
   <meta property="og:description" content="Tildes is a non-profit community site with no advertising or investors. It respects its users and their privacy, and prioritizes high-quality content and discussions.">
 {% endblock %}
 
-{% block header_context_link %}{% endblock %}
+{% block header_context_link %}
+  {% if not view %}
+    <div class="toast toast-minor" id="coronavirus-views">Specialized views: <a href="/?view=coronavirus-filtered">No coronavirus topics</a> / <a href="/?view=coronavirus-only">Only coronavirus topics</a></div>
+  {% endif %}
+{% endblock %}
 
 {% block filter_info %}
   {% if view %}
@@ -29,10 +33,6 @@
 {% endblock %}
 
 {% block content %}
-  {% if not view %}
-    <div class="toast toast-minor" id="coronavirus-views">Specialized views: <a href="/?view=coronavirus-filtered">No coronavirus topics</a> / <a href="/?view=coronavirus-only">Only coronavirus topics</a></div>
-  {% endif %}
-
   {% if request.user %}
     {% if request.user.subscriptions %}
       {{ super() }}
