@@ -68,10 +68,6 @@
 
 <header id="site-header" data-js-hide-sidebar-if-open>
   <a class="site-header-logo" href="/">Tildes</a>
-  {% block header_context_link %}{% endblock %}
-
-  {{ logged_in_user_info() }}
-
   <button
     class="btn btn-sm btn-link site-header-sidebar-button
     {% if request.user and request.user.num_unread_total > 0 %}
@@ -84,6 +80,9 @@
     {% endif %}
   >Sidebar</button>
 
+  {% block header_context_link %}{% endblock %}
+
+  {{ logged_in_user_info() }}
 </header>
 
 <main class="{% block main_classes %}{% endblock %}" data-js-hide-sidebar-if-open>

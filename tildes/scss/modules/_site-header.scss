@@ -14,33 +14,28 @@
       display: flex;
     }
 
-    margin-left: auto;
+    float: right;
+    margin-top: 0.2rem;
   }
 
   .toast {
+    display: inline-block;
     width: auto;
-    margin: 0 0.2rem 0 -1rem;
+    margin: 0.2rem 0.2rem 0 0;
     padding: 0.2rem 0.4rem;
-
-    @media (min-width: $size-xs) {
-      margin-left: 0;
-      text-indent: -1rem;
-      padding-left: 1.4rem;
-
-      a {
-        white-space: nowrap;
-      }
-    }
+    vertical-align: top;
   }
 }
 
 .site-header-context {
+  vertical-align: text-bottom;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .site-header-logo {
+  display: inline-block;
   background-image: url("/favicon-32x32.png");
   background-repeat: no-repeat;
 
@@ -52,7 +47,10 @@
     image-rendering: crisp-edges;
   }
 
-  margin-right: 1rem;
+  @media (min-width: $size-xs) {
+    margin-right: 1rem;
+  }
+
   padding-left: 40px;
   padding-right: 8px;
   line-height: 32px;
@@ -72,8 +70,8 @@
     display: none;
   }
 
-  margin-left: auto;
-  flex-shrink: 0;
+  float: right;
+  margin-top: 0.2rem;
 
   &.badge {
     margin-right: 0.6rem;
