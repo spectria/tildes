@@ -463,6 +463,11 @@
     a:visited {
       color: map-get($theme, "foreground-primary");
     }
+
+    .toast a,
+    .toast a:visited {
+      color: map-get($theme, "link");
+    }
   }
 
   .site-header-logo,
