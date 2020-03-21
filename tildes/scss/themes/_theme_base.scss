@@ -458,9 +458,11 @@
     color: map-get($theme, "link");
   }
 
-  .site-header-context,
-  .site-header-context:visited {
-    color: map-get($theme, "foreground-primary");
+  .site-header-context {
+    a,
+    a:visited {
+      color: map-get($theme, "foreground-primary");
+    }
   }
 
   .site-header-logo,

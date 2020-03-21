@@ -9,14 +9,12 @@
 {% block title %}Search results: {{ search }}{% endblock %}
 
 {% block header_context_link %}
-  <span class="site-header-context">
-    {% if group %}
-      Search in ~{{ group.path }}:
-    {% else %}
-      Search:
-    {% endif %}
-    {{ search }}
-  </span>
+  {% if group %}
+    Search in ~{{ group.path }}:
+  {% else %}
+    Search:
+  {% endif %}
+  {{ search }}
 {% endblock %}
 
 {% block filter_info %}

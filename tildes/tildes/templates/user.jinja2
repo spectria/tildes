@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block header_context_link %}
-<a class="site-header-context" href="/user/{{ user.username }}">{{ user.username }}</a>
+<a href="/user/{{ user.username }}">{{ user.username }}</a>
 {% endblock %}
 
 {# Only show the heading if they can't see the type tabs and the user isn't deleted/banned #}
