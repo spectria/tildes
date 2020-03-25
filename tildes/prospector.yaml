@@ -11,6 +11,7 @@ pep8:
     # "multiple statements on one line" - type declarations seem to trigger sometimes
     - E704
     - E203  # whitespace around colons in slices
+    - E722  # bare "except:" - pylint checks for this, shouldn't need to double-ignore
 
 pep257:
   disable:

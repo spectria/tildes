@@ -7,12 +7,14 @@ from datetime import datetime
 from typing import List, Optional
 
 from dateutil.rrule import rrule
+from jinja2.sandbox import SandboxedEnvironment
 from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Text, TIMESTAMP
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import text
 
 from tildes.lib.database import RecurrenceRule, TagList
+from tildes.lib.datetime import utc_now
 from tildes.models import DatabaseModel
 from tildes.models.group import Group
 from tildes.models.topic import Topic
@@ -82,7 +84,23 @@ class TopicSchedule(DatabaseModel):
                 .one()
             )
 
-        topic = Topic.create_text_topic(self.group, user, self.title, self.markdown)
+        # treat both the title and markdown as Jinja templates (sandboxed)
+        jinja_sandbox = SandboxedEnvironment()
+        jinja_variables = {"current_time_utc": utc_now()}
+
+        try:
+            title_template = jinja_sandbox.from_string(self.title)
+            title = title_template.render(jinja_variables)
+        except:  # pylint: disable=bare-except
+            title = self.title
+
+        try:
+            markdown_template = jinja_sandbox.from_string(self.markdown)
+            markdown = markdown_template.render(jinja_variables)
+        except:  # pylint: disable=bare-except
+            markdown = self.markdown
+
+        topic = Topic.create_text_topic(self.group, user, title, markdown)
         topic.tags = self.tags
         topic.schedule = self
 
