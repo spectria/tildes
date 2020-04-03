@@ -23,3 +23,35 @@ scrape_configs:
     tls_config:
       insecure_skip_verify: true
     {% endif %}
+
+  # use blackbox exporter to check site is responding on IPv4
+  - job_name: "site_ipv4"
+    metrics_path: /probe
+    params:
+      module: [site_ipv4]
+    static_configs:
+      - targets:
+        - https://{{ pillar['site_hostname'] }}
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115  # The blackbox exporter's real hostname:port
+
+  # use blackbox exporter to check site is responding on IPv6
+  - job_name: "site_ipv6"
+    metrics_path: /probe
+    params:
+      module: [site_ipv6]
+    static_configs:
+      - targets:
+        - https://{{ pillar['site_hostname'] }}
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115  # The blackbox exporter's real hostname:port

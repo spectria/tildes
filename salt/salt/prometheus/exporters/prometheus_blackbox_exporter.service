@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus Blackbox Exporter
+After=syslog.target network.target
+
+[Service]
+Type=simple
+RemainAfterExit=no
+WorkingDirectory=/opt/prometheus_blackbox_exporter
+User=prometheus
+Group=prometheus
+ExecStart=/opt/prometheus_blackbox_exporter/blackbox_exporter --config.file=/opt/prometheus_blackbox_exporter/blackbox.yml
+
+[Install]
+WantedBy=multi-user.target

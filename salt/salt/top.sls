@@ -42,3 +42,4 @@ base:
     - sentry
     - grafana
     - prometheus
+    - prometheus.exporters.blackbox_exporter
