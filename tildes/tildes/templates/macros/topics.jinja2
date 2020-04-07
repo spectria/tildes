@@ -99,12 +99,12 @@
             Scheduled topic
           </div>
         {% else %}
-          <div class="topic-info-source" aria-label="Posted by">
+          <div class="topic-info-source">
             {{ link_to_user(topic.user) }}
           </div>
         {% endif %}
       {% else %}
-        <div class="topic-info-source" aria-label="Link source" title="{{ topic.link_domain }}">
+        <div class="topic-info-source" title="{{ topic.link_domain }}">
         {% if topic.is_link_type %}
           <div class="topic-icon topic-icon-{{ topic.link_domain.replace('.', '_') }}"></div>
         {% endif %}
@@ -113,7 +113,7 @@
         </div>
       {% endif %}
 
-      <div aria-label="Post time">{{ adaptive_date_responsive(topic.created_time, precision=1) }}</div>
+      <div>{{ adaptive_date_responsive(topic.created_time, precision=1) }}</div>
     </footer>
 
     {{ topic_voting(topic) }}
