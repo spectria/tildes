@@ -109,30 +109,27 @@
 </aside>
 
 <footer id="site-footer" data-js-hide-sidebar-if-open>
-  {# Show the theme-selection dropdown if the user isn't logged in #}
-  {% if not request.user %}
-    <div class="site-footer-theme-selection">
-      <label for="theme">Theme:</label>
-      <select class="form-select" name="theme" id="theme" data-js-theme-selector>
-        {% for (theme, description) in (
-            ("white", "White"),
-            ("solarized-light", "Solarized Light"),
-            ("solarized-dark", "Solarized Dark"),
-            ("dracula", "Dracula"),
-            ("atom-one-dark", "Atom One Dark"),
-            ("black", "Black"),
-            ("zenburn", "Zenburn"),
-            ("gruvbox-light", "Gruvbox Light"),
-            ("gruvbox-dark", "Gruvbox Dark")) %}
-        <option value="{{ theme }}"
-          {{ 'selected' if theme == request.cookies.get("theme", "white") else '' }}
-        >
-          {{ description }}
-        </option>
-        {% endfor %}
-      </select>
-    </div>
-  {% endif %}
+  <div class="site-footer-theme-selection">
+    <label for="theme">Theme:</label>
+    <select class="form-select" name="theme" id="theme" data-js-theme-selector>
+      {% for (theme, description) in (
+          ("white", "White"),
+          ("solarized-light", "Solarized Light"),
+          ("solarized-dark", "Solarized Dark"),
+          ("dracula", "Dracula"),
+          ("atom-one-dark", "Atom One Dark"),
+          ("black", "Black"),
+          ("zenburn", "Zenburn"),
+          ("gruvbox-light", "Gruvbox Light"),
+          ("gruvbox-dark", "Gruvbox Dark")) %}
+      <option value="{{ theme }}"
+        {{ 'selected' if theme == request.cookies.get("theme", "white") else '' }}
+      >
+        {{ description }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
 
   <ul class="site-footer-links">
     <li class="site-footer-link"><a href="https://docs.tildes.net">Docs</a></li>
