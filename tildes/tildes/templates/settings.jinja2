@@ -27,7 +27,7 @@
           {% for theme, description in theme_options.items() %}
             <option
               value="{{ theme }}"
-              {{ 'selected' if theme == current_theme else '' }}
+              {{ 'selected' if theme == request.current_theme else '' }}
             >
               {{ description }}
             </option>

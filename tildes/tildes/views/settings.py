@@ -51,8 +51,6 @@ def get_settings(request: Request) -> dict:
     site_default_theme = "white"
     user_default_theme = request.user.theme_default or site_default_theme
 
-    current_theme = request.cookies.get("theme", "") or user_default_theme
-
     # Make a copy of the theme options dict so we can add info to the names
     theme_options = THEME_OPTIONS.copy()
 
@@ -70,7 +68,6 @@ def get_settings(request: Request) -> dict:
     return {
         "current_comment_sort_order": current_comment_sort_order,
         "comment_sort_order_options": CommentTreeSortOption,
-        "current_theme": current_theme,
         "theme_options": theme_options,
     }
 

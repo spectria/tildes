@@ -20,17 +20,17 @@
   {% endblock %}
 
   {# Hardcoding each option isn't great, but I don't know a better method #}
-  {% if request.cookies.get('theme', '') == 'solarized-dark' %}
+  {% if request.current_theme == "solarized-dark" %}
   <meta name="theme-color" content="#073642">
-  {% elif request.cookies.get("theme", "") == "dracula" %}
+  {% elif request.current_theme == "dracula" %}
   <meta name="theme-color" content="#282a36">
-  {% elif request.cookies.get("theme", "") == "atom-one-dark" %}
+  {% elif request.current_theme == "atom-one-dark" %}
   <meta name="theme-color" content="#282c34">
-  {% elif request.cookies.get('theme', '') == 'black' %}
+  {% elif request.current_theme == "black" %}
   <meta name="theme-color" content="#222">
-  {% elif request.cookies.get('theme', '') == 'zenburn' %}
+  {% elif request.current_theme == "zenburn" %}
   <meta name="theme-color" content="#3f3f3f">
-  {% elif request.cookies.get('theme', '') == 'gruvbox-dark' %}
+  {% elif request.current_theme == "gruvbox-dark" %}
   <meta name="theme-color" content="#282828">
   {% endif %}
 
@@ -57,13 +57,7 @@
 </head>
 
 {% block body_tag %}
-  {% if request.cookies.get('theme', '') %}
-  <body class="theme-{{ request.cookies.get('theme', '') }}">
-  {% elif request.user and request.user.theme_default %}
-  <body class="theme-{{ request.user.theme_default }}">
-  {% else %}
-  <body>
-  {% endif %}
+  <body class="theme-{{ request.current_theme }}">
 {% endblock %}
 
 <header id="site-header" data-js-hide-sidebar-if-open>
@@ -123,7 +117,7 @@
           ("gruvbox-light", "Gruvbox Light"),
           ("gruvbox-dark", "Gruvbox Dark")) %}
       <option value="{{ theme }}"
-        {{ 'selected' if theme == request.cookies.get("theme", "white") else '' }}
+        {{ 'selected' if theme == request.current_theme else '' }}
       >
         {{ description }}
       </option>

@@ -179,6 +179,18 @@ def current_listing_normal_url(
     return request.current_route_url(_query=query_vars)
 
 
+def current_theme(request: Request) -> str:
+    """Return the name of the current theme being used by the user."""
+    cookie_theme = request.cookies.get("theme", None)
+
+    if request.user:
+        user_theme = request.user.theme_default
+    else:
+        user_theme = None
+
+    return cookie_theme or user_theme or "white"
+
+
 def includeme(config: Configurator) -> None:
     """Attach the request methods to the Pyramid request object."""
     config.add_request_method(is_bot, "is_bot", reify=True)
@@ -194,6 +206,8 @@ def includeme(config: Configurator) -> None:
         reify=True,
     )
     # pylint: enable=unnecessary-lambda
+
+    config.add_request_method(current_theme, "current_theme", reify=True)
 
     config.add_request_method(check_rate_limit, "check_rate_limit")
     config.add_request_method(apply_rate_limit, "apply_rate_limit")
