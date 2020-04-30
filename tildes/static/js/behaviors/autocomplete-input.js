@@ -163,7 +163,7 @@ $.onmount("[data-js-autocomplete-input]", function() {
         if ($autocompleteMenu) {
             $autocompleteMenu.remove();
         }
-        if ($this.val() === "") {
+        if ($this.val().trim() === "") {
             return;
         }
         var $tagsHiddenInput = $("[data-js-autocomplete-hidden-input]");
@@ -171,7 +171,12 @@ $.onmount("[data-js-autocomplete-input]", function() {
             .data("js-autocomplete-input")
             .filter(function(suggestion) {
                 return (
-                    suggestion.startsWith($this.val().toLowerCase()) &&
+                    suggestion.startsWith(
+                        $this
+                            .val()
+                            .toLowerCase()
+                            .trim()
+                    ) &&
                     !$tagsHiddenInput
                         .val()
                         .match(new RegExp("(^|,)" + suggestion + ","))
