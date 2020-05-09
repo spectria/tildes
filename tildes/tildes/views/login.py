@@ -81,16 +81,37 @@ def post_login(
         .one_or_none()
     )
 
-    # If that user doesn't exist or the password was wrong, error out
-    if not user or not user.is_correct_password(password):
+    # If the username doesn't exist, tell them so - usually this isn't considered a good
+    # practice, but it's completely trivial to check if a username exists on Tildes
+    # anyway (by visiting /user/<username>), so it's better to just let people know if
+    # they're trying to log in with the wrong username
+    if not user:
         incr_counter("login_failures")
 
         # log the failure - need to manually commit because of the exception
-        log_entry = Log(LogEventType.USER_LOG_IN_FAIL, request, {"username": username})
+        log_entry = Log(
+            LogEventType.USER_LOG_IN_FAIL,
+            request,
+            {"username": username, "reason": "Nonexistent username"},
+        )
         request.db_session.add(log_entry)
         request.tm.commit()
 
-        raise HTTPUnprocessableEntity("Incorrect username or password")
+        raise HTTPUnprocessableEntity("That username does not exist")
+
+    if not user.is_correct_password(password):
+        incr_counter("login_failures")
+
+        # log the failure - need to manually commit because of the exception
+        log_entry = Log(
+            LogEventType.USER_LOG_IN_FAIL,
+            request,
+            {"username": username, "reason": "Incorrect password"},
+        )
+        request.db_session.add(log_entry)
+        request.tm.commit()
+
+        raise HTTPUnprocessableEntity("Incorrect password")
 
     # Don't allow banned users to log in
     if user.is_banned:
