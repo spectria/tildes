@@ -1,5 +1,12 @@
 {% from 'common.jinja2' import app_dir, app_username, bin_dir %}
 
+lift-expired-temp-bans-cronjob:
+  cron.present:
+    - name: {{ bin_dir }}/python -c "from scripts.lift_expired_temporary_bans import lift_expired_temporary_bans; lift_expired_temporary_bans('{{ app_dir }}/{{ pillar['ini_file'] }}')"
+    - user: {{ app_username }}
+    - hour: '*'
+    - minute: 1
+
 close-voting-cronjob:
   cron.present:
     - name: {{ bin_dir }}/python -c "from scripts.close_voting_on_old_posts import close_voting_on_old_posts; close_voting_on_old_posts('{{ app_dir }}/{{ pillar['ini_file'] }}')"

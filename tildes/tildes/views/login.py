@@ -3,6 +3,7 @@
 
 """Views related to logging in/out."""
 
+from datetime import timedelta
 from typing import NoReturn
 from urllib.parse import unquote_plus
 
@@ -115,7 +116,17 @@ def post_login(
 
     # Don't allow banned users to log in
     if user.is_banned:
-        raise HTTPUnprocessableEntity("This account has been banned")
+        if user.ban_expiry_time:
+            # add an hour to the ban's expiry time since the cronjob runs hourly
+            unban_time = user.ban_expiry_time + timedelta(hours=1)
+            unban_time = unban_time.strftime("%Y-%m-%d %H:%M (UTC)")
+
+            raise HTTPUnprocessableEntity(
+                "That account is temporarily banned. "
+                f"The ban will be lifted at {unban_time}"
+            )
+
+        raise HTTPUnprocessableEntity("That account has been banned")
 
     # If 2FA is enabled, save username to session and make user enter code
     if user.two_factor_enabled:

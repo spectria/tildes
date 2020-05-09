@@ -126,6 +126,7 @@ class User(DatabaseModel):
     deleted_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     is_banned: bool = Column(Boolean, nullable=False, server_default="false")
     banned_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
+    ban_expiry_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     home_default_order: Optional[TopicSortOption] = Column(ENUM(TopicSortOption))
     home_default_period: Optional[str] = Column(Text)
     filtered_topic_tags: List[str] = Column(

@@ -31,7 +31,12 @@
 {% if user.is_deleted or user.is_banned %}
   <div class="empty">
     {% if user.is_banned %}
-      <h2 class="empty-title">This user is banned</h2>
+      {% if user.ban_expiry_time %}
+        <h2 class="empty-title">This user is temporarily banned</h2>
+        <p class="empty-subtitle">The ban will be lifted on {{ user.ban_expiry_time.strftime("%B %-d, %Y") }}</p>
+      {% else %}
+        <h2 class="empty-title">This user is banned</h2>
+      {% endif %}
     {% elif user.is_deleted %}
       <h2 class="empty-title">This user has deleted their account</h2>
     {% endif %}
