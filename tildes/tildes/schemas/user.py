@@ -98,7 +98,10 @@ class UserSchema(Schema):
             return
 
         if is_breached_password(value):
-            raise ValidationError("That password exists in a data breach (see sidebar)")
+            raise ValidationError(
+                "That password exists in a data breach (for more info, see "
+                '"password restrictions" below or in sidebar)'
+            )
 
     @pre_load
     def username_trim_whitespace(self, data: dict, many: bool, partial: Any) -> dict:
