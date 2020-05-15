@@ -47,8 +47,8 @@ def _is_exempt_from_transformations(parsed_url: ParseResult) -> bool:
     if not parsed_url.hostname:
         return True
 
-    # Paradox forums use an invalid url scheme that will break if processed
-    if parsed_url.hostname == "forum.paradoxplaza.com":
+    # Paradox and Terraria forums use an invalid url scheme that will break if processed
+    if parsed_url.hostname in ("forum.paradoxplaza.com", "forums.terraria.org"):
         return True
 
     return False
