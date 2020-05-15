@@ -12,6 +12,7 @@ base:
     - redis.breached-passwords
     - redis.modules.rebloom
     - redis.modules.redis-cell
+    - postgresql-redis-bridge
     - scripts
     - cmark-gfm
     - prometheus.exporters.node_exporter
