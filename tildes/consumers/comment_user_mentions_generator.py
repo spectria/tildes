@@ -10,6 +10,8 @@ from tildes.models.comment import Comment, CommentNotification
 class CommentUserMentionGenerator(EventStreamConsumer):
     """Consumer that generates user mentions for comments."""
 
+    METRICS_PORT = 25010
+
     def process_message(self, message: Message) -> None:
         """Process a message from the stream."""
         comment = (

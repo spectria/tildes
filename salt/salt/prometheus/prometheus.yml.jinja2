@@ -55,3 +55,30 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: 127.0.0.1:9115  # The blackbox exporter's real hostname:port
+
+  # event stream consumers (background jobs)
+  - job_name: "consumer_comment_user_mentions_generator"
+    static_configs:
+      - targets: ['{{ pillar['site_hostname'] }}:25010']
+
+  - job_name: "consumer_topic_interesting_activity_updater"
+    static_configs:
+      - targets: ['{{ pillar['site_hostname'] }}:25013']
+
+  - job_name: "consumer_topic_metadata_generator"
+    static_configs:
+      - targets: ['{{ pillar['site_hostname'] }}:25014']
+
+  {% if grains["id"] == "prod" %}
+  - job_name: "consumer_site_icon_downloader"
+    static_configs:
+      - targets: ['{{ pillar['site_hostname'] }}:25011']
+
+  - job_name: "consumer_topic_embedly_extractor"
+    static_configs:
+      - targets: ['{{ pillar['site_hostname'] }}:25012']
+
+  - job_name: "consumer_topic_youtube_scraper"
+    static_configs:
+      - targets: ['{{ pillar['site_hostname'] }}:25015']
+  {% endif %}

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from tildes.lib.string import (
+    camelcase_to_snakecase,
     convert_to_url_slug,
     truncate_string,
     truncate_string_at_char,
@@ -141,3 +142,13 @@ def test_word_count_with_lots_of_punctuation():
         "best not to count 100% on it; that's just foolish/risky."
     )
     assert word_count(string) == 31
+
+
+def test_basic_camelcase_to_snakecase():
+    """Ensure CamelCase->snake_case conversion works for a simple case."""
+    assert camelcase_to_snakecase("SomeClassName") == "some_class_name"
+
+
+def test_camelcase_to_snakecase_with_acronym():
+    """Ensure CamelCase->snake_case works as expected with an acronym."""
+    assert camelcase_to_snakecase("SomeHTTPThing") == "some_http_thing"

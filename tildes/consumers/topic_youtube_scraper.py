@@ -27,6 +27,8 @@ RESCRAPE_DELAY = timedelta(hours=24)
 class TopicYoutubeScraper(EventStreamConsumer):
     """Consumer that fetches data from YouTube's data API for relevant link topics."""
 
+    METRICS_PORT = 25015
+
     def __init__(
         self, api_key: str, consumer_group: str, source_streams: Sequence[str]
     ):

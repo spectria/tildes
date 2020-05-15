@@ -247,3 +247,16 @@ def extract_text_from_html(html: str, skip_tags: Optional[List[str]] = None) -> 
 
     # sanitize unicode, remove leading/trailing whitespace, etc.
     return simplify_string(extracted_text)
+
+
+def camelcase_to_snakecase(original: str) -> str:
+    """Convert words in a string from CamelCase to snake_case.
+
+    Code adapted from the "inflection" library's underscore() method:
+    https://github.com/jpvanhal/inflection/blob/master/inflection.py
+    """
+    converted = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1_\2", original)
+    converted = re.sub(r"([a-z\d])([A-Z])", r"\1_\2", converted)
+    converted = converted.replace("-", "_")
+
+    return converted.lower()

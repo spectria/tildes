@@ -14,6 +14,8 @@ from tildes.models.comment import Comment, CommentInTree, CommentTree
 class TopicInterestingActivityUpdater(EventStreamConsumer):
     """Consumer that updates topics' last_interesting_activity_time."""
 
+    METRICS_PORT = 25013
+
     def process_message(self, message: Message) -> None:
         """Process a message from the stream."""
         trigger_comment = (

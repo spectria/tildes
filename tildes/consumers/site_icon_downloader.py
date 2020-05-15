@@ -20,6 +20,8 @@ from tildes.models.scraper import ScraperResult
 class SiteIconDownloader(EventStreamConsumer):
     """Consumer that generates content_metadata for topics."""
 
+    METRICS_PORT = 25011
+
     ICON_FOLDER = "/opt/tildes/static/images/site-icons"
 
     def __init__(self, consumer_group: str, source_streams: Sequence[str]):

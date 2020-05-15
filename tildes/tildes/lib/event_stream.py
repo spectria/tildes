@@ -8,9 +8,11 @@ from abc import abstractmethod
 from configparser import ConfigParser
 from typing import Any, Dict, List, Sequence
 
+from prometheus_client import CollectorRegistry, Counter, start_http_server
 from redis import Redis, ResponseError
 
 from tildes.lib.database import get_session_from_config
+from tildes.lib.string import camelcase_to_snakecase
 
 REDIS_KEY_PREFIX = "event_stream:"
 MAX_RETRIES_PER_MESSAGE = 3
@@ -44,6 +46,8 @@ class EventStreamConsumer:
     (optionally) connecting to the database to be able to fetch and modify data as
     necessary. It relies on the environment variable INI_FILE being set.
     """
+
+    METRICS_PORT = None
 
     def __init__(
         self,
@@ -86,6 +90,36 @@ class EventStreamConsumer:
         # start by reading any already-pending messages by default
         self.is_reading_pending = not skip_pending
 
+        self._init_metrics()
+
+    @property
+    def _metrics_prefix(self) -> str:
+        """Prefix string at the start of every metric name for this consumer."""
+        snakecase_name = camelcase_to_snakecase(self.__class__.__name__)
+        return f"tildes_consumer_{snakecase_name}"
+
+    def _init_metrics(self) -> None:
+        """Initialize this consumer's metrics, registry, and launch HTTP server.
+
+        Requires class property METRICS_PORT to be set, otherwise it just sets
+        self.metrics to None (and will crash if the port is already in use).
+        """
+        if not self.METRICS_PORT:
+            self.metrics = None
+            return
+
+        self.metrics_registry = CollectorRegistry()
+
+        self.metrics = {
+            "messages_counter": Counter(
+                f"{self._metrics_prefix}_messages_processed",
+                "Consumer Messages Processed",
+                registry=self.metrics_registry,
+            ),
+        }
+
+        start_http_server(self.METRICS_PORT, registry=self.metrics_registry)
+
     def consume_streams(self) -> None:
         """Process messages from the streams indefinitely."""
         while True:
@@ -109,6 +143,10 @@ class EventStreamConsumer:
                     self.db_session.commit()
 
                 message.ack(self.consumer_group)
+
+                if self.metrics:
+                    counter = self.metrics["messages_counter"]
+                    counter.inc()
 
     def _clear_dead_messages(self) -> None:
         """Clear any pending messages that have failed too many times.

@@ -19,6 +19,8 @@ from tildes.models.topic import Topic
 class TopicMetadataGenerator(EventStreamConsumer):
     """Consumer that generates content_metadata for topics."""
 
+    METRICS_PORT = 25014
+
     def __init__(self, consumer_group: str, source_streams: Sequence[str]):
         """Initialize the consumer, including the public suffix list."""
         super().__init__(consumer_group, source_streams)
