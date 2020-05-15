@@ -69,7 +69,7 @@ scrape_configs:
     static_configs:
       - targets: ['{{ pillar['site_hostname'] }}:25014']
 
-  {% if grains["id"] == "prod" %}
+  {% if grains["id"] != "dev" %}
   - job_name: "consumer_site_icon_downloader"
     static_configs:
       - targets: ['{{ pillar['site_hostname'] }}:25011']
