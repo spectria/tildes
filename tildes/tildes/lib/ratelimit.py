@@ -282,8 +282,8 @@ _RATE_LIMITED_ACTIONS = (
     RateLimitedAction("login", timedelta(hours=1), 20),
     RateLimitedAction("login_two_factor", timedelta(hours=1), 20),
     RateLimitedAction("register", timedelta(hours=1), 50),
-    RateLimitedAction("topic_post", timedelta(hours=1), 6, max_burst=4),
-    RateLimitedAction("comment_post", timedelta(hours=1), 30, max_burst=20),
+    RateLimitedAction("topic_post", timedelta(hours=4), 10, max_burst=4),
+    RateLimitedAction("comment_post", timedelta(hours=1), 10, max_burst=5),
     RateLimitedAction("donate_stripe", timedelta(hours=1), 5, by_user=False),
 )
 
