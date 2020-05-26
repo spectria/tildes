@@ -38,8 +38,7 @@ class TopicQuery(PaginatedQuery):
         self._only_ignored = False
         self._only_user_voted = False
 
-        # filter out ignored topics by default for logged-in users
-        self.filter_ignored = bool(request.user)
+        self.filter_ignored = False
 
     def _attach_extra_data(self) -> "TopicQuery":
         """Attach the extra user data to the query."""
@@ -59,7 +58,7 @@ class TopicQuery(PaginatedQuery):
         # pylint: disable=self-cls-assignment
         self = super()._finalize()
 
-        if self.filter_ignored:
+        if self.filter_ignored and self.request.user:
             self = self.filter(TopicIgnore.topic_id == None)  # noqa
 
         return self
@@ -233,12 +232,11 @@ class TopicQuery(PaginatedQuery):
         """Restrict the topics to ones that the user has ignored (generative)."""
         # pylint: disable=self-cls-assignment
         self._only_ignored = True
-        self = self.include_ignored()
 
         return self
 
-    def include_ignored(self) -> "TopicQuery":
-        """Specify that ignored topics should be included (generative)."""
-        self.filter_ignored = False
+    def exclude_ignored(self) -> "TopicQuery":
+        """Specify that ignored topics should be excluded (generative)."""
+        self.filter_ignored = True
 
         return self

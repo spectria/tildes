@@ -215,6 +215,7 @@ def get_group_topics(  # noqa
         request.query(Topic)
         .join_all_relationships()
         .inside_groups(groups, include_subgroups=not is_home_page)
+        .exclude_ignored()
         .apply_sort_option(order)
     )
 
