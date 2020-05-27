@@ -106,10 +106,10 @@ class TopicSchedule(DatabaseModel):
 
         return topic
 
-    def advance_schedule(self) -> None:
-        """Advance the schedule, setting next_post_time appropriately."""
+    def advance_schedule_to_future(self) -> None:
+        """Advance the schedule to the next future occurrence."""
         if self.recurrence_rule:
             rule = self.recurrence_rule.replace(dtstart=self.next_post_time)
-            self.next_post_time = rule.after(self.next_post_time)
+            self.next_post_time = rule.after(utc_now())
         else:
             self.next_post_time = None

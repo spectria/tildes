@@ -36,7 +36,7 @@ def post_scheduled_topics(config_path: str) -> None:
 
     while due_topic:
         db_session.add(due_topic.create_topic())
-        due_topic.advance_schedule()
+        due_topic.advance_schedule_to_future()
         db_session.add(due_topic)
         db_session.commit()
 
