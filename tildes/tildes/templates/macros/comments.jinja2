@@ -72,14 +72,14 @@
           {% endif %}
         </div>
       {% else %}
-        {% if comment.is_deleted %}
-          <div class="is-comment-deleted">Comment deleted by author</div>
-        {% elif comment.is_removed %}
+        {% if comment.is_removed %}
           {% if comment.removed_marker %}
             <div class="is-comment-removed">{{ comment.removed_marker }}</div>
           {% else %}
             <div class="is-comment-removed">Comment removed by site admin</div>
           {% endif %}
+        {% elif comment.is_deleted %}
+          <div class="is-comment-deleted">Comment deleted by author</div>
         {% endif %}
       {% endif %}
 
