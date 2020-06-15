@@ -3,7 +3,6 @@
 
 {% from 'buttons.jinja2' import post_action_toggle_button with context %}
 {% from 'datetime.jinja2' import adaptive_date_responsive %}
-{% from 'forms.jinja2' import markdown_textarea %}
 {% from 'links.jinja2' import link_to_user with context %}
 {% from 'utils.jinja2' import pluralize %}
 
@@ -30,12 +29,13 @@
     >
       {{ render_comment_contents(comment, is_individual_comment) }}
 
-      {# Recursively display reply comments, unless we hit a "removed marker" #}
-      {% if comment.replies and
-           (request.has_permission("view", comment) or not comment.removed_marker) %}
-        <ol class="comment-tree comment-tree-replies">
+      {% if request.has_permission("view", comment) or not comment.removed_marker %}
+      <ol class="comment-tree comment-tree-replies">
+        {# Recursively display reply comments, unless we hit a "removed marker" #}
+        {% if comment.replies %}
           {{ loop(comment.replies) }}
-        </ol>
+        {% endif %}
+      </ol>
       {% endif %}
     </article>
     {% if not is_individual_comment %}</li>{% endif %}
@@ -226,10 +226,13 @@
             <button
               class="btn-post-action"
               name="reply"
-              data-js-comment-reply-button
-              {% if comment.age.days >= 7 %}
-              data-js-old-warning-age="{{ comment.age|vague_timedelta_description }}"
-              {% endif %}
+              data-ic-get-from="{{ request.route_url(
+                "ic_comment_reply",
+                comment_id36=comment.comment_id36,
+              ) }}"
+              data-ic-target="#comment-{{ comment.comment_id36 }} > .comment-tree-replies:first"
+              data-ic-scroll-to-target="true"
+              data-ic-swap-style="prepend"
             >Reply</button>
           </li>
         {% endif %}
@@ -281,23 +284,4 @@
       {% endfor %}
     </menu>
   </template>
-{% endmacro %}
-
-{% macro comment_reply_template() %}
-<template id="comment-reply">
-  <form
-    method="post"
-    autocomplete="off"
-    data-js-confirm-cancel="Discard your reply?"
-    data-js-prevent-double-submit
-    data-js-confirm-leave-page-unsaved
-    data-ic-replace-target="true"
-  >
-    {{ markdown_textarea(auto_focus=True) }}
-    <div class="form-buttons">
-      <button type="submit" class="btn btn-primary">Post comment</button>
-      <button type="button" class="btn btn-link" data-js-cancel-button>Cancel</button>
-    </div>
-  </form>
-</template>
 {% endmacro %}

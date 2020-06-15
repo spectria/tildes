@@ -1,0 +1,35 @@
+{# Copyright (c) 2020 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% from 'macros/forms.jinja2' import markdown_textarea %}
+
+<li class="comment-tree-item">
+
+<form
+  method="post"
+  autocomplete="off"
+  data-ic-post-to="{{ request.route_url(
+    "ic_comment_replies",
+    comment_id36=parent_comment.comment_id36,
+  ) }}"
+  data-ic-replace-target="true"
+  data-js-confirm-cancel="Discard your reply?"
+  data-js-prevent-double-submit
+  data-js-confirm-leave-page-unsaved
+  data-js-comment-reply-form
+>
+  {% if parent_comment.age.days >= 7 %}
+  <div class="warning-old-reply">
+    <p class="text-warning text-small">The comment you're replying to is {{ parent_comment.age|vague_timedelta_description }} old. Replying to old comments is fine as long as you're contributing to the discussion.</p>
+  </div>
+  {% endif %}
+
+  {{ markdown_textarea(id="markdown-reply-%s" % parent_comment.comment_id36) }}
+
+  <div class="form-buttons">
+    <button type="submit" class="btn btn-primary">Post comment</button>
+    <button type="button" class="btn btn-link" data-js-cancel-button>Cancel</button>
+  </div>
+</form>
+
+</li>

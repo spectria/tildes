@@ -100,7 +100,6 @@
 
 .comment-tree {
   margin: 0;
-  padding-top: 0.4rem;
   list-style-type: none;
 }
 
@@ -114,8 +113,11 @@
 
 .comment-tree-item {
   margin: 0;
-  padding: 0;
   max-width: none;
+
+  &:first-child {
+    margin-top: 0.4rem;
+  }
 }
 
 .comment-labels {

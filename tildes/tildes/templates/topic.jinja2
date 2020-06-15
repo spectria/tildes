@@ -4,7 +4,7 @@
 {% extends 'base.jinja2' %}
 
 {% from 'macros/buttons.jinja2' import post_action_toggle_button with context %}
-{% from 'macros/comments.jinja2' import comment_label_options_template, comment_reply_template, render_comment_tree with context %}
+{% from 'macros/comments.jinja2' import comment_label_options_template, render_comment_tree with context %}
 {% from 'macros/datetime.jinja2' import adaptive_date_responsive, time_ago %}
 {% from 'macros/forms.jinja2' import markdown_textarea %}
 {% from 'macros/groups.jinja2' import group_segmented_link %}
@@ -21,7 +21,6 @@
 
 {% block templates %}
   {% if request.user %}
-    {{ comment_reply_template() }}
     {{ comment_label_options_template(comment_label_options) }}
   {% endif %}
 {% endblock %}

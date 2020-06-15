@@ -131,6 +131,17 @@ def get_comment_contents(request: Request) -> dict:
 
 
 @ic_view_config(
+    route_name="comment_reply",
+    request_method="GET",
+    renderer="comment_reply.jinja2",
+    permission="reply",
+)
+def get_comment_reply(request: Request) -> dict:
+    """Get the reply form for a comment with Intercooler."""
+    return {"parent_comment": request.context}
+
+
+@ic_view_config(
     route_name="comment",
     request_method="GET",
     request_param="ic-trigger-name=edit",
