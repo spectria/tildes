@@ -14,6 +14,7 @@ from sqlalchemy.orm.exc import FlushError
 from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import CommentLabelOption, CommentNotificationType, LogEventType
+from tildes.metrics import incr_counter
 from tildes.models.comment import (
     Comment,
     CommentBookmark,
@@ -94,6 +95,7 @@ def post_comment_reply(request: Request, markdown: str) -> dict:
 
     wait_mins = _reply_wait_minutes(request, request.user, parent_comment.user)
     if wait_mins:
+        incr_counter("comment_back_and_forth_warnings")
         raise HTTPUnprocessableEntity(
             f"You can't reply to this user yet. Please wait {wait_mins} minutes."
         )
@@ -150,6 +152,7 @@ def get_comment_reply(request: Request) -> dict:
     """Get the reply form for a comment with Intercooler."""
     wait_mins = _reply_wait_minutes(request, request.user, request.context.user)
     if wait_mins:
+        incr_counter("comment_back_and_forth_warnings")
         raise HTTPUnprocessableEntity(
             f"You can't reply to this user yet. Please wait {wait_mins} minutes."
         )
