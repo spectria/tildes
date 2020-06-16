@@ -201,8 +201,8 @@ def test_other_protocol_urls_not_linkified():
         assert "href" not in processed
 
 
-def test_html_attr_whitelist_violation():
-    """Ensure non-whitelisted HTML attributes are removed."""
+def test_html_disallowed_attributes():
+    """Ensure disallowed HTML attributes are removed."""
     markdown = (
         '<a href="example.com" title="example" target="_blank" '
         'referrerpolicy="unsafe-url">test link</a>'

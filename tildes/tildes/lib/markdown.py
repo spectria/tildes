@@ -56,7 +56,7 @@ def allow_syntax_highlighting_classes(tag: str, name: str, value: str) -> bool:
     return False
 
 
-HTML_TAG_WHITELIST = (
+ALLOWED_HTML_TAGS = (
     "a",
     "b",
     "blockquote",
@@ -92,9 +92,9 @@ HTML_TAG_WHITELIST = (
     "tr",
     "ul",
 )
-PROTOCOL_WHITELIST = ("http", "https", "mailto")
+ALLOWED_LINK_PROTOCOLS = ("http", "https", "mailto")
 
-HTML_ATTRIBUTE_WHITELIST_DEFAULT = {
+ALLOWED_HTML_ATTRIBUTES_DEFAULT = {
     "a": ["href", "title"],
     "details": ["open"],
     "ol": ["start"],
@@ -105,7 +105,7 @@ HTML_ATTRIBUTE_WHITELIST_DEFAULT = {
 }
 
 # per-context overrides for allowed attributes
-HTML_ATTRIBUTE_WHITELIST_OVERRIDES = {
+ALLOWED_HTML_ATTRIBUTES_OVERRIDES = {
     HTMLSanitizationContext.USER_BIO: {"a": ["href", "title", "rel"]}
 }
 
@@ -497,16 +497,16 @@ def linkify_and_sanitize_html(
 
     tildes_linkifier = partial(LinkifyFilter, skip_tags=linkify_skipped_tags)
 
-    attribute_whitelist = HTML_ATTRIBUTE_WHITELIST_DEFAULT
+    allowed_attributes = ALLOWED_HTML_ATTRIBUTES_DEFAULT
     if context:
         # include overrides for the current context
-        overrides = HTML_ATTRIBUTE_WHITELIST_OVERRIDES.get(context, {})
-        attribute_whitelist = {**attribute_whitelist, **overrides}
+        overrides = ALLOWED_HTML_ATTRIBUTES_OVERRIDES.get(context, {})
+        allowed_attributes = {**allowed_attributes, **overrides}
 
     cleaner = bleach.Cleaner(
-        tags=HTML_TAG_WHITELIST,
-        attributes=attribute_whitelist,
-        protocols=PROTOCOL_WHITELIST,
+        tags=ALLOWED_HTML_TAGS,
+        attributes=allowed_attributes,
+        protocols=ALLOWED_LINK_PROTOCOLS,
         filters=[tildes_linkifier],
     )
     return cleaner.clean(html)
