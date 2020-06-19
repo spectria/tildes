@@ -3,8 +3,6 @@
 
 """Web API endpoints related to comments."""
 
-from typing import Optional
-
 from marshmallow.fields import Boolean
 from pyramid.httpexceptions import HTTPUnprocessableEntity
 from pyramid.request import Request
@@ -14,7 +12,6 @@ from sqlalchemy.orm.exc import FlushError
 from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import CommentLabelOption, CommentNotificationType, LogEventType
-from tildes.metrics import incr_counter
 from tildes.models.comment import (
     Comment,
     CommentBookmark,
@@ -23,7 +20,6 @@ from tildes.models.comment import (
     CommentVote,
 )
 from tildes.models.log import LogComment
-from tildes.models.user import User
 from tildes.schemas.comment import CommentLabelSchema, CommentSchema
 from tildes.views import IC_NOOP
 from tildes.views.decorators import ic_view_config, rate_limit_view
@@ -92,14 +88,6 @@ def post_toplevel_comment(request: Request, markdown: str) -> dict:
 def post_comment_reply(request: Request, markdown: str) -> dict:
     """Post a reply to a comment with Intercooler."""
     parent_comment = request.context
-
-    wait_mins = _reply_wait_minutes(request, request.user, parent_comment.user)
-    if wait_mins:
-        incr_counter("comment_back_and_forth_warnings")
-        raise HTTPUnprocessableEntity(
-            f"You can't reply to this user yet. Please wait {wait_mins} minutes."
-        )
-
     new_comment = Comment(
         topic=parent_comment.topic,
         author=request.user,
@@ -150,13 +138,6 @@ def get_comment_contents(request: Request) -> dict:
 )
 def get_comment_reply(request: Request) -> dict:
     """Get the reply form for a comment with Intercooler."""
-    wait_mins = _reply_wait_minutes(request, request.user, request.context.user)
-    if wait_mins:
-        incr_counter("comment_back_and_forth_warnings")
-        raise HTTPUnprocessableEntity(
-            f"You can't reply to this user yet. Please wait {wait_mins} minutes."
-        )
-
     return {"parent_comment": request.context}
 
 
@@ -470,45 +451,3 @@ def delete_comment_bookmark(request: Request) -> dict:
 def get_comment_markdown_source(request: Request) -> dict:
     """Get the Markdown source for a comment with Intercooler."""
     return {"post": request.context}
-
-
-def _reply_wait_minutes(
-    request: Request, replying_user: User, replying_to_user: User
-) -> Optional[int]:
-    """Return how many mins replying_user needs to wait to respond to replying_to_user.
-
-    `replying_user` is the one that wants to be able to post a new reply. They can't do
-    so if there exists a back-and-forth between them and `replying_to_user` where the
-    most recent comment is within the time threshold.
-
-    That is, call the user trying to reply "A", and the user they're replying to "B".
-    If a sequence of comments exists that are written by users (B, A, B) and the last
-    comment is "too recent", this will return how many minutes they need to wait. If
-    there isn't any recent sequence like that, it will return None.
-    """
-    threshold_minutes = 30
-
-    # if a "too recent" exchange exists, this will return a single value for how many
-    # minutes ago the final comment in the back-and-forth was posted
-    result = request.db_session.execute(
-        """
-        select ceil(extract(epoch from now() - main.created_time) / 60)
-        from comments as main
-        inner join comments as parent on parent.comment_id = main.parent_comment_id
-        inner join comments as grandparent
-            on grandparent.comment_id = parent.parent_comment_id
-        where main.user_id = :replying_to_user_id
-            and parent.user_id = :replying_user_id
-            and grandparent.user_id = :replying_to_user_id
-            and main.created_time > now() - interval ':threshold_minutes minutes'""",
-        {
-            "replying_to_user_id": replying_to_user.user_id,
-            "replying_user_id": replying_user.user_id,
-            "threshold_minutes": threshold_minutes,
-        },
-    ).fetchone()
-
-    if not result:
-        return None
-
-    return threshold_minutes - int(result[0])
