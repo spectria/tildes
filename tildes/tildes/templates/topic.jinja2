@@ -288,6 +288,13 @@
       </div>
     </form>
   </section>
+{% elif topic.was_posted_by_scheduler
+    and topic.schedule.only_new_top_level_comments_in_latest
+    and topic != topic.schedule.latest_topic %}
+  <div class="divider"></div>
+  <p class="text-small">This is an older topic in a scheduled series, and is closed to new top-level comments.</p>
+
+  <p class="text-small">To respond, <a href="{{ topic.schedule.latest_topic.permalink }}">go to the most recent topic in the series</a> instead.</p>
 {% endif %}
 
 </article>

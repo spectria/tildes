@@ -8,7 +8,15 @@ from typing import List, Optional
 
 from dateutil.rrule import rrule
 from jinja2.sandbox import SandboxedEnvironment
-from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Text, TIMESTAMP
+from sqlalchemy import (
+    Boolean,
+    CheckConstraint,
+    Column,
+    ForeignKey,
+    Integer,
+    Text,
+    TIMESTAMP,
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import text
@@ -52,6 +60,9 @@ class TopicSchedule(DatabaseModel):
         TIMESTAMP(timezone=True), nullable=True, index=True
     )
     recurrence_rule: Optional[rrule] = Column(RecurrenceRule, nullable=True)
+    only_new_top_level_comments_in_latest: bool = Column(
+        Boolean, nullable=False, server_default="true"
+    )
     latest_topic_id: int = Column(Integer, ForeignKey("topics.topic_id"), nullable=True)
 
     group: Group = relationship("Group", innerjoin=True)

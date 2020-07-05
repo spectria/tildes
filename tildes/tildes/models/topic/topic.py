@@ -315,6 +315,9 @@ class Topic(DatabaseModel):
         # comment:
         #  - removed topics can only be commented on by users who can remove
         #  - locked topics can only be commented on by users who can lock
+        #  - topics posted by the scheduler can only be commented in if they're the
+        #    latest topic from that schedule, or only_new_top_level_comments_in_latest
+        #    is False
         #  - otherwise, logged-in users can comment
         if self.is_removed:
             acl.extend(
@@ -334,6 +337,13 @@ class Topic(DatabaseModel):
                     group_id=self.group_id,
                 )
             )
+            acl.append((Deny, Everyone, "comment"))
+
+        if (
+            self.was_posted_by_scheduler
+            and self.schedule.only_new_top_level_comments_in_latest
+            and self.topic_id != self.schedule.latest_topic_id
+        ):
             acl.append((Deny, Everyone, "comment"))
 
         acl.append((Allow, Authenticated, "comment"))
