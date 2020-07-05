@@ -65,6 +65,9 @@ class Topic(DatabaseModel):
           updates to is_deleted in comments.
         - last_activity_time will be updated by insertions, deletions, and updates to
           is_deleted in comments.
+      Outgoing:
+        - Inserting rows or updating is_deleted/is_removed to change visibility will
+          update topic_schedule.latest_topic_id if the topic has a schedule_id.
       Internal:
         - deleted_time will be set when is_deleted is set to true
     """
@@ -126,6 +129,8 @@ class Topic(DatabaseModel):
 
     user: User = relationship("User", lazy=False, innerjoin=True)
     group: Group = relationship("Group", innerjoin=True)
+
+    schedule = relationship("TopicSchedule", foreign_keys=[schedule_id])
 
     # Create specialized indexes
     __table_args__ = (

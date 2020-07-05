@@ -9,7 +9,7 @@ from typing import List, Optional
 from dateutil.rrule import rrule
 from jinja2.sandbox import SandboxedEnvironment
 from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Text, TIMESTAMP
-from sqlalchemy.orm import backref, relationship
+from sqlalchemy.orm import relationship
 from sqlalchemy.orm.session import Session
 from sqlalchemy.sql.expression import text
 
@@ -23,7 +23,13 @@ from tildes.schemas.topic import TITLE_MAX_LENGTH
 
 
 class TopicSchedule(DatabaseModel):
-    """Model for scheduled topics (auto-posted, often repeatedly on a schedule)."""
+    """Model for scheduled topics (auto-posted, often repeatedly on a schedule).
+
+    Trigger behavior:
+      Incoming:
+        - latest_topic_id will be set when a new topic is inserted for the schedule,
+          and updated when a topic from the schedule is deleted or removed.
+    """
 
     __tablename__ = "topic_schedule"
 
@@ -46,11 +52,11 @@ class TopicSchedule(DatabaseModel):
         TIMESTAMP(timezone=True), nullable=True, index=True
     )
     recurrence_rule: Optional[rrule] = Column(RecurrenceRule, nullable=True)
+    latest_topic_id: int = Column(Integer, ForeignKey("topics.topic_id"), nullable=True)
 
     group: Group = relationship("Group", innerjoin=True)
     user: Optional[User] = relationship("User")
-
-    topics: List[Topic] = relationship(Topic, backref=backref("schedule"))
+    latest_topic: Topic = relationship("Topic", foreign_keys=[latest_topic_id])
 
     def __init__(
         self,

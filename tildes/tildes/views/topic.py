@@ -15,7 +15,8 @@ from pyramid.request import Request
 from pyramid.response import Response
 from pyramid.view import view_config
 from sqlalchemy import cast
-from sqlalchemy.sql.expression import any_, desc, text
+from sqlalchemy.orm import joinedload
+from sqlalchemy.sql.expression import any_, desc
 from sqlalchemy_utils import Ltree
 from webargs.pyramidparser import use_kwargs
 
@@ -249,25 +250,21 @@ def get_group_topics(  # noqa
 
     if isinstance(request.context, Group):
         # Get the most recent topic from each scheduled topic in this group
-        # I'm not even going to attempt to write this query in pure SQLAlchemy
-        topic_id_subquery = """
-            SELECT topic_id FROM (SELECT topic_id, schedule_id, row_number() OVER
-            (PARTITION BY schedule_id ORDER BY created_time DESC) AS rownum FROM topics)
-            AS t WHERE schedule_id IS NOT NULL AND rownum = 1
-        """
-        most_recent_scheduled_topics = (
-            request.query(Topic)
-            .join(TopicSchedule)
+        group_schedules = (
+            request.query(TopicSchedule)
+            .options(joinedload(TopicSchedule.latest_topic))
             .filter(
-                Topic.topic_id.in_(text(topic_id_subquery)),  # type: ignore
                 TopicSchedule.group == request.context,
                 TopicSchedule.next_post_time != None,  # noqa
             )
             .order_by(TopicSchedule.next_post_time)
             .all()
         )
+        most_recent_scheduled_topics = [
+            schedule.latest_topic for schedule in group_schedules
+        ]
     else:
-        most_recent_scheduled_topics = None
+        most_recent_scheduled_topics = []
 
     if is_home_page:
         financial_data = get_financial_data(request.db_session)
