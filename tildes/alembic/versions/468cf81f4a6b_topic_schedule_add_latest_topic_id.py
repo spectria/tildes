@@ -30,6 +30,16 @@ def upgrade():
 
     op.execute(
         """
+        update topic_schedule set latest_topic_id = (
+            select topic_id from topics
+            where schedule_id = topic_schedule.schedule_id
+            order by created_time desc limit 1
+        )
+    """
+    )
+
+    op.execute(
+        """
         create or replace function update_topic_schedule_latest_topic_id() returns trigger as $$
         begin
             if (NEW.schedule_id is not null) then
