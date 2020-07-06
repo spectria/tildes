@@ -288,7 +288,8 @@
       </div>
     </form>
   </section>
-{% elif topic.was_posted_by_scheduler
+{% elif request.user
+    and topic.was_posted_by_scheduler
     and topic.schedule.only_new_top_level_comments_in_latest
     and topic != topic.schedule.latest_topic %}
   <div class="divider"></div>
