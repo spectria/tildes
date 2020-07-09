@@ -8,7 +8,7 @@ For general information about Tildes and its goals, please see [the announcement
 
 Known issues and plans for upcoming changes are tracked on GitLab: https://gitlab.com/tildes/tildes/issues
 
-The "board" view is useful as an overview: https://gitlab.com/tildes/tildes/boards
+The "board" view is useful as an overview: https://gitlab.com/tildes/tildes/-/boards
 
 ## Contributing to Tildes development
 
