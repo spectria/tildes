@@ -25,7 +25,7 @@ Vagrant.configure(VAGRANT_CONFIG_VERSION) do |config|
       salt.log_level = "info"
 
       salt.install_type = "stable"
-      salt.version = "2019.2.3"
+      salt.version = "2019.2"
   end
 
   config.vm.provider "virtualbox" do |vb|
