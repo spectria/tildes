@@ -71,7 +71,7 @@
     <li>User settings</li>
 
     <ul class="nav">
-      {% if not (tag or unfiltered) %}
+      {% if not unfiltered %}
       <li><details>
         <summary>Filtered topic tags ({{ request.user.filtered_topic_tags|length }})</summary>
         <ul class="topic-tags">

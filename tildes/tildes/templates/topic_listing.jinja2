@@ -112,6 +112,12 @@
     Showing only topics with the tag "{{ tag|replace('_', ' ') }}".
     <a href="{{ request.current_listing_normal_url() }}">Back to normal view</a>
   {% endif %}
+
+  {% if request.user.filtered_topic_tags and not unfiltered %}
+    <br>
+    Topic tag filters active (see sidebar).
+    <a href="{{ request.current_listing_normal_url({'tag': tag, 'unfiltered': 'true'}) }}">View unfiltered list</a>
+  {% endif %}
 {% elif unfiltered %}
   Showing unfiltered topic list.
   <a href="{{ request.current_listing_normal_url() }}">Back to normal view</a>

@@ -213,11 +213,20 @@ def get_group_topics(  # noqa
     if after:
         query = query.after_id36(after)
 
-    # apply topic tag filters unless they're disabled or viewing a single tag
-    if request.user and request.user.filtered_topic_tags and not (tag or unfiltered):
+    # apply topic tag filters unless they're disabled
+    if request.user and request.user.filtered_topic_tags and not unfiltered:
+        filtered_topic_tags = request.user.filtered_topic_tags
+
+        # if viewing single tag, don't filter that tag and its ancestors
+        # for example, if viewing "ask.survey", don't filter "ask.survey" or "ask"
+        if tag:
+            filtered_topic_tags = [
+                ft for ft in filtered_topic_tags if not tag.descendant_of(ft)
+            ]
+
         query = query.filter(
             ~Topic.tags.descendant_of(  # type: ignore
-                any_(cast(request.user.filtered_topic_tags, TagList))
+                any_(cast(filtered_topic_tags, TagList))
             )
         )
 
