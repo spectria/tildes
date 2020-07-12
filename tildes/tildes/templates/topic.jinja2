@@ -344,6 +344,12 @@
               Unknown user
             {% else %}
               {{ link_to_user(entry.user) }}
+
+              {% if entry.user == topic.user %}
+                <span class="topic-user-info">
+                  (<abbr title="Original Poster (of the topic)">OP</abbr>)
+                </span>
+              {% endif %}
             {% endif %}
             {{ entry }}
             <span class="topic-log-entry-time">({{ time_ago(entry.event_time, abbreviate=True) }})</span>
