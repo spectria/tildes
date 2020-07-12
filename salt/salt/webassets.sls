@@ -1,4 +1,13 @@
-{% from 'common.jinja2' import app_dir, bin_dir %}
+{% from 'common.jinja2' import app_dir, app_username %}
+
+# webassets will crash the site unless this file exists, make sure it's always there
+{{ app_dir }}/static/css/site-icons.css:
+  file.managed:
+    - user: {{ app_username }}
+    - group: {{ app_username }}
+    - mode: 644
+    - create: True
+    - replace: False
 
 /etc/systemd/system/webassets.service:
   file.managed:
