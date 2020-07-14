@@ -26,7 +26,6 @@ sqlalchemy.url = postgresql+psycopg2://tildes:@:6432/tildes
 stripe.recurring_donation_product_id = prod_ProductID
 
 tildes.default_user_comment_label_weight = 1.0
-tildes.welcome_message_sender = Deimos
 
 webassets.auto_build = false
 webassets.base_dir = %(here)s/static

@@ -12,11 +12,9 @@ from sqlalchemy.exc import IntegrityError
 from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import LogEventType
-from tildes.lib.message import WELCOME_MESSAGE_SUBJECT, WELCOME_MESSAGE_TEXT
 from tildes.metrics import incr_counter
 from tildes.models.group import Group, GroupSubscription
 from tildes.models.log import Log
-from tildes.models.message import MessageConversation
 from tildes.models.user import User, UserInviteCode
 from tildes.schemas.user import UserSchema
 from tildes.views.decorators import not_logged_in, rate_limit_view
@@ -110,8 +108,6 @@ def post_register(
             continue
         request.db_session.add(GroupSubscription(user, group))
 
-    _send_welcome_message(user, request)
-
     incr_counter("registrations")
 
     # log the user in to the new account
@@ -123,19 +119,3 @@ def post_register(
 
     # redirect to the front page
     raise HTTPFound(location="/")
-
-
-def _send_welcome_message(recipient: User, request: Request) -> None:
-    """Send the welcome message if a sender is configured in the INI."""
-    sender_username = request.registry.settings.get("tildes.welcome_message_sender")
-    if not sender_username:
-        return
-
-    sender = request.query(User).filter(User.username == sender_username).one_or_none()
-    if not sender:
-        return
-
-    welcome_message = MessageConversation(
-        sender, recipient, WELCOME_MESSAGE_SUBJECT, WELCOME_MESSAGE_TEXT
-    )
-    request.db_session.add(welcome_message)
