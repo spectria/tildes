@@ -9,9 +9,13 @@ $.onmount("[data-js-markdown-preview-tab]", function() {
         var $previewDiv = $(this)
             .closest("form")
             .find(".form-markdown-preview");
+        var $previewErrors = $(this)
+            .closest("form")
+            .find(".text-status-message.text-error");
 
         $editTextarea.addClass("d-none");
         $previewDiv.removeClass("d-none");
+        $previewErrors.remove();
     });
 
     $(this).on("after.success.ic success.ic", function(event) {
