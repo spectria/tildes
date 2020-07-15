@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 $.onmount("[data-js-autocomplete-input]", function() {
-    function addChip($input) {
+    function addChip($input, userTypedComma) {
         var $autocompleteContainer = $input
             .parents("[data-js-autocomplete-container]")
             .first();
@@ -11,7 +11,8 @@ $.onmount("[data-js-autocomplete-input]", function() {
             .first();
         var $tagsHiddenInput = $("[data-js-autocomplete-hidden-input]");
 
-        $input
+        var remaining = "";
+        var inputTags = $input
             .val()
             .split(",")
             .map(function(tag) {
@@ -19,36 +20,43 @@ $.onmount("[data-js-autocomplete-input]", function() {
             })
             .filter(function(tag) {
                 return tag !== "";
-            })
-            .forEach(function(tag) {
-                if (!$tagsHiddenInput.val().match(new RegExp("(^|,)" + tag + ","))) {
-                    var clearIcon = document.createElement("a");
-                    clearIcon.classList.add("btn");
-                    clearIcon.classList.add("btn-clear");
-                    clearIcon.setAttribute("data-js-autocomplete-chip-clear", "");
-                    clearIcon.setAttribute("aria-label", "Close");
-                    clearIcon.setAttribute("role", "button");
-                    clearIcon.setAttribute("tabindex", $chips.children().length);
-
-                    var $chip = $(document.createElement("div"));
-                    $chip.addClass("chip");
-                    $chip.html(tag);
-                    $chip.append(clearIcon);
-
-                    if (!tag.match(/^[\w .]+$/)) {
-                        $chip.addClass("error");
-                        $chip.attr(
-                            "title",
-                            "Tags may only contain letters, numbers, and spaces."
-                        );
-                    }
-
-                    $chips.append($chip);
-
-                    $tagsHiddenInput.val($tagsHiddenInput.val() + tag + ",");
-                }
             });
-        $autocompleteContainer.find("[data-js-autocomplete-input]").val("");
+
+        // process only first tag, to left of comma, if user typed comma
+        if (userTypedComma && $input.val().indexOf(",") !== -1) {
+            remaining = inputTags.slice(1).join(", ");
+            inputTags = inputTags.slice(0, 1);
+        }
+
+        inputTags.forEach(function(tag) {
+            if (!$tagsHiddenInput.val().match(new RegExp("(^|,)" + tag + ","))) {
+                var clearIcon = document.createElement("a");
+                clearIcon.classList.add("btn");
+                clearIcon.classList.add("btn-clear");
+                clearIcon.setAttribute("data-js-autocomplete-chip-clear", "");
+                clearIcon.setAttribute("aria-label", "Close");
+                clearIcon.setAttribute("role", "button");
+                clearIcon.setAttribute("tabindex", $chips.children().length);
+
+                var $chip = $(document.createElement("div"));
+                $chip.addClass("chip");
+                $chip.html(tag);
+                $chip.append(clearIcon);
+
+                if (!tag.match(/^[\w .]+$/)) {
+                    $chip.addClass("error");
+                    $chip.attr(
+                        "title",
+                        "Tags may only contain letters, numbers, and spaces."
+                    );
+                }
+
+                $chips.append($chip);
+
+                $tagsHiddenInput.val($tagsHiddenInput.val() + tag + ",");
+            }
+        });
+        $autocompleteContainer.find("[data-js-autocomplete-input]").val(remaining);
         $autocompleteContainer.find("[data-js-autocomplete-suggestions]").html("");
 
         $.onmount();
@@ -102,6 +110,7 @@ $.onmount("[data-js-autocomplete-input]", function() {
     });
 
     $(this).keydown(function(event) {
+        var $this = $(this);
         var $autocompleteMenu = $("[data-js-autocomplete-menu]").first();
         var $nextActiveItem = null;
 
@@ -111,6 +120,11 @@ $.onmount("[data-js-autocomplete-input]", function() {
                 $(this).blur();
                 break;
             case ",":
+                // wait for comma to be added to text so addChip() sees it
+                setTimeout(function() {
+                    addChip($this, true);
+                }, 100);
+                break;
             case "Enter":
                 event.preventDefault();
                 addChip($(this));
