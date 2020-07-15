@@ -216,6 +216,11 @@ class TopicQuery(PaginatedQuery):
 
     def search(self, query: str) -> "TopicQuery":
         """Restrict the topics to ones that match a search query (generative)."""
+        # Replace "." with space, since tags are stored as space-separated strings
+        # in the search index.
+        # URL domains are not indexed, so removing "." is okay for now.
+        query = query.replace(".", " ")
+
         return self.filter(Topic.search_tsv.op("@@")(func.websearch_to_tsquery(query)))
 
     def only_bookmarked(self) -> "TopicQuery":
