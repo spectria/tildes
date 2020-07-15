@@ -147,7 +147,7 @@ class ArrayOfLtree(ARRAY):
             if isinstance(other, list):
                 return self.op("?")(cast(other, ARRAY(LQUERY)))
             else:
-                return self.op("~")(other)
+                return self.op("~")(cast(other, LQUERY))
 
 
 class RecurrenceRule(TypeDecorator):

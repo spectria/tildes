@@ -206,13 +206,13 @@ class TopicQuery(PaginatedQuery):
     def has_tag(self, tag: str) -> "TopicQuery":
         """Restrict the topics to ones with a specific tag (generative).
 
-        Note that this method searches for topics that have any tag that either starts
-        or ends with the specified tag, not only exact/full matches.
+        Note that this method searches for topics that have any tag that contains
+        the specified tag as a subpath, not only exact/full matches.
         """
-        queries = [f"{tag}.*", f"*.{tag}"]
+        query = f"*.{tag}.*"
 
         # pylint: disable=protected-access
-        return self.filter(Topic.tags.lquery(queries))  # type: ignore
+        return self.filter(Topic.tags.lquery(query))  # type: ignore
 
     def search(self, query: str) -> "TopicQuery":
         """Restrict the topics to ones that match a search query (generative)."""
