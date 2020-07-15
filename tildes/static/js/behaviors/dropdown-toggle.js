@@ -34,6 +34,19 @@ $.onmount(".dropdown-toggle", function() {
                 "dropdown-right",
                 $this.offset().left + $this.width() - $menu.width() > 0
             );
+
+        // If the menu extends past the bottom of the viewport, or the site footer
+        // overlaps the menu, push the menu above the button instead.
+        var menuBottom = $this.offset().top + $this.height() + $menu.height();
+        var viewportHeight = $(window).height();
+        var scrollTop = $(document).scrollTop();
+        var footerTop = $("#site-footer").offset().top;
+        $this
+            .parent()
+            .toggleClass(
+                "dropdown-bottom",
+                menuBottom > viewportHeight + scrollTop || menuBottom > footerTop
+            );
     });
 
     $(this).blur(function() {

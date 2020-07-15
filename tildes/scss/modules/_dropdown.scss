@@ -11,6 +11,13 @@
     }
   }
 
+  &.dropdown-bottom {
+    .menu {
+      top: auto;
+      bottom: 100%;
+    }
+  }
+
   &-toggle.btn-post-action {
     height: auto;
   }
