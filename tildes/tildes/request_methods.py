@@ -37,6 +37,7 @@ def is_bot(request: Request) -> bool:
         "Qwantify",
         "SeznamBot",
         "Tildes Scraper",
+        "yacybot",
         "YandexBot",
     )
 
