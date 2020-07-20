@@ -5,7 +5,6 @@
   file.managed:
     - user: {{ app_username }}
     - group: {{ app_username }}
-    - mode: 644
     - create: True
     - replace: False
 
