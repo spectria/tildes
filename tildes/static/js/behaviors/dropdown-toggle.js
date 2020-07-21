@@ -32,12 +32,12 @@ $.onmount(".dropdown-toggle", function() {
             .parent()
             .toggleClass(
                 "dropdown-right",
-                $this.offset().left + $this.width() - $menu.width() > 0
+                $this.offset().left + $this.outerWidth() - $menu.outerWidth() > 0
             );
 
         // If the menu extends past the bottom of the viewport, or the site footer
         // overlaps the menu, push the menu above the button instead.
-        var menuBottom = $this.offset().top + $this.height() + $menu.height();
+        var menuBottom = $this.offset().top + $this.outerHeight() + $menu.outerHeight();
         var viewportHeight = $(window).height();
         var scrollTop = $(document).scrollTop();
         var footerTop = $("#site-footer").offset().top;
