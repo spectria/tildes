@@ -36,6 +36,7 @@ def is_bot(request: Request) -> bool:
         "Python-urllib",
         "Qwantify",
         "SeznamBot",
+        "tildee.py",
         "Tildes Scraper",
         "yacybot",
         "YandexBot",
