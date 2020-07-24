@@ -4,6 +4,7 @@
 """Custom schema field definitions."""
 
 import enum
+import re
 from typing import Any, Mapping, Optional, Type
 
 import sqlalchemy_utils
@@ -150,6 +151,10 @@ class SimpleString(Field):
 class Ltree(Field):
     """Field for postgresql ltree type."""
 
+    # note that this regex only checks whether all of the chars are individually valid,
+    # but doesn't verify that the value as a whole is a valid ltree path
+    VALID_CHARS_REGEX = re.compile("^[A-Za-z0-9_.]+$")
+
     def _serialize(
         self, value: sqlalchemy_utils.Ltree, attr: str, obj: object, **kwargs: Any
     ) -> str:
@@ -162,6 +167,9 @@ class Ltree(Field):
         """Deserialize a string path to an Ltree object."""
         # convert to lowercase and replace spaces with underscores
         value = value.lower().replace(" ", "_")
+
+        if not self.VALID_CHARS_REGEX.fullmatch(value):
+            raise ValidationError("Only letters, numbers, and spaces allowed.")
 
         try:
             return sqlalchemy_utils.Ltree(value)
