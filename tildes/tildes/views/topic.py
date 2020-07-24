@@ -221,7 +221,9 @@ def get_group_topics(  # noqa
         # for example, if viewing "ask.survey", don't filter "ask.survey" or "ask"
         if tag:
             filtered_topic_tags = [
-                ft for ft in filtered_topic_tags if not tag.descendant_of(ft)
+                ft
+                for ft in filtered_topic_tags
+                if not tag.descendant_of(ft.replace(" ", "_"))
             ]
 
         query = query.filter(
