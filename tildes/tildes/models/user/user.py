@@ -246,6 +246,13 @@ class User(DatabaseModel):
 
     def is_correct_password(self, password: str) -> bool:
         """Check if the password is correct for this user."""
+        # Some accounts have no password - the special-purpose "fake" accounts (ones
+        # with user_id <= 0), and it's possible to happen for a real account as well, in
+        # a niche case like un-deleting an account that was deleted a long time ago.
+        # Trying to check a password on those accounts will error, so just always fail.
+        if not self.password_hash:
+            return False
+
         return is_match_for_hash(password, self.password_hash)
 
     def change_password(self, old_password: str, new_password: str) -> None:
