@@ -4,6 +4,7 @@
 """Views related to posting/viewing topics and comments on them."""
 
 from collections import namedtuple
+from datetime import timedelta
 from difflib import SequenceMatcher
 from typing import Any, Optional, Union
 
@@ -63,10 +64,13 @@ def post_group_topics(
     group = request.context
 
     if link:
-        # check to see if this link has been posted before
+        # check to see if this link has already been posted in the last 6 months
         previous_topics = (
             request.query(Topic)
-            .filter(Topic.link == link)
+            .filter(
+                Topic.link == link,
+                Topic.created_time >= utc_now() - timedelta(days=180),
+            )
             .order_by(desc(Topic.created_time))
             .limit(5)
             .all()
