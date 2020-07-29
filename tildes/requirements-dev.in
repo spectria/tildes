@@ -6,5 +6,6 @@ prospector
 pyramid-debugtoolbar
 pytest
 pytest-mock
+pytidylib
 testing.redis
 webtest

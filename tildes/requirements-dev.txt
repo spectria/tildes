@@ -81,6 +81,7 @@ pytest-mock==3.2.0
 pytest==6.0.0
 python-dateutil==2.8.1
 python-editor==1.0.4      # via alembic
+pytidylib==0.3.2
 pyyaml==5.3.1
 qrcode==6.1
 redis==3.5.3
