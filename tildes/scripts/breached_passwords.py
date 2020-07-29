@@ -152,7 +152,7 @@ def addhashes(filename: str) -> None:
         hashval = hashval.split(":")[0]
 
         command = generate_redis_protocol("BF.ADD", BREACHED_PASSWORDS_BF_KEY, hashval)
-        redis_pipe.stdin.write(command)
+        redis_pipe.stdin.write(command)  # type: ignore
 
         if count % update_interval == 0:
             progress_bar.update(update_interval)
