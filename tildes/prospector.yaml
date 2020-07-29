@@ -30,7 +30,7 @@ pylint:
     - bad-continuation  # let Black handle line-wrapping
     - comparison-with-callable  # seems to have a lot of false positives
     - cyclic-import  # not sure what's triggering this, doesn't seem to work correctly
-    - logging-format-interpolation  # rather use f-strings than worry about this
+    - logging-fstring-interpolation  # rather use f-strings than worry about this
     - no-else-return  # elif after return - could refactor to enable this check
     - no-self-use  # schemas do this a lot, would be nice to only disable for schemas
     - too-few-public-methods  # plenty of classes that don't need multiple methods

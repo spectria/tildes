@@ -2,7 +2,7 @@
 black
 freezegun
 mypy
-prospector==1.2.0
+prospector
 pyramid-debugtoolbar
 pytest
 pytest-mock
