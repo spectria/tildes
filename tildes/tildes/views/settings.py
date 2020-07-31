@@ -14,7 +14,6 @@ from pyramid.request import Request
 from pyramid.response import Response
 from pyramid.view import view_config
 from sqlalchemy import func
-from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import CommentLabelOption, CommentTreeSortOption
 from tildes.lib.datetime import utc_now
@@ -28,6 +27,7 @@ from tildes.schemas.user import (
     EMAIL_ADDRESS_NOTE_MAX_LENGTH,
     UserSchema,
 )
+from tildes.views.decorators import use_kwargs
 
 
 PASSWORD_FIELD = UserSchema(only=("password",)).fields["password"]
@@ -139,7 +139,8 @@ def get_settings_bio(request: Request) -> dict:
         "old_password": PASSWORD_FIELD,
         "new_password": PASSWORD_FIELD,
         "new_password_confirm": PASSWORD_FIELD,
-    }
+    },
+    location="form",
 )
 def post_settings_password_change(
     request: Request, old_password: str, new_password: str, new_password_confirm: str

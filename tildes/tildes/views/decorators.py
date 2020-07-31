@@ -3,11 +3,39 @@
 
 """Contains decorators for view functions."""
 
-from typing import Any, Callable
+from typing import Any, Callable, Dict, Union
 
+from marshmallow import EXCLUDE
+from marshmallow.fields import Field
+from marshmallow.schema import Schema
 from pyramid.httpexceptions import HTTPFound
 from pyramid.request import Request
 from pyramid.view import view_config
+from webargs import dict2schema, pyramidparser
+
+
+def use_kwargs(
+    argmap: Union[Schema, Dict[str, Field]], location: str = "query", **kwargs: Any
+) -> Callable:
+    """Wrap the webargs @use_kwargs decorator with preferred default modifications.
+
+    Primarily, we want the location argument to default to "query" so that the data
+    comes from the query string. As of version 6.0, webargs defaults to "json", which is
+    almost never correct for Tildes.
+
+    We also need to set every schema's behavior for unknown fields to "exclude", so that
+    it just ignores them, instead of erroring when there's unexpected data (as there
+    almost always is, especially because of Intercooler).
+    """
+    # convert a dict argmap to a Schema (the same way webargs would on its own)
+    if isinstance(argmap, dict):
+        argmap = dict2schema(argmap)()
+
+    assert isinstance(argmap, Schema)  # tell mypy the type is more restricted now
+
+    argmap.unknown = EXCLUDE
+
+    return pyramidparser.use_kwargs(argmap, location=location, **kwargs)
 
 
 def ic_view_config(**kwargs: Any) -> Callable:

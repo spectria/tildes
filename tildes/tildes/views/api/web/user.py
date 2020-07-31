@@ -17,7 +17,6 @@ from pyramid.httpexceptions import (
 from pyramid.request import Request
 from pyramid.response import Response
 from sqlalchemy.exc import IntegrityError
-from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import LogEventType, TopicSortOption
 from tildes.lib.datetime import SimpleHoursPeriod
@@ -28,7 +27,7 @@ from tildes.schemas.fields import Enum, ShortTimePeriod
 from tildes.schemas.topic import TopicSchema
 from tildes.schemas.user import UserSchema
 from tildes.views import IC_NOOP
-from tildes.views.decorators import ic_view_config
+from tildes.views.decorators import ic_view_config, use_kwargs
 
 
 PASSWORD_FIELD = UserSchema(only=("password",)).fields["password"]
@@ -45,7 +44,8 @@ PASSWORD_FIELD = UserSchema(only=("password",)).fields["password"]
         "old_password": PASSWORD_FIELD,
         "new_password": PASSWORD_FIELD,
         "new_password_confirm": PASSWORD_FIELD,
-    }
+    },
+    location="form",
 )
 def patch_change_password(
     request: Request, old_password: str, new_password: str, new_password_confirm: str
@@ -70,7 +70,7 @@ def patch_change_password(
     request_param="ic-trigger-name=account-recovery-email",
     permission="change_settings",
 )
-@use_kwargs(UserSchema(only=("email_address", "email_address_note")))
+@use_kwargs(UserSchema(only=("email_address", "email_address_note")), location="form")
 def patch_change_email_address(
     request: Request, email_address: str, email_address_note: str
 ) -> Response:
@@ -102,7 +102,7 @@ def patch_change_email_address(
     renderer="two_factor_enabled.jinja2",
     permission="change_settings",
 )
-@use_kwargs({"code": String()})
+@use_kwargs({"code": String()}, location="form")
 def post_enable_two_factor(request: Request, code: str) -> dict:
     """Enable two-factor authentication for the user."""
     user = request.context
@@ -132,7 +132,7 @@ def post_enable_two_factor(request: Request, code: str) -> dict:
     renderer="two_factor_disabled.jinja2",
     permission="change_settings",
 )
-@use_kwargs({"code": String()})
+@use_kwargs({"code": String()}, location="form")
 def post_disable_two_factor(request: Request, code: str) -> Response:
     """Disable two-factor authentication for the user."""
     if not request.user.is_correct_two_factor_code(code):
@@ -152,7 +152,7 @@ def post_disable_two_factor(request: Request, code: str) -> Response:
     renderer="two_factor_backup_codes.jinja2",
     permission="change_settings",
 )
-@use_kwargs({"code": String()})
+@use_kwargs({"code": String()}, location="form")
 def post_view_two_factor_backup_codes(request: Request, code: str) -> Response:
     """Show the user their two-factor authentication backup codes."""
     user = request.context
@@ -294,7 +294,7 @@ def patch_change_account_default_theme(request: Request) -> Response:
     request_param="ic-trigger-name=user-bio",
     permission="change_settings",
 )
-@use_kwargs({"markdown": String()})
+@use_kwargs({"markdown": String()}, location="form")
 def patch_change_user_bio(request: Request, markdown: str) -> dict:
     """Update a user's bio."""
     user = request.context
@@ -353,7 +353,7 @@ def get_invite_code(request: Request) -> dict:
         "order": Enum(TopicSortOption),
         "period": ShortTimePeriod(allow_none=True, missing=None),
     },
-    locations=("form",),  # will crash due to trying to find JSON data without this
+    location="form",
 )
 def put_default_listing_options(
     request: Request, order: TopicSortOption, period: Optional[SimpleHoursPeriod]
@@ -375,7 +375,7 @@ def put_default_listing_options(
     request_method="PUT",
     permission="change_settings",
 )
-@use_kwargs({"tags": String()})
+@use_kwargs({"tags": String()}, location="form")
 def put_filtered_topic_tags(request: Request, tags: str) -> dict:
     """Update a user's filtered topic tags list."""
     if not tags or tags.isspace():

@@ -7,16 +7,16 @@ from marshmallow.fields import String
 from pyramid.httpexceptions import HTTPMovedPermanently, HTTPNotFound
 from pyramid.request import Request
 from sqlalchemy_utils import Ltree
-from webargs.pyramidparser import use_kwargs
 
 from tildes.models.group import Group, GroupWikiPage
 from tildes.resources import get_resource
 from tildes.schemas.group import GroupSchema
+from tildes.views.decorators import use_kwargs
 
 
 @use_kwargs(
     GroupSchema(only=("path",), context={"fix_path_capitalization": True}),
-    locations=("matchdict",),
+    location="matchdict",
 )
 def group_by_path(request: Request, path: str) -> Group:
     """Get a group specified by {path} in the route (or 404)."""
@@ -35,7 +35,7 @@ def group_by_path(request: Request, path: str) -> Group:
     return get_resource(request, query)
 
 
-@use_kwargs({"wiki_page_path": String()}, locations=("matchdict",))
+@use_kwargs({"wiki_page_path": String()}, location="matchdict")
 def group_wiki_page_by_path(request: Request, wiki_page_path: str) -> GroupWikiPage:
     """Get a group's wiki page by its path (or 404)."""
     group = group_by_path(request)  # pylint: disable=no-value-for-parameter

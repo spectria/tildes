@@ -6,11 +6,11 @@
 from pyramid.httpexceptions import HTTPFound
 from pyramid.request import Request
 from pyramid.view import view_config
-from webargs.pyramidparser import use_kwargs
 
 from tildes.models.group import GroupWikiPage
 from tildes.schemas.fields import SimpleString
 from tildes.schemas.group_wiki_page import GroupWikiPageSchema
+from tildes.views.decorators import use_kwargs
 
 
 @view_config(route_name="group_wiki", renderer="group_wiki.jinja2")
@@ -65,7 +65,7 @@ def get_wiki_new_page_form(request: Request) -> dict:
 @view_config(
     route_name="group_wiki", request_method="POST", permission="wiki_page_create"
 )
-@use_kwargs(GroupWikiPageSchema())
+@use_kwargs(GroupWikiPageSchema(), location="form")
 def post_group_wiki(request: Request, page_name: str, markdown: str) -> HTTPFound:
     """Create a new wiki page in a group."""
     group = request.context
@@ -94,8 +94,8 @@ def get_wiki_edit_page_form(request: Request) -> dict:
 
 
 @view_config(route_name="group_wiki_page", request_method="POST", permission="edit")
-@use_kwargs(GroupWikiPageSchema(only=("markdown",)))
-@use_kwargs({"edit_message": SimpleString(max_length=80)})
+@use_kwargs(GroupWikiPageSchema(only=("markdown",)), location="form")
+@use_kwargs({"edit_message": SimpleString(max_length=80)}, location="form")
 def post_group_wiki_page(request: Request, markdown: str, edit_message: str) -> dict:
     """Apply an edit to a single group wiki page."""
     page = request.context

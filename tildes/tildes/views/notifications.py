@@ -8,11 +8,11 @@ from typing import Optional
 from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.sql.expression import desc
-from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import CommentLabelOption
 from tildes.models.comment import CommentNotification
 from tildes.schemas.listing import PaginatedListingSchema
+from tildes.views.decorators import use_kwargs
 
 
 @view_config(route_name="notifications_unread", renderer="notifications_unread.jinja2")

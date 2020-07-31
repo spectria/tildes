@@ -8,7 +8,6 @@ from typing import Optional
 from pyramid.request import Request
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import IntegrityError
-from webargs.pyramidparser import use_kwargs
 from zope.sqlalchemy import mark_changed
 
 from tildes.enums import TopicSortOption
@@ -17,7 +16,7 @@ from tildes.models.group import Group, GroupSubscription
 from tildes.models.user import UserGroupSettings
 from tildes.schemas.fields import Enum, ShortTimePeriod
 from tildes.views import IC_NOOP
-from tildes.views.decorators import ic_view_config
+from tildes.views.decorators import ic_view_config, use_kwargs
 
 
 @ic_view_config(
@@ -89,7 +88,7 @@ def delete_subscribe_group(request: Request) -> dict:
         "order": Enum(TopicSortOption),
         "period": ShortTimePeriod(allow_none=True, missing=None),
     },
-    locations=("form",),  # will crash due to trying to find JSON data without this
+    location="form",
 )
 def patch_group_user_settings(
     request: Request, order: TopicSortOption, period: Optional[SimpleHoursPeriod]

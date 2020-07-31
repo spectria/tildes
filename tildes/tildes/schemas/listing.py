@@ -46,10 +46,12 @@ class TopicListingSchema(PaginatedListingSchema):
         if "rank_start" not in self.fields:
             return data
 
-        if not (data.get("before") or data.get("after")):
-            data["n"] = 1
+        new_data = data.copy()
 
-        return data
+        if not (new_data.get("before") or new_data.get("after")):
+            new_data["n"] = 1
+
+        return new_data
 
 
 class MixedListingSchema(PaginatedListingSchema):
@@ -71,10 +73,12 @@ class MixedListingSchema(PaginatedListingSchema):
         to the topic with ID36 "123". "c-123" also works, for comments.
         """
         # pylint: disable=unused-argument
+        new_data = data.copy()
+
         keys = ("after", "before")
 
         for key in keys:
-            value = data.get(key)
+            value = new_data.get(key)
             if not value:
                 continue
 
@@ -83,12 +87,12 @@ class MixedListingSchema(PaginatedListingSchema):
                 continue
 
             if type_char == "c":
-                data["anchor_type"] = "comment"
+                new_data["anchor_type"] = "comment"
             elif type_char == "t":
-                data["anchor_type"] = "topic"
+                new_data["anchor_type"] = "topic"
             else:
                 continue
 
-            data[key] = id36
+            new_data[key] = id36
 
-        return data
+        return new_data

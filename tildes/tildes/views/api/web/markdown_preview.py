@@ -4,11 +4,10 @@
 """Web API endpoint for previewing Markdown."""
 
 from pyramid.request import Request
-from webargs.pyramidparser import use_kwargs
 
 from tildes.lib.markdown import convert_markdown_to_safe_html
 from tildes.schemas.group_wiki_page import GroupWikiPageSchema
-from tildes.views.decorators import ic_view_config
+from tildes.views.decorators import ic_view_config, use_kwargs
 
 
 @ic_view_config(
@@ -17,7 +16,7 @@ from tildes.views.decorators import ic_view_config
     renderer="markdown_preview.jinja2",
 )
 # uses GroupWikiPageSchema because it should always have the highest max_length
-@use_kwargs(GroupWikiPageSchema(only=("markdown",)))
+@use_kwargs(GroupWikiPageSchema(only=("markdown",)), location="form")
 def markdown_preview(request: Request, markdown: str) -> dict:
     """Render the provided text as Markdown."""
     # pylint: disable=unused-argument

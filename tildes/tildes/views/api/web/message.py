@@ -4,11 +4,10 @@
 """Web API endpoints related to messages."""
 
 from pyramid.request import Request
-from webargs.pyramidparser import use_kwargs
 
 from tildes.models.message import MessageReply
 from tildes.schemas.message import MessageReplySchema
-from tildes.views.decorators import ic_view_config
+from tildes.views.decorators import ic_view_config, use_kwargs
 
 
 @ic_view_config(
@@ -17,7 +16,7 @@ from tildes.views.decorators import ic_view_config
     renderer="single_message.jinja2",
     permission="reply",
 )
-@use_kwargs(MessageReplySchema(only=("markdown",)))
+@use_kwargs(MessageReplySchema(only=("markdown",)), location="form")
 def post_message_reply(request: Request, markdown: str) -> dict:
     """Post a reply to a message conversation with Intercooler."""
     conversation = request.context

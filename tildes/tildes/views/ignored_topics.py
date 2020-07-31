@@ -5,14 +5,14 @@ from typing import Optional
 from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.sql import desc
-from webargs.pyramidparser import use_kwargs
 
 from tildes.models.topic import Topic, TopicIgnore
 from tildes.schemas.listing import PaginatedListingSchema
+from tildes.views.decorators import use_kwargs
 
 
 @view_config(route_name="ignored_topics", renderer="ignored_topics.jinja2")
-@use_kwargs(PaginatedListingSchema)
+@use_kwargs(PaginatedListingSchema())
 def get_ignored_topics(
     request: Request, after: Optional[str], before: Optional[str], per_page: int,
 ) -> dict:

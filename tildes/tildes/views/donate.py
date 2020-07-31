@@ -10,10 +10,9 @@ from pyramid.httpexceptions import HTTPInternalServerError
 from pyramid.request import Request
 from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.view import view_config
-from webargs.pyramidparser import use_kwargs
 
 from tildes.metrics import incr_counter
-from tildes.views.decorators import rate_limit_view
+from tildes.views.decorators import rate_limit_view, use_kwargs
 
 
 @view_config(
@@ -39,7 +38,8 @@ def get_donate_stripe(request: Request) -> dict:
         "amount": Float(required=True, validate=Range(min=1.0)),
         "currency": String(required=True, validate=OneOf(("CAD", "USD"))),
         "interval": String(required=True, validate=OneOf(("onetime", "month", "year"))),
-    }
+    },
+    location="form",
 )
 @rate_limit_view("donate_stripe")
 def post_donate_stripe(

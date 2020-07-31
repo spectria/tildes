@@ -9,10 +9,10 @@ from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.dialects.postgresql import array
 from sqlalchemy.sql.expression import and_, or_
-from webargs.pyramidparser import use_kwargs
 
 from tildes.models.message import MessageConversation, MessageReply
 from tildes.schemas.message import MessageConversationSchema, MessageReplySchema
+from tildes.views.decorators import use_kwargs
 
 
 @view_config(
@@ -113,7 +113,7 @@ def get_message_conversation(request: Request) -> dict:
 @view_config(
     route_name="message_conversation", request_method="POST", permission="reply"
 )
-@use_kwargs(MessageReplySchema(only=("markdown",)))
+@use_kwargs(MessageReplySchema(only=("markdown",)), location="form")
 def post_message_reply(request: Request, markdown: str) -> HTTPFound:
     """Post a reply to a message conversation."""
     conversation = request.context
@@ -129,7 +129,7 @@ def post_message_reply(request: Request, markdown: str) -> HTTPFound:
 
 
 @view_config(route_name="user_messages", request_method="POST", permission="message")
-@use_kwargs(MessageConversationSchema(only=("subject", "markdown")))
+@use_kwargs(MessageConversationSchema(only=("subject", "markdown")), location="form")
 def post_user_message(request: Request, subject: str, markdown: str) -> HTTPFound:
     """Start a new message conversation with a user."""
     new_conversation = MessageConversation(

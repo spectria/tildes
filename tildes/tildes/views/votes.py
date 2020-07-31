@@ -5,16 +5,16 @@ from typing import Optional, Type, Union
 from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.sql import desc
-from webargs.pyramidparser import use_kwargs
 
 from tildes.models.comment import Comment, CommentVote
 from tildes.models.topic import Topic, TopicVote
 from tildes.schemas.fields import PostType
 from tildes.schemas.listing import PaginatedListingSchema
+from tildes.views.decorators import use_kwargs
 
 
 @view_config(route_name="votes", renderer="votes.jinja2")
-@use_kwargs(PaginatedListingSchema)
+@use_kwargs(PaginatedListingSchema())
 @use_kwargs({"post_type": PostType(data_key="type", missing="topic")})
 def get_voted_posts(
     request: Request,

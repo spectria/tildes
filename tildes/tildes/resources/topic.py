@@ -5,15 +5,15 @@
 
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.request import Request
-from webargs.pyramidparser import use_kwargs
 
 from tildes.lib.id import id36_to_id
 from tildes.models.topic import Topic
 from tildes.resources import get_resource
 from tildes.schemas.topic import TopicSchema
+from tildes.views.decorators import use_kwargs
 
 
-@use_kwargs(TopicSchema(only=("topic_id36",)), locations=("matchdict",))
+@use_kwargs(TopicSchema(only=("topic_id36",)), location="matchdict")
 def topic_by_id36(request: Request, topic_id36: str) -> Topic:
     """Get a topic specified by {topic_id36} in the route (or 404)."""
     try:

@@ -63,10 +63,17 @@ class UserSchema(Schema):
     def anonymize_username(self, data: dict, many: bool) -> dict:
         """Hide the username if the dumping context specifies to do so."""
         # pylint: disable=unused-argument
-        if "username" in data and self.context.get("hide_username"):
-            data["username"] = "<unknown>"
+        if not self.context.get("hide_username"):
+            return data
 
-        return data
+        if "username" not in data:
+            return data
+
+        new_data = data.copy()
+
+        new_data["username"] = "<unknown>"
+
+        return new_data
 
     @validates_schema
     def username_pass_not_substrings(
@@ -116,9 +123,11 @@ class UserSchema(Schema):
         if "username" not in data:
             return data
 
-        data["username"] = data["username"].strip()
+        new_data = data.copy()
 
-        return data
+        new_data["username"] = new_data["username"].strip()
+
+        return new_data
 
     @pre_load
     def prepare_email_address(self, data: dict, many: bool, partial: Any) -> dict:
@@ -127,14 +136,16 @@ class UserSchema(Schema):
         if "email_address" not in data:
             return data
 
+        new_data = data.copy()
+
         # remove any leading/trailing whitespace
-        data["email_address"] = data["email_address"].strip()
+        new_data["email_address"] = new_data["email_address"].strip()
 
         # if the value is empty, convert it to None
-        if not data["email_address"] or data["email_address"].isspace():
-            data["email_address"] = None
+        if not new_data["email_address"] or new_data["email_address"].isspace():
+            new_data["email_address"] = None
 
-        return data
+        return new_data
 
     @pre_load
     def prepare_bio_markdown(self, data: dict, many: bool, partial: Any) -> dict:
@@ -143,11 +154,13 @@ class UserSchema(Schema):
         if "bio_markdown" not in data:
             return data
 
-        # if the value is empty, convert it to None
-        if not data["bio_markdown"] or data["bio_markdown"].isspace():
-            data["bio_markdown"] = None
+        new_data = data.copy()
 
-        return data
+        # if the value is empty, convert it to None
+        if not new_data["bio_markdown"] or new_data["bio_markdown"].isspace():
+            new_data["bio_markdown"] = None
+
+        return new_data
 
 
 def is_valid_username(username: str) -> bool:

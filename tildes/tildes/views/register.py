@@ -9,7 +9,6 @@ from pyramid.request import Request
 from pyramid.security import NO_PERMISSION_REQUIRED, remember
 from pyramid.view import view_config
 from sqlalchemy.exc import IntegrityError
-from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import LogEventType
 from tildes.metrics import incr_counter
@@ -17,7 +16,7 @@ from tildes.models.group import Group, GroupSubscription
 from tildes.models.log import Log
 from tildes.models.user import User, UserInviteCode
 from tildes.schemas.user import UserSchema
-from tildes.views.decorators import not_logged_in, rate_limit_view
+from tildes.views.decorators import not_logged_in, rate_limit_view, use_kwargs
 
 
 @view_config(
@@ -31,25 +30,18 @@ def get_register(request: Request, code: str) -> dict:
     return {"code": code}
 
 
-def user_schema_check_breaches(request: Request) -> UserSchema:
-    """Return a UserSchema that will check the password against breaches.
-
-    It would probably be good to generalize this function at some point, probably
-    similar to:
-    http://webargs.readthedocs.io/en/latest/advanced.html#reducing-boilerplate
-    """
-    # pylint: disable=unused-argument
-    return UserSchema(
-        only=("username", "password"), context={"check_breached_passwords": True}
-    )
-
-
 @view_config(
     route_name="register", request_method="POST", permission=NO_PERMISSION_REQUIRED
 )
-@use_kwargs(user_schema_check_breaches)
 @use_kwargs(
-    {"invite_code": String(required=True), "password_confirm": String(required=True)}
+    UserSchema(
+        only=("username", "password"), context={"check_breached_passwords": True}
+    ),
+    location="form",
+)
+@use_kwargs(
+    {"invite_code": String(required=True), "password_confirm": String(required=True)},
+    location="form",
 )
 @not_logged_in
 @rate_limit_view("register")

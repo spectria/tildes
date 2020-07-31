@@ -5,15 +5,15 @@
 
 from pyramid.httpexceptions import HTTPForbidden, HTTPNotFound
 from pyramid.request import Request
-from webargs.pyramidparser import use_kwargs
 
 from tildes.lib.id import id36_to_id
 from tildes.models.comment import Comment, CommentNotification
 from tildes.resources import get_resource
 from tildes.schemas.comment import CommentSchema
+from tildes.views.decorators import use_kwargs
 
 
-@use_kwargs(CommentSchema(only=("comment_id36",)), locations=("matchdict",))
+@use_kwargs(CommentSchema(only=("comment_id36",)), location="matchdict")
 def comment_by_id36(request: Request, comment_id36: str) -> Comment:
     """Get a comment specified by {comment_id36} in the route (or 404)."""
     query = (
@@ -28,7 +28,7 @@ def comment_by_id36(request: Request, comment_id36: str) -> Comment:
         raise HTTPNotFound("Comment not found (or it was deleted)")
 
 
-@use_kwargs(CommentSchema(only=("comment_id36",)), locations=("matchdict",))
+@use_kwargs(CommentSchema(only=("comment_id36",)), location="matchdict")
 def notification_by_comment_id36(
     request: Request, comment_id36: str
 ) -> CommentNotification:

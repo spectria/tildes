@@ -9,7 +9,6 @@ from pyramid.request import Request
 from pyramid.response import Response
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import FlushError
-from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import CommentLabelOption, CommentNotificationType, LogEventType
 from tildes.models.comment import (
@@ -22,7 +21,7 @@ from tildes.models.comment import (
 from tildes.models.log import LogComment
 from tildes.schemas.comment import CommentLabelSchema, CommentSchema
 from tildes.views import IC_NOOP
-from tildes.views.decorators import ic_view_config, rate_limit_view
+from tildes.views.decorators import ic_view_config, rate_limit_view, use_kwargs
 
 
 def _mark_comment_read_from_interaction(request: Request, comment: Comment) -> None:
@@ -47,7 +46,7 @@ def _mark_comment_read_from_interaction(request: Request, comment: Comment) -> N
     renderer="single_comment.jinja2",
     permission="comment",
 )
-@use_kwargs(CommentSchema(only=("markdown",)))
+@use_kwargs(CommentSchema(only=("markdown",)), location="form")
 @rate_limit_view("comment_post")
 def post_toplevel_comment(request: Request, markdown: str) -> dict:
     """Post a new top-level comment on a topic with Intercooler."""
@@ -83,7 +82,7 @@ def post_toplevel_comment(request: Request, markdown: str) -> dict:
     renderer="single_comment.jinja2",
     permission="reply",
 )
-@use_kwargs(CommentSchema(only=("markdown",)))
+@use_kwargs(CommentSchema(only=("markdown",)), location="form")
 @rate_limit_view("comment_post")
 def post_comment_reply(request: Request, markdown: str) -> dict:
     """Post a reply to a comment with Intercooler."""
@@ -159,7 +158,7 @@ def get_comment_edit(request: Request) -> dict:
     renderer="comment_contents.jinja2",
     permission="edit",
 )
-@use_kwargs(CommentSchema(only=("markdown",)))
+@use_kwargs(CommentSchema(only=("markdown",)), location="form")
 def patch_comment(request: Request, markdown: str) -> dict:
     """Update a comment with Intercooler."""
     comment = request.context
@@ -260,9 +259,8 @@ def delete_vote_comment(request: Request) -> dict:
     permission="label",
     renderer="comment_contents.jinja2",
 )
-@use_kwargs(CommentLabelSchema(only=("name",)), locations=("matchdict",))
-# need to specify only "form" location for reason, or it will crash by looking for JSON
-@use_kwargs(CommentLabelSchema(only=("reason",)), locations=("form",))
+@use_kwargs(CommentLabelSchema(only=("name",)), location="matchdict")
+@use_kwargs(CommentLabelSchema(only=("reason",)), location="form")
 def put_label_comment(
     request: Request, name: CommentLabelOption, reason: str
 ) -> Response:
@@ -308,7 +306,7 @@ def put_label_comment(
     permission="label",
     renderer="comment_contents.jinja2",
 )
-@use_kwargs(CommentLabelSchema(only=("name",)), locations=("matchdict",))
+@use_kwargs(CommentLabelSchema(only=("name",)), location="matchdict")
 def delete_label_comment(request: Request, name: CommentLabelOption) -> Response:
     """Remove a label (that the user previously added) from a comment."""
     comment = request.context
@@ -337,7 +335,7 @@ def delete_label_comment(request: Request, name: CommentLabelOption) -> Response
 @ic_view_config(
     route_name="comment_mark_read", request_method="PUT", permission="mark_read"
 )
-@use_kwargs({"mark_all_previous": Boolean(missing=False)}, locations=("query",))
+@use_kwargs({"mark_all_previous": Boolean(missing=False)}, location="query")
 def put_mark_comments_read(request: Request, mark_all_previous: bool) -> Response:
     """Mark comment(s) read, clearing notifications.
 

@@ -10,7 +10,6 @@ from marshmallow.fields import String
 from pyramid.request import Request
 from pyramid.view import view_config
 from sqlalchemy.sql.expression import desc
-from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import CommentLabelOption, CommentSortOption, TopicSortOption
 from tildes.models.comment import Comment
@@ -19,6 +18,7 @@ from tildes.models.topic import Topic
 from tildes.models.user import User, UserInviteCode
 from tildes.schemas.fields import PostType
 from tildes.schemas.listing import MixedListingSchema
+from tildes.views.decorators import use_kwargs
 
 
 @view_config(route_name="user", renderer="user.jinja2")

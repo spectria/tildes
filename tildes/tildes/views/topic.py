@@ -19,7 +19,6 @@ from sqlalchemy import cast
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql.expression import any_, desc
 from sqlalchemy_utils import Ltree
-from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import (
     CommentLabelOption,
@@ -39,7 +38,7 @@ from tildes.schemas.comment import CommentSchema
 from tildes.schemas.fields import Enum, ShortTimePeriod
 from tildes.schemas.listing import TopicListingSchema
 from tildes.schemas.topic import TopicSchema
-from tildes.views.decorators import rate_limit_view
+from tildes.views.decorators import rate_limit_view, use_kwargs
 from tildes.views.financials import get_financial_data
 
 
@@ -47,10 +46,10 @@ DefaultSettings = namedtuple("DefaultSettings", ["order", "period"])
 
 
 @view_config(route_name="group_topics", request_method="POST", permission="post_topic")
-@use_kwargs(TopicSchema(only=("title", "markdown", "link")))
+@use_kwargs(TopicSchema(only=("title", "markdown", "link")), location="form")
 @use_kwargs(
     {"tags": String(missing=""), "confirm_repost": Boolean(missing=False)},
-    locations=("form",),  # will crash due to trying to find JSON data without this
+    location="form",
 )
 def post_group_topics(
     request: Request,
@@ -470,7 +469,7 @@ def get_topic(request: Request, comment_order: CommentTreeSortOption) -> dict:
 
 
 @view_config(route_name="topic", request_method="POST", permission="comment")
-@use_kwargs(CommentSchema(only=("markdown",)))
+@use_kwargs(CommentSchema(only=("markdown",)), location="form")
 @rate_limit_view("comment_post")
 def post_comment_on_topic(request: Request, markdown: str) -> HTTPFound:
     """Post a new top-level comment on a topic."""

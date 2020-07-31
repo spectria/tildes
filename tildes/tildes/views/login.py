@@ -14,14 +14,13 @@ from pyramid.request import Request
 from pyramid.response import Response
 from pyramid.security import NO_PERMISSION_REQUIRED, remember
 from pyramid.view import view_config
-from webargs.pyramidparser import use_kwargs
 
 from tildes.enums import LogEventType
 from tildes.metrics import incr_counter
 from tildes.models.log import Log
 from tildes.models.user import User
 from tildes.schemas.user import UserSchema
-from tildes.views.decorators import not_logged_in, rate_limit_view
+from tildes.views.decorators import not_logged_in, rate_limit_view, use_kwargs
 
 
 @view_config(
@@ -63,9 +62,10 @@ def finish_login(request: Request, user: User, redirect_url: str) -> HTTPFound:
 @use_kwargs(
     UserSchema(
         only=("username", "password"), context={"username_trim_whitespace": True}
-    )
+    ),
+    location="form",
 )
-@use_kwargs({"from_url": String(missing="")})
+@use_kwargs({"from_url": String(missing="")}, location="form")
 @not_logged_in
 @rate_limit_view("login")
 def post_login(
@@ -147,7 +147,9 @@ def post_login(
 )
 @not_logged_in
 @rate_limit_view("login_two_factor")
-@use_kwargs({"code": String(missing=""), "from_url": String(missing="")})
+@use_kwargs(
+    {"code": String(missing=""), "from_url": String(missing="")}, location="form"
+)
 def post_login_two_factor(request: Request, code: str, from_url: str) -> NoReturn:
     """Process a log in request with 2FA."""
     # Look up the user for the supplied username

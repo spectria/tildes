@@ -47,10 +47,14 @@ class GroupSchema(Schema):
         if not self.context.get("fix_path_capitalization"):
             return data
 
-        if "path" in data and isinstance(data["path"], str):
-            data["path"] = data["path"].lower()
+        if "path" not in data or not isinstance(data["path"], str):
+            return data
 
-        return data
+        new_data = data.copy()
+
+        new_data["path"] = new_data["path"].lower()
+
+        return new_data
 
     @validates("path")
     def validate_path(self, value: sqlalchemy_utils.Ltree) -> None:
@@ -71,11 +75,13 @@ class GroupSchema(Schema):
         if "sidebar_markdown" not in data:
             return data
 
-        # if the value is empty, convert it to None
-        if not data["sidebar_markdown"] or data["sidebar_markdown"].isspace():
-            data["sidebar_markdown"] = None
+        new_data = data.copy()
 
-        return data
+        # if the value is empty, convert it to None
+        if not new_data["sidebar_markdown"] or new_data["sidebar_markdown"].isspace():
+            new_data["sidebar_markdown"] = None
+
+        return new_data
 
 
 def is_valid_group_path(path: str) -> bool:
