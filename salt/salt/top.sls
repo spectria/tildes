@@ -30,6 +30,7 @@ base:
     - development
     - prometheus
     - nodejs
+    - java
   'prod':
     - nginx.shortener-config
     - nginx.static-sites-config

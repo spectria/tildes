@@ -55,11 +55,13 @@
         <li>Groups</li>
       {% endif %}
 
-      <ul class="nav nav-group-list">
-      {% for group in groups|sort %}
-        <li class="nav-item">{{ link_to_group(group) }}</li>
-      {% endfor %}
-      </ul>
+      <li>
+        <ul class="nav nav-group-list">
+        {% for group in groups|sort %}
+          <li class="nav-item">{{ link_to_group(group) }}</li>
+        {% endfor %}
+        </ul>
+      </li>
     </ul>
     <a href="/groups" class="btn btn-primary">Browse the list of groups</a>
   {% endif %}
@@ -70,25 +72,27 @@
     <ul class="nav">
     <li>User settings</li>
 
-    <ul class="nav">
-      {% if not unfiltered %}
-      <li><details>
-        <summary>Filtered topic tags ({{ request.user.filtered_topic_tags|length }})</summary>
-        <ul class="topic-tags">
-          {% for tag in request.user.filtered_topic_tags %}
-            <li class="label label-topic-tag">
-              <a href="/?tag={{tag}}">{{ tag }}</a>
-            </li>
-          {% else %}
-            <li class="label label-topic-tag">No filtered tags</li>
-          {% endfor %}
-        </ul>
-        <a class="btn btn-link" href="/settings/filters">Edit filtered tags</a>
-      </details></li>
-      {% endif %}
+    <li>
+      <ul class="nav">
+        {% if not unfiltered %}
+        <li><details>
+          <summary>Filtered topic tags ({{ request.user.filtered_topic_tags|length }})</summary>
+          <ul class="topic-tags">
+            {% for tag in request.user.filtered_topic_tags %}
+              <li class="label label-topic-tag">
+                <a href="/?tag={{tag}}">{{ tag }}</a>
+              </li>
+            {% else %}
+              <li class="label label-topic-tag">No filtered tags</li>
+            {% endfor %}
+          </ul>
+          <a class="btn btn-link" href="/settings/filters">Edit filtered tags</a>
+        </details></li>
+        {% endif %}
 
-      <li class="nav-item ml-2"><a href="/settings">Settings page</a></li>
-    </ul>
+        <li class="nav-item ml-2"><a href="/settings">Settings page</a></li>
+      </ul>
+    </li>
     </ul>
   {% endif %}
 {% endblock %}

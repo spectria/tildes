@@ -21,6 +21,7 @@ flake8==3.8.3             # via flake8-polyfill
 freezegun==0.3.15
 gunicorn==20.0.4
 html5lib==1.1
+html5validator==0.3.3
 hupper==1.10.2            # via pyramid
 idna==2.10                # via requests
 iniconfig==1.0.0          # via pytest

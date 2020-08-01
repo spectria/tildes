@@ -1,6 +1,7 @@
 -r requirements.in
 black
 freezegun
+html5validator
 mypy
 prospector
 pyramid-debugtoolbar
