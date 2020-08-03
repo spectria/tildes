@@ -5,7 +5,7 @@ import os
 
 from pyramid import testing
 from pyramid.paster import get_app, get_appsettings
-from pytest import fixture
+from pytest import fixture, mark
 from redis import Redis
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import make_url
@@ -224,3 +224,12 @@ def webtest(base_app):
 def webtest_loggedout(base_app):
     """Create a logged-out webtest TestApp (function scope, so no state is retained)."""
     yield TestApp(base_app, extra_environ=WEBTEST_EXTRA_ENVIRON)
+
+
+def pytest_collection_modifyitems(items):
+    """Add "webtest" marker to any tests that use either of the WebTest fixtures."""
+    webtest_fixture_names = ("webtest", "webtest_loggedout")
+
+    for item in items:
+        if any([fixture in item.fixturenames for fixture in webtest_fixture_names]):
+            item.add_marker(mark.webtest)

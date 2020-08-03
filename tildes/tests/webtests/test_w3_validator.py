@@ -3,6 +3,12 @@
 
 import subprocess
 
+from pytest import mark
+
+
+# marks all tests in this module with "html_validation" marker
+pytestmark = mark.html_validation
+
 
 def test_homepage_html_loggedout(webtest_loggedout):
     """Validate HTML5 on the Tildes homepage, logged out."""
