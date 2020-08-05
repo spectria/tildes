@@ -45,7 +45,7 @@ from tildes.views.financials import get_financial_data
 DefaultSettings = namedtuple("DefaultSettings", ["order", "period"])
 
 
-@view_config(route_name="group_topics", request_method="POST", permission="post_topic")
+@view_config(route_name="group_topics", request_method="POST", permission="topic.post")
 @use_kwargs(TopicSchema(only=("title", "markdown", "link")), location="form")
 @use_kwargs(
     {"tags": String(missing=""), "confirm_repost": Boolean(missing=False)},
@@ -379,7 +379,7 @@ def get_search(
 
 
 @view_config(
-    route_name="new_topic", renderer="new_topic.jinja2", permission="post_topic"
+    route_name="new_topic", renderer="new_topic.jinja2", permission="topic.post"
 )
 def get_new_topic_form(request: Request) -> dict:
     """Form for entering a new topic to post."""

@@ -36,7 +36,7 @@
   {% if request.user %}
     <div class="divider"></div>
 
-    {% if request.has_permission('post_topic', group) %}
+    {% if request.has_permission("topic.post", group) %}
       <a href="/~{{ group.path }}/new_topic" class="btn btn-primary">Post a new topic</a>
     {% endif %}
 

@@ -124,15 +124,15 @@ class Group(DatabaseModel):
         #  - all groups can be subscribed to by logged-in users
         acl.append((Allow, Authenticated, "subscribe"))
 
-        # post_topic:
+        # topic.post:
         #  - only users with specifically-granted permission can post topics in groups
         #    that require permission to post
         #  - otherwise, all logged-in users can post
         if self.requires_permission_to_post_topics:
-            acl.append((Allow, f"{self.group_id}:post_topic", "post_topic"))
-            acl.append((Deny, Everyone, "post_topic"))
+            acl.append((Allow, f"{self.group_id}:topic.post", "topic.post"))
+            acl.append((Deny, Everyone, "topic.post"))
 
-        acl.append((Allow, Authenticated, "post_topic"))
+        acl.append((Allow, Authenticated, "topic.post"))
 
         # wiki_page_create:
         #  - requires being granted the "wiki.edit" permission
