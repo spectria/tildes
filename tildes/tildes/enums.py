@@ -290,6 +290,28 @@ class HTMLSanitizationContext(enum.Enum):
     USER_BIO = enum.auto()
 
 
+# Enum for the possible user permissions
+# (Using functional API for this one because the values aren't valid Python names)
+UserPermission = enum.Enum(
+    "UserPermission",
+    [
+        "comment.remove",
+        "comment.view_labels",
+        "topic.edit_by_generic_user",
+        "topic.edit_link",
+        "topic.edit_title",
+        "topic.lock",
+        "topic.move",
+        "topic.post",
+        "topic.remove",
+        "topic.tag",
+        "user.ban",
+        "user.view_removed_posts",
+        "wiki.edit",
+    ],
+)
+
+
 class UserPermissionType(enum.Enum):
     """Enum for the types of user permissions."""
 

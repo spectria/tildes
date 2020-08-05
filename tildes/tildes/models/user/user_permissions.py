@@ -3,11 +3,11 @@
 
 """Contains the UserPermissions class."""
 
-from sqlalchemy import Column, ForeignKey, Integer, Text
+from sqlalchemy import Column, ForeignKey, Integer
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import relationship
 
-from tildes.enums import UserPermissionType
+from tildes.enums import UserPermission, UserPermissionType
 from tildes.models import DatabaseModel
 from tildes.models.group import Group
 from tildes.models.user import User
@@ -21,7 +21,7 @@ class UserPermissions(DatabaseModel):
     permission_id: int = Column(Integer, primary_key=True)
     user_id: int = Column(Integer, ForeignKey("users.user_id"), nullable=False)
     group_id: int = Column(Integer, ForeignKey("groups.group_id"), nullable=True)
-    permission: str = Column(Text, nullable=False)
+    permission: UserPermission = Column(ENUM(UserPermission), nullable=False)
     permission_type: UserPermissionType = Column(
         ENUM(UserPermissionType), nullable=False, server_default="ALLOW"
     )
@@ -50,6 +50,6 @@ class UserPermissions(DatabaseModel):
         if self.permission_type == UserPermissionType.DENY:
             principal += "!"
 
-        principal += self.permission
+        principal += str(self.permission.name)
 
         return principal
