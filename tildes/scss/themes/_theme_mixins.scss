@@ -1,0 +1,497 @@
+// Copyright (c) 2020 Tildes contributors <code@tildes.net>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+@mixin label-button($color) {
+  color: $color;
+  border-color: $color;
+
+  &:hover {
+    color: $color;
+  }
+
+  &.btn-used:hover {
+    background-color: $color;
+    color: var(--white);
+  }
+}
+
+@mixin theme-preview-block($name, $foreground, $background) {
+  .theme-preview-block-#{$name} {
+    background-color: $background;
+    color: $foreground;
+    border: 1px solid;
+  }
+}
+
+@mixin theme-special-label($background-color, $foreground-color, $border-color) {
+  background-color: $background-color;
+  color: $foreground-color;
+  border: 1px solid $border-color;
+  padding: 0 0.2rem;
+  line-height: 0.9rem;
+
+  a,
+  a:hover,
+  a:visited {
+    color: $foreground-color;
+  }
+}
+
+@function map-get-fallback($map, $preferred-key, $fallback-key) {
+  // map-get that will fall back to a second key if the first isn't set
+  @if (map-has-key($map, $preferred-key)) {
+    @return map-get($map, $preferred-key);
+  }
+
+  @return map-get($map, $fallback-key);
+}
+
+@function init-theme($theme) {
+  // check to make sure the theme has all of the essential colors set
+  $essential-keys:
+    "alert"
+    "background-primary"
+    "background-secondary"
+    "comment-label-exemplary"
+    "comment-label-joke"
+    "comment-label-noise"
+    "comment-label-offtopic"
+    "comment-label-malice"
+    "error"
+    "foreground-primary"
+    "foreground-secondary"
+    "link"
+    "link-visited"
+    "success"
+    "warning";
+
+  @each $key in $essential-keys {
+    @if (not map-has-key($theme, $key)) {
+      @error "Missing essential key in theme: #{$key}";
+    }
+  }
+
+  // colors that simply fall back to another if not defined
+  $background-input: map-get-fallback($theme, "background-input", "background-primary");
+  $border: map-get-fallback($theme, "border", "foreground-secondary");
+  $button: map-get-fallback($theme, "button", "link");
+  $button-used: map-get-fallback($theme, "button-used", "link-visited");
+  // stylelint-disable-next-line
+  $foreground-highlight: map-get-fallback($theme, "foreground-highlight", "foreground-primary");
+  $stripe-mine: map-get-fallback($theme, "stripe-mine", "link-visited");
+  $stripe-target: map-get-fallback($theme, "stripe-target", "warning");
+  $syntax-builtin: map-get-fallback($theme, "syntax-builtin", "foreground-primary");
+  $syntax-comment: map-get-fallback($theme, "syntax-comment", "foreground-primary");
+  $syntax-constant: map-get-fallback($theme, "syntax-constant", "foreground-primary");
+  $syntax-keyword: map-get-fallback($theme, "syntax-keyword", "foreground-primary");
+  $syntax-literal: map-get-fallback($theme, "syntax-literal", "foreground-primary");
+  $syntax-string: map-get-fallback($theme, "syntax-string", "foreground-primary");
+  $topic-tag-nsfw: map-get-fallback($theme, "topic-tag-nsfw", "error");
+  $topic-tag-spoiler: map-get-fallback($theme, "topic-tag-spoiler", "warning");
+
+  // foreground-extreme: if not defined, use white on a dark bg and black on a light one
+  $foreground-extreme: map-get($theme, "foreground-extreme");
+  $foreground-extreme:
+    choose-by-brightness(
+      map-get($theme, "background-primary"),
+      #000,
+      #fff,
+    ) !default;
+
+  // foreground-middle: if not defined, mix foreground-primary and foreground-secondary
+  $foreground-middle: map-get($theme, "foreground-middle");
+  $foreground-middle:
+    mix(
+      map-get($theme, "foreground-primary"),
+      map-get($theme, "foreground-secondary")
+    ) !default;
+
+  // link-hover: if not defined, darken the link color slightly
+  $link-hover: map-get($theme, "link-hover");
+  $link-hover: darken(map-get($theme, "link"), 5%) !default;
+  $new-theme:
+    map-merge(
+      $theme,
+      (
+        "background-input": $background-input,
+        "border": $border,
+        "button": $button,
+        "button-used": $button-used,
+        "foreground-extreme": $foreground-extreme,
+        "foreground-highlight": $foreground-highlight,
+        "foreground-middle": $foreground-middle,
+        "link-hover": $link-hover,
+        "stripe-mine": $stripe-mine,
+        "stripe-target": $stripe-target,
+        "syntax-builtin": $syntax-builtin,
+        "syntax-comment": $syntax-comment,
+        "syntax-constant": $syntax-constant,
+        "syntax-keyword": $syntax-keyword,
+        "syntax-literal": $syntax-literal,
+        "syntax-string": $syntax-string,
+        "topic-tag-nsfw": $topic-tag-nsfw,
+        "topic-tag-spoiler": $topic-tag-spoiler,
+      )
+    );
+
+  @return map-merge($default-theme, $new-theme);
+}
+
+@mixin use-theme($selected-theme) {
+  $theme: init-theme($selected-theme);
+  $is-light: is-color-bright(map-get($theme, "background-primary"));
+
+  // When creating CSS custom properties and using any of Sass' capabilities
+  // you'll have to interpolate it with the Sass syntax `#{...}` as seen below.
+  --alert: #{map-get($theme, "alert")};
+
+  --background-input: #{map-get($theme, "background-input")};
+  --background-mixed:
+    #{mix(
+      map-get($theme, "background-primary"),
+      map-get($theme, "background-secondary")
+    )};
+  --background-primary: #{map-get($theme, "background-primary")};
+  --background-secondary: #{map-get($theme, "background-secondary")};
+
+  --border: #{map-get($theme, "border")};
+
+  --button: #{map-get($theme, "button")};
+  --button-by-brightness:
+    #{choose-by-brightness(
+      map-get($theme, "button"),
+      map-get($theme, "black"),
+      map-get($theme, "white")
+    )};
+  --button-transparent: #{rgba(map-get($theme, "button"), 0.2)};
+
+  --button-darkened-3: #{darken(map-get($theme, "button"), 3%)};
+  --button-darkened-8: #{darken(map-get($theme, "button"), 8%)};
+  --button-darkened-10: #{darken(map-get($theme, "button"), 10%)};
+
+  --button-used: #{map-get($theme, "button-used")};
+  --button-used-darkened-3: #{darken(map-get($theme, "button-used"), 3%)};
+  --button-used-darkened-8: #{darken(map-get($theme, "button-used"), 8%)};
+
+  --error: #{map-get($theme, "error")};
+  --error-by-brightness:
+    #{choose-by-brightness(
+      map-get($theme, "error"),
+      map-get($theme, "black"),
+      map-get($theme, "white")
+    )};
+
+  --foreground-extreme:
+    #{choose-by-brightness(
+      map-get($theme, "background-primary"),
+      map-get($theme, "black"),
+      map-get($theme, "white")
+    )};
+  --foreground-highlight: #{map-get($theme, "foreground-highlight")};
+  --foreground-mixed:
+    #{mix(
+      map-get($theme, "foreground-primary"),
+      map-get($theme, "foreground-highlight")
+    )};
+  --foreground-primary: #{map-get($theme, "foreground-primary")};
+  --foreground-secondary: #{map-get($theme, "foreground-secondary")};
+
+  --link: #{map-get($theme, "link")};
+  --link-hover: #{darken(map-get($theme, "link"), 5%)};
+  --link-visited: #{map-get($theme, "link-visited")};
+
+  --stripe-mine: #{map-get($theme, "stripe-mine")};
+  --stripe-target: #{map-get($theme, "stripe-target")};
+
+  --success: #{map-get($theme, "success")};
+
+  --syntax-builtin: #{map-get($theme, "syntax-builtin")};
+  --syntax-comment: #{map-get($theme, "syntax-comment")};
+  --syntax-constant: #{map-get($theme, "syntax-constant")};
+  --syntax-keyword: #{map-get($theme, "syntax-keyword")};
+  --syntax-literal: #{map-get($theme, "syntax-literal")};
+  --syntax-string: #{map-get($theme, "syntax-string")};
+
+  // Colors for the special topic tags
+  @if $is-light {
+    --topic-tag-nsfw: #{map-get($theme, "topic-tag-nsfw")};
+    --topic-tag-nsfw-foreground: #{map-get($theme, "white")};
+    --topic-tag-nsfw-border: transparent;
+
+    --topic-tag-spoiler: #{map-get($theme, "topic-tag-spoiler")};
+    --topic-tag-spoiler-foreground: #{map-get($theme, "white")};
+    --topic-tag-spoiler-border: transparent;
+  } @else {
+    --topic-tag-nsfw: transparent;
+    --topic-tag-nsfw-foreground: #{map-get($theme, "topic-tag-nsfw")};
+    --topic-tag-nsfw-border: #{map-get($theme, "topic-tag-nsfw")};
+
+    --topic-tag-spoiler: transparent;
+    --topic-tag-spoiler-foreground: #{map-get($theme, "topic-tag-spoiler")};
+    --topic-tag-spoiler-border: #{map-get($theme, "topic-tag-spoiler")};
+  }
+
+  --warning: #{map-get($theme, "warning")};
+
+  // Colors for warning toasts
+  @if $is-light {
+    --warning-background: #{rgba(map-get($theme, "warning"), 0.9)};
+    --warning-foreground: #{map-get($theme, "black")};
+  } @else {
+    --warning-background: transparent;
+    --warning-foreground: #{map-get($theme, "warning")};
+  }
+
+  // Colors that were hardcoded in previously.
+  --white: #{map-get($theme, "white")};
+
+  // Variables for the comment labels.
+  @if $is-light {
+    --background-label-exemplary: #{map-get($theme, "comment-label-exemplary")};
+    --background-label-joke: #{map-get($theme, "comment-label-joke")};
+    --background-label-noise: #{map-get($theme, "comment-label-noise")};
+    --background-label-offtopic: #{map-get($theme, "comment-label-offtopic")};
+    --background-label-malice: #{map-get($theme, "comment-label-malice")};
+
+    --comment-label-exemplary: #{map-get($theme, "comment-label-exemplary")};
+    --comment-label-joke: #{map-get($theme, "comment-label-joke")};
+    --comment-label-noise: #{map-get($theme, "comment-label-noise")};
+    --comment-label-offtopic: #{map-get($theme, "comment-label-offtopic")};
+    --comment-label-malice: #{map-get($theme, "comment-label-malice")};
+
+    --foreground-label-exemplary: #{map-get($theme, "white")};
+    --foreground-label-joke: #{map-get($theme, "white")};
+    --foreground-label-noise: #{map-get($theme, "white")};
+    --foreground-label-offtopic: #{map-get($theme, "white")};
+    --foreground-label-malice: #{map-get($theme, "white")};
+  } @else {
+    --background-label-exemplary: transparent;
+    --background-label-joke: transparent;
+    --background-label-noise: transparent;
+    --background-label-offtopic: transparent;
+    --background-label-malice: transparent;
+
+    --comment-label-exemplary: #{map-get($theme, "comment-label-exemplary")};
+    --comment-label-joke: #{map-get($theme, "comment-label-joke")};
+    --comment-label-noise: #{map-get($theme, "comment-label-noise")};
+    --comment-label-offtopic: #{map-get($theme, "comment-label-offtopic")};
+    --comment-label-malice: #{map-get($theme, "comment-label-malice")};
+
+    --foreground-label-exemplary: #{map-get($theme, "comment-label-exemplary")};
+    --foreground-label-joke: #{map-get($theme, "comment-label-joke")};
+    --foreground-label-noise: #{map-get($theme, "comment-label-noise")};
+    --foreground-label-offtopic: #{map-get($theme, "comment-label-offtopic")};
+    --foreground-label-malice: #{map-get($theme, "comment-label-malice")};
+  }
+}
+
+@mixin syntax-highlighting {
+  .highlight {
+    .syntax-c {
+      color: var(--syntax-comment);
+    } // Comment
+    .syntax-err {
+      color: var(--foreground);
+    } // Error
+    .syntax-g {
+      color: var(--foreground);
+    } // Generic
+    .syntax-k {
+      color: var(--syntax-keyword);
+    } // Keyword
+    .syntax-l {
+      color: var(--foreground);
+    } // Literal
+    .syntax-n {
+      color: var(--foreground);
+    } // Name
+    .syntax-o {
+      color: var(--syntax-comment);
+    } // Operator
+    .syntax-x {
+      color: var(--syntax-constant);
+    } // Other
+    .syntax-p {
+      color: var(--foreground);
+    } // Punctuation
+    .syntax-cm {
+      color: var(--syntax-comment);
+    } // Comment.Multiline
+    .syntax-cp {
+      color: var(--syntax-comment);
+    } // Comment.Preproc
+    .syntax-c1 {
+      color: var(--syntax-comment);
+    } // Comment.Single
+    .syntax-cs {
+      color: var(--syntax-comment);
+    } // Comment.Special
+    .syntax-gd {
+      color: var(--syntax-comment);
+    } // Generic.Deleted
+    .syntax-ge {
+      color: var(--foreground);
+      font-style: italic;
+    } // Generic.Emph
+    .syntax-gr {
+      color: var(--syntax-constant);
+    } // Generic.Error
+    .syntax-gh {
+      color: var(--syntax-constant);
+    } // Generic.Heading
+    .syntax-gi {
+      color: var(--syntax-comment);
+    } // Generic.Inserted
+    .syntax-go {
+      color: var(--foreground);
+    } // Generic.Output
+    .syntax-gp {
+      color: var(--foreground);
+    } // Generic.Prompt
+    .syntax-gs {
+      color: var(--foreground);
+      font-weight: bold;
+    } // Generic.Strong
+    .syntax-gu {
+      color: var(--syntax-constant);
+    } // Generic.Subheading
+    .syntax-gt {
+      color: var(--foreground);
+    } // Generic.Traceback
+    .syntax-kc {
+      color: var(--syntax-constant);
+    } // Keyword.Constant
+    .syntax-kd {
+      color: var(--syntax-keyword);
+    } // Keyword.Declaration
+    .syntax-kn {
+      color: var(--syntax-comment);
+    } // Keyword.Namespace
+    .syntax-kp {
+      color: var(--syntax-comment);
+    } // Keyword.Pseudo
+    .syntax-kr {
+      color: var(--syntax-keyword);
+    } // Keyword.Reserved
+    .syntax-kt {
+      color: var(--syntax-keyword);
+    } // Keyword.Type
+    .syntax-ld {
+      color: var(--foreground);
+    } // Literal.Date
+    .syntax-m {
+      color: var(--syntax-comment);
+    } // Literal.Number
+    .syntax-s {
+      color: var(--syntax-comment);
+    } // Literal.String
+    .syntax-na {
+      color: var(--foreground);
+    } // Name.Attribute
+    .syntax-nb {
+      color: var(--syntax-builtin);
+    } // Name.Builtin
+    .syntax-nc {
+      color: var(--syntax-keyword);
+    } // Name.Class
+    .syntax-no {
+      color: var(--syntax-constant);
+    } // Name.Constant
+    .syntax-nd {
+      color: var(--syntax-keyword);
+    } // Name.Decorator
+    .syntax-ni {
+      color: var(--syntax-builtin);
+    } // Name.Entity
+    .syntax-ne {
+      color: var(--syntax-builtin);
+    } // Name.Exception
+    .syntax-nf {
+      color: var(--syntax-builtin);
+    } // Name.Function
+    .syntax-nl {
+      color: var(--foreground);
+    } // Name.Label
+    .syntax-nn {
+      color: var(--foreground);
+    } // Name.Namespace
+    .syntax-nx {
+      color: var(--foreground);
+    } // Name.Other
+    .syntax-py {
+      color: var(--foreground);
+    } // Name.Property
+    .syntax-nt {
+      color: var(--syntax-keyword);
+    } // Name.Tag
+    .syntax-nv {
+      color: var(--syntax-keyword);
+    } // Name.Variable
+    .syntax-ow {
+      color: var(--syntax-comment);
+    } // Operator.Word
+    .syntax-w {
+      color: var(--foreground);
+    } // Text.Whitespace
+    .syntax-mf {
+      color: var(--syntax-literal);
+    } // Literal.Number.Float
+    .syntax-mh {
+      color: var(--syntax-literal);
+    } // Literal.Number.Hex
+    .syntax-mi {
+      color: var(--syntax-literal);
+    } // Literal.Number.Integer
+    .syntax-mo {
+      color: var(--syntax-literal);
+    } // Literal.Number.Oct
+    .syntax-sb {
+      color: var(--syntax-string);
+    } // Literal.String.Backtick
+    .syntax-sc {
+      color: var(--syntax-string);
+    } // Literal.String.Char
+    .syntax-sd {
+      color: var(--syntax-comment);
+    } // Literal.String.Doc
+    .syntax-s2 {
+      color: var(--syntax-string);
+    } // Literal.String.Double
+    .syntax-se {
+      color: var(--syntax-constant);
+    } // Literal.String.Escape
+    .syntax-sh {
+      color: var(--syntax-comment);
+    } // Literal.String.Heredoc
+    .syntax-si {
+      color: var(--syntax-string);
+    } // Literal.String.Interpol
+    .syntax-sx {
+      color: var(--syntax-string);
+    } // Literal.String.Other
+    .syntax-sr {
+      color: var(--syntax-constant);
+    } // Literal.String.Regex
+    .syntax-s1 {
+      color: var(--syntax-string);
+    } // Literal.String.Single
+    .syntax-ss {
+      color: var(--syntax-string);
+    } // Literal.String.Symbol
+    .syntax-bp {
+      color: var(--syntax-keyword);
+    } // Name.Builtin.Pseudo
+    .syntax-vc {
+      color: var(--syntax-keyword);
+    } // Name.Variable.Class
+    .syntax-vg {
+      color: var(--syntax-keyword);
+    } // Name.Variable.Global
+    .syntax-vi {
+      color: var(--syntax-keyword);
+    } // Name.Variable.Instance
+    .syntax-il {
+      color: var(--syntax-comment);
+    } // Literal.Number.Integer.Long
+  }
+}

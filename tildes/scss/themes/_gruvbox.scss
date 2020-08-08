@@ -92,47 +92,63 @@ $gruvbox-base: (
 );
 
 // Dark theme definition
-$gruvbox-dark: (
-  "alert": $gb-dm-light-orange,
-  "background-input":  $gb-dm-bg1,
-  "background-primary": $gb-dm-bg0,
-  "background-secondary": $gb-dm-bg1,
-  "border": $gb-dm-bg2,
-  "error": $gb-dm-light-red,
-  "foreground-highlight": $gb-dm-fg0,
-  "foreground-primary": $gb-dm-fg1,
-  "foreground-secondary": $gb-dm-fg4,
-  "link": $gb-dm-light-blue,
-  "link-visited": $dark-purple,
-  "success": $dark-green,
-  "warning": $gb-dm-light-yellow,
-);
+$theme-gruvbox-dark:
+  map-merge(
+    $gruvbox-base,
+    (
+      "alert": $gb-dm-light-orange,
+      "background-input": $gb-dm-bg1,
+      "background-primary": $gb-dm-bg0,
+      "background-secondary": $gb-dm-bg1,
+      "border": $gb-dm-bg2,
+      "error": $gb-dm-light-red,
+      "foreground-highlight": $gb-dm-fg0,
+      "foreground-primary": $gb-dm-fg1,
+      "foreground-secondary": $gb-dm-fg4,
+      "link": $gb-dm-light-blue,
+      "link-visited": $dark-purple,
+      "success": $dark-green,
+      "warning": $gb-dm-light-yellow,
+    )
+  );
 
 body.theme-gruvbox-dark {
-  @include use-theme(map-merge($gruvbox-base, $gruvbox-dark));
+  @include use-theme($theme-gruvbox-dark);
 }
 
-@include theme-preview-block(map-merge($gruvbox-base, $gruvbox-dark), "gruvbox-dark");
-
-// Light theme definition
-$gruvbox-light: (
-  "alert": $dark-orange,
-  "background-input": $gb-lm-bg1,
-  "background-primary": $gb-lm-bg0,
-  "background-secondary": $gb-lm-bg1,
-  "border": $gb-lm-bg2,
-  "error": $dark-red,
-  "foreground-highlight": $gb-lm-fg0,
-  "foreground-primary": $gb-lm-fg1,
-  "foreground-secondary": $gb-lm-fg4,
-  "link": $gb-lm-light-blue,
-  "link-visited": $gb-lm-light-purple,
-  "success": $dark-green,
-  "warning": $gb-lm-light-yellow,
+@include theme-preview-block(
+  "gruvbox-dark",
+  map-get($theme-gruvbox-dark, "foreground-primary"),
+  map-get($theme-gruvbox-dark, "background-primary")
 );
 
+// Light theme definition
+$theme-gruvbox-light:
+  map-merge(
+    $gruvbox-base,
+    (
+      "alert": $dark-orange,
+      "background-input": $gb-lm-bg1,
+      "background-primary": $gb-lm-bg0,
+      "background-secondary": $gb-lm-bg1,
+      "border": $gb-lm-bg2,
+      "error": $dark-red,
+      "foreground-highlight": $gb-lm-fg0,
+      "foreground-primary": $gb-lm-fg1,
+      "foreground-secondary": $gb-lm-fg4,
+      "link": $gb-lm-light-blue,
+      "link-visited": $gb-lm-light-purple,
+      "success": $dark-green,
+      "warning": $gb-lm-light-yellow,
+    )
+  );
+
 body.theme-gruvbox-light {
-  @include use-theme(map-merge($gruvbox-base, $gruvbox-light));
+  @include use-theme($theme-gruvbox-light);
 }
 
-@include theme-preview-block(map-merge($gruvbox-base, $gruvbox-light), "gruvbox-light");
+@include theme-preview-block(
+  "gruvbox-light",
+  map-get($theme-gruvbox-light, "foreground-primary"),
+  map-get($theme-gruvbox-light, "background-primary")
+);

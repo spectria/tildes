@@ -49,4 +49,8 @@ body.theme-atom-one-dark {
   @include use-theme($theme-atom-one-dark);
 }
 
-@include theme-preview-block($theme-atom-one-dark, "atom-one-dark");
+@include theme-preview-block(
+  "atom-one-dark",
+  map-get($theme-atom-one-dark, "foreground-primary"),
+  map-get($theme-atom-one-dark, "background-primary")
+);

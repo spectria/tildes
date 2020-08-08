@@ -28,4 +28,8 @@ body.theme-black {
   @include use-theme($theme-black);
 }
 
-@include theme-preview-block($theme-black, "black");
+@include theme-preview-block(
+  "black",
+  map-get($theme-black, "foreground-primary"),
+  map-get($theme-black, "background-primary")
+);

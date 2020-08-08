@@ -41,4 +41,8 @@ body.theme-zenburn {
   @include use-theme($theme-zenburn);
 }
 
-@include theme-preview-block($theme-zenburn, "zenburn");
+@include theme-preview-block(
+  "zenburn",
+  map-get($default-theme, "foreground-primary"),
+  map-get($default-theme, "background-primary")
+);

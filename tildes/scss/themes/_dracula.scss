@@ -51,4 +51,8 @@ body.theme-dracula {
   @include use-theme($theme-dracula);
 }
 
-@include theme-preview-block($theme-dracula, "dracula");
+@include theme-preview-block(
+  "dracula",
+  map-get($theme-dracula, "foreground-primary"),
+  map-get($theme-dracula, "background-primary")
+);

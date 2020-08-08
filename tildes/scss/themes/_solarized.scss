@@ -34,7 +34,7 @@ $fg-light: $base0;
 $fg-lightest: $base1;
 
 // Shared between both "light" and "dark" variants
-$solarized-base: (
+$theme-solarized-base: (
   "alert": $orange,
   "comment-label-exemplary": $blue,
   "comment-label-joke": $green,
@@ -55,43 +55,53 @@ $solarized-base: (
 );
 
 // Dark theme definition
-$solarized-dark: (
-  "background-input": #001f27,
-  "background-primary": $bg-darkest,
-  "background-secondary": $bg-dark,
-  "border": #33555e,
-  "foreground-highlight": $fg-lightest,
-  "foreground-primary": $fg-light,
-  "foreground-secondary": $fg-darkest,
-);
+$theme-solarized-dark:
+  map-merge(
+    $theme-solarized-base,
+    (
+      "background-input": #001f27,
+      "background-primary": $bg-darkest,
+      "background-secondary": $bg-dark,
+      "border": #33555e,
+      "foreground-highlight": $fg-lightest,
+      "foreground-primary": $fg-light,
+      "foreground-secondary": $fg-darkest,
+    )
+  );
 
 body.theme-solarized-dark {
-  @include use-theme(map-merge($solarized-base, $solarized-dark));
+  @include use-theme($theme-solarized-dark);
 }
 
 @include theme-preview-block(
-  map-merge($solarized-base, $solarized-dark),
-  "solarized-dark"
+  "solarized-dark",
+  map-get($theme-solarized-dark, "foreground-primary"),
+  map-get($theme-solarized-dark, "background-primary")
 );
 
 // Light theme definition
-$solarized-light: (
-  "background-input": #fefbf1,
-  "background-primary": $bg-lightest,
-  "background-secondary": $bg-light,
-  "border": #cbc5b6,
-  "foreground-highlight": $fg-darkest,
-  "foreground-primary": $fg-dark,
-  "foreground-secondary": $fg-lightest,
-  "stripe-target": $yellow,
-  "warning": $orange,
-);
+$theme-solarized-light:
+  map-merge(
+    $theme-solarized-base,
+    (
+      "background-input": #fefbf1,
+      "background-primary": $bg-lightest,
+      "background-secondary": $bg-light,
+      "border": #cbc5b6,
+      "foreground-highlight": $fg-darkest,
+      "foreground-primary": $fg-dark,
+      "foreground-secondary": $fg-lightest,
+      "stripe-target": $yellow,
+      "warning": $orange,
+    )
+  );
 
 body.theme-solarized-light {
-  @include use-theme(map-merge($solarized-base, $solarized-light));
+  @include use-theme($theme-solarized-light);
 }
 
 @include theme-preview-block(
-  map-merge($solarized-base, $solarized-light),
-  "solarized-light"
+  "solarized-light",
+  map-get($theme-solarized-light, "foreground-primary"),
+  map-get($theme-solarized-light, "background-primary")
 );

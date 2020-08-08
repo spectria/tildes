@@ -45,6 +45,7 @@
 
 // Note: if you add a new theme, you may also want to add a new theme-color
 // meta tag inside the base.jinja2 template, so mobile browsers can match
+@import "themes/theme_mixins";
 @import "themes/theme_base";
 @import "themes/default";
 @import "themes/black";
