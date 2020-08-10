@@ -28,11 +28,18 @@ from tildes.models.group import Group
 
 def errors_from_validationerror(validation_error: ValidationError) -> Sequence[str]:
     """Extract errors from a marshmallow ValidationError into a displayable format."""
-    # as of webargs 6.0, errors are inside a nested dict, where the first level should
+    normalized_errors = validation_error.normalized_messages()
+
+    # As of webargs 6.0, errors are inside a nested dict, where the first level should
     # always be a single-item dict with the key representing the "location" of the data
-    # (e.g. query, form, etc.) - we don't care about that, so just skip that level
-    errors_by_location = validation_error.normalized_messages()
-    errors_by_field = list(errors_by_location.values())[0]
+    # (e.g. query, form, etc.) - Check if the errors seem to be in that format, and if
+    # they are, just remove that level since we don't care about it
+    first_value = list(normalized_errors.values())[0]
+    if isinstance(first_value, dict):
+        errors_by_field = first_value
+    else:
+        # not a webargs error, so just use the original without any unnesting
+        errors_by_field = normalized_errors
 
     error_strings = []
     for field, errors in errors_by_field.items():
