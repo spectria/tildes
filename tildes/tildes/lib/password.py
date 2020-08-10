@@ -7,6 +7,8 @@ from hashlib import sha1
 
 from redis import ConnectionError, Redis, ResponseError  # noqa
 
+from tildes.metrics import summary_timer
+
 
 # unix socket path for redis server with the breached passwords bloom filter
 BREACHED_PASSWORDS_REDIS_SOCKET = "/run/redis_breached_passwords/socket"
@@ -15,6 +17,7 @@ BREACHED_PASSWORDS_REDIS_SOCKET = "/run/redis_breached_passwords/socket"
 BREACHED_PASSWORDS_BF_KEY = "breached_passwords_bloom"
 
 
+@summary_timer("breached_password_check")
 def is_breached_password(password: str) -> bool:
     """Return whether the password is in the breached-passwords list."""
     redis = Redis(unix_socket_path=BREACHED_PASSWORDS_REDIS_SOCKET)

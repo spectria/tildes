@@ -1,12 +1,12 @@
 # Copyright (c) 2018 Tildes contributors <code@tildes.net>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-from tildes.metrics import _COUNTERS, _HISTOGRAMS
+from tildes.metrics import _COUNTERS, _HISTOGRAMS, _SUMMARIES
 
 
 def test_all_metric_names_prefixed():
     """Ensure all metric names have the 'tildes_' prefix."""
-    for metric_dict in (_COUNTERS, _HISTOGRAMS):
+    for metric_dict in (_COUNTERS, _HISTOGRAMS, _SUMMARIES):
         metrics = metric_dict.values()
         for metric in metrics:
             # this is ugly, but seems to be the "generic" way to get the name
