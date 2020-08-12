@@ -27,6 +27,15 @@ stripe.recurring_donation_product_id = prod_ProductID
 
 tildes.default_user_comment_label_weight = 1.0
 
+# Path to the file to use to check for passwords that have been in data breaches, which
+# users will be prevented from using as their password. It's recommended to use the
+# "Pwned Passwords" list downloaded from https://haveibeenpwned.com/passwords (must be
+# the SHA-1 format, "ordered by hash" one), but you can use any file with a compatible
+# format: each line starting with a single uppercase SHA-1 hash of a password to block,
+# with the entire file sorted in lexographical order.
+# Leave this line commented out to allow all passwords.
+# tildes.breached_passwords_hash_file_path = /opt/tildes/pwned-passwords-sha1-ordered-by-hash-v6.txt
+
 webassets.auto_build = false
 webassets.base_dir = %(here)s/static
 webassets.base_url = /

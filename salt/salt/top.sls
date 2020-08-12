@@ -22,6 +22,7 @@ base:
     - tildes-wiki
     - boussole
     - webassets
+    - pts-lbsearch
     - cronjobs
     - final-setup  # keep this state file last
   'dev':

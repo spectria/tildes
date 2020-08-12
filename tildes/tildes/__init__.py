@@ -28,6 +28,7 @@ def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
     config.include("tildes.json")
     config.include("tildes.request_methods")
     config.include("tildes.routes")
+    config.include("tildes.settings")
     config.include("tildes.tweens")
 
     config.add_webasset("javascript", Bundle(output="js/tildes.js"))
