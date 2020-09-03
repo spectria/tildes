@@ -181,9 +181,9 @@ class CommentTree:
 
     @property
     def most_recent_comment(self) -> Optional[Comment]:
-        """Return the most recent non-deleted Comment in the tree."""
+        """Return the most recent Comment in the tree (excluding deleted/removed)."""
         for comment in reversed(self.comments):
-            if not comment.is_deleted:
+            if not (comment.is_deleted or comment.is_removed):
                 return comment
 
         return None
