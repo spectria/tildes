@@ -8,7 +8,7 @@ RemainAfterExit=no
 WorkingDirectory=/opt/prometheus_redis_exporter
 User=prometheus
 Group=prometheus
-Environment="REDIS_ADDR=unix:///run/redis/socket,unix:///run/redis_breached_passwords/socket"
+Environment="REDIS_ADDR=unix:///run/redis/socket"
 ExecStart=/opt/prometheus_redis_exporter/redis_exporter
 
 [Install]

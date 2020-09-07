@@ -10,13 +10,6 @@ from tildes import settings
 from tildes.metrics import summary_timer
 
 
-# unix socket path for redis server with the breached passwords bloom filter
-BREACHED_PASSWORDS_REDIS_SOCKET = "/run/redis_breached_passwords/socket"
-
-# Key where the bloom filter of password hashes from data breaches is stored
-BREACHED_PASSWORDS_BF_KEY = "breached_passwords_bloom"
-
-
 @summary_timer("breached_password_check")
 def is_breached_password(password: str) -> bool:
     """Return whether the password is in the breached-passwords list.
