@@ -323,12 +323,14 @@
       ({{ pluralize(comments.num_top_level, "thread") }})
     </dd>
 
-    <dt>Last comment posted</dt>
-    <dd>
-      <a href="{{ comments.most_recent_comment.permalink }}" data-js-hide-sidebar-no-preventdefault>
-        {{ adaptive_date_responsive(comments.most_recent_comment.created_time) }}
-      </a>
-    </dd>
+    {% if comments.most_recent_comment %}
+      <dt>Last comment posted</dt>
+      <dd>
+        <a href="{{ comments.most_recent_comment.permalink }}" data-js-hide-sidebar-no-preventdefault>
+          {{ adaptive_date_responsive(comments.most_recent_comment.created_time) }}
+        </a>
+      </dd>
+    {% endif %}
   {% else %}
     <dd>No comments yet</dd>
   {% endif %}
