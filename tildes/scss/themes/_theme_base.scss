@@ -160,6 +160,10 @@ body {
     }
   }
 
+  .btn-comment-collapse:hover {
+    border-color: var(--border);
+  }
+
   .btn-light {
     color: var(--foreground-secondary);
     border-color: var(--border);
