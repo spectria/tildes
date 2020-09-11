@@ -645,6 +645,12 @@ body {
     border-left-color: var(--stripe-mine);
   }
 
+  .is-comment-exemplary {
+    > .comment-itself {
+      border-left-color: var(--comment-label-exemplary);
+    }
+  }
+
   .is-comment-new {
     > .comment-itself {
       border-left-color: var(--alert);
@@ -652,12 +658,6 @@ body {
 
     .comment-text {
       color: var(--foreground-highlight);
-    }
-  }
-
-  .is-comment-exemplary {
-    > .comment-itself {
-      border-left-color: var(--comment-label-exemplary);
     }
   }
 
