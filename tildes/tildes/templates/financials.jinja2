@@ -4,7 +4,6 @@
 {% extends 'base_no_sidebar.jinja2' %}
 
 {% from "macros/utils.jinja2" import format_money %}
-{% from "macros/donation_goal.jinja2" import donation_goal %}
 
 {% block title %}Tildes financials{% endblock %}
 
@@ -14,23 +13,17 @@
 
 {% block content %}
 
-<p>This page is a view into Tildes's financials: operating expenses, income from the various donation methods, and the overall goal for monthly donations. Currently, it only contains data for {{ current_time.strftime("%B %Y") }}, but more historical data will be available eventually.</p>
+<p>This page is a view into Tildes's financials, showing its operating expenses and income from the various donation methods. Currently, it only contains data for {{ current_time.strftime("%B %Y") }}, but more historical data will be available eventually.</p>
 
 <p>Amounts on this page are in USD unless otherwise noted. Even though Tildes is a Canadian non-profit, many of its costs and donations are in USD. People from other parts of the world are also generally most familiar with the relative value of USD, so using it makes this info more understandable to everyone.</p>
 
-<p>This page and the donation goal meter on the home page <em>do not</em> update in real-time. I will generally try to keep them current within a day or two (and automate some pieces eventually), but new donations will not show up immediately, and this information may be incomplete or outdated.</p>
+<p>This page <em>does not</em> update in real-time. I will generally try to keep it current within a day or two (and automate some pieces eventually), but new donations will not show up immediately, and this information may be incomplete or outdated.</p>
 
 <div class="divider"></div>
 
-<p><strong>The current donation goal is {{ format_money(entries["goal"]|sum(attribute="amount")) }} per month.</strong></p>
+<p>Tildes is a non-profit site with no ads or investors, funded entirely by donations.</p>
 
-{% if financial_data %}
-  {{ donation_goal(financial_data, current_time) }}
-{% endif %}
-
-<p>The actual <em>costs</em> solely to keep Tildes running are much lower than this (see table below), but this represents the amount that I believe will make Tildes truly independently sustainable. It will cover all of the operating costs and also allow me (<a href="/user/Deimos">Deimos</a>) to pay myself a somewhat respectable (but low) salary of about $35,000/year. This goal may not be achievable in the near term, but it is the point where I will be comfortable focusing on Tildes without still needing to find additional outside income.</p>
-
-<p><a href="https://docs.tildes.net/donate">Please donate&mdash;any amount will help get us closer to the goal!</a></p>
+<p><a href="https://docs.tildes.net/donate">Please donate to help support its continued development!</a></p>
 
 <div class="divider"></div>
 
