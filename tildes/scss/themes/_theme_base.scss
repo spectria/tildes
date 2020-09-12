@@ -118,6 +118,10 @@ body {
     background-color: var(--background-secondary);
   }
 
+  .table td {
+    border-bottom-color: var(--border);
+  }
+
   .table th {
     border-bottom-color: var(--foreground-highlight);
   }
@@ -393,6 +397,10 @@ body {
     }
   }
 
+  .form-markdown-preview {
+    border-color: var(--border);
+  }
+
   .form-select {
     border-color: var(--border);
   }
@@ -487,6 +495,7 @@ body {
 
   #sidebar {
     background-color: var(--background-primary);
+    border-left-color: var(--border);
   }
 
   #site-footer a:visited {
