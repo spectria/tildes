@@ -141,6 +141,13 @@
   $theme: init-theme($selected-theme);
   $is-light: is-color-bright(map-get($theme, "background-primary"));
 
+  // Temp: test whether this @supports query works for some users with older browsers
+  @supports not (--test: green) {
+    #sidebar {
+      background-color: #fff;
+    }
+  }
+
   // When creating CSS custom properties and using any of Sass' capabilities
   // you'll have to interpolate it with the Sass syntax `#{...}` as seen below.
   --alert: #{map-get($theme, "alert")};
