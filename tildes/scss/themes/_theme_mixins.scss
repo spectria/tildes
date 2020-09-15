@@ -137,9 +137,64 @@
   @return map-merge($default-theme, $new-theme);
 }
 
+@mixin minimal-hardcoded-theme($theme) {
+  // Outputs rules with "hardcoded" colors for old browsers with no support for custom
+  // properties. These rules will be repeated for every theme and will only be used by
+  // a tiny percentage of users, so something should only be added in here to fix major
+  // issues - the goal is only to make the themes *usable*, not perfect.
+  @supports not (--test: green) {
+    * {
+      background-color: map-get($theme, "background-primary");
+      border-color: map-get($theme, "border");
+      color: map-get($theme, "foreground-primary");
+    }
+
+    a,
+    a:hover,
+    a:visited,
+    .btn-link,
+    .nav-item a,
+    .tab-item {
+      color: map-get($theme, "link");
+    }
+
+    // "&" represents the <body> element itself
+    &,
+    #site-header,
+    #site-header *,
+    .comment-header,
+    .comment-header * {
+      background-color: map-get($theme, "background-secondary");
+    }
+
+    input,
+    input[readonly],
+    textarea,
+    textarea[readonly],
+    .form-select:not([multiple]):not([size]) {
+      background-color: map-get($theme, "background-input");
+    }
+
+    .btn.btn-primary {
+      color: $light-color;
+    }
+
+    .text-secondary {
+      color: map-get($theme, "foreground-secondary");
+    }
+
+    // Prevents the * rule from causing a <span> to override its parent
+    span {
+      color: inherit;
+    }
+  }
+}
+
 @mixin use-theme($selected-theme) {
   $theme: init-theme($selected-theme);
   $is-light: is-color-bright(map-get($theme, "background-primary"));
+
+  @include minimal-hardcoded-theme($theme);
 
   // When creating CSS custom properties and using any of Sass' capabilities
   // you'll have to interpolate it with the Sass syntax `#{...}` as seen below.
