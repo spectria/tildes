@@ -2,6 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 #sidebar {
+  // Prevents the sidebar background from being transparent on extremely old browsers
+  // that don't support *either* custom properties or the @supports test for them
+  background-color: $body-bg;
+
   .btn {
     width: 100%;
   }
