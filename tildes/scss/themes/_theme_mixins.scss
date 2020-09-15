@@ -143,7 +143,8 @@
   // a tiny percentage of users, so something should only be added in here to fix major
   // issues - the goal is only to make the themes *usable*, not perfect.
   @supports not (--test: green) {
-    * {
+    *,
+    #sidebar {
       background-color: map-get($theme, "background-primary");
       border-color: map-get($theme, "border");
       color: map-get($theme, "foreground-primary");
