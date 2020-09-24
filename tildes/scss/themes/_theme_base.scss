@@ -58,8 +58,6 @@ body {
     }
   }
 
-  @include syntax-highlighting;
-
   blockquote {
     border-color: var(--foreground-highlight-color);
     background-color: var(--background-secondary-color);

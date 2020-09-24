@@ -1,0 +1,211 @@
+// Copyright (c) 2020 Tildes contributors <code@tildes.net>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+.highlight {
+  .syntax-c {
+    color: var(--syntax-comment-color);
+  } // Comment
+  .syntax-err {
+    color: var(--foreground-color);
+  } // Error
+  .syntax-g {
+    color: var(--foreground-color);
+  } // Generic
+  .syntax-k {
+    color: var(--syntax-keyword-color);
+  } // Keyword
+  .syntax-l {
+    color: var(--foreground-color);
+  } // Literal
+  .syntax-n {
+    color: var(--foreground-color);
+  } // Name
+  .syntax-o {
+    color: var(--syntax-comment-color);
+  } // Operator
+  .syntax-x {
+    color: var(--syntax-constant-color);
+  } // Other
+  .syntax-p {
+    color: var(--foreground-color);
+  } // Punctuation
+  .syntax-cm {
+    color: var(--syntax-comment-color);
+  } // Comment.Multiline
+  .syntax-cp {
+    color: var(--syntax-comment-color);
+  } // Comment.Preproc
+  .syntax-c1 {
+    color: var(--syntax-comment-color);
+  } // Comment.Single
+  .syntax-cs {
+    color: var(--syntax-comment-color);
+  } // Comment.Special
+  .syntax-gd {
+    color: var(--syntax-comment-color);
+  } // Generic.Deleted
+  .syntax-ge {
+    color: var(--foreground-color);
+    font-style: italic;
+  } // Generic.Emph
+  .syntax-gr {
+    color: var(--syntax-constant-color);
+  } // Generic.Error
+  .syntax-gh {
+    color: var(--syntax-constant-color);
+  } // Generic.Heading
+  .syntax-gi {
+    color: var(--syntax-comment-color);
+  } // Generic.Inserted
+  .syntax-go {
+    color: var(--foreground-color);
+  } // Generic.Output
+  .syntax-gp {
+    color: var(--foreground-color);
+  } // Generic.Prompt
+  .syntax-gs {
+    color: var(--foreground-color);
+    font-weight: bold;
+  } // Generic.Strong
+  .syntax-gu {
+    color: var(--syntax-constant-color);
+  } // Generic.Subheading
+  .syntax-gt {
+    color: var(--foreground-color);
+  } // Generic.Traceback
+  .syntax-kc {
+    color: var(--syntax-constant-color);
+  } // Keyword.Constant
+  .syntax-kd {
+    color: var(--syntax-keyword-color);
+  } // Keyword.Declaration
+  .syntax-kn {
+    color: var(--syntax-comment-color);
+  } // Keyword.Namespace
+  .syntax-kp {
+    color: var(--syntax-comment-color);
+  } // Keyword.Pseudo
+  .syntax-kr {
+    color: var(--syntax-keyword-color);
+  } // Keyword.Reserved
+  .syntax-kt {
+    color: var(--syntax-keyword-color);
+  } // Keyword.Type
+  .syntax-ld {
+    color: var(--foreground-color);
+  } // Literal.Date
+  .syntax-m {
+    color: var(--syntax-comment-color);
+  } // Literal.Number
+  .syntax-s {
+    color: var(--syntax-comment-color);
+  } // Literal.String
+  .syntax-na {
+    color: var(--foreground-color);
+  } // Name.Attribute
+  .syntax-nb {
+    color: var(--syntax-builtin-color);
+  } // Name.Builtin
+  .syntax-nc {
+    color: var(--syntax-keyword-color);
+  } // Name.Class
+  .syntax-no {
+    color: var(--syntax-constant-color);
+  } // Name.Constant
+  .syntax-nd {
+    color: var(--syntax-keyword-color);
+  } // Name.Decorator
+  .syntax-ni {
+    color: var(--syntax-builtin-color);
+  } // Name.Entity
+  .syntax-ne {
+    color: var(--syntax-builtin-color);
+  } // Name.Exception
+  .syntax-nf {
+    color: var(--syntax-builtin-color);
+  } // Name.Function
+  .syntax-nl {
+    color: var(--foreground-color);
+  } // Name.Label
+  .syntax-nn {
+    color: var(--foreground-color);
+  } // Name.Namespace
+  .syntax-nx {
+    color: var(--foreground-color);
+  } // Name.Other
+  .syntax-py {
+    color: var(--foreground-color);
+  } // Name.Property
+  .syntax-nt {
+    color: var(--syntax-keyword-color);
+  } // Name.Tag
+  .syntax-nv {
+    color: var(--syntax-keyword-color);
+  } // Name.Variable
+  .syntax-ow {
+    color: var(--syntax-comment-color);
+  } // Operator.Word
+  .syntax-w {
+    color: var(--foreground-color);
+  } // Text.Whitespace
+  .syntax-mf {
+    color: var(--syntax-literal-color);
+  } // Literal.Number.Float
+  .syntax-mh {
+    color: var(--syntax-literal-color);
+  } // Literal.Number.Hex
+  .syntax-mi {
+    color: var(--syntax-literal-color);
+  } // Literal.Number.Integer
+  .syntax-mo {
+    color: var(--syntax-literal-color);
+  } // Literal.Number.Oct
+  .syntax-sb {
+    color: var(--syntax-string-color);
+  } // Literal.String.Backtick
+  .syntax-sc {
+    color: var(--syntax-string-color);
+  } // Literal.String.Char
+  .syntax-sd {
+    color: var(--syntax-comment-color);
+  } // Literal.String.Doc
+  .syntax-s2 {
+    color: var(--syntax-string-color);
+  } // Literal.String.Double
+  .syntax-se {
+    color: var(--syntax-constant-color);
+  } // Literal.String.Escape
+  .syntax-sh {
+    color: var(--syntax-comment-color);
+  } // Literal.String.Heredoc
+  .syntax-si {
+    color: var(--syntax-string-color);
+  } // Literal.String.Interpol
+  .syntax-sx {
+    color: var(--syntax-string-color);
+  } // Literal.String.Other
+  .syntax-sr {
+    color: var(--syntax-constant-color);
+  } // Literal.String.Regex
+  .syntax-s1 {
+    color: var(--syntax-string-color);
+  } // Literal.String.Single
+  .syntax-ss {
+    color: var(--syntax-string-color);
+  } // Literal.String.Symbol
+  .syntax-bp {
+    color: var(--syntax-keyword-color);
+  } // Name.Builtin.Pseudo
+  .syntax-vc {
+    color: var(--syntax-keyword-color);
+  } // Name.Variable.Class
+  .syntax-vg {
+    color: var(--syntax-keyword-color);
+  } // Name.Variable.Global
+  .syntax-vi {
+    color: var(--syntax-keyword-color);
+  } // Name.Variable.Instance
+  .syntax-il {
+    color: var(--syntax-comment-color);
+  } // Literal.Number.Integer.Long
+}
