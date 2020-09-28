@@ -8,6 +8,10 @@
     .btn-post-action {
       justify-content: left;
       width: 100%;
+
+      &:hover {
+        background-color: var(--background-secondary-color);
+      }
     }
   }
 

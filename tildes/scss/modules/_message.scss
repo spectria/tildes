@@ -13,6 +13,9 @@
     font-size: 0.7rem;
     line-height: 0.9rem;
 
+    color: var(--foreground-highlight-color);
+    background-color: var(--background-secondary-color);
+
     .link-user {
       margin-right: 0.2rem;
     }
@@ -40,5 +43,5 @@
 
 .is-message-mine {
   margin-left: -2px;
-  border-left: 3px solid;
+  border-left: 3px solid var(--stripe-mine-color);
 }

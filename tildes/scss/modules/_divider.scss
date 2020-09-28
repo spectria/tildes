@@ -4,4 +4,10 @@
 .divider,
 .divider[data-content] {
   margin: 1rem;
+  border-color: var(--border-color);
+}
+
+.divider[data-content]::after {
+  color: var(--foreground-primary-color);
+  background-color: var(--background-primary-color);
 }

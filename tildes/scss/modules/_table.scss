@@ -1,6 +1,14 @@
 // Copyright (c) 2019 Tildes contributors <code@tildes.net>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+.table td {
+  border-bottom-color: var(--border-color);
+}
+
+.table th {
+  border-bottom-color: var(--foreground-highlight-color);
+}
+
 .table-financials {
   max-width: $paragraph-max-width;
   margin-top: 1rem;

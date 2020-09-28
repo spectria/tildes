@@ -3,6 +3,11 @@
 
 .topic-listing > li {
   margin: 0;
+
+  &:nth-of-type(2n) {
+    color: var(--foreground-mixed-color);
+    background-color: var(--background-mixed-color);
+  }
 }
 
 .topic-listing-filter {
@@ -90,6 +95,11 @@
 
   .btn-post-action {
     font-weight: normal;
+    color: var(--link-color);
+  }
+
+  .btn-post-action-used {
+    color: var(--link-visited-color);
   }
 
   .dropdown-toggle .icon {
@@ -155,6 +165,10 @@
   margin-bottom: 0.8rem;
 }
 
+.topic-log-entry-time {
+  color: var(--foreground-secondary-color);
+}
+
 .topic-metadata {
   display: flex;
   flex-wrap: wrap;
@@ -194,6 +208,11 @@
   &.btn-used {
     border-color: transparent;
 
+    &:hover {
+      background-color: var(--button-darkened-3-color);
+      border-color: var(--button-darkened-8-color);
+    }
+
     .topic-voting-votes {
       font-weight: bold;
     }
@@ -224,6 +243,8 @@
   overflow: hidden;
   font-style: italic;
 
+  color: var(--foreground-secondary-color);
+
   h1 {
     margin: 0 0 0.4rem;
   }
@@ -236,11 +257,13 @@
     font-style: italic;
     content: "Re-collapse topic text";
     display: none;
+    color: var(--foreground-secondary-color);
   }
 
   &[open] {
     font-style: normal;
     font-size: 0.8rem;
+    color: var(--foreground-primary-color);
 
     summary {
       font-size: 0.6rem;
@@ -275,6 +298,10 @@
   }
 }
 
+.topic-info-comments-new {
+  color: var(--alert-color);
+}
+
 .topic-info-source {
   display: flex;
   align-items: center;
@@ -284,6 +311,7 @@
 
 .topic-info-source-scheduled {
   font-style: italic;
+  color: var(--foreground-secondary-color);
 }
 
 .topic-full {
@@ -299,6 +327,7 @@
 .topic-full-byline {
   margin-bottom: 0.4rem;
   font-size: 0.6rem;
+  color: var(--foreground-secondary-color);
 }
 
 .topic-full-content-metadata {
@@ -335,9 +364,11 @@
 .topic-full-tags {
   margin-bottom: 0.4rem;
   font-size: 0.6rem;
+  color: var(--foreground-secondary-color);
 
   a {
     text-decoration: underline;
+    color: var(--foreground-secondary-color);
 
     &:hover {
       text-decoration: none;
@@ -396,11 +427,18 @@
 }
 
 .is-topic-mine {
-  border-left: 3px solid;
+  border-left: 3px solid var(--stripe-mine-color);
   margin-left: -3px;
 }
 
 .is-topic-official {
-  border-left: 3px solid;
+  border-left: 3px solid var(--alert-color);
   margin-left: -3px;
+
+  h1 {
+    a,
+    a:visited {
+      color: var(--alert-color);
+    }
+  }
 }

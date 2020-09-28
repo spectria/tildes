@@ -1,39 +1,11 @@
 // Copyright (c) 2020 Tildes contributors <code@tildes.net>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-@mixin label-button($color) {
-  color: $color;
-  border-color: $color;
-
-  &:hover {
-    color: $color;
-  }
-
-  &.btn-used:hover {
-    background-color: $color;
-    color: var(--white-color);
-  }
-}
-
 @mixin theme-preview-block($name, $foreground, $background) {
   .theme-preview-block-#{$name} {
     background-color: $background;
     color: $foreground;
     border: 1px solid;
-  }
-}
-
-@mixin theme-special-label($background-color, $foreground-color, $border-color) {
-  background-color: $background-color;
-  color: $foreground-color;
-  border: 1px solid $border-color;
-  padding: 0 0.2rem;
-  line-height: 0.9rem;
-
-  a,
-  a:hover,
-  a:visited {
-    color: $foreground-color;
   }
 }
 

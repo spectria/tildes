@@ -7,6 +7,14 @@
   margin: 1rem 0;
   font-weight: bold;
 
+  color: var(--foreground-highlight-color);
+  background-color: var(--background-secondary-color);
+  border-color: var(--border-color);
+
+  a {
+    color: var(--link-color);
+  }
+
   ul {
     margin-bottom: 1rem;
   }
@@ -22,4 +30,10 @@
     font-size: 0.7rem;
     font-weight: bold;
   }
+}
+
+.toast.toast-warning {
+  border-color: var(--warning-color);
+  color: var(--warning-foreground-color);
+  background-color: var(--warning-background-color);
 }

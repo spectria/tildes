@@ -10,6 +10,28 @@ html {
 
 a {
   text-decoration: none;
+
+  color: var(--link-color);
+
+  &:hover {
+    color: var(--link-hover-color);
+  }
+
+  &:visited {
+    color: var(--link-visited-color);
+  }
+
+  code {
+    color: var(--link-color);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &:visited code {
+    color: var(--link-visited-color);
+  }
 }
 
 blockquote {
@@ -19,12 +41,20 @@ blockquote {
 
   border-left: 1px dotted;
 
+  border-color: var(--foreground-highlight-color);
+  background-color: var(--background-secondary-color);
+
   // nested blockquotes need reduced margin/padding
   > blockquote {
     margin: 0;
     margin-bottom: 0.2rem;
     padding-top: 0;
     padding-bottom: 0;
+  }
+
+  code,
+  pre {
+    background-color: var(--background-primary-color);
   }
 }
 
@@ -33,6 +63,9 @@ body {
   min-height: 100vh;
 
   @include font-shrink-on-mobile(0.8rem);
+
+  color: var(--foreground-primary-color);
+  background-color: var(--background-secondary-color);
 }
 
 button {
@@ -44,6 +77,9 @@ code {
   font-size: inherit;
   -moz-tab-size: 4;
   tab-size: 4;
+
+  color: var(--foreground-highlight-color);
+  background-color: var(--background-secondary-color);
 }
 
 dl dd {
@@ -139,6 +175,8 @@ main {
   overflow: hidden;
   max-width: 100vw;
 
+  background-color: var(--background-primary-color);
+
   @media (min-width: $size-md) {
     padding: 0.4rem;
   }
@@ -151,6 +189,40 @@ main {
 menu {
   list-style-type: none;
   padding: 0;
+}
+
+meter {
+  // Crazy styles to get this to work adapted from Spectre.css's _meters.scss
+  background: var(--background-secondary-color);
+
+  &::-webkit-meter-bar {
+    background: var(--background-secondary-color);
+  }
+
+  // For some mysterious reason, none of the below rules can be merged
+  &::-webkit-meter-optimum-value {
+    background: var(--success-color);
+  }
+
+  &:-moz-meter-optimum::-moz-meter-bar {
+    background: var(--success-color);
+  }
+
+  &::-webkit-meter-suboptimum-value {
+    background: var(--warning-color);
+  }
+
+  &:-moz-meter-sub-optimum::-moz-meter-bar {
+    background: var(--warning-color);
+  }
+
+  &::-webkit-meter-even-less-good-value {
+    background: var(--error-color);
+  }
+
+  &:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+    background: var(--error-color);
+  }
 }
 
 // We'll use lists for their semantic value sometimes, so we don't want them to
@@ -178,6 +250,8 @@ p:last-child {
 
 pre {
   overflow: auto;
+  color: var(--foreground-highlight-color);
+  background-color: var(--background-secondary-color);
 
   code {
     display: block;
@@ -200,6 +274,10 @@ table {
   border-spacing: 0;
   width: auto;
   margin-bottom: 1rem;
+}
+
+tbody tr:nth-of-type(2n + 1) {
+  background-color: var(--background-secondary-color);
 }
 
 td,

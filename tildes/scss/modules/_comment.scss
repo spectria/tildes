@@ -7,7 +7,7 @@
   margin-bottom: 0.4rem;
 
   &:target > .comment-itself {
-    border-left: 3px solid;
+    border-left: 3px solid var(--stripe-target-color);
   }
 }
 
@@ -28,6 +28,9 @@
   @media (min-width: $size-md) {
     padding: 0.2rem;
   }
+
+  color: var(--foreground-highlight-color);
+  background-color: var(--background-secondary-color);
 }
 
 .comment-user-info {
@@ -65,6 +68,8 @@
   display: none;
 
   margin-right: 0.4rem;
+
+  color: var(--foreground-secondary-color);
 }
 
 .comment-exemplary-reasons {
@@ -95,6 +100,12 @@
 
   @media (min-width: $size-md) {
     margin-left: 1rem;
+  }
+
+  color: var(--foreground-secondary-color);
+
+  &:visited {
+    color: var(--foreground-secondary-color);
   }
 }
 
@@ -164,6 +175,7 @@
 .comment-removed-warning {
   font-weight: bold;
   font-size: 0.6rem;
+  color: var(--warning-color);
 }
 
 .comment-votes {
@@ -217,6 +229,7 @@
     font-size: 0.6rem;
     line-height: 0.8rem;
     white-space: nowrap;
+    background-color: var(--background-primary-color);
   }
 
   .btn-comment-collapse-label::after {
@@ -249,26 +262,31 @@
 .is-comment-removed {
   font-size: 0.7rem;
   font-style: italic;
+  color: var(--foreground-secondary-color);
 }
 
 .is-comment-mine {
   > .comment-itself {
     margin-left: -2px;
-    border-left: 3px solid;
+    border-left: 3px solid var(--stripe-mine-color);
   }
 }
 
 .is-comment-new {
   > .comment-itself {
     margin-left: -2px;
-    border-left: 3px solid;
+    border-left: 3px solid var(--alert-color);
+  }
+
+  .comment-text {
+    color: var(--foreground-highlight-color);
   }
 }
 
 .is-comment-exemplary {
   > .comment-itself {
     margin-left: -2px;
-    border-left: 3px solid;
+    border-left: 3px solid var(--comment-label-exemplary-color);
   }
 }
 

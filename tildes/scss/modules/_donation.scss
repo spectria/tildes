@@ -34,6 +34,14 @@
   height: 0.4rem;
 }
 
+.donation-goal-meter-over-goal {
+  background: var(--comment-label-exemplary-color);
+
+  &::-webkit-meter-bar {
+    background: var(--comment-label-exemplary-color);
+  }
+}
+
 .donation-goal-progress {
   display: flex;
   align-items: center;

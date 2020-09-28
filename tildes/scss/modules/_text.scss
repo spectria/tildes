@@ -1,8 +1,20 @@
 // Copyright (c) 2018 Tildes contributors <code@tildes.net>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+.text-error {
+  color: var(--error-color);
+}
+
 .text-formatted {
   @extend %text-container;
+}
+
+.text-link {
+  color: var(--link-color);
+}
+
+.text-secondary {
+  color: var(--foreground-secondary-color);
 }
 
 .text-small {
@@ -12,6 +24,10 @@
 
 .text-status-message {
   font-size: 0.6rem;
+}
+
+.text-warning {
+  color: var(--warning-color);
 }
 
 // special formatting rules for wiki pages
@@ -24,6 +40,7 @@
   h6 {
     a {
       text-decoration: none;
+      color: var(--foreground-highlight-color);
     }
   }
 

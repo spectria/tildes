@@ -28,10 +28,16 @@
 
   .nav-item a {
     cursor: pointer;
+    color: var(--link-color);
 
     &:hover {
       text-decoration: underline;
+      color: var(--link-hover-color);
     }
+  }
+
+  .nav-item.active a {
+    color: var(--link-color);
   }
 
   .nav-item .btn-link {

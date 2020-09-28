@@ -3,7 +3,9 @@
 
 .menu {
   box-shadow: none;
-  border: 1px outset;
+  border: 1px outset var(--border-color);
+
+  background-color: var(--background-primary-color);
 
   .menu-item {
     > a:hover,

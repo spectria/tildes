@@ -3,6 +3,8 @@
 
 .input-group .input-group-addon {
   border-color: inherit;
+  background-color: var(--background-secondary-color);
+  color: var(--foreground-highlight-color);
 }
 
 .input-invite-code {

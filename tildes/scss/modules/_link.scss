@@ -9,4 +9,20 @@ a.link-group {
   &:hover {
     text-decoration: underline;
   }
+
+  &:visited {
+    color: var(--link-color);
+  }
+}
+
+.link-no-visited-color:visited {
+  color: var(--link-color);
+}
+
+a.logged-in-user-alert {
+  color: var(--alert-color);
+
+  &:visited {
+    color: var(--alert-color);
+  }
 }

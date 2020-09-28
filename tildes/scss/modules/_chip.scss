@@ -3,4 +3,26 @@
 
 .chip {
   border-radius: 0;
+
+  background-color: var(--background-secondary-color);
+  color: var(--foreground-highlight-color);
+
+  &.active {
+    background-color: var(--button-color);
+    color: var(--button-by-brightness-color);
+
+    .btn {
+      color: var(--button-by-brightness-color);
+    }
+  }
+
+  &.error {
+    background-color: var(--error-color);
+
+    color: var(--error-by-brightness-color);
+
+    .btn {
+      color: var(--error-by-brightness-color);
+    }
+  }
 }

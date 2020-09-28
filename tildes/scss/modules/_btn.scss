@@ -10,10 +10,28 @@
 
   font-size: 0.6rem;
   font-weight: bold;
+
+  color: var(--button-color);
+  background-color: transparent;
+  border-color: var(--button-color);
+
+  &:hover {
+    background-color: var(--button-transparent-color);
+  }
 }
 
 .btn.btn-sm {
   font-size: 0.6rem;
+}
+
+.btn.btn-link {
+  color: var(--link-color);
+  background-color: transparent;
+  border-color: transparent;
+
+  &:hover {
+    color: var(--link-color);
+  }
 }
 
 .btn-link-minimal {
@@ -44,6 +62,10 @@
     margin-right: 0.2rem;
     min-width: 0.8rem;
   }
+
+  &:hover {
+    border-color: var(--border-color);
+  }
 }
 
 .btn-comment-collapse-label::after {
@@ -73,8 +95,49 @@
   }
 }
 
+@mixin label-button($color) {
+  color: $color;
+  border-color: $color;
+
+  &:hover {
+    color: $color;
+  }
+
+  &.btn-used:hover {
+    background-color: $color;
+    color: var(--white-color);
+  }
+}
+
+.btn-comment-label-exemplary {
+  @include label-button(var(--comment-label-exemplary-color));
+}
+
+.btn-comment-label-joke {
+  @include label-button(var(--comment-label-joke-color));
+}
+
+.btn-comment-label-noise {
+  @include label-button(var(--comment-label-noise-color));
+}
+
+.btn-comment-label-offtopic {
+  @include label-button(var(--comment-label-offtopic-color));
+}
+
+.btn-comment-label-malice {
+  @include label-button(var(--comment-label-malice-color));
+}
+
 .btn-light {
   font-weight: normal;
+
+  color: var(--foreground-secondary-color);
+  border-color: var(--border-color);
+
+  &:hover {
+    color: var(--link-color);
+  }
 }
 
 .btn-post {
@@ -122,8 +185,42 @@
   line-height: 0.6rem;
 
   cursor: pointer;
+
+  color: var(--foreground-secondary-color);
+
+  &:hover {
+    color: var(--foreground-extreme-color);
+  }
 }
 
 .btn-post-action-used {
   text-decoration: underline;
+  color: var(--button-used-color);
+}
+
+.btn.btn-primary {
+  color: var(--button-by-brightness-color);
+
+  background-color: var(--button-color);
+  border-color: var(--button-color);
+
+  &:hover {
+    background-color: var(--button-darkened-10-color);
+    border-color: var(--button-darkened-10-color);
+  }
+
+  &:visited {
+    color: var(--button-by-brightness-color);
+  }
+}
+
+.btn-used {
+  color: var(--button-used-color);
+  border-color: var(--button-used-darkened-3-color);
+
+  &:hover {
+    background-color: var(--button-used-darkened-3-color);
+    border-color: var(--button-used-darkened-8-color);
+    color: var(--white-color);
+  }
 }

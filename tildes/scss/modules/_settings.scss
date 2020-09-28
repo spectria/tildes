@@ -2,6 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 .settings-list {
+  a:visited {
+    color: var(--link-color);
+  }
+
   li {
     margin-bottom: 1rem;
   }

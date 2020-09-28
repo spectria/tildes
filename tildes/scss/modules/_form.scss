@@ -1,6 +1,16 @@
 // Copyright (c) 2018 Tildes contributors <code@tildes.net>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+.form-autocomplete {
+  .menu {
+    background-color: var(--background-secondary-color);
+  }
+
+  .form-autocomplete-input .form-input {
+    border-color: transparent;
+  }
+}
+
 .form-group {
   .form-radio {
     margin-left: 1rem;
@@ -15,10 +25,13 @@
   }
 }
 
-select.form-select:not([multiple]) {
+select.form-select:not([multiple]):not([size]) {
   // would be better to implement autoprefixer to do this
   -moz-appearance: none;
   -webkit-appearance: none;
+
+  border-color: var(--border-color);
+  background-color: var(--background-input-color);
 }
 
 .form-listing-options {
@@ -59,6 +72,8 @@ select.form-select:not([multiple]) {
   padding: 0.4rem;
   border: 1px dashed;
   overflow: auto;
+
+  border-color: var(--border-color);
 }
 
 .form-buttons {
@@ -85,6 +100,26 @@ textarea.form-input {
 
 .form-input {
   max-width: 40rem;
+
+  // error colors for :invalid inputs, using same approach as Spectre
+  &:not(:placeholder-shown):invalid {
+    border-color: var(--error-color);
+
+    &:focus {
+      box-shadow: 0 0 0 1px var(--error-color);
+    }
+
+    + .form-input-hint {
+      color: var(--error-color);
+    }
+  }
+}
+
+.form-input,
+.form-input[readonly] {
+  color: var(--foreground-primary-color);
+  background-color: var(--background-input-color);
+  border-color: var(--border-color);
 }
 
 .form-input-note {

@@ -34,6 +34,16 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  a,
+  a:visited {
+    color: var(--foreground-primary-color);
+  }
+
+  .toast a,
+  .toast a:visited {
+    color: var(--link-color);
+  }
 }
 
 .site-header-logo {
@@ -60,6 +70,12 @@
   font-size: 1.2rem;
   font-weight: bold;
 
+  color: var(--foreground-highlight-color);
+
+  &:visited {
+    color: var(--foreground-highlight-color);
+  }
+
   &:hover,
   &:active,
   &:focus {
@@ -83,6 +99,7 @@
       font-size: 0.5rem;
       height: 0.7rem;
       transform: translate(50%, -40%);
+      background-color: var(--alert-color);
     }
   }
 }

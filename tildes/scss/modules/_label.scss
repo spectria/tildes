@@ -12,14 +12,75 @@
   text-transform: capitalize;
 }
 
+@mixin theme-special-label($background-color, $foreground-color, $border-color) {
+  background-color: $background-color;
+  color: $foreground-color;
+  border: 1px solid $border-color;
+  padding: 0 0.2rem;
+  line-height: 0.9rem;
+
+  a,
+  a:hover,
+  a:visited {
+    color: $foreground-color;
+  }
+}
+
+.label-comment-exemplary {
+  @include theme-special-label(
+    var(--background-label-exemplary-color),
+    var(--foreground-label-exemplary-color),
+    var(--comment-label-exemplary-color)
+  );
+}
+
+.label-comment-joke {
+  @include theme-special-label(
+    var(--background-label-joke-color),
+    var(--foreground-label-joke-color),
+    var(--comment-label-joke-color)
+  );
+}
+
+.label-comment-noise {
+  @include theme-special-label(
+    var(--background-label-noise-color),
+    var(--foreground-label-noise-color),
+    var(--comment-label-noise-color)
+  );
+}
+
+.label-comment-offtopic {
+  @include theme-special-label(
+    var(--background-label-offtopic-color),
+    var(--foreground-label-offtopic-color),
+    var(--comment-label-offtopic-color)
+  );
+}
+
+.label-comment-malice {
+  @include theme-special-label(
+    var(--background-label-malice-color),
+    var(--foreground-label-malice-color),
+    var(--comment-label-malice-color)
+  );
+}
+
 .label-topic-tag {
   background-color: transparent;
   margin: 0 0.4rem 0 0;
+  padding: 0;
   word-wrap: break-word;
   max-width: 100%;
 
   & + & {
     margin-left: 0.2rem;
+  }
+
+  a,
+  a:hover,
+  a:visited {
+    color: var(--foreground-primary-color);
   }
 }
 
@@ -28,4 +89,22 @@
 .label-topic-tag[class*="label-topic-tag-nsfw-"],
 .label-topic-tag[class*="label-topic-tag-spoiler-"] {
   font-weight: bold;
+}
+
+.label-topic-tag-nsfw,
+.label-topic-tag[class*="label-topic-tag-nsfw-"] {
+  @include theme-special-label(
+    var(--topic-tag-nsfw-color),
+    var(--topic-tag-nsfw-foreground-color),
+    var(--topic-tag-nsfw-border-color)
+  );
+}
+
+.label-topic-tag-spoiler,
+.label-topic-tag[class*="label-topic-tag-spoiler-"] {
+  @include theme-special-label(
+    var(--topic-tag-spoiler-color),
+    var(--topic-tag-spoiler-foreground-color),
+    var(--topic-tag-spoiler-border-color)
+  );
 }

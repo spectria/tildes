@@ -1,3 +1,28 @@
+// Copyright (c) 2019 Tildes contributors <code@tildes.net>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+.breadcrumb .breadcrumb-item {
+  color: var(--foreground-secondary-color);
+
+  &:not(:last-child) {
+    a {
+      color: var(--foreground-secondary-color);
+    }
+  }
+
+  &:not(:first-child) {
+    &::before {
+      color: var(--foreground-secondary-color);
+    }
+  }
+
+  &:last-child {
+    a {
+      color: var(--link-color);
+    }
+  }
+}
+
 ol.breadcrumb,
 ul.breadcrumb {
   margin-left: 0;

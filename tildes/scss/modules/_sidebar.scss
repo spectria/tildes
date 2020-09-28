@@ -6,6 +6,11 @@
   // that don't support *either* custom properties or the @supports test for them
   background-color: $body-bg;
 
+  // stylelint-disable-next-line declaration-block-no-duplicate-properties
+  background-color: var(--background-primary-color);
+
+  border-left-color: var(--border-color);
+
   .btn {
     width: 100%;
   }
@@ -47,6 +52,8 @@
   padding: 0.2rem 0.4rem;
   align-items: center;
   justify-content: space-between;
+
+  background-color: var(--background-secondary-color);
 }
 
 .is-sidebar-displayed {

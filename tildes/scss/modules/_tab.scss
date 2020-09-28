@@ -3,6 +3,19 @@
 
 .tab {
   font-size: 0.6rem;
+  border-color: var(--border-color);
+
+  .tab-item {
+    a {
+      color: var(--foreground-primary-color);
+    }
+
+    &.active a,
+    &.active button {
+      color: var(--link-color);
+      border-bottom-color: var(--link-color);
+    }
+  }
 }
 
 .tab-item {

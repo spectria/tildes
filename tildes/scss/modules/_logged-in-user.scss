@@ -19,3 +19,8 @@
   font-weight: bold;
   font-size: 0.5rem;
 }
+
+.logged-in-user-username,
+.logged-in-user-username:visited {
+  color: var(--foreground-primary-color);
+}
