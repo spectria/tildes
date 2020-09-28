@@ -209,8 +209,7 @@
     border-color: transparent;
 
     &:hover {
-      background-color: var(--button-darkened-3-color);
-      border-color: var(--button-darkened-8-color);
+      background-color: var(--button-color);
     }
 
     .topic-voting-votes {

@@ -188,32 +188,26 @@
   --button-by-brightness-color:
     #{choose-by-brightness(
       map-get($theme, "button"),
-      map-get($theme, "black"),
-      map-get($theme, "white")
+      #000,
+      #fff
     )};
   --button-transparent-color: #{rgba(map-get($theme, "button"), 0.2)};
 
-  --button-darkened-3-color: #{darken(map-get($theme, "button"), 3%)};
-  --button-darkened-8-color: #{darken(map-get($theme, "button"), 8%)};
-  --button-darkened-10-color: #{darken(map-get($theme, "button"), 10%)};
-
   --button-used-color: #{map-get($theme, "button-used")};
-  --button-used-darkened-3-color: #{darken(map-get($theme, "button-used"), 3%)};
-  --button-used-darkened-8-color: #{darken(map-get($theme, "button-used"), 8%)};
 
   --error-color: #{map-get($theme, "error")};
   --error-by-brightness-color:
     #{choose-by-brightness(
       map-get($theme, "error"),
-      map-get($theme, "black"),
-      map-get($theme, "white")
+      #000,
+      #fff
     )};
 
   --foreground-extreme-color:
     #{choose-by-brightness(
       map-get($theme, "background-primary"),
-      map-get($theme, "black"),
-      map-get($theme, "white")
+      #000,
+      #fff
     )};
   --foreground-highlight-color: #{map-get($theme, "foreground-highlight")};
   --foreground-mixed-color:
@@ -225,7 +219,7 @@
   --foreground-secondary-color: #{map-get($theme, "foreground-secondary")};
 
   --link-color: #{map-get($theme, "link")};
-  --link-hover-color: #{darken(map-get($theme, "link"), 5%)};
+  --link-hover-color: #{map-get($theme, "link-hover")};
   --link-visited-color: #{map-get($theme, "link-visited")};
 
   --stripe-mine-color: #{map-get($theme, "stripe-mine")};
@@ -243,11 +237,11 @@
   // Colors for the special topic tags
   @if $is-light {
     --topic-tag-nsfw-color: #{map-get($theme, "topic-tag-nsfw")};
-    --topic-tag-nsfw-foreground-color: #{map-get($theme, "white")};
+    --topic-tag-nsfw-foreground-color: #fff;
     --topic-tag-nsfw-border-color: transparent;
 
     --topic-tag-spoiler-color: #{map-get($theme, "topic-tag-spoiler")};
-    --topic-tag-spoiler-foreground-color: #{map-get($theme, "white")};
+    --topic-tag-spoiler-foreground-color: #fff;
     --topic-tag-spoiler-border-color: transparent;
   } @else {
     --topic-tag-nsfw-color: transparent;
@@ -264,14 +258,11 @@
   // Colors for warning toasts
   @if $is-light {
     --warning-background-color: #{rgba(map-get($theme, "warning"), 0.9)};
-    --warning-foreground-color: #{map-get($theme, "black")};
+    --warning-foreground-color: #000;
   } @else {
     --warning-background-color: transparent;
     --warning-foreground-color: #{map-get($theme, "warning")};
   }
-
-  // Colors that were hardcoded in previously.
-  --white-color: #{map-get($theme, "white")};
 
   // Variables for the comment labels.
   @if $is-light {
@@ -287,11 +278,11 @@
     --comment-label-offtopic-color: #{map-get($theme, "comment-label-offtopic")};
     --comment-label-malice-color: #{map-get($theme, "comment-label-malice")};
 
-    --foreground-label-exemplary-color: #{map-get($theme, "white")};
-    --foreground-label-joke-color: #{map-get($theme, "white")};
-    --foreground-label-noise-color: #{map-get($theme, "white")};
-    --foreground-label-offtopic-color: #{map-get($theme, "white")};
-    --foreground-label-malice-color: #{map-get($theme, "white")};
+    --foreground-label-exemplary-color: #fff;
+    --foreground-label-joke-color: #fff;
+    --foreground-label-noise-color: #fff;
+    --foreground-label-offtopic-color: #fff;
+    --foreground-label-malice-color: #fff;
   } @else {
     --background-label-exemplary-color: transparent;
     --background-label-joke-color: transparent;

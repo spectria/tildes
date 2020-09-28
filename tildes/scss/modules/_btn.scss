@@ -105,7 +105,7 @@
 
   &.btn-used:hover {
     background-color: $color;
-    color: var(--white-color);
+    color: #fff;
   }
 }
 
@@ -205,8 +205,7 @@
   border-color: var(--button-color);
 
   &:hover {
-    background-color: var(--button-darkened-10-color);
-    border-color: var(--button-darkened-10-color);
+    filter: brightness(90%);
   }
 
   &:visited {
@@ -216,11 +215,10 @@
 
 .btn-used {
   color: var(--button-used-color);
-  border-color: var(--button-used-darkened-3-color);
+  border-color: var(--button-used-color);
 
   &:hover {
-    background-color: var(--button-used-darkened-3-color);
-    border-color: var(--button-used-darkened-8-color);
-    color: var(--white-color);
+    filter: brightness(95%);
+    color: #fff;
   }
 }
