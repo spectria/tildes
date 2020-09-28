@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 .comment {
-  border-left: 1px solid;
-  border-color: inherit;
+  border-left: 1px solid var(--border-color);
   margin-bottom: 0.4rem;
 
   &:target > .comment-itself {
@@ -12,8 +11,7 @@
 }
 
 .comment[data-comment-depth="0"] {
-  border-bottom: 1px solid;
-  border-color: inherit;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .comment-header {

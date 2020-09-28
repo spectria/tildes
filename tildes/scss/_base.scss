@@ -8,6 +8,10 @@ html {
   font-size: $html-font-size;
 }
 
+* {
+  border-color: var(--border-color);
+}
+
 a {
   text-decoration: none;
 
@@ -282,10 +286,10 @@ tbody tr:nth-of-type(2n + 1) {
 
 td,
 th {
-  border: $border-width solid;
+  border: $border-width solid var(--border-color);
   padding: $unit-3 $unit-2;
 }
 
 th {
-  border-bottom-width: $border-width-lg;
+  border-bottom: $border-width-lg solid var(--foreground-highlight-color);
 }
