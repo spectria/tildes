@@ -32,6 +32,10 @@
   <meta name="theme-color" content="#3f3f3f">
   {% elif request.current_theme == "gruvbox-dark" %}
   <meta name="theme-color" content="#282828">
+  {% elif request.current_theme == "love-dark" %}
+  <meta name="theme-color" content="#1f1731">
+  {% elif request.current_theme == "love-light" %}
+  <meta name="theme-color" content="#f2efff">
   {% endif %}
 
   {% assets "css" %}
@@ -115,7 +119,9 @@
           ("black", "Black"),
           ("zenburn", "Zenburn"),
           ("gruvbox-light", "Gruvbox Light"),
-          ("gruvbox-dark", "Gruvbox Dark")) %}
+          ("gruvbox-dark", "Gruvbox Dark"),
+          ("love-dark", "Love Dark"),
+          ("love-light", "Love Light")) %}
       <option value="{{ theme }}"
         {{ 'selected' if theme == request.current_theme else '' }}
       >

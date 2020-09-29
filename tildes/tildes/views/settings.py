@@ -42,6 +42,8 @@ THEME_OPTIONS = {
     "zenburn": "Zenburn",
     "gruvbox-light": "Gruvbox Light",
     "gruvbox-dark": "Gruvbox Dark",
+    "love-dark": "Love Dark",
+    "love-light": "Love Light",
 }
 
 

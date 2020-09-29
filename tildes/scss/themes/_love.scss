@@ -1,0 +1,81 @@
+// The Love Color Scheme https://love.holllo.cc
+
+// Love Dark
+$theme-love-dark: (
+  "alert": #faa56c,
+  "background-primary": #1f1731,
+  "background-secondary": #2a2041,
+  "border": #ababab,
+  "button": #41c8e5,
+  "comment-label-exemplary": #41c8e5,
+  "comment-label-joke": #96c839,
+  "comment-label-noise": #d2b83a,
+  "comment-label-offtopic": #3bd18a,
+  "comment-label-malice": #f99fb1,
+  "error": #f99fb1,
+  "foreground-highlight": #e2e2e2,
+  "foreground-primary": #f2efff,
+  "foreground-secondary": #e6deff,
+  "link": #41c8e5,
+  "link-visited": #d5a6f8,
+  "stripe-target": #d2b83a,
+  "success": #3bd18a,
+  "syntax-builtin": #41c8e5,
+  "syntax-comment": #ababab,
+  "syntax-constant": #f99fb1,
+  "syntax-keyword": #f99add,
+  "syntax-literal": #3bd18a,
+  "syntax-string": #d2b83a,
+  "topic-tag-spoiler": #faa56c,
+  "warning": #faa56c,
+);
+
+body.theme-love-dark {
+  @include use-theme($theme-love-dark);
+}
+
+@include theme-preview-block(
+  "love-dark",
+  map-get($theme-love-dark, "foreground-primary"),
+  map-get($theme-love-dark, "background-primary")
+);
+
+// Love Light
+$theme-love-light: (
+  "alert": #6a3b11,
+  "background-primary": #f2efff,
+  "background-secondary": #e6deff,
+  "border": #474747,
+  "button": #144d5a,
+  "comment-label-exemplary": #144d5a,
+  "comment-label-joke": #384d10,
+  "comment-label-noise": #514610,
+  "comment-label-offtopic": #115133,
+  "comment-label-malice": #8b123c,
+  "error": #8b123c,
+  "foreground-highlight": #1b1b1b,
+  "foreground-primary": #1f1731,
+  "foreground-secondary": #2a2041,
+  "link": #144d5a,
+  "link-visited": #6f1995,
+  "stripe-target": #514610,
+  "success": #115133,
+  "syntax-builtin": #144d5a,
+  "syntax-comment": #474747,
+  "syntax-constant": #8b123c,
+  "syntax-keyword": #81156a,
+  "syntax-literal": #115133,
+  "syntax-string": #514610,
+  "topic-tag-spoiler": #6a3b11,
+  "warning": #6a3b11,
+);
+
+body.theme-love-light {
+  @include use-theme($theme-love-light);
+}
+
+@include theme-preview-block(
+  "love-light",
+  map-get($theme-love-light, "foreground-primary"),
+  map-get($theme-love-light, "background-primary")
+);
