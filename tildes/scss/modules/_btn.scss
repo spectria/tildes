@@ -205,6 +205,10 @@
   border-color: var(--button-color);
 
   &:hover {
+    color: var(--button-by-brightness-color);
+    background-color: var(--button-color);
+    border-color: var(--button-color);
+
     filter: brightness(90%);
   }
 
