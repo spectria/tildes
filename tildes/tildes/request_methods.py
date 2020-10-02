@@ -27,6 +27,7 @@ def get_redis_connection(request: Request) -> Redis:
 def is_bot(request: Request) -> bool:
     """Return whether the request is by a known bot (e.g. search engine crawlers)."""
     bot_user_agent_substrings = (
+        "Amazonbot",
         "bingbot",
         "Googlebot",
         "heritrix",
