@@ -15,6 +15,7 @@ gunicorn==20.0.4
 html5lib==1.1
 hupper==1.10.2            # via pyramid
 idna==2.10                # via requests
+invoke==1.4.1
 ipython-genutils==0.2.0   # via traitlets
 ipython==7.16.1
 jedi==0.17.2              # via ipython
