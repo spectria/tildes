@@ -57,6 +57,13 @@ def test(context, quiet=False, webtests=False, html_validation=False):
 
 
 @task
+def type_checking(context):
+    """Run static type checking on the Python code."""
+    output("Running static type checking... ")
+    context.run("mypy .")
+
+
+@task
 def update_pip_requirements(context):
     """Use pip-tools to update package versions in the requirements files."""
 
