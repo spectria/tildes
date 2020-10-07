@@ -19,3 +19,9 @@ automatic-activate:
   file.append:
     - name: '/home/{{ app_username }}/.bashrc'
     - text: 'source activate'
+
+# adds invoke's tab-completion script so that invoke tasks can be completed
+invoke-tab-completion:
+  file.append:
+    - name: '/home/{{ app_username }}/.bashrc'
+    - text: 'source <(invoke --print-completion-script bash)'
