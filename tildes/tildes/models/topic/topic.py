@@ -87,14 +87,20 @@ class Topic(DatabaseModel):
         Integer, ForeignKey("topic_schedule.schedule_id"), index=True
     )
     created_time: datetime = Column(
-        TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()"),
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=text("NOW()"),
     )
     last_edited_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     last_activity_time: datetime = Column(
-        TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()"),
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=text("NOW()"),
     )
     last_interesting_activity_time: datetime = Column(
-        TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()"),
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=text("NOW()"),
     )
     is_deleted: bool = Column(
         Boolean, nullable=False, server_default="false", index=True

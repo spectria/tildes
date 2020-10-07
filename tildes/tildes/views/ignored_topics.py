@@ -14,7 +14,10 @@ from tildes.views.decorators import use_kwargs
 @view_config(route_name="ignored_topics", renderer="ignored_topics.jinja2")
 @use_kwargs(PaginatedListingSchema())
 def get_ignored_topics(
-    request: Request, after: Optional[str], before: Optional[str], per_page: int,
+    request: Request,
+    after: Optional[str],
+    before: Optional[str],
+    per_page: int,
 ) -> dict:
     """Generate the ignored topics page."""
     # pylint: disable=unused-argument

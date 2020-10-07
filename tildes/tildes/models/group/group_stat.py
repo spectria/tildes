@@ -23,7 +23,10 @@ class GroupStat(DatabaseModel):
     __tablename__ = "group_stats"
 
     group_id: int = Column(
-        Integer, ForeignKey("groups.group_id"), nullable=False, primary_key=True,
+        Integer,
+        ForeignKey("groups.group_id"),
+        nullable=False,
+        primary_key=True,
     )
     stat: GroupStatType = Column(ENUM(GroupStatType), nullable=False, primary_key=True)
     period: DateTimeTZRange = Column(TSTZRANGE, nullable=False, primary_key=True)

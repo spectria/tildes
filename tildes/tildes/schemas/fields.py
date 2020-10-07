@@ -37,7 +37,11 @@ class Enum(Field):
         return value.name.lower()
 
     def _deserialize(
-        self, value: str, attr: Optional[str], data: DataType, **kwargs: Any,
+        self,
+        value: str,
+        attr: Optional[str],
+        data: DataType,
+        **kwargs: Any,
     ) -> enum.Enum:
         """Deserialize a string to the enum member with that name."""
         if not self._enum_class:
@@ -64,7 +68,11 @@ class ShortTimePeriod(Field):
     """
 
     def _deserialize(
-        self, value: str, attr: Optional[str], data: DataType, **kwargs: Any,
+        self,
+        value: str,
+        attr: Optional[str],
+        data: DataType,
+        **kwargs: Any,
     ) -> Optional[SimpleHoursPeriod]:
         """Deserialize to a SimpleHoursPeriod object."""
         if value == "all":
@@ -76,7 +84,11 @@ class ShortTimePeriod(Field):
             raise ValidationError("Invalid time period")
 
     def _serialize(
-        self, value: Optional[SimpleHoursPeriod], attr: str, obj: object, **kwargs: Any,
+        self,
+        value: Optional[SimpleHoursPeriod],
+        attr: str,
+        obj: object,
+        **kwargs: Any,
     ) -> Optional[str]:
         """Serialize the value to the "short form" string."""
         if not value:
@@ -105,7 +117,11 @@ class Markdown(Field):
             raise ValidationError("Cannot be entirely whitespace.")
 
     def _deserialize(
-        self, value: str, attr: Optional[str], data: DataType, **kwargs: Any,
+        self,
+        value: str,
+        attr: Optional[str],
+        data: DataType,
+        **kwargs: Any,
     ) -> str:
         """Deserialize the string, removing carriage returns in the process."""
         value = value.replace("\r", "")
@@ -138,7 +154,11 @@ class SimpleString(Field):
         super().__init__(validate=Length(min=1, max=max_length), **kwargs)
 
     def _deserialize(
-        self, value: str, attr: Optional[str], data: DataType, **kwargs: Any,
+        self,
+        value: str,
+        attr: Optional[str],
+        data: DataType,
+        **kwargs: Any,
     ) -> str:
         """Deserialize the string, removing/replacing as necessary."""
         return simplify_string(value)
@@ -162,7 +182,11 @@ class Ltree(Field):
         return value.path
 
     def _deserialize(
-        self, value: str, attr: Optional[str], data: DataType, **kwargs: Any,
+        self,
+        value: str,
+        attr: Optional[str],
+        data: DataType,
+        **kwargs: Any,
     ) -> sqlalchemy_utils.Ltree:
         """Deserialize a string path to an Ltree object."""
         # convert to lowercase and replace spaces with underscores

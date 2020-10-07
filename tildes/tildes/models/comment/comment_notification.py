@@ -57,10 +57,14 @@ class CommentNotification(DatabaseModel):
         self, user: User, comment: Comment, notification_type: CommentNotificationType
     ):
         """Create a new notification for a user from a comment."""
-        if notification_type in (
-            CommentNotificationType.COMMENT_REPLY,
-            CommentNotificationType.TOPIC_REPLY,
-        ) and not self.should_create_reply_notification(comment):
+        if (
+            notification_type
+            in (
+                CommentNotificationType.COMMENT_REPLY,
+                CommentNotificationType.TOPIC_REPLY,
+            )
+            and not self.should_create_reply_notification(comment)
+        ):
             raise ValueError("That comment shouldn't create a reply notification")
 
         self.user = user

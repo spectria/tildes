@@ -107,7 +107,8 @@ class ContentMetadataFields(enum.Enum):
 
     @classmethod
     def detail_fields_for_content_type(
-        cls, content_type: "TopicContentType",
+        cls,
+        content_type: "TopicContentType",
     ) -> List["ContentMetadataFields"]:
         """Return a list of fields to display for detail about a particular type."""
         if content_type is TopicContentType.ARTICLE:
