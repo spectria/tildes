@@ -105,7 +105,7 @@ def update_pip_requirements(context):
 
         # remove any comments that include an -r reference
         # (meaning it's a package that was specifically installed, not a dependency)
-        cleaned_lines = [re.sub(r"\s+# via.*-r.*", "", line) for line in req_lines]
+        cleaned_lines = [re.sub(r"\s+# via.* -r .*", "", line) for line in req_lines]
 
         with open(out_filename, "w") as req_file:
             req_file.writelines(cleaned_lines)
