@@ -45,8 +45,14 @@ class TopicSchema(Schema):
 
         new_data = data.copy()
 
-        # strip any trailing periods
-        new_data["title"] = new_data["title"].rstrip(".")
+        split_title = re.split("[.?!]+", new_data["title"])
+
+        # the last string in the list will be empty if it ended with punctuation
+        num_sentences = len([piece for piece in split_title if piece])
+
+        # strip trailing periods off single-sentence titles
+        if num_sentences == 1:
+            new_data["title"] = new_data["title"].rstrip(".")
 
         return new_data
 

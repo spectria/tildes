@@ -46,10 +46,17 @@ def test_whitespace_trimmed(title_schema):
 
 
 def test_trailing_periods_trimmed(title_schema):
-    """Ensure trailing periods on a title are removed."""
+    """Ensure trailing periods on a single-sentence title are removed."""
     title = "This is an interesting story."
     result = title_schema.load({"title": title})
     assert not result["title"].endswith(".")
+
+
+def test_multisentence_trailing_period_kept(title_schema):
+    """Ensure a trailing period is kept if the title has multiple sentences."""
+    title = "I came. I saw. I conquered."
+    result = title_schema.load({"title": title})
+    assert result["title"].endswith(".")
 
 
 def test_consecutive_whitespace_removed(title_schema):
