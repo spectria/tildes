@@ -1,11 +1,6 @@
 #!/bin/sh
 #
-# Pre-push hook script that ensures mypy checks, style checks, and tests pass
+# Pre-push hook script that ensures all tests and code checks pass
 
 vagrant ssh -c ". activate \
-    && echo 'Checking mypy type annotations...' && mypy --no-error-summary . \
-    && echo 'Checking if Black would reformat any code...' && black --check . \
-    && echo -n 'Running tests: ' && pytest -q -m '' \
-    && echo 'Checking SCSS style...' && npm run --silent lint:scss \
-    && echo 'Checking JS style...' && npm run --silent lint:js \
-    && echo 'Checking Python style fully (takes a while)...' && prospector -M"
+    && invoke type-checking test --quiet --html-validation check-code-style --full"

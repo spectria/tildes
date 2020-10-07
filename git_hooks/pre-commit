@@ -1,10 +1,6 @@
 #!/bin/sh
 #
-# Pre-commit hook script that ensures mypy checks and tests pass
+# Pre-commit hook script that ensures type-checking, tests, and fast style checks pass
 
 vagrant ssh -c ". activate \
-    && echo 'Checking mypy type annotations...' && mypy --no-error-summary . \
-    && echo 'Checking if Black would reformat any code...' && black --check . \
-    && echo -n 'Running tests: ' && pytest -q -m 'not html_validation' \
-    && echo 'Checking SCSS style...' && npm run --silent lint:scss \
-    && echo 'Checking JS style...' && npm run --silent lint:js"
+    && invoke type-checking test --quiet check-code-style"
