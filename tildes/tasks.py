@@ -14,6 +14,29 @@ def output(string):
     print(string, end="", flush=True)
 
 
+@task(help={"full": "Include all checks (very slow)"})
+def check_code_style(context, full=False):
+    """Run the various utilities to check code style.
+
+    By default, runs checks that return relatively quickly. To run the full set of
+    checks (which will be quite slow), add the --full flag.
+    """
+    output("Checking if Black would reformat any Python code... ")
+    context.run("black --check .")
+
+    print("Checking SCSS style...", flush=True)
+    context.run("npm run --silent lint:scss")
+
+    print("Checking JS style...", flush=True)
+    context.run("npm run --silent lint:js")
+
+    if full:
+        output("Checking Python style fully (takes a couple minutes)... ")
+
+        # -M flag hides the "summary information"
+        context.run("prospector -M")
+
+
 @task(
     help={
         "html-validation": "Include HTML validation (very slow, includes webtests)",
