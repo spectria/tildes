@@ -80,6 +80,19 @@ def test(context, quiet=False, webtests=False, html_validation=False):
 
 
 @task
+def shell(context):
+    """Start an IPython shell inside the app environment.
+
+    Will use the settings in production.ini if that file exists, otherwise will fall
+    back to using development.ini.
+    """
+    if Path("production.ini").exists():
+        context.run("pshell production.ini", pty=True)
+    else:
+        context.run("pshell development.ini", pty=True)
+
+
+@task
 def type_checking(context):
     """Run static type checking on the Python code."""
     output("Running static type checking... ")
