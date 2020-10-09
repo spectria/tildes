@@ -14,11 +14,11 @@ All code contributions must be made under the same license as the project's main
 
 ## Setting up a development version
 
-Please see this page on the Tildes Docs for instructions to set up a development version: https://docs.tildes.net/instructions/development-setup
+Please see this page on the Tildes Docs for instructions to set up a development version: https://docs.tildes.net/development/initial-setup
 
 ## General development information
 
-This page on the Tildes docs contains information about many aspects of Tildes development: https://docs.tildes.net/instructions/development
+This page on the Tildes docs contains information about many aspects of Tildes development: https://docs.tildes.net/development/general-development
 
 ## Contributing code
 
