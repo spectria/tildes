@@ -39,12 +39,13 @@ def check_code_style(context, full=False):
 
 @task(
     help={
+        "full": "Include all tests",
         "html-validation": "Include HTML validation (very slow, includes webtests)",
         "quiet": "Reduce verbosity",
         "webtests": "Include webtests (a little slow)",
     }
 )
-def test(context, quiet=False, webtests=False, html_validation=False):
+def test(context, full=False, quiet=False, webtests=False, html_validation=False):
     """Run the tests.
 
     By default, webtests (ones that make actual HTTP requests to the app) and HTML
@@ -58,10 +59,11 @@ def test(context, quiet=False, webtests=False, html_validation=False):
     pytest_args = []
     excluded_markers = []
 
-    if not webtests:
-        excluded_markers.append("webtest")
-    if not html_validation:
-        excluded_markers.append("html_validation")
+    if not full:
+        if not webtests:
+            excluded_markers.append("webtest")
+        if not html_validation:
+            excluded_markers.append("html_validation")
 
     if excluded_markers:
         excluded_marker_str = " or ".join(excluded_markers)
