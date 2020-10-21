@@ -6,6 +6,7 @@
 from pathlib import Path
 
 from invoke import task
+from invoke.exceptions import Exit
 
 
 def output(string):
@@ -34,6 +35,39 @@ def check_code_style(context, full=False):
 
         # -M flag hides the "summary information"
         context.run("prospector -M")
+
+
+@task
+def reload_web_server(context):
+    """Reload the web server, in order to apply config updates."""
+    context.run("sudo systemctl reload nginx.service")
+
+
+@task(
+    help={
+        "domain": "Domain to obtain a cert for (can be specified multiple times)",
+    },
+    iterable=["domain"],
+    post=[reload_web_server],
+)
+def renew_tls_certificate(context, domain, wildcard=True):
+    """Renew the TLS certificate for the specified domain(s)."""
+    if not domain:
+        raise Exit("No domains specified")
+
+    domains = []
+    for dom in domain:
+        domains.append(dom)
+        if wildcard:
+            domains.append(f"*.{dom}")
+
+    domain_args = " ".join([f"-d {dom}" for dom in domains])
+
+    context.run(
+        f"sudo certbot certonly --manual {domain_args} "
+        "--preferred-challenges dns-01 "
+        "--server https://acme-v02.api.letsencrypt.org/directory"
+    )
 
 
 @task(
