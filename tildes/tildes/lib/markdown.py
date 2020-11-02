@@ -92,7 +92,7 @@ ALLOWED_HTML_TAGS = (
     "tr",
     "ul",
 )
-ALLOWED_LINK_PROTOCOLS = ("http", "https", "mailto")
+ALLOWED_LINK_PROTOCOLS = ("gemini", "http", "https", "mailto")
 
 ALLOWED_HTML_ATTRIBUTES_DEFAULT = {
     "a": ["href", "title"],
