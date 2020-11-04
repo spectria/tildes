@@ -14,6 +14,12 @@ def output(string):
     print(string, end="", flush=True)
 
 
+@task
+def web_server_reload(context):
+    """Reload the web server, in order to apply config updates."""
+    context.run("sudo systemctl reload nginx.service")
+
+
 @task(help={"full": "Include all checks (very slow)"})
 def code_style_check(context, full=False):
     """Run the various utilities to check code style.
@@ -38,36 +44,27 @@ def code_style_check(context, full=False):
 
 
 @task
-def web_server_reload(context):
-    """Reload the web server, in order to apply config updates."""
-    context.run("sudo systemctl reload nginx.service")
+def pip_requirements_update(context):
+    """Use pip-tools to update package versions in the requirements files."""
+
+    for filename in ("requirements.in", "requirements-dev.in"):
+        print(f"Updating package versions from {filename}")
+        context.run(
+            f"pip-compile --no-header --no-annotate --quiet --upgrade {filename}"
+        )
 
 
-@task(
-    help={
-        "domain": "Domain to obtain a cert for (can be specified multiple times)",
-    },
-    iterable=["domain"],
-    post=[web_server_reload],
-)
-def tls_certificate_renew(context, domain, wildcard=True):
-    """Renew the TLS certificate for the specified domain(s)."""
-    if not domain:
-        raise Exit("No domains specified")
+@task
+def shell(context):
+    """Start an IPython shell inside the app environment.
 
-    domains = []
-    for dom in domain:
-        domains.append(dom)
-        if wildcard:
-            domains.append(f"*.{dom}")
-
-    domain_args = " ".join([f"-d {dom}" for dom in domains])
-
-    context.run(
-        f"sudo certbot certonly --manual {domain_args} "
-        "--preferred-challenges dns-01 "
-        "--server https://acme-v02.api.letsencrypt.org/directory"
-    )
+    Will use the settings in production.ini if that file exists, otherwise will fall
+    back to using development.ini.
+    """
+    if Path("production.ini").exists():
+        context.run("pshell production.ini", pty=True)
+    else:
+        context.run("pshell development.ini", pty=True)
 
 
 @task(
@@ -114,17 +111,31 @@ def test(context, full=False, quiet=False, webtests=False, html_validation=False
         context.run("pytest " + " ".join(pytest_args), pty=True)
 
 
-@task
-def shell(context):
-    """Start an IPython shell inside the app environment.
+@task(
+    help={
+        "domain": "Domain to obtain a cert for (can be specified multiple times)",
+    },
+    iterable=["domain"],
+    post=[web_server_reload],
+)
+def tls_certificate_renew(context, domain, wildcard=True):
+    """Renew the TLS certificate for the specified domain(s)."""
+    if not domain:
+        raise Exit("No domains specified")
 
-    Will use the settings in production.ini if that file exists, otherwise will fall
-    back to using development.ini.
-    """
-    if Path("production.ini").exists():
-        context.run("pshell production.ini", pty=True)
-    else:
-        context.run("pshell development.ini", pty=True)
+    domains = []
+    for dom in domain:
+        domains.append(dom)
+        if wildcard:
+            domains.append(f"*.{dom}")
+
+    domain_args = " ".join([f"-d {dom}" for dom in domains])
+
+    context.run(
+        f"sudo certbot certonly --manual {domain_args} "
+        "--preferred-challenges dns-01 "
+        "--server https://acme-v02.api.letsencrypt.org/directory"
+    )
 
 
 @task
@@ -132,14 +143,3 @@ def type_check(context):
     """Run static type checking on the Python code."""
     output("Running static type checking... ")
     context.run("mypy .")
-
-
-@task
-def pip_requirements_update(context):
-    """Use pip-tools to update package versions in the requirements files."""
-
-    for filename in ("requirements.in", "requirements-dev.in"):
-        print(f"Updating package versions from {filename}")
-        context.run(
-            f"pip-compile --no-header --no-annotate --quiet --upgrade {filename}"
-        )
