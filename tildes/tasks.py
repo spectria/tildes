@@ -15,7 +15,7 @@ def output(string):
 
 
 @task(help={"full": "Include all checks (very slow)"})
-def check_code_style(context, full=False):
+def code_style_check(context, full=False):
     """Run the various utilities to check code style.
 
     By default, runs checks that return relatively quickly. To run the full set of
@@ -38,7 +38,7 @@ def check_code_style(context, full=False):
 
 
 @task
-def reload_web_server(context):
+def web_server_reload(context):
     """Reload the web server, in order to apply config updates."""
     context.run("sudo systemctl reload nginx.service")
 
@@ -48,9 +48,9 @@ def reload_web_server(context):
         "domain": "Domain to obtain a cert for (can be specified multiple times)",
     },
     iterable=["domain"],
-    post=[reload_web_server],
+    post=[web_server_reload],
 )
-def renew_tls_certificate(context, domain, wildcard=True):
+def tls_certificate_renew(context, domain, wildcard=True):
     """Renew the TLS certificate for the specified domain(s)."""
     if not domain:
         raise Exit("No domains specified")
@@ -128,14 +128,14 @@ def shell(context):
 
 
 @task
-def type_checking(context):
+def type_check(context):
     """Run static type checking on the Python code."""
     output("Running static type checking... ")
     context.run("mypy .")
 
 
 @task
-def update_pip_requirements(context):
+def pip_requirements_update(context):
     """Use pip-tools to update package versions in the requirements files."""
 
     for filename in ("requirements.in", "requirements-dev.in"):

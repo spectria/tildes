@@ -3,4 +3,4 @@
 # Pre-push hook script that ensures all tests and code checks pass
 
 vagrant ssh -c ". activate \
-    && invoke type-checking test --quiet --full check-code-style --full"
+    && invoke type-check test --quiet --full code-style-check --full"

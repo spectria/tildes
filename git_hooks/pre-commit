@@ -3,4 +3,4 @@
 # Pre-commit hook script that ensures type-checking, tests, and fast style checks pass
 
 vagrant ssh -c ". activate \
-    && invoke type-checking test --quiet check-code-style"
+    && invoke type-check test --quiet code-style-check"
