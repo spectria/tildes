@@ -20,7 +20,8 @@
   grid-template-areas:
     "title    voting"
     "metadata voting"
-    "info     actions";
+    "info     actions"
+    "action-settings action-settings";
   grid-template-columns: 1fr auto;
   grid-gap: 0.2rem;
 
@@ -37,16 +38,24 @@
 
   position: relative;
 
+  // smaller bottom padding to account for the empty .post-action-settings div
   padding: 0.2rem;
+  padding-bottom: 0;
 
   @media (min-width: $size-sm) {
+    // smaller bottom padding to account for the empty .post-action-settings div
     padding: 0.4rem;
+    padding-bottom: 0.2rem;
   }
 
   font-size: 0.6rem;
 
   header {
     grid-area: title;
+  }
+
+  .post-action-settings {
+    grid-area: action-settings;
   }
 
   .topic-metadata {

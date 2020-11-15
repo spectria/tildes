@@ -203,7 +203,7 @@
 {% endmacro %}
 
 {% macro topic_actions(topic) %}
-  {% if request.has_any_permission(("bookmark", "ignore"), topic) %}
+  {% if request.has_any_permission(("bookmark", "ignore", "edit_title"), topic) %}
     <div class="dropdown dropdown-right topic-actions">
       <button class="btn dropdown-toggle">
         Actions
@@ -217,9 +217,21 @@
         {% if request.has_permission("ignore", topic) %}
           <li>{{ post_action_toggle_button("ignore", topic, is_toggled=topic.user_ignored, trigger_name="topic-actions-ignore") }}</li>
         {% endif %}
-      </ul>
+
+        {% if request.has_permission("edit_title", topic) %}
+          <li><button class="btn-post-action" name="edit-title"
+            data-ic-get-from="{{ request.route_url(
+              'ic_topic_title',
+              topic_id36=topic.topic_id36,
+            ) }}"
+            data-ic-swap-style="replace"
+            data-ic-target="#topic-{{ topic.topic_id36 }} .post-action-settings"
+          >Edit title</button>
+        {% endif %}
+      </menu>
     </div>
   {% endif %}
+  <div class="post-action-settings"></div>
 {% endmacro %}
 
 {% macro topic_classes(topic) %}
