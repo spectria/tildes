@@ -3,6 +3,7 @@
 
 """Contains the CommentNotificationQuery class."""
 
+from __future__ import annotations
 from typing import Any
 
 from pyramid.request import Request
@@ -32,7 +33,7 @@ class CommentNotificationQuery(PaginatedQuery):
             .subquery()
         )
 
-    def _attach_extra_data(self) -> "CommentNotificationQuery":
+    def _attach_extra_data(self) -> CommentNotificationQuery:
         """Attach the user's comment votes to the query."""
         vote_subquery = (
             self.request.query(CommentVote)
@@ -45,7 +46,7 @@ class CommentNotificationQuery(PaginatedQuery):
         )
         return self.add_columns(vote_subquery)
 
-    def join_all_relationships(self) -> "CommentNotificationQuery":
+    def join_all_relationships(self) -> CommentNotificationQuery:
         """Eagerly join the comment, topic, and group to the notification."""
         # pylint: disable=self-cls-assignment
         self = self.options(
@@ -69,7 +70,7 @@ class CommentNotificationQuery(PaginatedQuery):
 
         return notification
 
-    def get_page(self, per_page: int) -> "CommentNotificationResults":
+    def get_page(self, per_page: int) -> CommentNotificationResults:
         """Get a page worth of results from the query (`per page` items)."""
         return CommentNotificationResults(self, per_page)
 

@@ -3,6 +3,7 @@
 
 """Contains the Topic class."""
 
+from __future__ import annotations
 from datetime import datetime, timedelta
 from itertools import chain
 from pathlib import PurePosixPath
@@ -217,7 +218,7 @@ class Topic(DatabaseModel):
         return f'<Topic "{self.title}" ({self.topic_id})>'
 
     @classmethod
-    def _create_base_topic(cls, group: Group, author: User, title: str) -> "Topic":
+    def _create_base_topic(cls, group: Group, author: User, title: str) -> Topic:
         """Create the "base" for a new topic."""
         new_topic = cls()
         new_topic.group = group
@@ -234,7 +235,7 @@ class Topic(DatabaseModel):
     @classmethod
     def create_text_topic(
         cls, group: Group, author: User, title: str, markdown: str = ""
-    ) -> "Topic":
+    ) -> Topic:
         """Create a new text topic."""
         new_topic = cls._create_base_topic(group, author, title)
         new_topic.topic_type = TopicType.TEXT
@@ -245,7 +246,7 @@ class Topic(DatabaseModel):
     @classmethod
     def create_link_topic(
         cls, group: Group, author: User, title: str, link: str
-    ) -> "Topic":
+    ) -> Topic:
         """Create a new link topic."""
         new_topic = cls._create_base_topic(group, author, title)
         new_topic.topic_type = TopicType.LINK

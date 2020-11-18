@@ -3,6 +3,7 @@
 
 """Functions/classes related to dates and times."""
 
+from __future__ import annotations
 import re
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
@@ -30,7 +31,7 @@ class SimpleHoursPeriod:
             raise ValueError("Time period is too large")
 
     @classmethod
-    def from_short_form(cls, short_form: str) -> "SimpleHoursPeriod":
+    def from_short_form(cls, short_form: str) -> SimpleHoursPeriod:
         """Initialize a period from a "short form" string (e.g. "2h", "4d")."""
         if not cls._SHORT_FORM_REGEX.match(short_form):
             raise ValueError("Invalid time period")

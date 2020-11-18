@@ -3,6 +3,7 @@
 
 """Classes and constants related to rate-limited actions."""
 
+from __future__ import annotations
 from datetime import timedelta
 from ipaddress import ip_address
 from typing import Any, List, Optional, Sequence
@@ -58,7 +59,7 @@ class RateLimitResult:
         )
 
     @classmethod
-    def unlimited_result(cls) -> "RateLimitResult":
+    def unlimited_result(cls) -> RateLimitResult:
         """Return a "blank" result representing an unlimited action."""
         return cls(
             is_allowed=True,
@@ -68,7 +69,7 @@ class RateLimitResult:
         )
 
     @classmethod
-    def from_redis_cell_result(cls, result: List[int]) -> "RateLimitResult":
+    def from_redis_cell_result(cls, result: List[int]) -> RateLimitResult:
         """Convert the response from CL.THROTTLE command to a RateLimitResult.
 
         CL.THROTTLE responds with an array of 5 integers:
@@ -98,7 +99,7 @@ class RateLimitResult:
         )
 
     @classmethod
-    def merged_result(cls, results: Sequence["RateLimitResult"]) -> "RateLimitResult":
+    def merged_result(cls, results: Sequence["RateLimitResult"]) -> RateLimitResult:
         """Merge any number of RateLimitResults into a single result.
 
         Basically, the merged result should be the "most restrictive" combination of all

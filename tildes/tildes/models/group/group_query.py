@@ -3,6 +3,7 @@
 
 """Contains the GroupQuery class."""
 
+from __future__ import annotations
 from typing import Any
 
 from pyramid.request import Request
@@ -24,14 +25,14 @@ class GroupQuery(ModelQuery):
         """
         super().__init__(Group, request)
 
-    def _attach_extra_data(self) -> "GroupQuery":
+    def _attach_extra_data(self) -> GroupQuery:
         """Attach the extra user data to the query."""
         if not self.request.user:
             return self
 
         return self._attach_subscription_data()
 
-    def _attach_subscription_data(self) -> "GroupQuery":
+    def _attach_subscription_data(self) -> GroupQuery:
         """Add a subquery to include whether the user is subscribed."""
         subscription_subquery = (
             self.request.query(GroupSubscription)

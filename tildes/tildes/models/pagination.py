@@ -3,6 +3,7 @@
 
 """Contains the PaginatedQuery and PaginatedResults classes."""
 
+from __future__ import annotations
 from itertools import chain
 from typing import Any, Iterator, List, Optional, Sequence, TypeVar
 
@@ -85,14 +86,14 @@ class PaginatedQuery(ModelQuery):
         """
         return bool(self.before_id)
 
-    def anchor_type(self, anchor_type: str) -> "PaginatedQuery":
+    def anchor_type(self, anchor_type: str) -> PaginatedQuery:
         """Set the type of the "anchor" (before/after item) (generative)."""
         anchor_table_name = anchor_type + "s"
         self._anchor_table = self.model_cls.metadata.tables.get(anchor_table_name)
 
         return self
 
-    def after_id36(self, id36: str) -> "PaginatedQuery":
+    def after_id36(self, id36: str) -> PaginatedQuery:
         """Restrict the query to results after an id36 (generative)."""
         if self.before_id:
             raise ValueError("Can't set both before and after restrictions")
@@ -101,7 +102,7 @@ class PaginatedQuery(ModelQuery):
 
         return self
 
-    def before_id36(self, id36: str) -> "PaginatedQuery":
+    def before_id36(self, id36: str) -> PaginatedQuery:
         """Restrict the query to results before an id36 (generative)."""
         if self.after_id:
             raise ValueError("Can't set both before and after restrictions")
@@ -110,7 +111,7 @@ class PaginatedQuery(ModelQuery):
 
         return self
 
-    def _apply_before_or_after(self) -> "PaginatedQuery":
+    def _apply_before_or_after(self) -> PaginatedQuery:
         """Apply the "before" or "after" restrictions if necessary."""
         # pylint: disable=assignment-from-no-return
         if not (self.after_id or self.before_id):
@@ -165,7 +166,7 @@ class PaginatedQuery(ModelQuery):
             .subquery()
         )
 
-    def _finalize(self) -> "PaginatedQuery":
+    def _finalize(self) -> PaginatedQuery:
         """Finalize the query before execution."""
         query = super()._finalize()
 
@@ -185,7 +186,7 @@ class PaginatedQuery(ModelQuery):
 
         return query
 
-    def get_page(self, per_page: int) -> "PaginatedResults":
+    def get_page(self, per_page: int) -> PaginatedResults:
         """Get a page worth of results from the query (`per page` items)."""
         return PaginatedResults(self, per_page)
 

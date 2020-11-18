@@ -3,6 +3,7 @@
 
 """Contains the TopicQuery class."""
 
+from __future__ import annotations
 from typing import Any, Sequence
 
 from pyramid.request import Request
@@ -40,7 +41,7 @@ class TopicQuery(PaginatedQuery):
 
         self.filter_ignored = False
 
-    def _attach_extra_data(self) -> "TopicQuery":
+    def _attach_extra_data(self) -> TopicQuery:
         """Attach the extra user data to the query."""
         if not self.request.user:
             return self
@@ -53,7 +54,7 @@ class TopicQuery(PaginatedQuery):
             ._attach_ignored_data()
         )
 
-    def _finalize(self) -> "TopicQuery":
+    def _finalize(self) -> TopicQuery:
         """Finalize the query before it's executed."""
         # pylint: disable=self-cls-assignment
         self = super()._finalize()
@@ -63,7 +64,7 @@ class TopicQuery(PaginatedQuery):
 
         return self
 
-    def _attach_vote_data(self) -> "TopicQuery":
+    def _attach_vote_data(self) -> TopicQuery:
         """Join the data related to whether the user has voted on the topic."""
         query = self.join(
             TopicVote,
@@ -77,7 +78,7 @@ class TopicQuery(PaginatedQuery):
 
         return query
 
-    def _attach_bookmark_data(self) -> "TopicQuery":
+    def _attach_bookmark_data(self) -> TopicQuery:
         """Join the data related to whether the user has bookmarked the topic."""
         query = self.join(
             TopicBookmark,
@@ -91,7 +92,7 @@ class TopicQuery(PaginatedQuery):
 
         return query
 
-    def _attach_visit_data(self) -> "TopicQuery":
+    def _attach_visit_data(self) -> TopicQuery:
         """Join the data related to the user's last visit to the topic(s)."""
         # subquery using LATERAL to select only the newest visit for each topic
         lateral_subquery = (
@@ -116,7 +117,7 @@ class TopicQuery(PaginatedQuery):
 
         return query
 
-    def _attach_ignored_data(self) -> "TopicQuery":
+    def _attach_ignored_data(self) -> TopicQuery:
         """Join the data related to whether the user has ignored the topic."""
         query = self.join(
             TopicIgnore,
@@ -160,7 +161,7 @@ class TopicQuery(PaginatedQuery):
 
     def apply_sort_option(
         self, sort: TopicSortOption, is_desc: bool = True
-    ) -> "TopicQuery":
+    ) -> TopicQuery:
         """Apply a TopicSortOption sorting method (generative)."""
         if sort == TopicSortOption.VOTES:
             self._sort_column = Topic.num_votes
@@ -179,7 +180,7 @@ class TopicQuery(PaginatedQuery):
 
     def inside_groups(
         self, groups: Sequence[Group], include_subgroups: bool = True
-    ) -> "TopicQuery":
+    ) -> TopicQuery:
         """Restrict the topics to inside specific groups (generative)."""
         if include_subgroups:
             query_paths = [group.path for group in groups]
@@ -191,7 +192,7 @@ class TopicQuery(PaginatedQuery):
 
         return self.filter(Topic.group_id.in_(group_ids))  # type: ignore
 
-    def inside_time_period(self, period: SimpleHoursPeriod) -> "TopicQuery":
+    def inside_time_period(self, period: SimpleHoursPeriod) -> TopicQuery:
         """Restrict the topics to inside a time period (generative)."""
         # if the time period is too long, this will crash by creating a datetime outside
         # the valid range - catch that and just don't filter by time period at all if
@@ -203,7 +204,7 @@ class TopicQuery(PaginatedQuery):
 
         return self.filter(Topic.created_time > start_time)
 
-    def has_tag(self, tag: str) -> "TopicQuery":
+    def has_tag(self, tag: str) -> TopicQuery:
         """Restrict the topics to ones with a specific tag (generative).
 
         Note that this method searches for topics that have any tag that contains
@@ -214,7 +215,7 @@ class TopicQuery(PaginatedQuery):
         # pylint: disable=protected-access
         return self.filter(Topic.tags.lquery(query))  # type: ignore
 
-    def search(self, query: str) -> "TopicQuery":
+    def search(self, query: str) -> TopicQuery:
         """Restrict the topics to ones that match a search query (generative)."""
         # Replace "." with space, since tags are stored as space-separated strings
         # in the search index.
@@ -223,24 +224,24 @@ class TopicQuery(PaginatedQuery):
 
         return self.filter(Topic.search_tsv.op("@@")(func.websearch_to_tsquery(query)))
 
-    def only_bookmarked(self) -> "TopicQuery":
+    def only_bookmarked(self) -> TopicQuery:
         """Restrict the topics to ones that the user has bookmarked (generative)."""
         self._only_bookmarked = True
         return self
 
-    def only_user_voted(self) -> "TopicQuery":
+    def only_user_voted(self) -> TopicQuery:
         """Restrict the topics to ones that the user has voted on (generative)."""
         self._only_user_voted = True
         return self
 
-    def only_ignored(self) -> "TopicQuery":
+    def only_ignored(self) -> TopicQuery:
         """Restrict the topics to ones that the user has ignored (generative)."""
         # pylint: disable=self-cls-assignment
         self._only_ignored = True
 
         return self
 
-    def exclude_ignored(self) -> "TopicQuery":
+    def exclude_ignored(self) -> TopicQuery:
         """Specify that ignored topics should be excluded (generative)."""
         self.filter_ignored = True
 

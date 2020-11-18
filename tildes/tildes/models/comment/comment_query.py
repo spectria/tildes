@@ -3,6 +3,7 @@
 
 """Contains the CommentQuery class."""
 
+from __future__ import annotations
 from typing import Any
 
 from pyramid.request import Request
@@ -31,7 +32,7 @@ class CommentQuery(PaginatedQuery):
         self._only_bookmarked = False
         self._only_user_voted = False
 
-    def _attach_extra_data(self) -> "CommentQuery":
+    def _attach_extra_data(self) -> CommentQuery:
         """Attach the extra user data to the query."""
         # pylint: disable=protected-access
         if not self.request.user:
@@ -39,7 +40,7 @@ class CommentQuery(PaginatedQuery):
 
         return self._attach_vote_data()._attach_bookmark_data()
 
-    def _attach_vote_data(self) -> "CommentQuery":
+    def _attach_vote_data(self) -> CommentQuery:
         """Join the data related to whether the user has voted on the comment."""
         query = self.join(
             CommentVote,
@@ -53,7 +54,7 @@ class CommentQuery(PaginatedQuery):
 
         return query
 
-    def _attach_bookmark_data(self) -> "CommentQuery":
+    def _attach_bookmark_data(self) -> CommentQuery:
         """Join the data related to whether the user has bookmarked the comment."""
         query = self.join(
             CommentBookmark,
@@ -86,7 +87,7 @@ class CommentQuery(PaginatedQuery):
 
     def apply_sort_option(
         self, sort: CommentSortOption, desc: bool = True
-    ) -> "CommentQuery":
+    ) -> CommentQuery:
         """Apply a CommentSortOption sorting method (generative)."""
         if sort == CommentSortOption.VOTES:
             self._sort_column = Comment.num_votes
@@ -97,18 +98,18 @@ class CommentQuery(PaginatedQuery):
 
         return self
 
-    def search(self, query: str) -> "CommentQuery":
+    def search(self, query: str) -> CommentQuery:
         """Restrict the comments to ones that match a search query (generative)."""
         return self.filter(
             Comment.search_tsv.op("@@")(func.websearch_to_tsquery(query))
         )
 
-    def only_bookmarked(self) -> "CommentQuery":
+    def only_bookmarked(self) -> CommentQuery:
         """Restrict the comments to ones that the user has bookmarked (generative)."""
         self._only_bookmarked = True
         return self
 
-    def only_user_voted(self) -> "CommentQuery":
+    def only_user_voted(self) -> CommentQuery:
         """Restrict the comments to ones that the user has voted on (generative)."""
         self._only_user_voted = True
         return self
