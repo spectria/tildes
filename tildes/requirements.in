@@ -9,6 +9,7 @@ gunicorn
 html5lib
 invoke
 ipython
+lupa
 marshmallow
 Pillow
 pip-tools

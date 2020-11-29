@@ -13,7 +13,7 @@ from tildes.models.comment import (
     CommentVote,
 )
 from tildes.models.financials import Financials
-from tildes.models.group import Group, GroupStat, GroupSubscription
+from tildes.models.group import Group, GroupScript, GroupStat, GroupSubscription
 from tildes.models.log import Log
 from tildes.models.message import MessageConversation, MessageReply
 from tildes.models.scraper import ScraperResult

@@ -22,6 +22,14 @@
     - group: root
     - mode: 644
 
+/etc/systemd/system/consumer-post_processing_script_runner.service:
+  file.managed:
+    - source: salt://consumers/post_processing_script_runner.service.jinja2
+    - template: jinja
+    - user: root
+    - group: root
+    - mode: 644
+
 consumer-topic_interesting_activity_updater.service:
   service.running:
     - enable: True
@@ -31,6 +39,10 @@ consumer-topic_metadata_generator.service:
     - enable: True
 
 consumer-comment_user_mentions_generator.service:
+  service.running:
+    - enable: True
+
+consumer-post_processing_script_runner.service:
   service.running:
     - enable: True
 
