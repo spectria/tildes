@@ -1,8 +1,10 @@
-{% from 'common.jinja2' import app_dir -%}
+{% from 'common.jinja2' import app_dir, app_username -%}
 [Unit]
 Description=Boussole - auto-compile SCSS files on change
 
 [Service]
+User={{ app_username }}
+Group={{ app_username }}
 WorkingDirectory={{ app_dir }}
 Environment="LC_ALL=C.UTF-8" "LANG=C.UTF-8"
 ExecStart=/opt/venvs/boussole/bin/boussole watch --backend=yaml --config=boussole.yaml --poll
