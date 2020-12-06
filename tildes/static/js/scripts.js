@@ -10,6 +10,15 @@ $(function() {
         var token = $("meta[name='csrftoken']").attr("content");
         ajaxSetup.headers["X-CSRF-Token"] = token;
 
+        // Remove the ic-current-url param - we aren't using it, and there are some
+        // overzealous content blockers reacting to phrases like "_show_ads_" in it.
+        // All browsers that don't support this API also don't have content blockers
+        if ("URLSearchParams" in window) {
+            var params = new URLSearchParams(ajaxSetup.data);
+            params.delete("ic-current-url");
+            ajaxSetup.data = params.toString();
+        }
+
         // This is pretty ugly - adds an X-IC-Trigger-Name header for DELETE
         // requests since the POST params are not accessible
         if (ajaxSetup.headers["X-HTTP-Method-Override"] === "DELETE") {
