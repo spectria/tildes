@@ -41,6 +41,7 @@ def get_donate_stripe(request: Request) -> dict:
     },
     location="form",
 )
+@rate_limit_view("global_donate_stripe")
 @rate_limit_view("donate_stripe")
 def post_donate_stripe(
     request: Request, amount: int, currency: str, interval: str
