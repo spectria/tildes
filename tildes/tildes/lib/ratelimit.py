@@ -185,9 +185,6 @@ class RateLimitedAction:
         if max_burst and not 1 <= max_burst <= limit:
             raise ValueError("max_burst must be at least 1 and <= limit")
 
-        if not (by_user or by_ip):
-            raise ValueError("At least one of by_user or by_ip must be True")
-
         self.name = name
         self.period = period
         self.limit = limit
@@ -218,9 +215,16 @@ class RateLimitedAction:
         """Set the redis connection."""
         self._redis = redis_connection
 
-    def _build_redis_key(self, by_type: str, value: Any) -> str:
+    @property
+    def is_global(self) -> bool:
+        """Whether the rate limit applies globally, not to particular users or IPs."""
+        return not (self.by_user or self.by_ip)
+
+    def _build_redis_key(self, by_type: str, value: Any = None) -> str:
         """Build the Redis key where this rate limit is maintained."""
-        parts = ["ratelimit", self.name, by_type, str(value)]
+        parts = ["ratelimit", self.name, by_type]
+        if value:
+            parts.append(str(value))
 
         return ":".join(parts)
 
@@ -233,6 +237,24 @@ class RateLimitedAction:
             self.limit,
             int(self.period.total_seconds()),
         )
+
+    def check_global(self) -> RateLimitResult:
+        """Check a global rate limit to see if anyone can perform this action."""
+        if not self.is_global:
+            raise RateLimitError("check_global called on non-global-limited action")
+
+        key = self._build_redis_key("global")
+        result = self._call_redis_command(key)
+
+        return RateLimitResult.from_redis_cell_result(result)
+
+    def reset_global(self) -> None:
+        """Reset the global ratelimit on this action."""
+        if not self.is_global:
+            raise RateLimitError("reset_global called on non-global-limited action")
+
+        key = self._build_redis_key("global")
+        self.redis.delete(key)
 
     def check_for_user_id(self, user_id: int) -> RateLimitResult:
         """Check whether a particular user_id can perform this action."""

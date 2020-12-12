@@ -24,10 +24,15 @@ def test_all_rate_limited_action_names_unique():
         seen_names.add(action.name)
 
 
-def test_action_with_all_types_disabled():
-    """Ensure RateLimitedAction can't have both by_user and by_ip disabled."""
-    with raises(ValueError):
-        RateLimitedAction("test", timedelta(hours=1), 5, by_user=False, by_ip=False)
+def test_check_global_disabled():
+    """Ensure global check is disabled if action is by_user or by_ip."""
+    action = RateLimitedAction("test", timedelta(hours=1), 5, by_user=True, by_ip=False)
+    with raises(RateLimitError):
+        action.check_global()
+
+    action = RateLimitedAction("test", timedelta(hours=1), 5, by_user=False, by_ip=True)
+    with raises(RateLimitError):
+        action.check_global()
 
 
 def test_check_by_user_id_disabled():
@@ -51,6 +56,31 @@ def test_max_burst_with_limit_1():
     action = RateLimitedAction("test", timedelta(hours=1), 1)
 
     assert action.max_burst == 1
+
+
+def test_simple_global_rate_limiting(redis):
+    """Ensure simple global rate-limiting is working."""
+    limit = 5
+
+    # define an action with max_burst equal to the full limit
+    action = RateLimitedAction(
+        "testaction",
+        timedelta(hours=1),
+        limit,
+        max_burst=limit,
+        by_user=False,
+        by_ip=False,
+        redis=redis,
+    )
+
+    # run the action the full number of times, should all be allowed
+    for _ in range(limit):
+        result = action.check_global()
+        assert result.is_allowed
+
+    # try one more time, should be rejected
+    result = action.check_global()
+    assert not result.is_allowed
 
 
 def test_simple_rate_limiting_by_user_id(redis):

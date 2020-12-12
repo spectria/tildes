@@ -90,6 +90,9 @@ def check_rate_limit(request: Request, action_name: str) -> RateLimitResult:
 
     results = []
 
+    if action.is_global:
+        results.append(action.check_global())
+
     if action.by_user and request.user:
         results.append(action.check_for_user_id(request.user.user_id))
 
