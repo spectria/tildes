@@ -223,7 +223,7 @@
   {% endif %}
 
   {% if group.sidebar_rendered_html %}
-    {{ group.sidebar_rendered_html|safe }}
+    <div class="group-sidebar-text">{{ group.sidebar_rendered_html|safe }}</div>
   {% endif %}
 
   {% if subgroups %}
