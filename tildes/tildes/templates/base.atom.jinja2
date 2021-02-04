@@ -1,0 +1,14 @@
+{# Copyright (c) 2021 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+    <title>{% block feed_title %}Tildes Atom feed{% endblock %}</title>
+    <id>{% block feed_id %}{{ request.current_route_url() }}{% endblock %}</id>
+    <link rel="self" href="{% block feed_link %}{{ request.current_route_url() }}{% endblock %}" />
+    <updated>{% block feed_updated %}{{ current_time.strftime("%Y-%m-%dT%H:%M:%SZ") }}{% endblock %}</updated>
+
+    {% block feed_entries %}{% endblock %}
+
+</feed>

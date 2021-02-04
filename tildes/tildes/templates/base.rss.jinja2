@@ -1,0 +1,15 @@
+{# Copyright (c) 2021 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+
+    <channel>
+        <title>{% block channel_title %}Tildes{% endblock %}</title>
+        <link>{% block channel_link %}https://tildes.net/{% endblock %}</link>
+        <description>{% block channel_description %}Tildes RSS feed{% endblock %}</description>
+
+        {% block channel_items %}{% endblock %}
+    </channel>
+
+</rss>

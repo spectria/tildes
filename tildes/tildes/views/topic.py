@@ -142,7 +142,11 @@ def post_group_topics(
 
 
 @view_config(route_name="home", renderer="home.jinja2")
+@view_config(route_name="home_atom", renderer="home.atom.jinja2")
+@view_config(route_name="home_rss", renderer="home.rss.jinja2")
 @view_config(route_name="group", renderer="topic_listing.jinja2")
+@view_config(route_name="group_topics_atom", renderer="topic_listing.atom.jinja2")
+@view_config(route_name="group_topics_rss", renderer="topic_listing.rss.jinja2")
 @use_kwargs(TopicListingSchema())
 def get_group_topics(  # noqa
     request: Request,
@@ -159,7 +163,9 @@ def get_group_topics(  # noqa
     # period needs special treatment so we can distinguish between missing and None
     period = kwargs.get("period", missing)
 
-    is_home_page = request.matched_route.name == "home"
+    is_home_page = request.matched_route.name in ["home", "home_atom", "home_rss"]
+    is_atom = request.matched_route.name in ["home_atom", "group_topics_atom"]
+    is_rss = request.matched_route.name in ["home_rss", "group_topics_rss"]
 
     if is_home_page:
         # on the home page, include topics from the user's subscribed groups
@@ -191,6 +197,11 @@ def get_group_topics(  # noqa
 
     if period is missing:
         period = default_settings.period
+
+    # force Newest sort order, and All Time period, for RSS feeds
+    if is_atom or is_rss:
+        order = TopicSortOption.NEW
+        period = None
 
     # set up the basic query for topics
     query = (
@@ -284,6 +295,11 @@ def get_group_topics(  # noqa
         financial_data = get_financial_data(request.db_session)
     else:
         financial_data = None
+
+    if is_atom:
+        request.response.content_type = "application/atom+xml"
+    if is_rss:
+        request.response.content_type = "application/rss+xml"
 
     return {
         "group": request.context,

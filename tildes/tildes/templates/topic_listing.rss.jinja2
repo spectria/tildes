@@ -1,0 +1,37 @@
+{# Copyright (c) 2021 Tildes contributors <code@tildes.net> #}
+{# SPDX-License-Identifier: AGPL-3.0-or-later #}
+
+{% extends 'base.rss.jinja2' %}
+
+{% block channel_title %}~{{ group.path }} - Tildes{% endblock %}
+{% block channel_link %}https://tildes.net/~{{ group.path }}{% endblock %}
+{% block channel_description %}Topics in ~{{ group.path }}{% endblock %}
+
+{% block channel_items %}
+
+    {% for topic in topics %}
+        <item>
+            <title><![CDATA[{{ topic.title }}]]></title>
+            {% if topic.is_link_type %}
+                <link>{{ topic.link }}</link>
+            {% else %}
+                <link>{{ topic.permalink }}</link>
+            {% endif %}
+            <description><![CDATA[
+                {% if topic.is_link_type %}
+                    <p>Link URL: <a href="{{ topic.link }}">{{ topic.link }}</a></p>
+                {% elif topic.is_text_type %}
+                    {{ topic.rendered_html|safe }}
+                    <hr/>
+                {% endif %}
+                <p>Comments URL: <a href="{{ topic.permalink }}">https://tildes.net{{ topic.permalink }}</a></p>
+                <p>Votes: {{ topic.num_votes }}</p>
+                <p>Comments: {{ topic.num_comments }}</p>
+            ]]></description>
+            <author>{{ topic.user.username }}</author>
+            <comments>{{ topic.permalink }}</comments>
+            <pubDate>{{ topic.created_time.strftime("%a, %d %b %Y %T %z") }}</pubDate>
+        </item>
+    {% endfor %}
+
+{% endblock %}

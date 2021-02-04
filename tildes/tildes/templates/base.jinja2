@@ -55,6 +55,9 @@
   <meta name="application-name" content="Tildes">
   <meta name="msapplication-TileColor" content="#002b36">
 
+  {# RSS/Atom feeds #}
+  {% block link_alternate_feeds %}{% endblock %}
+
   <title>{% block title_full %}{% block title %}{% endblock %} - Tildes{% endblock %}</title>
 
   {% block templates %}{% endblock %}

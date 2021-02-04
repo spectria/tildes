@@ -19,6 +19,8 @@ from tildes.resources.user import user_by_username
 def includeme(config: Configurator) -> None:
     """Set up application routes."""
     config.add_route("home", "/")
+    config.add_route("home_atom", "/topics.atom")
+    config.add_route("home_rss", "/topics.rss")
 
     config.add_route("search", "/search")
 
@@ -37,6 +39,8 @@ def includeme(config: Configurator) -> None:
         config.add_route("new_topic", "/new_topic", factory=group_by_path)
 
         config.add_route("group_topics", "/topics", factory=group_by_path)
+        config.add_route("group_topics_atom", "/topics.atom", factory=group_by_path)
+        config.add_route("group_topics_rss", "/topics.rss", factory=group_by_path)
 
         config.add_route("group_search", "/search", factory=group_by_path)
 
