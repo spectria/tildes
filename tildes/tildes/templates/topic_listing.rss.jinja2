@@ -15,7 +15,7 @@
             {% if topic.is_link_type %}
                 <link>{{ topic.link }}</link>
             {% else %}
-                <link>{{ topic.permalink }}</link>
+                <link>{{ topic.permalink_absolute }}</link>
             {% endif %}
             <description><![CDATA[
                 {% if topic.is_link_type %}
@@ -24,12 +24,12 @@
                     {{ topic.rendered_html|safe }}
                     <hr/>
                 {% endif %}
-                <p>Comments URL: <a href="{{ topic.permalink }}">https://tildes.net{{ topic.permalink }}</a></p>
+                <p>Comments URL: <a href="{{ topic.permalink_absolute }}">{{ topic.permalink_absolute }}</a></p>
                 <p>Votes: {{ topic.num_votes }}</p>
                 <p>Comments: {{ topic.num_comments }}</p>
             ]]></description>
             <author>{{ topic.user.username }}</author>
-            <comments>{{ topic.permalink }}</comments>
+            <comments>{{ topic.permalink_absolute }}</comments>
             <pubDate>{{ topic.created_time.strftime("%a, %d %b %Y %T %z") }}</pubDate>
         </item>
     {% endfor %}

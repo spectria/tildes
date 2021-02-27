@@ -10,11 +10,11 @@
     {% for topic in topics %}
         <entry>
             <title><![CDATA[{{ topic.title }}]]></title>
-            <id>https://tildes.net{{ topic.permalink }}</id>
+            <id>{{ topic.permalink_absolute }}</id>
             {% if topic.is_link_type %}
                 <link rel="alternate" href="{{ topic.link }}"/>
             {% else %}
-                <link rel="alternate" href="{{ topic.permalink }}"/>
+                <link rel="alternate" href="{{ topic.permalink_absolute }}"/>
             {% endif %}
             <content type="html"><![CDATA[
                 {% if topic.is_link_type %}
@@ -23,7 +23,7 @@
                     {{ topic.rendered_html|safe }}
                     <hr/>
                 {% endif %}
-                <p>Comments URL: <a href="{{ topic.permalink }}">https://tildes.net{{ topic.permalink }}</a></p>
+                <p>Comments URL: <a href="{{ topic.permalink_absolute }}">{{ topic.permalink_absolute }}</a></p>
                 <p>Votes: {{ topic.num_votes }}</p>
                 <p>Comments: {{ topic.num_comments }}</p>
             ]]></content>

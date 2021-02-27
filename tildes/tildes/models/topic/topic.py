@@ -420,6 +420,11 @@ class Topic(DatabaseModel):
         return f"/~{self.group.path}/{self.topic_id36}/{self.url_slug}"
 
     @property
+    def permalink_absolute(self) -> str:
+        """Return the absolute permalink for this topic (domain included)."""
+        return f"https://tildes.net{self.permalink}"
+
+    @property
     def is_text_type(self) -> bool:
         """Return whether this is a text topic."""
         return self.topic_type is TopicType.TEXT
