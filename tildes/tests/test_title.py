@@ -78,3 +78,13 @@ def test_unicode_control_chars_removed(title_schema):
     title = "nothing\u0000strange\u0085going\u009con\u007fhere"
     result = title_schema.load({"title": title})
     assert result["title"] == "nothingstrangegoingonhere"
+
+
+def test_zero_width_joiner_emojis_kept(title_schema):
+    """Test that emojis are parsed correctly"""
+    title = "🤷🤷‍♂️🤷‍♀️🤷🏻🤷🏻‍♀️🤷🏻‍♂️🤷🏼🤷🏼‍♀️🤷🏼‍♂️🤷🏽🤷🏽‍♀️🤷🏽‍♂️🤷🏾🤷🏾‍♀️🤷🏾‍♂️🤷🏿🤷🏿‍♀️🤷🏿‍♂️"
+    result = title_schema.load({"title": title})
+    assert (
+        result["title"]
+        == "🤷🤷‍♂️🤷‍♀️🤷🏻🤷🏻‍♀️🤷🏻‍♂️🤷🏼🤷🏼‍♀️🤷🏼‍♂️🤷🏽🤷🏽‍♀️🤷🏽‍♂️🤷🏾🤷🏾‍♀️🤷🏾‍♂️🤷🏿🤷🏿‍♀️🤷🏿‍♂️"
+    )

@@ -77,6 +77,18 @@ def test_control_chars_removed():
     assert result == "I can be sneaky and add problemchars."
 
 
+def test_zero_width_joiners_kept_and_collapsed():
+    """"Ensure that multiple zero width joiners are collapsed like spaces."""
+    original = "🤷\u200D\u200D\u200D♀\u200d"
+    assert process_string(original) == "🤷\u200D♀"
+
+
+def test_zero_width_joiners_allowed_inside_emojis_and_not_other_words():
+    """"Ensure the zero width joiner char is kept inside emojis."""
+    original = "🤷\u200D♀ foo\u200dbar"
+    assert process_string(original) == "🤷\u200D♀ foobar"
+
+
 def test_leading_trailing_spaces_removed():
     """Ensure leading/trailing spaces are removed from the string."""
     original = "          Centered!          "

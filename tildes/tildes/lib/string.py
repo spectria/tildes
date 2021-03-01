@@ -178,7 +178,7 @@ def _sanitize_characters(original: str) -> str:
     """Process a string and filter/replace problematic unicode."""
     final_characters = []
 
-    for char in original:
+    for index, char in enumerate(original):
         category = unicodedata.category(char)
 
         if category.startswith("Z"):
@@ -189,6 +189,19 @@ def _sanitize_characters(original: str) -> str:
             # newlines, which are replaced with normal spaces
             if char == "\n":
                 final_characters.append(" ")
+            elif char == "\u200D":
+                final_length = len(final_characters)
+                # only check for the ZWJ if it's between two characters
+                if final_length <= index < len(original) - 1:
+                    char_before_category = unicodedata.category(
+                        final_characters[final_length - 1]
+                    )
+                    char_after_category = unicodedata.category(original[index + 1])
+                    # only keep the ZWJ if it's between two symbol characters
+                    if char_before_category.startswith(
+                        "S"
+                    ) and char_after_category.startswith("S"):
+                        final_characters.append("\u200D")
         else:
             # any other type of character, just keep it
             final_characters.append(char)
