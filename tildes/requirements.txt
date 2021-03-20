@@ -19,7 +19,7 @@ invoke==1.4.1
 ipython-genutils==0.2.0
 ipython==7.19.0
 jedi==0.17.2
-jinja2==2.11.2
+jinja2==2.11.3
 lupa==1.9
 mako==1.1.3
 markupsafe==1.1.1
