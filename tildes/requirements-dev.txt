@@ -83,7 +83,7 @@ pytest-mock==3.3.1
 pytest==6.1.2
 python-dateutil==2.8.1
 python-editor==1.0.4
-pyyaml==5.3.1
+pyyaml==5.4
 qrcode==6.1
 redis==3.5.3
 regex==2020.10.28
