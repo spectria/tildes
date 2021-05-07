@@ -397,11 +397,12 @@ def get_search(
 @view_config(
     route_name="new_topic", renderer="new_topic.jinja2", permission="topic.post"
 )
-def get_new_topic_form(request: Request) -> dict:
+@use_kwargs({"title": String(missing=""), "link": String(missing="")})
+def get_new_topic_form(request: Request, title: str, link: str) -> dict:
     """Form for entering a new topic to post."""
     group = request.context
 
-    return {"group": group}
+    return {"group": group, "title": title, "link": link}
 
 
 @view_config(route_name="topic", renderer="topic.jinja2")
