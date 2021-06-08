@@ -29,7 +29,7 @@ parso==0.7.1
 pastedeploy==2.1.1
 pexpect==4.8.0
 pickleshare==0.7.5
-pillow==8.0.1
+pillow==8.2.0
 pip-tools==5.3.1
 plaster-pastedeploy==0.7
 plaster==1.0
