@@ -1,0 +1,33 @@
+---
+app_username: vagrant
+pip_requirements_filename: requirements-dev.txt
+ini_file: development.ini
+
+gunicorn_args: --reload
+
+# have to disable sendfile for vagrant due to a virtualbox bug
+nginx_enable_sendfile: false
+nginx_worker_processes: 1
+
+nginx_enable_hsts: false
+nginx_enable_csp: false
+
+postgresql_tildes_databases:
+  - tildes
+  - tildes_test
+postgresql_tildes_user_flags: "SUPERUSER"
+tildes_database_insert_dev_data: true
+
+hsts_max_age: 60
+
+site_hostname: localhost
+
+ssl_cert_dir: /etc/pki/tls/certs
+ssl_cert_path: "{{ ssl_cert_dir }}/localhost.crt"
+ssl_private_key_path: "{{ ssl_cert_dir }}/localhost.key"
+
+ansible_python_interpreter: /usr/bin/python3
+
+# Workaround for some Ansible permissions issues when becoming an unprivileged user
+# (this has some risks, but should be fine for our use)
+ansible_shell_allow_world_readable_temp: true

@@ -1,0 +1,42 @@
+---
+- name: Create prometheus user and group
+  import_tasks: prometheus_user.yml
+
+- name: Download node_exporter from GitHub
+  get_url:
+    dest: /tmp/prometheus_node_exporter.tar.gz
+    url: https://github.com/prometheus/node_exporter/releases/download/v0.13.0/node_exporter-0.13.0.linux-amd64.tar.gz
+    checksum: sha256:2de5d1e51330c41588ed4c88bc531a3d2dccf6b4d7b99d5782d95cff27a3c049
+
+- name: Create node_exporter directory
+  file:
+    path: /opt/prometheus_node_exporter
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: 0755
+
+- name: Extract node_exporter
+  unarchive:
+    remote_src: true
+    src: /tmp/prometheus_node_exporter.tar.gz
+    dest: /opt/prometheus_node_exporter
+    owner: prometheus
+    group: prometheus
+    extra_opts:
+      - --strip-components=1
+    creates: /opt/prometheus_node_exporter/node_exporter
+
+- name: Create node_exporter service file
+  copy:
+    src: prometheus_node_exporter.service
+    dest: /etc/systemd/system/prometheus_node_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start and enable node_exporter service
+  service:
+    name: prometheus_node_exporter
+    state: started
+    enabled: true

@@ -1,0 +1,23 @@
+---
+- name: Install packages needed by Ansible community plugins
+  pip:
+    executable: pip3
+    name: cryptography
+
+- name: Create directory for certificate
+  file:
+    path: "{{ ssl_cert_dir }}"
+    state: directory
+    mode: 0755
+
+- name: Create a private key
+  community.crypto.openssl_privatekey:
+    path: "{{ ssl_private_key_path }}"
+
+- name: Create a self-signed certificate
+  community.crypto.x509_certificate:
+    path: "{{ ssl_cert_path }}"
+    privatekey_path: "{{ ssl_private_key_path }}"
+    provider: selfsigned
+  notify:
+    - Reload nginx

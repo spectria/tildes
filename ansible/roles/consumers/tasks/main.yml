@@ -1,0 +1,16 @@
+---
+- name: Set up service files for background consumers
+  template:
+    src: "consumer.service.jinja2"
+    dest: /etc/systemd/system/consumer-{{ item }}.service
+    owner: root
+    group: root
+    mode: 0644
+  loop: "{{ consumers }}"
+
+- name: Start and enable all consumer services
+  service:
+    name: consumer-{{ item }}
+    state: started
+    enabled: true
+  loop: "{{ consumers }}"

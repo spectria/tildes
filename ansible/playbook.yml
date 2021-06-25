@@ -1,0 +1,54 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars.yml
+  roles:
+    - common
+
+- hosts: app_server
+  become: true
+  vars_files:
+    - vars.yml
+  roles:
+    - cmark-gfm
+    - pts_lbsearch
+    - python
+    - gunicorn
+    - nginx
+    - nginx_site_config
+    - postgresql
+    - postgresql_plpython
+    - postgresql_tildes_dbs
+    - pgbouncer
+    - redis
+    - redis_module_cell
+    - postgresql_redis_bridge
+    - boussole
+    - webassets
+    - scripts
+    - prometheus_node_exporter
+    - prometheus_postgres_exporter
+    - prometheus_redis_exporter
+    - consumers
+    - cronjobs
+    - wiki_repo
+
+- hosts: dev
+  become: true
+  vars_files:
+    - vars.yml
+  roles:
+    - self_signed_ssl_cert
+    - prometheus
+    - java
+    - nodejs
+    - development
+
+- hosts: prod
+  become: true
+  vars_files:
+    - vars.yml
+  roles:
+    - nginx_prod_config
+    - ipv6_networking

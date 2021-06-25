@@ -1,0 +1,12 @@
+---
+postgresql_version: 12
+
+# Users of this role can define postgresql_settings, which will be merged with
+# this base _postgresql_settings
+_postgresql_settings:
+  lock_timeout: 5000
+  statement_timeout: 5000
+  idle_in_transaction_session_timeout: 600000
+  timezone: "'UTC'"
+  shared_preload_libraries: "'pg_stat_statements'"
+postgresql_settings: {}

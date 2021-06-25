@@ -1,0 +1,4 @@
+---
+dependencies:
+  - role: postgresql
+  - role: redis

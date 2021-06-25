@@ -1,0 +1,17 @@
+[Unit]
+Description={{ item.replace("_", " ").title() }} (Queue Consumer)
+Requires=redis.service
+After=redis.service
+PartOf=redis.service
+
+[Service]
+User={{ app_username }}
+Group={{ app_username }}
+WorkingDirectory={{ app_dir }}/consumers
+Environment="INI_FILE={{ app_dir }}/{{ ini_file }}"
+ExecStart={{ bin_dir }}/python {{ item }}.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

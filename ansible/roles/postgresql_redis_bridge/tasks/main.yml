@@ -1,0 +1,13 @@
+- name: Create postgresql_redis_bridge service file
+  template:
+    src: postgresql_redis_bridge.service.jinja2
+    dest: /etc/systemd/system/postgresql_redis_bridge.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start and enable postgresql_redis_bridge service
+  service:
+    name: postgresql_redis_bridge
+    state: started
+    enabled: true

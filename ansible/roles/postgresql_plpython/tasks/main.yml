@@ -1,0 +1,12 @@
+---
+- name: Install PL/Python3 procedural language for PostgreSQL
+  apt:
+    name: postgresql-plpython3-{{ postgresql_version }}
+
+- name: Set PYTHONPATH env var for PostgreSQL
+  lineinfile:
+    path: /etc/postgresql/{{ postgresql_version }}/main/environment
+    regexp: "^PYTHONPATH="
+    line: "PYTHONPATH='{{ venv_dir }}/lib/python{{ python_version }}/site-packages:{{ app_dir }}'"
+  notify:
+    - Restart postgresql

@@ -1,0 +1,3 @@
+---
+hsts_max_age: 63072000
+static_sites_dir: /opt/tildes-static-sites

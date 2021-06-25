@@ -1,0 +1,47 @@
+---
+- name: Download postgres_exporter from GitHub
+  get_url:
+    dest: /tmp/prometheus_postgres_exporter.tar.gz
+    url: https://github.com/wrouesnel/postgres_exporter/releases/download/v0.4.7/postgres_exporter_v0.4.7_linux-amd64.tar.gz
+    checksum: sha256:c34d61bb4deba8efae06fd3c9979b96dae3f3c757698ce3384c80fff586c667b
+
+- name: Create postgres_exporter directory
+  file:
+    path: /opt/prometheus_postgres_exporter
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: 0755
+
+- name: Extract postgres_exporter
+  unarchive:
+    remote_src: true
+    src: /tmp/prometheus_postgres_exporter.tar.gz
+    dest: /opt/prometheus_postgres_exporter
+    owner: postgres
+    group: postgres
+    extra_opts:
+      - --strip-components=1
+    creates: /opt/prometheus_postgres_exporter/postgres_exporter
+
+- name: Create queries.yaml file
+  copy:
+    src: queries.yaml
+    dest: /opt/prometheus_postgres_exporter/queries.yaml
+    owner: postgres
+    group: postgres
+    mode: 0644
+
+- name: Create postgres_exporter service file
+  copy:
+    src: prometheus_postgres_exporter.service
+    dest: /etc/systemd/system/prometheus_postgres_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start and enable postgres_exporter service
+  service:
+    name: prometheus_postgres_exporter
+    state: started
+    enabled: true

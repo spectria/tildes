@@ -1,0 +1,4 @@
+---
+- name: Install OpenJDK Java runtime
+  apt:
+    name: openjdk-11-jre

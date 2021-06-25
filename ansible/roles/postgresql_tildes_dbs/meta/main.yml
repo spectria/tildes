@@ -1,0 +1,8 @@
+---
+dependencies:
+  - role: postgresql
+  - role: pgbouncer
+
+  # needed to be able to run the db init scripts
+  - role: python
+  - role: cmark-gfm

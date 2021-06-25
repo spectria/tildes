@@ -1,0 +1,131 @@
+---
+- name: Check if Redis is installed
+  stat:
+    path: /usr/local/bin/redis-server
+  register: redis_server
+
+- name: Download and install Redis
+  when: not redis_server.stat.exists
+  block:
+    - name: Download Redis from GitHub
+      get_url:
+        dest: /tmp/redis-{{ redis_version }}.tar.gz
+        url: https://github.com/antirez/redis/archive/{{ redis_version }}.tar.gz
+        checksum: sha256:2761422599f8969559e66797cd7f606c16e907bf82d962345a7d366c5d1278df
+
+    - name: Create temp directory to extract Redis to
+      file:
+        path: /tmp/redis-{{ redis_version }}
+        state: directory
+
+    - name: Extract Redis
+      unarchive:
+        remote_src: true
+        src: /tmp/redis-{{ redis_version }}.tar.gz
+        dest: /tmp/redis-{{ redis_version }}
+        extra_opts:
+          - --strip-components=1
+
+    - name: Install build dependencies for Redis
+      apt:
+        name: build-essential
+
+    - name: Install Redis
+      shell:
+        chdir: /tmp/redis-{{ redis_version }}
+        cmd: |
+          make
+          make install
+
+- name: Create group for redis user
+  group:
+    name: redis
+
+- name: Create redis user
+  user:
+    name: redis
+    group: redis
+    create_home: false
+
+- name: Create /run/redis
+  file:
+    path: /run/redis
+    state: directory
+    owner: redis
+    group: redis
+    mode: 0755
+
+- name: Create /var/lib/redis
+  file:
+    path: /var/lib/redis
+    state: directory
+    owner: redis
+    group: redis
+    mode: 0700
+
+- name: Create /var/log/redis
+  file:
+    path: /var/log/redis
+    state: directory
+    owner: redis
+    group: redis
+    mode: 0744
+
+- name: Create Redis configuration file
+  template:
+    src: redis.conf.jinja2
+    dest: /etc/redis.conf
+    owner: redis
+    group: redis
+    mode: 0600
+
+- name: Create Redis service file
+  copy:
+    src: redis.service
+    dest: /etc/systemd/system/redis.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add service file for disabling transparent hugepage
+  copy:
+    src: transparent_hugepage.service
+    dest: /etc/systemd/system/transparent_hugepage.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Check if transparent hugepage is currently enabled
+  command:
+    cmd: cat /sys/kernel/mm/transparent_hugepage/enabled
+  register: transparent_hugepage
+  changed_when: false
+
+- name: Start and enable "disable transparent hugepage" service
+  service:
+    name: transparent_hugepage.service
+    state: started
+    enabled: true
+  when: "'[never]' not in transparent_hugepage.stdout"
+
+- name: Check if kernel overcommit mode is already set
+  command:
+    cmd: sysctl -n vm.overcommit_memory
+  register: overcommit_memory
+  changed_when: false
+
+- name: Set kernel overcommit mode temporarily (recommended by Redis)
+  command:
+    cmd: sysctl vm.overcommit_memory=1
+  when: overcommit_memory.stdout == "0"
+
+- name: Make kernel overcommit mode permanent (recommended by Redis, requires restart)
+  lineinfile:
+    path: /etc/sysctl.conf
+    line: vm.overcommit_memory = 1
+
+- name: Start and enable redis service
+  service:
+    name: redis
+    state: started
+    enabled: true

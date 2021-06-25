@@ -1,0 +1,54 @@
+---
+- name: Create gunicorn service file
+  template:
+    src: gunicorn.service.jinja2
+    dest: /etc/systemd/system/gunicorn.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create gunicorn socket file
+  template:
+    src: gunicorn.socket.jinja2
+    dest: /etc/systemd/system/gunicorn.socket
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create gunicorn tmpfiles.d configuration file
+  template:
+    src: gunicorn.conf.jinja2
+    dest: /usr/lib/tmpfiles.d/gunicorn.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start and enable gunicorn.socket service
+  service:
+    name: gunicorn.socket
+    state: started
+    enabled: true
+
+# Set up the gunicorn_reloader service, which reloads gunicorn whenever certain files
+# are changed (such as static files, to update the cache-busting strings)
+- name: Create gunicorn_reloader service file
+  copy:
+    src: gunicorn_reloader.service
+    dest: /etc/systemd/system/gunicorn_reloader.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create gunicorn_reloader path-monitoring file
+  copy:
+    src: gunicorn_reloader.path
+    dest: /etc/systemd/system/gunicorn_reloader.path
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start and enable gunicorn_reloader path-monitoring service
+  service:
+    name: gunicorn_reloader.path
+    state: started
+    enabled: true

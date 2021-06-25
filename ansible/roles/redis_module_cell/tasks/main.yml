@@ -1,0 +1,27 @@
+---
+- name: Download redis-cell Redis module from GitHub
+  get_url:
+    dest: /tmp/redis-cell.tar.gz
+    url: https://github.com/brandur/redis-cell/releases/download/v0.2.1/redis-cell-v0.2.1-x86_64-unknown-linux-gnu.tar.gz
+    checksum: sha256:9427fb100f4cada817f30f854ead7f233de32948a0ec644f15988c275a2ed1cb
+
+- name: Create /opt/redis-cell
+  file:
+    path: /opt/redis-cell
+    state: directory
+    owner: redis
+    group: redis
+    mode: 0755
+
+- name: Extract redis-cell
+  unarchive:
+    remote_src: true
+    src: /tmp/redis-cell.tar.gz
+    dest: /opt/redis-cell
+
+- name: Load redis-cell module in Redis configuration
+  lineinfile:
+    path: /etc/redis.conf
+    line: loadmodule /opt/redis-cell/libredis_cell.so
+  notify:
+    - Restart redis

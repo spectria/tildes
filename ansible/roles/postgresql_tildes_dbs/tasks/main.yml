@@ -1,0 +1,62 @@
+---
+- name: Install requirements for building psycopg2 (needed by Ansible)
+  apt:
+    name:
+      - gcc
+      - libpq-dev
+      - python3-dev
+
+- name: Install packages needed by Ansible community plugins
+  pip:
+    executable: pip3
+    name:
+      - ipaddress
+      - psycopg2
+
+- name: Create tildes user
+  become_user: postgres
+  community.postgresql.postgresql_user:
+    name: tildes
+    role_attr_flags: "{{ postgresql_tildes_user_flags }}"
+
+# This is a bit of a hack to effectively enable looping over a block of tasks
+- name: Set up site database (and test database in dev version)
+  include_tasks: database.yml
+  loop: "{{ postgresql_tildes_databases }}"
+  vars:
+    extensions:
+      - citext
+      - ltree
+      - intarray
+      - pg_stat_statements
+      - pg_trgm
+      - plpython3u
+  register: database_changes
+
+# Since handlers don't run until the end of the entire playbook, we need to run them
+# manually at this point in case postgresql or pgbouncer need to be reloaded
+- name: Trigger handlers to run manually for postgresql/pgbouncer updates
+  meta: flush_handlers
+
+- name: Check if the database has already been initialized (will fail if not)
+  become_user: postgres
+  community.postgresql.postgresql_query:
+    db: tildes
+    query: select user_id from users;
+  ignore_errors: true
+  register: users_query
+
+- name: Initialize the database
+  become_user: postgres
+  command:
+    cmd: "{{ bin_dir }}/python -c \"from scripts.initialize_db import initialize_db; initialize_db('{{ app_dir }}/{{ ini_file }}')\""
+    chdir: "{{ app_dir }}"
+  when: users_query is failed
+  register: initialize_db
+
+- name: Insert dev data into database
+  become_user: "{{ app_username }}"
+  command:
+    cmd: "{{ bin_dir }}/python -c \"from scripts.initialize_db import insert_dev_data; insert_dev_data('{{ app_dir }}/{{ ini_file }}')\""
+    chdir: "{{ app_dir }}"
+  when: tildes_database_insert_dev_data and initialize_db is changed

@@ -1,0 +1,93 @@
+---
+- name: Check if the correct version of Python is already installed
+  stat:
+    path: /usr/local/bin/python{{ python_version }}
+  register: python_binary
+
+- name: Download and install Python
+  when: not python_binary.stat.exists
+  block:
+    - name: Download Python source code
+      get_url:
+        dest: /tmp/python.tar.gz
+        url: https://www.python.org/ftp/python/3.8.10/Python-3.8.10.tgz
+        checksum: sha256:b37ac74d2cbad2590e7cd0dd2b3826c29afe89a734090a87bf8c03c45066cb65
+
+    - name: Create temp directory to extract Python to
+      file:
+        path: /tmp/python
+        state: directory
+
+    - name: Extract Python
+      unarchive:
+        remote_src: true
+        src: /tmp/python.tar.gz
+        dest: /tmp/python
+        extra_opts:
+          - --strip-components=1
+
+    - name: Install build dependencies for Python
+      apt:
+        name:
+          - make
+          - build-essential
+          - libssl-dev
+          - zlib1g-dev
+          - libbz2-dev
+          - libreadline-dev
+          - libsqlite3-dev
+          - wget
+          - curl
+          - llvm
+          - libncurses5-dev
+          - libncursesw5-dev
+          - xz-utils
+          - tk-dev
+
+    - name: Build and install Python (this can take a long time)
+      shell:
+        chdir: /tmp/python
+        cmd: |
+          ./configure --enable-optimizations --with-ensurepip=install
+          make
+          make altinstall
+
+- name: Create dir for venvs
+  file:
+    path: /opt/venvs
+    state: directory
+    owner: "{{ app_username }}"
+    group: "{{ app_username }}"
+    mode: 0755
+
+- name: Install packages needed for compiling psycopg2
+  apt:
+    name:
+      - gcc
+      - libpq-dev
+
+- name: Create venv
+  become_user: "{{ app_username }}"
+  command:
+    cmd: python{{ python_version }} -m venv {{ venv_dir }}
+    creates: "{{ venv_dir }}"
+
+- name: Check installed packages in venv
+  command:
+    cmd: "{{ bin_dir }}/pip freeze"
+  register: pip_freeze
+  changed_when: false
+
+- name: Install Python packages into venv
+  become_user: "{{ app_username }}"
+  pip:
+    executable: "{{ bin_dir }}/pip"
+    requirements: "{{ app_dir }}/{{ pip_requirements_filename }}"
+
+- name: Install Tildes into venv as editable
+  become_user: "{{ app_username }}"
+  pip:
+    executable: "{{ bin_dir }}/pip"
+    name: "{{ app_dir }}"
+    editable: true
+  when: "'-e '+app_dir not in pip_freeze.stdout_lines"

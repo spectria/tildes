@@ -1,0 +1,29 @@
+---
+- name: Check if site-icons.css file exists
+  stat:
+    path: "{{ app_dir }}/static/css/site-icons.css"
+  register: site_icons_css_file
+
+# webassets will crash the site if this file doesn't exist
+- name: Create site-icons.css file
+  file:
+    path: "{{ app_dir }}/static/css/site-icons.css"
+    state: touch
+    owner: "{{ app_username }}"
+    group: "{{ app_username }}"
+    mode: 0644
+  when: not site_icons_css_file.stat.exists
+
+- name: Create systemd service file
+  template:
+    src: webassets.service.jinja2
+    dest: /etc/systemd/system/webassets.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start and enable webassets service
+  service:
+    name: webassets
+    state: started
+    enabled: true

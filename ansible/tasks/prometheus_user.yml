@@ -1,0 +1,10 @@
+---
+- name: Create group for prometheus user
+  group:
+    name: prometheus
+
+- name: Create prometheus user
+  user:
+    name: prometheus
+    group: prometheus
+    create_home: false

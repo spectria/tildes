@@ -1,0 +1,44 @@
+---
+- name: Create venv and install boussole with pip
+  pip:
+    virtualenv: "{{ boussole_venv_dir }}"
+    virtualenv_command: python{{ python_version }} -m venv
+    name: boussole
+
+- name: Create systemd service file
+  template:
+    src: boussole.service.jinja2
+    dest: /etc/systemd/system/boussole.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start and enable boussole service
+  service:
+    name: boussole
+    state: started
+    enabled: true
+
+- name: Create directory for compiled CSS
+  file:
+    path: "{{ app_dir }}/static/css"
+    state: directory
+    owner: "{{ app_username }}"
+    group: "{{ app_username }}"
+    mode: 0755
+
+- name: Check if any compiled CSS files exist
+  find:
+    path: "{{ app_dir }}/static/css"
+    patterns:
+      - "*.css"
+  register: compiled_css_files
+
+- name: Run boussole manually if no compiled CSS exists yet
+  command:
+    chdir: "{{ app_dir }}"
+    cmd: "{{ boussole_venv_dir }}/bin/boussole compile --backend=yaml --config=boussole.yaml"
+  environment:
+    LC_ALL: C.UTF-8
+    LANG: C.UTF-8
+  when: compiled_css_files.matched == 0

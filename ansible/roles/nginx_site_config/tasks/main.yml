@@ -1,0 +1,21 @@
+---
+- name: Add site config file
+  template:
+    src: tildes.conf.jinja2
+    dest: /etc/nginx/sites-available/tildes.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload nginx
+
+- name: Enable site in nginx
+  file:
+    path: /etc/nginx/sites-enabled/tildes.conf
+    src: /etc/nginx/sites-available/tildes.conf
+    state: link
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload nginx

@@ -1,0 +1,31 @@
+---
+- name: Install pgbouncer
+  apt:
+    name: pgbouncer
+
+- name: Add pgbouncer.ini
+  template:
+    src: pgbouncer.ini.jinja2
+    dest: /etc/pgbouncer/pgbouncer.ini
+    owner: postgres
+    group: postgres
+    mode: 0640
+  notify:
+    - Reload pgbouncer
+
+- name: Add user to pgbouncer userlist
+  lineinfile:
+    path: /etc/pgbouncer/userlist.txt
+    line: '"tildes" ""'
+    create: true
+    owner: postgres
+    group: postgres
+    mode: 0640
+  notify:
+    - Reload pgbouncer
+
+- name: Start and enable pgbouncer service
+  service:
+    name: pgbouncer
+    state: started
+    enabled: true

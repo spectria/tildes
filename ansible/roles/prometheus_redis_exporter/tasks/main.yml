@@ -1,0 +1,40 @@
+---
+- name: Create prometheus user and group
+  import_tasks: prometheus_user.yml
+
+- name: Download redis_exporter from GitHub
+  get_url:
+    dest: /tmp/prometheus_redis_exporter.tar.gz
+    url: https://github.com/oliver006/redis_exporter/releases/download/v0.26.0/redis_exporter-v0.26.0.linux-amd64.tar.gz
+    checksum: sha256:39354c57b9d02b455c584baf46a2df6ed3d1ac190c88e3ec0fa0c23b49ccc2bb
+
+- name: Create redis_exporter directory
+  file:
+    path: /opt/prometheus_redis_exporter
+    state: directory
+    owner: prometheus
+    group: prometheus
+    mode: 0755
+
+- name: Extract redis_exporter
+  unarchive:
+    remote_src: true
+    src: /tmp/prometheus_redis_exporter.tar.gz
+    dest: /opt/prometheus_redis_exporter
+    owner: prometheus
+    group: prometheus
+    creates: /opt/prometheus_redis_exporter/redis_exporter
+
+- name: Create redis_exporter service file
+  copy:
+    src: prometheus_redis_exporter.service
+    dest: /etc/systemd/system/prometheus_redis_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start and enable redis_exporter service
+  service:
+    name: prometheus_redis_exporter
+    state: started
+    enabled: true

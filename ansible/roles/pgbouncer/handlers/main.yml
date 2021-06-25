@@ -1,0 +1,5 @@
+---
+- name: Reload pgbouncer
+  service:
+    name: pgbouncer
+    state: reloaded

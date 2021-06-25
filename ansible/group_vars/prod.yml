@@ -1,0 +1,52 @@
+---
+app_username: tildes
+postgresql_settings:
+  checkpoint_completion_target: 0.7
+  default_statistics_target: 100
+  effective_cache_size: 24GB
+  effective_io_concurrency: 200
+  maintenance_work_mem: 2GB
+  max_parallel_workers: 8
+  max_parallel_workers_per_gather: 4
+  max_wal_size: 2GB
+  max_worker_processes: 8
+  min_wal_size: 1GB
+  random_page_cost: 1.1
+  shared_buffers: 8GB
+  wal_buffers: 16MB
+  work_mem: 10485kB
+ini_file: production.ini
+gunicorn_args: --workers 8
+site_hostname: tildes.net
+
+# add extra prod-only consumer services (e.g. ones that use external APIs)
+consumers:
+  - comment_user_mentions_generator
+  - post_processing_script_runner
+  - site_icon_downloader
+  - topic_embedly_extractor
+  - topic_interesting_activity_updater
+  - topic_metadata_generator
+  - topic_youtube_scraper
+
+ipv6_device: eno1
+ipv6_address: "2607:5300:0203:2e7a::"
+ipv6_gateway: "2607:5300:0203:2eff:ff:ff:ff:ff"
+
+prometheus_ips:
+  - "2607:5300:201:3100::6e77"
+
+prometheus_consumer_scrape_targets:
+  comment_user_mentions_generator: 25010
+  post_processing_script_runner: 25016
+  site_icon_downloader: 25011
+  topic_embedly_extractor: 25012
+  topic_interesting_activity_updater: 25013
+  topic_metadata_generator: 25014
+  topic_youtube_scraper: 25015
+
+ansible_python_interpreter: /usr/bin/python3
+
+# Workaround for some Ansible permissions issues when becoming an unprivileged user
+# (this has some risks, but should be fine for our use)
+ansible_shell_allow_world_readable_temp: true

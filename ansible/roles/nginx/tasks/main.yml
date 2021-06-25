@@ -1,0 +1,52 @@
+---
+- name: Add APT key for nginx repository
+  apt_key:
+    url: https://nginx.org/keys/nginx_signing.key
+
+- name: Add nginx APT repository
+  apt_repository:
+    repo: deb http://nginx.org/packages/debian/ buster nginx
+
+- name: Install nginx
+  apt:
+    name: nginx
+
+- name: Start and enable nginx service
+  service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: Create nginx.conf file
+  template:
+    src: nginx.conf.jinja2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload nginx
+
+- name: Create sites-available directory
+  file:
+    path: /etc/nginx/sites-available
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create sites-enabled directory
+  file:
+    path: /etc/nginx/sites-enabled
+    state: directory
+    owner: root
+    group: root
+    mode: 0744
+
+- name: Add logrotate config
+  copy:
+    src: logrotate
+    dest: /etc/logrotate.d/nginx
+    owner: root
+    group: root
+    mode: 0644

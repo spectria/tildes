@@ -1,0 +1,6 @@
+---
+consumers:
+  - comment_user_mentions_generator
+  - post_processing_script_runner
+  - topic_interesting_activity_updater
+  - topic_metadata_generator

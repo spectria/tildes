@@ -1,0 +1,8 @@
+---
+- name: Install the activate script
+  template:
+    src: activate.sh.jinja2
+    dest: /usr/local/bin/activate
+    owner: root
+    group: root
+    mode: 0755

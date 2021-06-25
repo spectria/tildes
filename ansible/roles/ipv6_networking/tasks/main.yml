@@ -1,0 +1,23 @@
+---
+- name: Enable IPv6 networking
+  blockinfile:
+    path: /etc/network/interfaces
+    block: |
+      iface {{ ipv6_device }} inet6 static
+          address {{ ipv6_address }}
+          netmask 64
+
+      post-up sleep 5; /sbin/ip -family inet6 route add {{ ipv6_gateway }} dev {{ ipv6_device }}
+      post-up sleep 5; /sbin/ip -family inet6 route add default via {{ ipv6_gateway }}
+      pre-down /sbin/ip -family inet6 route del default via {{ ipv6_gateway }}
+      pre-down /sbin/ip -family inet6 route del {{ ipv6_gateway }} dev {{ ipv6_device }}
+
+# apt seems to hang a lot when using IPv6
+- name: Force apt not to use IPv6
+  lineinfile:
+    path: /etc/apt/apt.conf.d/99force-ipv4
+    line: Acquire::ForceIPv4 "true";
+    create: true
+    owner: root
+    group: root
+    mode: 0644

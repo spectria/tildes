@@ -1,0 +1,13 @@
+---
+- name: Set time zone to UTC
+  community.general.timezone:
+    name: Etc/UTC
+
+- name: Create group for app user
+  group:
+    name: "{{ app_username }}"
+
+- name: Create app user
+  user:
+    name: "{{ app_username }}"
+    group: "{{ app_username }}"

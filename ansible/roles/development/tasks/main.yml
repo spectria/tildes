@@ -1,0 +1,26 @@
+---
+- name: Create IPython profile
+  become_user: "{{ app_username }}"
+  command:
+    cmd: "{{ bin_dir }}/ipython profile create"
+    creates: /home/{{ app_username }}/.ipython/profile_default
+
+- name: Create IPython config file
+  copy:
+    src: ipython_config.py
+    dest: /home/{{ app_username }}/.ipython/profile_default/ipython_config.py
+    owner: "{{ app_username }}"
+    group: "{{ app_username }}"
+    mode: 0744
+
+- name: Automatically activate venv on login and in new shells
+  lineinfile:
+    path: /home/{{ app_username }}/.bashrc
+    line: source activate
+    owner: "{{ app_username }}"
+    group: "{{ app_username }}"
+
+- name: Add invoke's tab-completion script to support completing invoke task names
+  lineinfile:
+    path: /home/{{ app_username }}/.bashrc
+    line: source <(invoke --print-completion-script bash)

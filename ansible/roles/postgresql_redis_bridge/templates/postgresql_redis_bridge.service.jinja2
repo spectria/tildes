@@ -1,0 +1,17 @@
+[Unit]
+Description=postgresql_redis_bridge - convert NOTIFY to Redis streams
+Requires=redis.service
+After=redis.service
+PartOf=redis.service
+
+[Service]
+User={{ app_username }}
+Group={{ app_username }}
+WorkingDirectory={{ app_dir }}/scripts
+Environment="INI_FILE={{ app_dir }}/{{ ini_file }}"
+ExecStart={{ bin_dir }}/python postgresql_redis_bridge.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

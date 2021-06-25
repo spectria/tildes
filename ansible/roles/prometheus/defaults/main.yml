@@ -1,0 +1,8 @@
+---
+prometheus_version: 2.0.0
+
+prometheus_consumer_scrape_targets:
+  comment_user_mentions_generator: 25010
+  post_processing_script_runner: 25016
+  topic_interesting_activity_updater: 25013
+  topic_metadata_generator: 25014

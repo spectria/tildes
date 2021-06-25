@@ -1,0 +1,92 @@
+user nginx;
+worker_processes {{ nginx_worker_processes }};
+
+error_log /var/log/nginx/error.log warn;
+pid /var/run/nginx.pid;
+
+
+events {
+    worker_connections 1024;
+}
+
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    server_tokens off;
+
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log /var/log/nginx/access.log main;
+
+    {% if nginx_enable_sendfile %}
+    sendfile on;
+    {% else %}
+    sendfile off;
+    {% endif %}
+
+    # define a rate-limiting zone to use, and return HTTP 429 if exceeded
+    limit_req_zone $binary_remote_addr zone=tildes_app:10m rate=4r/s;
+    limit_req_status 429;
+
+    keepalive_timeout  65;
+
+    # redirect non-https accesses to the https version
+    server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        server_name _;
+
+        return 301 https://$host$request_uri;
+    }
+
+    gzip on;
+    gzip_min_length 1000;
+    gzip_comp_level 6;
+    gzip_vary on;
+    gzip_proxied any;
+
+    # type list from https://github.com/h5bp/server-configs-nginx
+    gzip_types
+      application/atom+xml
+      application/javascript
+      application/json
+      application/ld+json
+      application/manifest+json
+      application/rss+xml
+      application/vnd.geo+json
+      application/vnd.ms-fontobject
+      application/x-font-ttf
+      application/x-web-app-manifest+json
+      application/xhtml+xml
+      application/xml
+      font/opentype
+      image/bmp
+      image/svg+xml
+      image/x-icon
+      text/cache-manifest
+      text/css
+      text/plain
+      text/vcard
+      text/vnd.rim.location.xloc
+      text/vtt
+      text/x-component
+      text/x-cross-domain-policy;
+
+    ssl_certificate {{ ssl_cert_path }};
+    ssl_certificate_key {{ ssl_private_key_path }};
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_tickets off;
+
+    # "modern" configuration from Mozilla guidelines
+    ssl_protocols TLSv1.2;
+    ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
+    ssl_prefer_server_ciphers on;
+
+    include /etc/nginx/sites-enabled/*.conf;
+}
+

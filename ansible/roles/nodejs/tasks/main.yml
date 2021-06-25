@@ -1,0 +1,20 @@
+---
+- name: Add APT key for NodeSource Node.js repository
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+
+- name: Add NodeSource Node.js APT repository
+  apt_repository:
+    repo: deb https://deb.nodesource.com/node_14.x buster main
+
+- name: Install Node.js
+  apt:
+    name: nodejs
+
+- name: Install npm packages defined in package.json
+  become_user: "{{ app_username }}"
+  community.general.npm:
+    path: "{{ app_dir }}"
+    # --no-bin-links option is needed to prevent npm from creating symlinks in the .bin
+    # directory, which doesn't work inside Vagrant on Windows
+    no_bin_links: true

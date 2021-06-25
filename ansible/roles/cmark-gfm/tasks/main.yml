@@ -1,0 +1,40 @@
+---
+- name: Check if cmark-gfm is installed
+  stat:
+    path: /usr/local/lib/libcmark-gfm.so
+  register: cmark_gfm_library
+
+- name: Download and install cmark-gfm
+  when: not cmark_gfm_library.stat.exists
+  block:
+    - name: Download cmark-gfm from GitHub
+      get_url:
+        dest: /tmp/cmark-gfm.tar.gz
+        url: https://github.com/github/cmark-gfm/archive/0.29.0.gfm.0.tar.gz
+        checksum: sha256:6a94aeaa59a583fadcbf28de81dea8641b3f56d935dda5b2447a3c8df6c95fea
+
+    - name: Create temp directory to extract cmark-gfm to
+      file:
+        path: /tmp/cmark-gfm
+        state: directory
+
+    - name: Extract cmark-gfm
+      unarchive:
+        remote_src: true
+        src: /tmp/cmark-gfm.tar.gz
+        dest: /tmp/cmark-gfm
+        extra_opts:
+          - --strip-components=1
+
+    - name: Install build dependencies for cmark-gfm
+      apt:
+        name:
+          - build-essential
+          - cmake
+
+    - name: Install cmark-gfm
+      shell:
+        chdir: /tmp/cmark-gfm
+        cmd: |
+          make
+          make install

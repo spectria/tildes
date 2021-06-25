@@ -1,0 +1,53 @@
+---
+- name: Add cronjob for lifting expired temporary bans
+  cron:
+    name: lift_expired_temporary_bans
+    job: "{{ bin_dir }}/python -c \"from scripts.lift_expired_temporary_bans import lift_expired_temporary_bans; lift_expired_temporary_bans('{{ app_dir }}/{{ ini_file }}')\""
+    user: "{{ app_username }}"
+    hour: "*"
+    minute: 1
+
+- name: Add cronjob for closing voting on old posts
+  cron:
+    name: close_voting_on_old_posts
+    job: "{{ bin_dir }}/python -c \"from scripts.close_voting_on_old_posts import close_voting_on_old_posts; close_voting_on_old_posts('{{ app_dir }}/{{ ini_file }}')\""
+    user: "{{ app_username }}"
+    hour: "*"
+    minute: 3
+
+- name: Add cronjob for cleaning up private data
+  cron:
+    name: clean_private_data
+    job: "{{ bin_dir }}/python -c \"from scripts.clean_private_data import clean_all_data; clean_all_data('{{ app_dir }}/{{ ini_file }}')\""
+    user: "{{ app_username }}"
+    hour: 4
+    minute: 10
+
+- name: Add cronjob for generating yesterday's group stats
+  cron:
+    name: generate_group_stats_for_yesterday
+    job: "{{ bin_dir }}/python -c \"from scripts.generate_group_stats_for_yesterday import generate_stats; generate_stats('{{ app_dir }}/{{ ini_file }}')\""
+    user: "{{ app_username }}"
+    hour: 0
+    minute: 10
+
+- name: Add cronjob for generating site-icons CSS file
+  cron:
+    name: generate_site_icons_css
+    job: "{{ bin_dir }}/python -c \"from scripts.generate_site_icons_css import generate_css; generate_css()\""
+    user: "{{ app_username }}"
+    minute: "*/5"
+
+- name: Add cronjob for posting scheduled topics
+  cron:
+    name: post_scheduled_topics
+    job: "{{ bin_dir }}/python -c \"from scripts.post_scheduled_topics import post_scheduled_topics; post_scheduled_topics('{{ app_dir }}/{{ ini_file }}')\""
+    user: "{{ app_username }}"
+
+- name: Add cronjob for updating all groups' lists of common topic tags
+  cron:
+    name: update_groups_common_topic_tags
+    job: "{{ bin_dir }}/python -c \"from scripts.update_groups_common_topic_tags import update_common_topic_tags; update_common_topic_tags('{{ app_dir }}/{{ ini_file }}')\""
+    user: "{{ app_username }}"
+    hour: "*"
+    minute: 0

@@ -4,25 +4,39 @@
 VAGRANT_CONFIG_VERSION = "2"
 
 Vagrant.configure(VAGRANT_CONFIG_VERSION) do |config|
-  config.vm.box = "ubuntu/xenial64"
+  # Using the "contrib" version for vboxsf module for synced folders
+  config.vm.box = "debian/contrib-buster64"
 
   # Main application folder
   config.vm.synced_folder "tildes/", "/opt/tildes/"
 
-  # Mount the salt file root and pillar root
-  config.vm.synced_folder "salt/salt/", "/srv/salt/"
-  config.vm.synced_folder "salt/pillar/", "/srv/pillar/"
+  config.vm.synced_folder "ansible/", "/srv/ansible"
 
   config.vm.network "forwarded_port", guest: 443, host: 4443
   config.vm.network "forwarded_port", guest: 9090, host: 9090
 
-  # Masterless salt provisioning
-  config.vm.provision :salt do |salt|
-      salt.masterless = true
-      salt.minion_config = "salt/minion"
-      salt.run_highstate = true
-      salt.verbose = true
-      salt.log_level = "info"
+  config.vm.provision "ansible_local" do |ansible|
+    ansible.install_mode = "pip"
+
+    # Since Debian Buster still uses Python 2.7 by default and the pip bootstrap
+    # script is no longer compatible with 2.7, we need to specify the installation
+    # command manually. If we upgrade to a newer version of Debian that defaults to
+    # Python 3.6+, this should no longer be necessary.
+    ansible.pip_install_cmd = "sudo apt-get install -y python3-distutils && curl -s https://bootstrap.pypa.io/get-pip.py | sudo python3"
+
+    # Vagrant doesn't currently recognize the new format for Ansible versions
+    # (e.g. "ansible [core 2.11.1]"), so the compatibility mode is set incorrectly.
+    # A new version of Vagrant should resolve this soon.
+    ansible.compatibility_mode = "2.0"
+
+    # put the VM into the "dev" and "app_server" Ansible groups
+    ansible.groups = {
+        "dev" => ["default"],
+        "app_server" => ["default"],
+    }
+
+    ansible.galaxy_role_file = "ansible/requirements.yml"
+    ansible.playbook = "ansible/playbook.yml"
   end
 
   config.vm.provider "virtualbox" do |vb|

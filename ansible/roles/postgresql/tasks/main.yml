@@ -1,0 +1,27 @@
+---
+- name: Add APT key for PostgreSQL repository
+  apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+
+- name: Add PostgreSQL APT repository
+  apt_repository:
+    repo: deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main
+
+- name: Install PostgreSQL
+  apt:
+    name: postgresql-{{ postgresql_version }}
+
+- name: Start and enable PostgreSQL service
+  service:
+    name: postgresql
+    state: started
+    enabled: true
+
+- name: Set configuration options in postgresql.conf
+  lineinfile:
+    path: /etc/postgresql/{{ postgresql_version }}/main/postgresql.conf
+    regexp: "^#?{{ item.key }} ?="
+    line: "{{ item.key }} = {{ item.value }}"
+  loop: "{{ _postgresql_settings | combine(postgresql_settings) | dict2items }}"
+  notify:
+    - Restart postgresql

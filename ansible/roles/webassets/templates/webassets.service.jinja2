@@ -1,0 +1,13 @@
+[Unit]
+Description=Webassets - auto-compile JS files on change
+
+[Service]
+User={{ app_username }}
+Group={{ app_username }}
+WorkingDirectory={{ app_dir }}
+ExecStart={{ bin_dir }}/webassets -c webassets.yaml watch
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

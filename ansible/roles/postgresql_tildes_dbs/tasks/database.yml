@@ -1,0 +1,38 @@
+---
+- name: Create database and enable access and all necessary extensions
+  become_user: postgres
+  block:
+    - name: Create database
+      community.postgresql.postgresql_db:
+        name: "{{ item }}"
+        owner: tildes
+
+    - name: Enable extensions
+      community.postgresql.postgresql_ext:
+        name: "{{ extension }}"
+        db: "{{ item }}"
+      loop: "{{ extensions }}"
+      # since the "outer" loop by include_tasks is already using the `item` variable,
+      # this will use `extension` for the loop inside here
+      loop_control:
+        loop_var: extension
+
+    - name: Add database to pg_hba.conf
+      community.postgresql.postgresql_pg_hba:
+        dest: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+        databases: "{{ item }}"
+        users: tildes
+        contype: local
+        method: trust
+      notify:
+        - Reload postgresql
+
+    - name: Add database to pgbouncer.ini
+      become_user: root
+      lineinfile:
+        path: /etc/pgbouncer/pgbouncer.ini
+        line: "{{ item }} ="
+        insertafter: "^\\[databases\\]$"
+        firstmatch: true
+      notify:
+        - Reload pgbouncer

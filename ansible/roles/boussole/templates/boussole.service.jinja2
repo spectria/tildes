@@ -1,0 +1,14 @@
+[Unit]
+Description=Boussole - auto-compile SCSS files on change
+
+[Service]
+User={{ app_username }}
+Group={{ app_username }}
+WorkingDirectory={{ app_dir }}
+Environment="LC_ALL=C.UTF-8" "LANG=C.UTF-8"
+ExecStart={{ boussole_venv_dir }}/bin/boussole watch --backend=yaml --config=boussole.yaml --poll
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

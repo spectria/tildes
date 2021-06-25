@@ -1,0 +1,24 @@
+---
+- name: Create the base repo directory
+  file:
+    path: /var/lib/tildes-wiki
+    state: directory
+    owner: "{{ app_username }}"
+    group: "{{ app_username }}"
+    mode: 0775
+
+- name: Check if a wiki git repo exists
+  stat:
+    path: /var/lib/tildes-wiki/.git
+  register: wiki_repo
+
+- name: Create a git repo and initial commit
+  become_user: "{{ app_username }}"
+  shell:
+    cmd: |
+      git init
+      git config user.name "Tildes"
+      git config user.email "Tildes"
+      git commit --allow-empty -m "Initial commit"
+    chdir: /var/lib/tildes-wiki
+  when: not wiki_repo.stat.exists

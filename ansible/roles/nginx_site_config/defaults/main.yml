@@ -1,0 +1,11 @@
+---
+nginx_enable_hsts: true
+nginx_enable_csp: true
+nginx_enable_ratelimiting: true
+nginx_redirect_www: true
+
+prometheus_ips:
+  - 127.0.0.1
+  - ::1
+
+hsts_max_age: 63072000
