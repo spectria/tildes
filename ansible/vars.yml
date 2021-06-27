@@ -5,4 +5,5 @@ bin_dir: "{{ venv_dir }}/bin"
 
 static_sites_dir: /opt/tildes-static-sites
 
-python_version: 3.8
+python_full_version: 3.9.5
+python_version: "{{ python_full_version.rpartition('.')[0] }}"
