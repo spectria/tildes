@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     CheckConstraint,
     Column,
@@ -77,15 +78,15 @@ class Topic(DatabaseModel):
 
     __tablename__ = "topics"
 
-    topic_id: int = Column(Integer, primary_key=True)
+    topic_id: int = Column(BigInteger, primary_key=True)
     group_id: int = Column(
-        Integer, ForeignKey("groups.group_id"), nullable=False, index=True
+        BigInteger, ForeignKey("groups.group_id"), nullable=False, index=True
     )
     user_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, index=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, index=True
     )
     schedule_id: int = Column(
-        Integer, ForeignKey("topic_schedule.schedule_id"), index=True
+        BigInteger, ForeignKey("topic_schedule.schedule_id"), index=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),

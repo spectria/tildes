@@ -15,6 +15,7 @@ from pyramid.security import (
     Everyone,
 )
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     CheckConstraint,
     Column,
@@ -68,7 +69,7 @@ class User(DatabaseModel):
 
     __tablename__ = "users"
 
-    user_id: int = Column(Integer, primary_key=True)
+    user_id: int = Column(BigInteger, primary_key=True)
     username: str = Column(CIText, nullable=False, unique=True)
     password_hash: str = deferred(Column(Text, nullable=False))
     email_address_hash: Optional[str] = deferred(Column(Text))
@@ -92,7 +93,7 @@ class User(DatabaseModel):
     )
     num_unread_messages: int = Column(Integer, nullable=False, server_default="0")
     num_unread_notifications: int = Column(Integer, nullable=False, server_default="0")
-    inviter_id: int = Column(Integer, ForeignKey("users.user_id"))
+    inviter_id: int = Column(BigInteger, ForeignKey("users.user_id"))
     invite_codes_remaining: int = Column(Integer, nullable=False, server_default="0")
     collapse_old_comments: bool = Column(Boolean, nullable=False, server_default="true")
     comment_sort_order_default: Optional[CommentTreeSortOption] = Column(

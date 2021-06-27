@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Union
 
 from psycopg2.extras import DateTimeTZRange
-from sqlalchemy import Column, Float, ForeignKey, Index, Integer
+from sqlalchemy import BigInteger, Column, Float, ForeignKey, Index
 from sqlalchemy.dialects.postgresql import ENUM, TSTZRANGE
 from sqlalchemy.orm import relationship
 
@@ -23,7 +23,7 @@ class GroupStat(DatabaseModel):
     __tablename__ = "group_stats"
 
     group_id: int = Column(
-        Integer,
+        BigInteger,
         ForeignKey("groups.group_id"),
         nullable=False,
         primary_key=True,

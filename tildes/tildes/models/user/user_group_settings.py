@@ -5,7 +5,7 @@
 
 from typing import Optional
 
-from sqlalchemy import Column, ForeignKey, Integer, Text
+from sqlalchemy import BigInteger, Column, ForeignKey, Text
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import relationship
 
@@ -21,10 +21,10 @@ class UserGroupSettings(DatabaseModel):
     __tablename__ = "user_group_settings"
 
     user_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     group_id: int = Column(
-        Integer, ForeignKey("groups.group_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("groups.group_id"), nullable=False, primary_key=True
     )
     default_order: Optional[TopicSortOption] = Column(ENUM(TopicSortOption))
     default_period: Optional[str] = Column(Text)

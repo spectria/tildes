@@ -7,7 +7,16 @@ from datetime import datetime
 from typing import List, Optional
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
-from sqlalchemy import Boolean, CheckConstraint, Column, Index, Integer, Text, TIMESTAMP
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    CheckConstraint,
+    Column,
+    Index,
+    Integer,
+    Text,
+    TIMESTAMP,
+)
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import deferred
 from sqlalchemy.sql.expression import text
@@ -34,7 +43,7 @@ class Group(DatabaseModel):
 
     __tablename__ = "groups"
 
-    group_id: int = Column(Integer, primary_key=True)
+    group_id: int = Column(BigInteger, primary_key=True)
     path: Ltree = Column(LtreeType, nullable=False, index=True, unique=True)
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),

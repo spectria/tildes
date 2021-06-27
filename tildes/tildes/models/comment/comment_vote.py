@@ -5,7 +5,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import Column, ForeignKey, Integer, TIMESTAMP
+from sqlalchemy import BigInteger, Column, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
@@ -28,10 +28,10 @@ class CommentVote(DatabaseModel):
     __tablename__ = "comment_votes"
 
     user_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     comment_id: int = Column(
-        Integer, ForeignKey("comments.comment_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("comments.comment_id"), nullable=False, primary_key=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),

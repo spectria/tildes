@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import Column, ForeignKey, Integer, TIMESTAMP
+from sqlalchemy import BigInteger, Column, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
@@ -17,10 +17,10 @@ class TopicBookmark(DatabaseModel):
     __tablename__ = "topic_bookmarks"
 
     user_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     topic_id: int = Column(
-        Integer, ForeignKey("topics.topic_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("topics.topic_id"), nullable=False, primary_key=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),

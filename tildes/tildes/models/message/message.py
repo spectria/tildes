@@ -17,6 +17,7 @@ from typing import List, Optional, Sequence
 
 from pyramid.security import Allow, DENY_ALL
 from sqlalchemy import (
+    BigInteger,
     CheckConstraint,
     Column,
     ForeignKey,
@@ -60,12 +61,12 @@ class MessageConversation(DatabaseModel):
 
     __tablename__ = "message_conversations"
 
-    conversation_id: int = Column(Integer, primary_key=True)
+    conversation_id: int = Column(BigInteger, primary_key=True)
     sender_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, index=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, index=True
     )
     recipient_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, index=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, index=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),
@@ -82,8 +83,14 @@ class MessageConversation(DatabaseModel):
     )
     markdown: str = deferred(Column(Text, nullable=False))
     rendered_html: str = Column(Text, nullable=False)
-    num_replies: int = Column(Integer, nullable=False, server_default="0")
+    num_replies: int = Column(BigInteger, nullable=False, server_default="0")
     last_reply_time: Optional[datetime] = Column(TIMESTAMP(timezone=True), index=True)
+
+    # This deliberately uses Integer instead of BigInteger, even though that's not
+    # correct, because the PostgreSQL intarray extension only supports integers. This
+    # is dangerous and *will* break if user_id values ever get larger than integers
+    # can hold. I'm comfortable doing something that will only be an issue if the site
+    # reaches 2.1 billion users though, I think this would be the least of the problems.
     unread_user_ids: List[int] = Column(
         ARRAY(Integer), nullable=False, server_default="{}"
     )
@@ -216,15 +223,15 @@ class MessageReply(DatabaseModel):
 
     __tablename__ = "message_replies"
 
-    reply_id: int = Column(Integer, primary_key=True)
+    reply_id: int = Column(BigInteger, primary_key=True)
     conversation_id: int = Column(
-        Integer,
+        BigInteger,
         ForeignKey("message_conversations.conversation_id"),
         nullable=False,
         index=True,
     )
     sender_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, index=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, index=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),

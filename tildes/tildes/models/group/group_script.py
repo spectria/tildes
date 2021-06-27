@@ -6,7 +6,7 @@
 from typing import Optional
 
 from pyramid.security import DENY_ALL
-from sqlalchemy import Column, ForeignKey, Integer, Text
+from sqlalchemy import BigInteger, Column, ForeignKey, Text
 from sqlalchemy.orm import relationship
 
 from tildes.models import DatabaseModel
@@ -20,8 +20,8 @@ class GroupScript(DatabaseModel):
 
     __tablename__ = "group_scripts"
 
-    script_id: int = Column(Integer, primary_key=True)
-    group_id: Optional[int] = Column(Integer, ForeignKey("groups.group_id"))
+    script_id: int = Column(BigInteger, primary_key=True)
+    group_id: Optional[int] = Column(BigInteger, ForeignKey("groups.group_id"))
     code: str = Column(Text, nullable=False)
 
     group: Optional[Group] = relationship("Group")

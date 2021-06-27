@@ -6,7 +6,7 @@
 from typing import Any, Dict, Optional
 
 from pyramid.request import Request
-from sqlalchemy import BigInteger, Column, event, ForeignKey, Integer, Table, TIMESTAMP
+from sqlalchemy import BigInteger, Column, event, ForeignKey, Table, TIMESTAMP
 from sqlalchemy.dialects.postgresql import ENUM, INET, JSONB
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.declarative import declared_attr
@@ -31,7 +31,7 @@ class BaseLog:
     @declared_attr
     def user_id(self) -> Column:
         """Return the user_id column."""
-        return Column(Integer, ForeignKey("users.user_id"), index=True)
+        return Column(BigInteger, ForeignKey("users.user_id"), index=True)
 
     @declared_attr
     def event_type(self) -> Column:
@@ -96,7 +96,7 @@ class LogComment(DatabaseModel, BaseLog):
     __tablename__ = "log_comments"
 
     comment_id: int = Column(
-        Integer, ForeignKey("comments.comment_id"), index=True, nullable=False
+        BigInteger, ForeignKey("comments.comment_id"), index=True, nullable=False
     )
 
     comment: Comment = relationship("Comment")
@@ -125,7 +125,7 @@ class LogTopic(DatabaseModel, BaseLog):
     __tablename__ = "log_topics"
 
     topic_id: int = Column(
-        Integer, ForeignKey("topics.topic_id"), index=True, nullable=False
+        BigInteger, ForeignKey("topics.topic_id"), index=True, nullable=False
     )
 
     topic: Topic = relationship("Topic")
@@ -212,7 +212,7 @@ def create_inherited_tables(
 
     # log_topics
     connection.execute(
-        "CREATE TABLE log_topics (topic_id integer not null) INHERITS (log)"
+        "CREATE TABLE log_topics (topic_id bigint not null) INHERITS (log)"
     )
 
     fk_name = naming["fk"] % {
@@ -230,7 +230,7 @@ def create_inherited_tables(
 
     # log_comments
     connection.execute(
-        "CREATE TABLE log_comments (comment_id integer not null) INHERITS (log)"
+        "CREATE TABLE log_comments (comment_id bigint not null) INHERITS (log)"
     )
 
     fk_name = naming["fk"] % {

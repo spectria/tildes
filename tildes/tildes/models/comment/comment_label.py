@@ -6,7 +6,7 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Column, ForeignKey, Integer, REAL, Text, TIMESTAMP
+from sqlalchemy import BigInteger, Column, ForeignKey, REAL, Text, TIMESTAMP
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy.sql.expression import text
@@ -31,13 +31,13 @@ class CommentLabel(DatabaseModel):
     __tablename__ = "comment_labels"
 
     comment_id: int = Column(
-        Integer, ForeignKey("comments.comment_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("comments.comment_id"), nullable=False, primary_key=True
     )
     label: CommentLabelOption = Column(
         ENUM(CommentLabelOption), nullable=False, primary_key=True
     )
     user_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")

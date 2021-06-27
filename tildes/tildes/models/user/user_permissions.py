@@ -3,7 +3,7 @@
 
 """Contains the UserPermissions class."""
 
-from sqlalchemy import Column, ForeignKey, Integer
+from sqlalchemy import BigInteger, Column, ForeignKey
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import relationship
 
@@ -18,9 +18,9 @@ class UserPermissions(DatabaseModel):
 
     __tablename__ = "user_permissions"
 
-    permission_id: int = Column(Integer, primary_key=True)
-    user_id: int = Column(Integer, ForeignKey("users.user_id"), nullable=False)
-    group_id: int = Column(Integer, ForeignKey("groups.group_id"), nullable=True)
+    permission_id: int = Column(BigInteger, primary_key=True)
+    user_id: int = Column(BigInteger, ForeignKey("users.user_id"), nullable=False)
+    group_id: int = Column(BigInteger, ForeignKey("groups.group_id"), nullable=True)
     permission: UserPermission = Column(ENUM(UserPermission), nullable=False)
     permission_type: UserPermissionType = Column(
         ENUM(UserPermissionType), nullable=False, server_default="ALLOW"

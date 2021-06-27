@@ -11,8 +11,8 @@ BEGIN
             SET num_replies = num_replies + 1,
                 last_reply_time = NEW.created_time,
                 unread_user_ids = unread_user_ids |
-                    CASE WHEN sender_id = NEW.sender_id THEN recipient_id
-                        ELSE sender_id
+                    CASE WHEN sender_id = NEW.sender_id THEN recipient_id::integer
+                        ELSE sender_id::integer
                     END
             WHERE conversation_id = NEW.conversation_id;
     ELSIF (TG_OP = 'DELETE') THEN

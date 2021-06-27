@@ -6,7 +6,7 @@
 from decimal import Decimal
 
 from psycopg2.extras import DateRange
-from sqlalchemy import Column, Index, Integer, Numeric, Text
+from sqlalchemy import BigInteger, Column, Index, Numeric, Text
 from sqlalchemy.dialects.postgresql import DATERANGE, ENUM
 
 from tildes.enums import FinancialEntryType
@@ -18,7 +18,7 @@ class Financials(DatabaseModel):
 
     __tablename__ = "financials"
 
-    entry_id: int = Column(Integer, primary_key=True)
+    entry_id: int = Column(BigInteger, primary_key=True)
     entry_type: FinancialEntryType = Column(ENUM(FinancialEntryType), nullable=False)
     description: str = Column(Text)
     amount: Decimal = Column(Numeric(scale=2), nullable=False)

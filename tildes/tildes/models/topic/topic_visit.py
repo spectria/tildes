@@ -5,7 +5,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import Column, ForeignKey, Integer, TIMESTAMP
+from sqlalchemy import BigInteger, Column, ForeignKey, Integer, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
@@ -29,10 +29,10 @@ class TopicVisit(DatabaseModel):
     __tablename__ = "topic_visits"
 
     user_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     topic_id: int = Column(
-        Integer, ForeignKey("topics.topic_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("topics.topic_id"), nullable=False, primary_key=True
     )
     visit_time: datetime = Column(
         TIMESTAMP(timezone=True),

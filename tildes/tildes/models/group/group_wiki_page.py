@@ -9,7 +9,7 @@ from typing import List, Optional
 
 from pygit2 import Repository, Signature
 from pyramid.security import Allow, DENY_ALL, Everyone
-from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Text, TIMESTAMP
+from sqlalchemy import BigInteger, CheckConstraint, Column, ForeignKey, Text, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
@@ -38,7 +38,7 @@ class GroupWikiPage(DatabaseModel):
     GITLAB_REPO_URL = "https://gitlab.com/tildes/tildes-wiki"
 
     group_id: int = Column(
-        Integer, ForeignKey("groups.group_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("groups.group_id"), nullable=False, primary_key=True
     )
     path: str = Column(CIText, nullable=False, primary_key=True)
     page_name: str = Column(

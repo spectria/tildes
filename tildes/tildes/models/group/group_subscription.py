@@ -5,7 +5,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import Column, ForeignKey, Integer, TIMESTAMP
+from sqlalchemy import BigInteger, Column, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
@@ -28,10 +28,10 @@ class GroupSubscription(DatabaseModel):
     __tablename__ = "group_subscriptions"
 
     user_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     group_id: int = Column(
-        Integer, ForeignKey("groups.group_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("groups.group_id"), nullable=False, primary_key=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),

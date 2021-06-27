@@ -6,7 +6,7 @@
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import Column, Integer, Text, TIMESTAMP
+from sqlalchemy import BigInteger, Column, Text, TIMESTAMP
 from sqlalchemy.dialects.postgresql import ENUM, JSONB
 from sqlalchemy.sql.expression import text
 
@@ -19,7 +19,7 @@ class ScraperResult(DatabaseModel):
 
     __tablename__ = "scraper_results"
 
-    result_id: int = Column(Integer, primary_key=True)
+    result_id: int = Column(BigInteger, primary_key=True)
     url: str = Column(Text, nullable=False, index=True)
     scraper_type: ScraperType = Column(ENUM(ScraperType), nullable=False)
     scrape_time: datetime = Column(

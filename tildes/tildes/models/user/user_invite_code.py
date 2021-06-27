@@ -7,7 +7,7 @@ import random
 import string
 from datetime import datetime
 
-from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, Text, TIMESTAMP
+from sqlalchemy import BigInteger, CheckConstraint, Column, ForeignKey, Text, TIMESTAMP
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
@@ -33,12 +33,12 @@ class UserInviteCode(DatabaseModel):
         primary_key=True,
     )
     user_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, index=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, index=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")
     )
-    invitee_id: int = Column(Integer, ForeignKey("users.user_id"))
+    invitee_id: int = Column(BigInteger, ForeignKey("users.user_id"))
 
     user: User = relationship("User", innerjoin=True, foreign_keys=[user_id])
 

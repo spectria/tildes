@@ -9,11 +9,11 @@ from typing import List, Optional
 from dateutil.rrule import rrule
 from jinja2.sandbox import SandboxedEnvironment
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     CheckConstraint,
     Column,
     ForeignKey,
-    Integer,
     Text,
     TIMESTAMP,
 )
@@ -41,11 +41,13 @@ class TopicSchedule(DatabaseModel):
 
     __tablename__ = "topic_schedule"
 
-    schedule_id: int = Column(Integer, primary_key=True)
+    schedule_id: int = Column(BigInteger, primary_key=True)
     group_id: int = Column(
-        Integer, ForeignKey("groups.group_id"), nullable=False, index=True
+        BigInteger, ForeignKey("groups.group_id"), nullable=False, index=True
     )
-    user_id: Optional[int] = Column(Integer, ForeignKey("users.user_id"), nullable=True)
+    user_id: Optional[int] = Column(
+        BigInteger, ForeignKey("users.user_id"), nullable=True
+    )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True), nullable=False, server_default=text("NOW()")
     )
@@ -63,7 +65,9 @@ class TopicSchedule(DatabaseModel):
     only_new_top_level_comments_in_latest: bool = Column(
         Boolean, nullable=False, server_default="true"
     )
-    latest_topic_id: int = Column(Integer, ForeignKey("topics.topic_id"), nullable=True)
+    latest_topic_id: int = Column(
+        BigInteger, ForeignKey("topics.topic_id"), nullable=True
+    )
 
     group: Group = relationship("Group", innerjoin=True)
     user: Optional[User] = relationship("User")

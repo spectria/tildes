@@ -5,7 +5,7 @@
 
 from datetime import timedelta
 
-from sqlalchemy import Column, ForeignKey, Integer, Interval, Text
+from sqlalchemy import BigInteger, Column, ForeignKey, Integer, Interval, Text
 from sqlalchemy.orm import relationship
 
 from tildes.models import DatabaseModel
@@ -18,7 +18,7 @@ class UserRateLimit(DatabaseModel):
 
     __tablename__ = "user_rate_limit"
 
-    user_id: int = Column(Integer, ForeignKey("users.user_id"), primary_key=True)
+    user_id: int = Column(BigInteger, ForeignKey("users.user_id"), primary_key=True)
     action: str = Column(Text, primary_key=True)
     period: timedelta = Column(Interval, nullable=False)
     limit: int = Column(Integer, nullable=False)

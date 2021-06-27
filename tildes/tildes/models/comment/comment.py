@@ -15,7 +15,16 @@ from pyramid.security import (
     Everyone,
     principals_allowed_by_permission,
 )
-from sqlalchemy import Boolean, Column, ForeignKey, Index, Integer, Text, TIMESTAMP
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    Column,
+    ForeignKey,
+    Index,
+    Integer,
+    Text,
+    TIMESTAMP,
+)
 from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql.expression import text
@@ -72,15 +81,15 @@ class Comment(DatabaseModel):
 
     __tablename__ = "comments"
 
-    comment_id: int = Column(Integer, primary_key=True)
+    comment_id: int = Column(BigInteger, primary_key=True)
     topic_id: int = Column(
-        Integer, ForeignKey("topics.topic_id"), nullable=False, index=True
+        BigInteger, ForeignKey("topics.topic_id"), nullable=False, index=True
     )
     user_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, index=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, index=True
     )
     parent_comment_id: Optional[int] = Column(
-        Integer, ForeignKey("comments.comment_id"), index=True
+        BigInteger, ForeignKey("comments.comment_id"), index=True
     )
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),

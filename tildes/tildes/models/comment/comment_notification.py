@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import List, Tuple
 
 from pyramid.security import Allow, DENY_ALL
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, TIMESTAMP
+from sqlalchemy import BigInteger, Boolean, Column, ForeignKey, TIMESTAMP
 from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import relationship, Session
 from sqlalchemy.sql.expression import text
@@ -37,10 +37,10 @@ class CommentNotification(DatabaseModel):
     __tablename__ = "comment_notifications"
 
     user_id: int = Column(
-        Integer, ForeignKey("users.user_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("users.user_id"), nullable=False, primary_key=True
     )
     comment_id: int = Column(
-        Integer, ForeignKey("comments.comment_id"), nullable=False, primary_key=True
+        BigInteger, ForeignKey("comments.comment_id"), nullable=False, primary_key=True
     )
     notification_type: CommentNotificationType = Column(
         ENUM(CommentNotificationType), nullable=False
