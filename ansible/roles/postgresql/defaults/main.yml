@@ -1,5 +1,5 @@
 ---
-postgresql_version: 12
+postgresql_version: 13
 
 # Users of this role can define postgresql_settings, which will be merged with
 # this base _postgresql_settings
