@@ -10,8 +10,8 @@
     - name: Download Redis from GitHub
       get_url:
         dest: /tmp/redis-{{ redis_version }}.tar.gz
-        url: https://github.com/antirez/redis/archive/{{ redis_version }}.tar.gz
-        checksum: sha256:2761422599f8969559e66797cd7f606c16e907bf82d962345a7d366c5d1278df
+        url: https://github.com/redis/redis/archive/{{ redis_version }}.tar.gz
+        checksum: sha256:d53bb1f3e31c8893cbeda20195fa64132e35354d633231939c47b640fd401098
 
     - name: Create temp directory to extract Redis to
       file:
