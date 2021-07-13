@@ -387,8 +387,8 @@ def put_filtered_topic_tags(request: Request, tags: str) -> dict:
     try:
         schema = TopicSchema(only=("tags",))
         result = schema.load({"tags": split_tags})
-    except ValidationError:
-        raise ValidationError({"tags": ["Invalid tags"]})
+    except ValidationError as exc:
+        raise ValidationError({"tags": ["Invalid tags"]}) from exc
 
     request.user.filtered_topic_tags = result["tags"]
 

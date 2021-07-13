@@ -41,6 +41,7 @@ def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
     config.add_static_view("images", "/images")
 
     if settings.get("sentry_dsn"):
+        # pylint: disable=abstract-class-instantiated
         sentry_sdk.init(
             dsn=settings["sentry_dsn"],
             integrations=[PyramidIntegration()],

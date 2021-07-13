@@ -49,8 +49,8 @@ class Enum(Field):
 
         try:
             return self._enum_class[value.upper()]
-        except KeyError:
-            raise ValidationError("Invalid enum member")
+        except KeyError as exc:
+            raise ValidationError("Invalid enum member") from exc
 
 
 class ID36(String):
@@ -80,8 +80,8 @@ class ShortTimePeriod(Field):
 
         try:
             return SimpleHoursPeriod.from_short_form(value)
-        except ValueError:
-            raise ValidationError("Invalid time period")
+        except ValueError as exc:
+            raise ValidationError("Invalid time period") from exc
 
     def _serialize(
         self,
@@ -197,8 +197,8 @@ class Ltree(Field):
 
         try:
             return sqlalchemy_utils.Ltree(value)
-        except (TypeError, ValueError):
-            raise ValidationError("Invalid path")
+        except (TypeError, ValueError) as exc:
+            raise ValidationError("Invalid path") from exc
 
 
 class PostType(String):

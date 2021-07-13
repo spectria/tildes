@@ -112,8 +112,8 @@ class TopicSchema(Schema):
         for tag in value:
             try:
                 group_schema.load({"path": tag})
-            except ValidationError:
-                raise ValidationError("Tag %s is invalid" % tag)
+            except ValidationError as exc:
+                raise ValidationError("Tag %s is invalid" % tag) from exc
 
     @pre_load
     def prepare_markdown(self, data: dict, many: bool, partial: Any) -> dict:

@@ -118,8 +118,8 @@ def post_group_topics(
 
     try:
         new_topic.tags = tags.split(",")
-    except ValidationError:
-        raise ValidationError({"tags": ["Invalid tags"]})
+    except ValidationError as exc:
+        raise ValidationError({"tags": ["Invalid tags"]}) from exc
 
     # remove any tag that's the same as the group's name
     new_topic.tags = [tag for tag in new_topic.tags if tag != str(group.path)]

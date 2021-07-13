@@ -191,7 +191,7 @@ class Topic(DatabaseModel):
         important_tags = set(self.group.important_topic_tags + global_important_tags)
 
         # used with startswith() to check for sub-tags
-        important_prefixes = tuple([f"{tag}." for tag in important_tags])
+        important_prefixes = tuple(f"{tag}." for tag in important_tags)
 
         return [
             tag

@@ -62,8 +62,8 @@ def incr_counter(name: str, amount: int = 1, **labels: str) -> None:
     """Increment a Prometheus counter."""
     try:
         counter = _COUNTERS[name]
-    except KeyError:
-        raise ValueError("Invalid counter name")
+    except KeyError as exc:
+        raise ValueError("Invalid counter name") from exc
 
     if labels:
         counter = counter.labels(**labels)
@@ -75,8 +75,8 @@ def get_histogram(name: str, **labels: str) -> Histogram:
     """Return an (optionally labeled) Prometheus histogram by name."""
     try:
         hist = _HISTOGRAMS[name]
-    except KeyError:
-        raise ValueError("Invalid histogram name")
+    except KeyError as exc:
+        raise ValueError("Invalid histogram name") from exc
 
     if labels:
         hist = hist.labels(**labels)
@@ -93,8 +93,8 @@ def get_summary(name: str, **labels: str) -> Summary:
     """Return an (optionally labeled) Prometheus summary by name."""
     try:
         hist = _SUMMARIES[name]
-    except KeyError:
-        raise ValueError("Invalid summary name")
+    except KeyError as exc:
+        raise ValueError("Invalid summary name") from exc
 
     if labels:
         hist = hist.labels(**labels)

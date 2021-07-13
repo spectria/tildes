@@ -72,8 +72,10 @@ class YoutubeScraper:
 
         try:
             video_data = response.json()["items"][0]
-        except (KeyError, IndexError):
-            raise ScraperError(f"No data returned for video with ID {video_id}")
+        except (KeyError, IndexError) as exc:
+            raise ScraperError(
+                f"No data returned for video with ID {video_id}"
+            ) from exc
 
         return ScraperResult(url, ScraperType.YOUTUBE, video_data)
 

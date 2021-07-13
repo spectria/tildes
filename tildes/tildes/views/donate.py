@@ -51,8 +51,8 @@ def post_donate_stripe(
         stripe.api_key = request.registry.settings["api_keys.stripe.secret"]
         publishable_key = request.registry.settings["api_keys.stripe.publishable"]
         product_id = request.registry.settings["stripe.recurring_donation_product_id"]
-    except KeyError:
-        raise HTTPInternalServerError
+    except KeyError as exc:
+        raise HTTPInternalServerError from exc
 
     incr_counter("donation_initiations", type="stripe")
 

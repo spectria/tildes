@@ -45,7 +45,7 @@ def is_bot(request: Request) -> bool:
 
     if request.user_agent:
         return any(
-            [substring in request.user_agent for substring in bot_user_agent_substrings]
+            substring in request.user_agent for substring in bot_user_agent_substrings
         )
 
     return False
@@ -83,8 +83,8 @@ def check_rate_limit(request: Request, action_name: str) -> RateLimitResult:
     if not action:
         try:
             action = RATE_LIMITED_ACTIONS[action_name]
-        except KeyError:
-            raise ValueError("Invalid action name: %s" % action_name)
+        except KeyError as exc:
+            raise ValueError("Invalid action name: %s" % action_name) from exc
 
     action.redis = request.redis
 
@@ -136,8 +136,8 @@ def current_listing_base_url(
 
     try:
         base_view_vars = base_vars_by_route[request.matched_route.name]
-    except KeyError:
-        raise AttributeError("Current route is not supported.")
+    except KeyError as exc:
+        raise AttributeError("Current route is not supported.") from exc
 
     query_vars = {
         key: val for key, val in request.GET.copy().items() if key in base_view_vars
@@ -173,8 +173,8 @@ def current_listing_normal_url(
 
     try:
         normal_view_vars = normal_vars_by_route[request.matched_route.name]
-    except KeyError:
-        raise AttributeError("Current route is not supported.")
+    except KeyError as exc:
+        raise AttributeError("Current route is not supported.") from exc
 
     query_vars = {
         key: val for key, val in request.GET.copy().items() if key in normal_view_vars

@@ -27,8 +27,8 @@ class SimpleHoursPeriod:
 
         try:
             self.timedelta = timedelta(hours=hours)
-        except OverflowError:
-            raise ValueError("Time period is too large")
+        except OverflowError as exc:
+            raise ValueError("Time period is too large") from exc
 
     @classmethod
     def from_short_form(cls, short_form: str) -> SimpleHoursPeriod:

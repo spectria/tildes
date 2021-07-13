@@ -18,8 +18,8 @@ def topic_by_id36(request: Request, topic_id36: str) -> Topic:
     """Get a topic specified by {topic_id36} in the route (or 404)."""
     try:
         topic_id = id36_to_id(topic_id36)
-    except ValueError:
-        raise HTTPNotFound
+    except ValueError as exc:
+        raise HTTPNotFound from exc
 
     query = (
         request.query(Topic)
@@ -30,8 +30,8 @@ def topic_by_id36(request: Request, topic_id36: str) -> Topic:
 
     try:
         topic = get_resource(request, query)
-    except HTTPNotFound:
-        raise HTTPNotFound("Topic not found (or it was deleted)")
+    except HTTPNotFound as exc:
+        raise HTTPNotFound("Topic not found (or it was deleted)") from exc
 
     # if there's also a group specified in the route, check that it's the same group as
     # the topic was posted in, otherwise redirect to correct group

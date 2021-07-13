@@ -86,8 +86,10 @@ def post_register(
     request.db_session.add(user)
     try:
         request.db_session.flush()
-    except IntegrityError:
-        raise HTTPUnprocessableEntity("That username has already been registered.")
+    except IntegrityError as exc:
+        raise HTTPUnprocessableEntity(
+            "That username has already been registered."
+        ) from exc
 
     # the flush above will generate the new user's ID, so use that to update the invite
     # code with info about the user that registered with it

@@ -24,8 +24,8 @@ def comment_by_id36(request: Request, comment_id36: str) -> Comment:
 
     try:
         return get_resource(request, query)
-    except HTTPNotFound:
-        raise HTTPNotFound("Comment not found (or it was deleted)")
+    except HTTPNotFound as exc:
+        raise HTTPNotFound("Comment not found (or it was deleted)") from exc
 
 
 @use_kwargs(CommentSchema(only=("comment_id36",)), location="matchdict")

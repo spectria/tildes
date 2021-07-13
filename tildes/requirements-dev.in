@@ -3,7 +3,7 @@ black
 freezegun
 html5validator
 mypy
-prospector
+prospector @ git+https://github.com/Deimos/prospector.git#egg=prospector
 pyramid-debugtoolbar
 pytest
 pytest-mock

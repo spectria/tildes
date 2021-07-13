@@ -185,8 +185,8 @@ def put_tag_topic(request: Request, tags: str, conflict_check: str) -> dict:
 
     try:
         topic.tags = new_tags
-    except ValidationError:
-        raise ValidationError({"tags": ["Invalid tags"]})
+    except ValidationError as exc:
+        raise ValidationError({"tags": ["Invalid tags"]}) from exc
 
     # if tags weren't changed, don't add a log entry or update page
     if set(topic.tags) == set(old_tags):

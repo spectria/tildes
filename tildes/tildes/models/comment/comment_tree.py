@@ -254,7 +254,7 @@ class CommentTree:
         # if all the top-level comments end up fully collapsed,
         # uncollapse the ones we just collapsed (so we don't have a
         # comment page that's all collapsed comments)
-        if all([comment.collapsed_state == "full" for comment in self.tree]):
+        if all(comment.collapsed_state == "full" for comment in self.tree):
             for comment, was_unknown in zip(self.tree, top_unknown_initial):
                 if was_unknown:
                     comment.collapsed_state = None

@@ -267,16 +267,16 @@ class MixedPaginatedResults(PaginatedResults):
         """Merge all the supplied results into a single one."""
         sort_column_name = paginated_results[0].query._sort_column.name
         if any(
-            [r.query._sort_column.name != sort_column_name for r in paginated_results]
+            r.query._sort_column.name != sort_column_name for r in paginated_results
         ):
             raise ValueError("All results must by sorted by the same column.")
 
         reverse_sort = paginated_results[0].query.sort_desc
-        if any([r.query.sort_desc != reverse_sort for r in paginated_results]):
+        if any(r.query.sort_desc != reverse_sort for r in paginated_results):
             raise ValueError("All results must by sorted in the same direction.")
 
         is_query_reversed = paginated_results[0].query.is_reversed
-        if any([r.query.is_reversed != is_query_reversed for r in paginated_results]):
+        if any(r.query.is_reversed != is_query_reversed for r in paginated_results):
             raise ValueError("All results must have the same directionality.")
 
         # merge all the results into one list and sort it
@@ -288,8 +288,8 @@ class MixedPaginatedResults(PaginatedResults):
 
         self.per_page = min([r.per_page for r in paginated_results])
 
-        self.has_prev_page = any([r.has_prev_page for r in paginated_results])
-        self.has_next_page = any([r.has_next_page for r in paginated_results])
+        self.has_prev_page = any(r.has_prev_page for r in paginated_results)
+        self.has_next_page = any(r.has_next_page for r in paginated_results)
 
         if len(self.results) > self.per_page:
             if is_query_reversed:

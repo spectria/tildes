@@ -48,8 +48,8 @@ def obtain_transaction_lock(
     if lock_space:
         try:
             lock_space_value = LockSpaces[lock_space.upper()].value
-        except KeyError:
-            raise ValueError("Invalid lock space: %s" % lock_space)
+        except KeyError as exc:
+            raise ValueError("Invalid lock space: %s" % lock_space) from exc
 
         session.query(func.pg_advisory_xact_lock(lock_space_value, lock_value)).one()
     else:
