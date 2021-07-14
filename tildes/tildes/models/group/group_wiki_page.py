@@ -20,7 +20,7 @@ from tildes.lib.html import add_anchors_to_headings
 from tildes.lib.markdown import convert_markdown_to_safe_html
 from tildes.lib.string import convert_to_url_slug
 from tildes.models import DatabaseModel
-from tildes.models.user import User
+from tildes.models.user.user import User
 from tildes.schemas.group_wiki_page import GroupWikiPageSchema, PAGE_NAME_MAX_LENGTH
 from tildes.typing import AclType
 

@@ -157,14 +157,18 @@ class RecurrenceRule(TypeDecorator):
 
     impl = Text
 
-    def process_bind_param(self, value: rrule, dialect: Dialect) -> str:
+    def process_bind_param(
+        self, value: Optional[rrule], dialect: Dialect
+    ) -> Optional[str]:
         """Convert the rrule value to a string to store it."""
         if value is None:
             return value
 
         return rrule_to_str(value)
 
-    def process_result_value(self, value: str, dialect: Dialect) -> rrule:
+    def process_result_value(
+        self, value: Optional[str], dialect: Dialect
+    ) -> Optional[rrule]:
         """Convert the stored string to an rrule."""
         if value is None:
             return value

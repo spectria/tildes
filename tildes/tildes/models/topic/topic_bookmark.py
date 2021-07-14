@@ -7,8 +7,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 
 from tildes.models import DatabaseModel
-from tildes.models.topic import Topic
 from tildes.models.user import User
+
+from .topic import Topic
 
 
 class TopicBookmark(DatabaseModel):

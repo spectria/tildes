@@ -5,7 +5,18 @@
 
 import re
 from functools import partial
-from typing import Any, Callable, Iterator, List, Match, Optional, Pattern, Tuple
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    List,
+    Match,
+    Optional,
+    Pattern,
+    Tuple,
+    Union,
+)
 
 import bleach
 from bs4 import BeautifulSoup
@@ -94,7 +105,7 @@ ALLOWED_HTML_TAGS = (
 )
 ALLOWED_LINK_PROTOCOLS = ("gemini", "http", "https", "mailto")
 
-ALLOWED_HTML_ATTRIBUTES_DEFAULT = {
+ALLOWED_HTML_ATTRIBUTES_DEFAULT: Dict[str, Union[List[str], Callable]] = {
     "a": ["href", "title"],
     "details": ["open"],
     "ol": ["start"],

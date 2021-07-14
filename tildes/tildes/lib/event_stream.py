@@ -6,7 +6,7 @@
 import os
 from abc import abstractmethod
 from configparser import ConfigParser
-from typing import Any, Dict, List, Sequence
+from typing import Any, Dict, List, Optional, Sequence
 
 from prometheus_client import CollectorRegistry, Counter, start_http_server
 from redis import Redis, ResponseError
@@ -47,7 +47,7 @@ class EventStreamConsumer:
     necessary. It relies on the environment variable INI_FILE being set.
     """
 
-    METRICS_PORT = None
+    METRICS_PORT: Optional[int] = None
 
     def __init__(
         self,

@@ -63,6 +63,9 @@ class TopicMetadataGenerator(EventStreamConsumer):
     @staticmethod
     def _generate_text_metadata(topic: Topic) -> Dict[str, Any]:
         """Generate metadata for a text topic (word count and excerpt)."""
+        if not topic.rendered_html:
+            return {}
+
         extracted_text = extract_text_from_html(topic.rendered_html)
 
         # create a short excerpt by truncating the extracted string
@@ -80,6 +83,9 @@ class TopicMetadataGenerator(EventStreamConsumer):
 
     def _generate_link_metadata(self, topic: Topic) -> Dict[str, Any]:
         """Generate metadata for a link topic (domain)."""
+        if not topic.link:
+            return {}
+
         parsed_domain = get_domain_from_url(topic.link)
 
         if self._domain_is_ip_address(parsed_domain):

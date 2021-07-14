@@ -8,4 +8,8 @@ pyramid-debugtoolbar
 pytest
 pytest-mock
 testing.redis
+types-bleach
+types-python-dateutil
+types-redis
+types-requests
 webtest

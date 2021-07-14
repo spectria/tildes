@@ -11,7 +11,7 @@ from sqlalchemy.sql.expression import text
 
 from tildes.metrics import incr_counter
 from tildes.models import DatabaseModel
-from tildes.models.user import User
+from tildes.models.user.user import User
 
 from .group import Group
 

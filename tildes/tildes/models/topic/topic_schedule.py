@@ -25,9 +25,10 @@ from tildes.lib.database import RecurrenceRule, TagList
 from tildes.lib.datetime import utc_now
 from tildes.models import DatabaseModel
 from tildes.models.group import Group
-from tildes.models.topic import Topic
 from tildes.models.user import User
 from tildes.schemas.topic import TITLE_MAX_LENGTH
+
+from .topic import Topic
 
 
 class TopicSchedule(DatabaseModel):

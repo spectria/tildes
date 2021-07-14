@@ -12,7 +12,8 @@ from sqlalchemy.orm import relationship
 from tildes.enums import TopicSortOption
 from tildes.models import DatabaseModel
 from tildes.models.group import Group
-from tildes.models.user import User
+
+from .user import User
 
 
 class UserGroupSettings(DatabaseModel):

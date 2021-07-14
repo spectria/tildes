@@ -272,7 +272,7 @@ class CommentInTree(ObjectProxy):
         self.replies: List[CommentInTree] = []
         self.has_visible_descendant = False
         self.num_children = 0
-        self.depth: Optional[int] = None
+        self.depth = 0
 
     @property
     def has_uncollapsed_descendant(self) -> bool:
