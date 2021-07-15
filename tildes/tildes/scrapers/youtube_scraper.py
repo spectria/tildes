@@ -5,7 +5,7 @@
 
 import re
 from datetime import timedelta
-from typing import Any, Dict
+from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 import requests
@@ -59,7 +59,7 @@ class YoutubeScraper:
         if not video_id:
             raise ValueError("Invalid url, no video ID found.")
 
-        params: Dict[str, Any] = {
+        params: dict[str, Any] = {
             "key": self.api_key,
             "id": video_id,
             "part": "snippet,contentDetails,statistics",
@@ -80,7 +80,7 @@ class YoutubeScraper:
         return ScraperResult(url, ScraperType.YOUTUBE, video_data)
 
     @classmethod
-    def get_metadata_from_result(cls, result: ScraperResult) -> Dict[str, Any]:
+    def get_metadata_from_result(cls, result: ScraperResult) -> dict[str, Any]:
         """Get the metadata that we're interested in out of a scrape result."""
         if result.scraper_type != ScraperType.YOUTUBE:
             raise ValueError("Can't process a result from a different scraper.")

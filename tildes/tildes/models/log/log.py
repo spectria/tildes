@@ -3,7 +3,7 @@
 
 """Contains the Log class."""
 
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from pyramid.request import Request
 from sqlalchemy import BigInteger, Column, event, ForeignKey, Table, TIMESTAMP
@@ -75,7 +75,7 @@ class Log(DatabaseModel, BaseLog):
         self,
         event_type: LogEventType,
         request: Request,
-        info: Optional[Dict[str, Any]] = None,
+        info: Optional[dict[str, Any]] = None,
     ):
         """Create a new log entry.
 
@@ -106,7 +106,7 @@ class LogComment(DatabaseModel, BaseLog):
         event_type: LogEventType,
         request: Request,
         comment: Comment,
-        info: Optional[Dict[str, Any]] = None,
+        info: Optional[dict[str, Any]] = None,
     ):
         """Create a new log entry related to a specific comment."""
         # pylint: disable=non-parent-init-called
@@ -135,7 +135,7 @@ class LogTopic(DatabaseModel, BaseLog):
         event_type: LogEventType,
         request: Request,
         topic: Topic,
-        info: Optional[Dict[str, Any]] = None,
+        info: Optional[dict[str, Any]] = None,
     ):
         """Create a new log entry related to a specific topic."""
         # pylint: disable=non-parent-init-called

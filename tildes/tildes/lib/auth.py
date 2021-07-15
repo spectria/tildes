@@ -3,7 +3,7 @@
 
 """Functions to help with authorization, such as generating ACLs."""
 
-from typing import List, Optional
+from typing import Optional
 
 from pyramid.security import Allow, Deny
 
@@ -14,7 +14,7 @@ def aces_for_permission(
     required_permission: str,
     group_id: Optional[int] = None,
     granted_permission: Optional[str] = None,
-) -> List[AceType]:
+) -> list[AceType]:
     """Return the ACEs for manually-granted (or denied) entries in UserPermissions."""
     aces = []
 

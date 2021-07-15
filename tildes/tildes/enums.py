@@ -5,7 +5,7 @@
 
 import enum
 from datetime import timedelta
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from tildes.lib.datetime import utc_from_timestamp
 
@@ -109,7 +109,7 @@ class ContentMetadataFields(enum.Enum):
     def detail_fields_for_content_type(
         cls,
         content_type: "TopicContentType",
-    ) -> List["ContentMetadataFields"]:
+    ) -> list["ContentMetadataFields"]:
         """Return a list of fields to display for detail about a particular type."""
         if content_type is TopicContentType.ARTICLE:
             return [cls.WORD_COUNT, cls.PUBLISHED]

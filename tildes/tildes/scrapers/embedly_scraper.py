@@ -3,7 +3,7 @@
 
 """Contains the EmbedlyScraper class."""
 
-from typing import Any, Dict
+from typing import Any
 from urllib.parse import urlparse
 
 import requests
@@ -35,7 +35,7 @@ class EmbedlyScraper:
 
     def scrape_url(self, url: str) -> ScraperResult:
         """Scrape a url and return the result."""
-        params: Dict[str, Any] = {"key": self.api_key, "format": "json", "url": url}
+        params: dict[str, Any] = {"key": self.api_key, "format": "json", "url": url}
 
         response = requests.get(
             "https://api.embedly.com/1/extract", params=params, timeout=5
@@ -45,7 +45,7 @@ class EmbedlyScraper:
         return ScraperResult(url, ScraperType.EMBEDLY, response.json())
 
     @staticmethod
-    def get_metadata_from_result(result: ScraperResult) -> Dict[str, Any]:
+    def get_metadata_from_result(result: ScraperResult) -> dict[str, Any]:
         """Get the metadata that we're interested in out of a scrape result."""
         if result.scraper_type != ScraperType.EMBEDLY:
             raise ValueError("Can't process a result from a different scraper.")

@@ -3,8 +3,6 @@
 
 """Configure and initialize the Pyramid app."""
 
-from typing import Dict
-
 import sentry_sdk
 from marshmallow.exceptions import ValidationError
 from paste.deploy.config import PrefixMiddleware
@@ -13,7 +11,7 @@ from sentry_sdk.integrations.pyramid import PyramidIntegration
 from webassets import Bundle
 
 
-def main(global_config: Dict[str, str], **settings: str) -> PrefixMiddleware:
+def main(global_config: dict[str, str], **settings: str) -> PrefixMiddleware:
     """Configure and return a Pyramid WSGI application."""
     config = Configurator(settings=settings)
 

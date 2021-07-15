@@ -1,6 +1,6 @@
 """Views relating to bookmarks."""
 
-from typing import Optional, Type, Union
+from typing import Optional, Union
 
 from pyramid.request import Request
 from pyramid.view import view_config
@@ -27,7 +27,7 @@ def get_bookmarks(
     # pylint: disable=unused-argument
     user = request.user
 
-    bookmark_cls: Union[Type[CommentBookmark], Type[TopicBookmark]]
+    bookmark_cls: Union[type[CommentBookmark], type[TopicBookmark]]
 
     if post_type == "comment":
         post_cls = Comment

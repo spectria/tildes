@@ -4,8 +4,8 @@
 """Consumer that fetches data from Embedly's Extract API for link topics."""
 
 import os
+from collections.abc import Sequence
 from datetime import timedelta
-from typing import Sequence
 
 from pyramid.paster import get_appsettings
 from requests.exceptions import HTTPError, Timeout

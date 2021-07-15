@@ -3,9 +3,10 @@
 
 """Consumer that downloads site icons using Embedly scraper data."""
 
+from collections.abc import Sequence
 from io import BytesIO
 from os import path
-from typing import Optional, Sequence
+from typing import Optional
 
 import publicsuffix
 import requests

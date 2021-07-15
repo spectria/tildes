@@ -3,7 +3,8 @@
 
 """Consumer that generates content_metadata for topics."""
 
-from typing import Any, Dict, Sequence
+from collections.abc import Sequence
+from typing import Any
 from ipaddress import ip_address
 
 import publicsuffix
@@ -61,7 +62,7 @@ class TopicMetadataGenerator(EventStreamConsumer):
         )
 
     @staticmethod
-    def _generate_text_metadata(topic: Topic) -> Dict[str, Any]:
+    def _generate_text_metadata(topic: Topic) -> dict[str, Any]:
         """Generate metadata for a text topic (word count and excerpt)."""
         if not topic.rendered_html:
             return {}
@@ -81,7 +82,7 @@ class TopicMetadataGenerator(EventStreamConsumer):
         except ValueError:
             return False
 
-    def _generate_link_metadata(self, topic: Topic) -> Dict[str, Any]:
+    def _generate_link_metadata(self, topic: Topic) -> dict[str, Any]:
         """Generate metadata for a link topic (domain)."""
         if not topic.link:
             return {}

@@ -3,7 +3,7 @@
 
 """Library code related to displaying info about individual websites."""
 
-from typing import List, Optional
+from typing import Optional
 
 from tildes.enums import ContentMetadataFields, TopicContentType
 
@@ -22,7 +22,7 @@ class SiteInfo:
         self.show_author = show_author
         self.content_type = content_type
 
-    def content_source(self, authors: Optional[List[str]] = None) -> str:
+    def content_source(self, authors: Optional[list[str]] = None) -> str:
         """Return a string representing the "source" of content on this site.
 
         If the site isn't one that needs to show its author, this is just its name.

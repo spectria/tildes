@@ -7,7 +7,7 @@
 # checks to avoid errors
 # pylint: disable=no-value-for-parameter,redundant-keyword-arg
 
-from typing import Callable
+from collections.abc import Callable
 
 from prometheus_client import Counter, Histogram, Summary
 

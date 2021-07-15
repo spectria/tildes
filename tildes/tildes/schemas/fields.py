@@ -5,7 +5,8 @@
 
 import enum
 import re
-from typing import Any, Mapping, Optional, Type
+from collections.abc import Mapping
+from typing import Any, Optional
 
 import sqlalchemy_utils
 from marshmallow.exceptions import ValidationError
@@ -24,7 +25,9 @@ DataType = Optional[Mapping[str, Any]]
 class Enum(Field):
     """Field for a native Python Enum (or subclasses)."""
 
-    def __init__(self, enum_class: Optional[Type] = None, *args: Any, **kwargs: Any):
+    def __init__(
+        self, enum_class: Optional[type[enum.Enum]] = None, *args: Any, **kwargs: Any
+    ):
         """Initialize the field with an optional enum class."""
         # pylint: disable=keyword-arg-before-vararg
         super().__init__(*args, **kwargs)

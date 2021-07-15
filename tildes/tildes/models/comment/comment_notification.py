@@ -5,7 +5,6 @@
 
 import re
 from datetime import datetime
-from typing import List, Tuple
 
 from pyramid.security import Allow, DENY_ALL
 from sqlalchemy import BigInteger, Boolean, Column, ForeignKey, TIMESTAMP
@@ -120,7 +119,7 @@ class CommentNotification(DatabaseModel):
     @classmethod
     def get_mentions_for_comment(
         cls, db_session: Session, comment: Comment
-    ) -> List["CommentNotification"]:
+    ) -> list["CommentNotification"]:
         """Get a list of notifications for user mentions in the comment."""
         notifications = []
 
@@ -160,8 +159,8 @@ class CommentNotification(DatabaseModel):
     def prevent_duplicate_notifications(
         db_session: Session,
         comment: Comment,
-        new_notifications: List["CommentNotification"],
-    ) -> Tuple[List["CommentNotification"], List["CommentNotification"]]:
+        new_notifications: list["CommentNotification"],
+    ) -> tuple[list["CommentNotification"], list["CommentNotification"]]:
         """Filter new notifications for edited comments.
 
         Protect against sending a notification for the same comment to the same user

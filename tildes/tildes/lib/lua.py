@@ -3,8 +3,9 @@
 
 """Functions and classes related to Lua scripting."""
 
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 
 from lupa import LuaError, LuaRuntime
 

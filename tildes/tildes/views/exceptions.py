@@ -3,7 +3,7 @@
 
 """Views used by Pyramid when an exception is raised."""
 
-from typing import Sequence
+from collections.abc import Sequence
 from urllib.parse import quote_plus
 
 from marshmallow import ValidationError

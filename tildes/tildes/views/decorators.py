@@ -3,7 +3,8 @@
 
 """Contains decorators for view functions."""
 
-from typing import Any, Callable, Dict, Union
+from collections.abc import Callable
+from typing import Any, Union
 
 from marshmallow import EXCLUDE
 from marshmallow.fields import Field
@@ -15,7 +16,7 @@ from webargs import dict2schema, pyramidparser
 
 
 def use_kwargs(
-    argmap: Union[Schema, Dict[str, Field]], location: str = "query", **kwargs: Any
+    argmap: Union[Schema, dict[str, Field]], location: str = "query", **kwargs: Any
 ) -> Callable:
     """Wrap the webargs @use_kwargs decorator with preferred default modifications.
 

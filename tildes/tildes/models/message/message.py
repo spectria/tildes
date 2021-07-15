@@ -12,8 +12,9 @@ This might feel a bit unusual since it splits "all messages" across two tables/c
 but it simplifies a lot of things when organizing them into threads.
 """
 
+from collections.abc import Sequence
 from datetime import datetime
-from typing import List, Optional, Sequence
+from typing import Optional
 
 from pyramid.security import Allow, DENY_ALL
 from sqlalchemy import (
@@ -91,7 +92,7 @@ class MessageConversation(DatabaseModel):
     # is dangerous and *will* break if user_id values ever get larger than integers
     # can hold. I'm comfortable doing something that will only be an issue if the site
     # reaches 2.1 billion users though, I think this would be the least of the problems.
-    unread_user_ids: List[int] = Column(
+    unread_user_ids: list[int] = Column(
         ARRAY(Integer), nullable=False, server_default="{}"
     )
 

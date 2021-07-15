@@ -4,7 +4,8 @@
 """Contains the TopicQuery class."""
 
 from __future__ import annotations
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from pyramid.request import Request
 from sqlalchemy import func

@@ -4,8 +4,9 @@
 """Contains the PaginatedQuery and PaginatedResults classes."""
 
 from __future__ import annotations
+from collections.abc import Iterator, Sequence
 from itertools import chain
-from typing import Any, Iterator, List, Optional, Sequence, TypeVar
+from typing import Any, Optional, TypeVar
 
 from pyramid.request import Request
 from sqlalchemy import Column, func, inspect
@@ -39,12 +40,12 @@ class PaginatedQuery(ModelQuery):
         if not self.is_reversed:
             return super().__iter__()
 
-        results: List[ModelType] = list(super().__iter__())
+        results: list[ModelType] = list(super().__iter__())
 
         return iter(reversed(results))
 
     @property
-    def sorting_columns(self) -> List[Column]:
+    def sorting_columns(self) -> list[Column]:
         """Return the columns being used for sorting."""
         if not self._sort_column:
             raise AttributeError
@@ -56,7 +57,7 @@ class PaginatedQuery(ModelQuery):
             return [self._sort_column]
 
     @property
-    def sorting_columns_desc(self) -> List[Column]:
+    def sorting_columns_desc(self) -> list[Column]:
         """Return descending versions of the sorting columns."""
         return [col.desc() for col in self.sorting_columns]
 

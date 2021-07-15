@@ -4,10 +4,11 @@
 """Contains the Topic class."""
 
 from __future__ import annotations
+from collections.abc import Iterable
 from datetime import datetime, timedelta
 from itertools import chain
 from pathlib import PurePosixPath
-from typing import Any, Dict, Iterable, List, Optional, TYPE_CHECKING
+from typing import Any, Optional, TYPE_CHECKING
 from urllib.parse import urlparse
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
@@ -122,7 +123,7 @@ class Topic(DatabaseModel):
     _markdown: Optional[str] = deferred(Column("markdown", Text))
     rendered_html: Optional[str] = Column(Text)
     link: Optional[str] = Column(Text)
-    content_metadata: Dict[str, Any] = Column(
+    content_metadata: dict[str, Any] = Column(
         MutableDict.as_mutable(JSONB(none_as_null=True))
     )
     num_comments: int = Column(Integer, nullable=False, server_default="0")
@@ -130,7 +131,7 @@ class Topic(DatabaseModel):
     _is_voting_closed: bool = Column(
         "is_voting_closed", Boolean, nullable=False, server_default="false", index=True
     )
-    tags: List[str] = Column(TagList, nullable=False, server_default="{}")
+    tags: list[str] = Column(TagList, nullable=False, server_default="{}")
     is_official: bool = Column(Boolean, nullable=False, server_default="false")
     is_locked: bool = Column(Boolean, nullable=False, server_default="false")
     search_tsv: Any = deferred(Column(TSVECTOR))
@@ -184,7 +185,7 @@ class Topic(DatabaseModel):
             self.last_edited_time = utc_now()
 
     @property
-    def important_tags(self) -> List[str]:
+    def important_tags(self) -> list[str]:
         """Return only the topic's "important" tags."""
         global_important_tags = ["nsfw", "spoiler"]
 
@@ -200,7 +201,7 @@ class Topic(DatabaseModel):
         ]
 
     @property
-    def unimportant_tags(self) -> List[str]:
+    def unimportant_tags(self) -> list[str]:
         """Return only the topic's tags that *aren't* considered "important"."""
         important_tags = set(self.important_tags)
         return [tag for tag in self.tags if tag not in important_tags]
@@ -552,7 +553,7 @@ class Topic(DatabaseModel):
         return self.content_metadata.get(key)
 
     @property
-    def content_metadata_for_display(self) -> List[str]:
+    def content_metadata_for_display(self) -> list[str]:
         """Return a list of the content's metadata strings, suitable for display."""
         if not self.content_type:
             return []
@@ -582,7 +583,7 @@ class Topic(DatabaseModel):
         return metadata_strings
 
     @property
-    def content_metadata_fields_for_display(self) -> Dict[str, str]:
+    def content_metadata_fields_for_display(self) -> dict[str, str]:
         """Return a dict of the metadata fields and values, suitable for display."""
         if not self.content_metadata:
             return {}

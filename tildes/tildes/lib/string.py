@@ -5,7 +5,8 @@
 
 import re
 import unicodedata
-from typing import Iterator, List, Optional
+from collections.abc import Iterator
+from typing import Optional
 from urllib.parse import quote
 from xml.etree.ElementTree import Element
 
@@ -225,10 +226,10 @@ def separate_string(original: str, separator: str, segment_size: int) -> str:
     return separated
 
 
-def extract_text_from_html(html: str, skip_tags: Optional[List[str]] = None) -> str:
+def extract_text_from_html(html: str, skip_tags: Optional[list[str]] = None) -> str:
     """Extract plain text content from the elements inside an HTML string."""
 
-    def extract_text(element: Element, skip_tags: List[str]) -> Iterator[str]:
+    def extract_text(element: Element, skip_tags: list[str]) -> Iterator[str]:
         """Extract text recursively from elements, optionally skipping some tags.
 
         This function is Python's xml.etree.ElementTree.Element.itertext() but with the

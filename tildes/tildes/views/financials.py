@@ -5,7 +5,7 @@
 
 from collections import defaultdict
 from decimal import Decimal
-from typing import Dict, List, Optional
+from typing import Optional
 
 from pyramid.request import Request
 from pyramid.view import view_config
@@ -30,7 +30,7 @@ def get_financials(request: Request) -> dict:
     )
 
     # split the entries up by type
-    entries: Dict[str, List] = defaultdict(list)
+    entries = defaultdict(list)
     for entry in financial_entries:
         entries[entry.entry_type.name.lower()].append(entry)
 
@@ -43,7 +43,7 @@ def get_financials(request: Request) -> dict:
     }
 
 
-def get_financial_data(db_session: Session) -> Optional[Dict[str, Decimal]]:
+def get_financial_data(db_session: Session) -> Optional[dict[str, Decimal]]:
     """Return financial data used to render the donation goal box."""
     # get the total sum for each entry type in the financials table relevant to today
     financial_totals = (

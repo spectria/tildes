@@ -3,7 +3,7 @@
 
 """Contains the database-related config updates and request methods."""
 
-from typing import Callable, Type
+from collections.abc import Callable
 
 from pyramid.config import Configurator
 from pyramid.request import Request
@@ -31,7 +31,7 @@ def obtain_lock(request: Request, lock_space: str, lock_value: int) -> None:
     obtain_transaction_lock(request.db_session, lock_space, lock_value)
 
 
-def query_factory(request: Request, model_cls: Type[DatabaseModel]) -> ModelQuery:
+def query_factory(request: Request, model_cls: type[DatabaseModel]) -> ModelQuery:
     """Return a ModelQuery or subclass depending on model_cls specified."""
     if model_cls == Comment:
         return CommentQuery(request)

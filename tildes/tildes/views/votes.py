@@ -1,6 +1,6 @@
 """Views relating to voted posts."""
 
-from typing import Optional, Type, Union
+from typing import Optional, Union
 
 from pyramid.request import Request
 from pyramid.view import view_config
@@ -27,7 +27,7 @@ def get_voted_posts(
     # pylint: disable=unused-argument
     user = request.user
 
-    vote_cls: Union[Type[CommentVote], Type[TopicVote]]
+    vote_cls: Union[type[CommentVote], type[TopicVote]]
 
     if post_type == "comment":
         post_cls = Comment

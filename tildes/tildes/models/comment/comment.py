@@ -4,8 +4,9 @@
 """Contains the Comment class."""
 
 from collections import Counter
+from collections.abc import Sequence
 from datetime import datetime, timedelta
-from typing import Any, Optional, Sequence, TYPE_CHECKING, Union
+from typing import Any, Optional, TYPE_CHECKING, Union
 
 from pyramid.security import (
     Allow,

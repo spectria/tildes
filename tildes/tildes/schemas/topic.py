@@ -4,7 +4,6 @@
 """Validation/dumping schema for topics."""
 
 import re
-import typing
 from typing import Any
 from urllib.parse import urlparse
 
@@ -65,7 +64,7 @@ class TopicSchema(Schema):
 
         new_data = data.copy()
 
-        tags: typing.List[str] = []
+        tags: list[str] = []
 
         for tag in new_data["tags"]:
             tag = tag.lower()
@@ -99,7 +98,7 @@ class TopicSchema(Schema):
         return new_data
 
     @validates("tags")
-    def validate_tags(self, value: typing.List[str]) -> None:
+    def validate_tags(self, value: list[str]) -> None:
         """Validate the tags field, raising an error if an issue exists.
 
         Note that tags are validated by ensuring that each tag would be a valid group

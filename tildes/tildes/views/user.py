@@ -3,7 +3,7 @@
 
 """Views related to a specific user."""
 
-from typing import List, Optional, Type, Union
+from typing import Optional, Union
 
 from enum import Enum
 from marshmallow.fields import String
@@ -50,8 +50,8 @@ def get_user(
         anchor_type = None
         per_page = 20
 
-    types_to_query: List[Union[Type[Topic], Type[Comment]]]
-    order_options: Optional[Union[Type[TopicSortOption], Type[CommentSortOption]]]
+    types_to_query: list[Union[type[Topic], type[Comment]]]
+    order_options: Optional[Union[type[TopicSortOption], type[CommentSortOption]]]
 
     if post_type == "topic":
         types_to_query = [Topic]
@@ -111,8 +111,8 @@ def get_user_search(
     """Generate the search results page for a user's posts."""
     user = request.context
 
-    types_to_query: List[Union[Type[Topic], Type[Comment]]]
-    order_options: Union[Type[TopicSortOption], Type[CommentSortOption]]
+    types_to_query: list[Union[type[Topic], type[Comment]]]
+    order_options: Union[type[TopicSortOption], type[CommentSortOption]]
 
     if post_type == "topic":
         types_to_query = [Topic]
@@ -170,7 +170,7 @@ def get_invite(request: Request) -> dict:
 def _get_user_posts(
     request: Request,
     user: User,
-    types_to_query: List[Union[Type[Topic], Type[Comment]]],
+    types_to_query: list[Union[type[Topic], type[Comment]]],
     anchor_type: Optional[str],
     before: Optional[str],
     after: Optional[str],

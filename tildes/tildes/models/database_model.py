@@ -4,7 +4,7 @@
 """Contains the base DatabaseModel class."""
 
 from datetime import timedelta
-from typing import Any, Optional, Type, TypeVar
+from typing import Any, Optional, TypeVar
 
 from marshmallow import Schema
 from sqlalchemy import event
@@ -28,7 +28,7 @@ NAMING_CONVENTION = {
 
 
 def attach_set_listener(
-    class_: Type["DatabaseModelBase"], attribute: str, instance: "DatabaseModelBase"
+    class_: type["DatabaseModelBase"], attribute: str, instance: "DatabaseModelBase"
 ) -> None:
     """Attach the SQLAlchemy ORM "set" attribute listener."""
     # pylint: disable=unused-argument
@@ -48,7 +48,7 @@ class DatabaseModelBase:
     # declare the type of __table__ so mypy understands it when checking __eq__
     __table__: Table
 
-    schema_class: Optional[Type[Schema]] = None
+    schema_class: Optional[type[Schema]] = None
 
     def __eq__(self, other: Any) -> bool:
         """Equality comparison method - check if primary key values match."""

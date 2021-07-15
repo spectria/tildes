@@ -4,7 +4,7 @@
 """Contains the TopicSchedule class."""
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from dateutil.rrule import rrule
 from jinja2.sandbox import SandboxedEnvironment
@@ -58,7 +58,7 @@ class TopicSchedule(DatabaseModel):
         nullable=False,
     )
     markdown: str = Column(Text, nullable=False)
-    tags: List[str] = Column(TagList, nullable=False, server_default="{}")
+    tags: list[str] = Column(TagList, nullable=False, server_default="{}")
     next_post_time: Optional[datetime] = Column(
         TIMESTAMP(timezone=True), nullable=True, index=True
     )
@@ -79,7 +79,7 @@ class TopicSchedule(DatabaseModel):
         group: Group,
         title: str,
         markdown: str,
-        tags: List[str],
+        tags: list[str],
         next_post_time: datetime,
         recurrence_rule: Optional[rrule] = None,
         user: Optional[User] = None,

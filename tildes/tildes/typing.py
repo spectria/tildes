@@ -3,8 +3,8 @@
 
 """Custom type aliases to use in type annotations."""
 
-from typing import Any, List, Tuple
+from typing import Any
 
 # types for an ACE (Access Control Entry), and the ACL (Access Control List) of them
-AceType = Tuple[str, Any, str]
-AclType = List[AceType]
+AceType = tuple[str, Any, str]
+AclType = list[AceType]

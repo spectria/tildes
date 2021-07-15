@@ -3,7 +3,7 @@
 
 """Web API exception views."""
 
-from typing import Sequence
+from collections.abc import Sequence
 from urllib.parse import quote, urlparse, urlunparse
 
 from marshmallow.exceptions import ValidationError

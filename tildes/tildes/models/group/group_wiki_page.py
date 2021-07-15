@@ -5,7 +5,7 @@
 
 from datetime import datetime
 from pathlib import Path, PurePath
-from typing import List, Optional
+from typing import Optional
 
 from pygit2 import Repository, Signature
 from pyramid.security import Allow, DENY_ALL, Everyone
@@ -104,7 +104,7 @@ class GroupWikiPage(DatabaseModel):
         return self.file_path.stem
 
     @property
-    def folders(self) -> List[PurePath]:
+    def folders(self) -> list[PurePath]:
         """Return a list of the folders the page is inside (if any)."""
         path = PurePath(self.path)
 

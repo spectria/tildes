@@ -5,8 +5,9 @@
 
 import os
 from abc import abstractmethod
+from collections.abc import Sequence
 from configparser import ConfigParser
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Optional
 
 from prometheus_client import CollectorRegistry, Counter, start_http_server
 from redis import Redis, ResponseError
@@ -22,7 +23,7 @@ class Message:
     """Represents a single message taken from a stream."""
 
     def __init__(
-        self, redis: Redis, stream: str, message_id: str, fields: Dict[str, str]
+        self, redis: Redis, stream: str, message_id: str, fields: dict[str, str]
     ):
         """Initialize a new message from a Redis stream."""
         self.redis = redis
@@ -181,7 +182,7 @@ class EventStreamConsumer:
                     message_ids=[entry["message_id"]],
                 )
 
-    def _xreadgroup_response_to_messages(self, response: Any) -> List[Message]:
+    def _xreadgroup_response_to_messages(self, response: Any) -> list[Message]:
         """Convert a response from XREADGROUP to a list of Messages."""
         messages = []
 
@@ -204,7 +205,7 @@ class EventStreamConsumer:
 
         return messages
 
-    def _get_messages(self, pending: bool = False) -> List[Message]:
+    def _get_messages(self, pending: bool = False) -> list[Message]:
         """Get any messages from the streams for this consumer.
 
         This method will return at most one message from each of the source streams per

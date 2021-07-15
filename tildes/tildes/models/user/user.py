@@ -4,7 +4,7 @@
 """Contains the User class."""
 
 from datetime import datetime, timedelta
-from typing import List, NoReturn, Optional
+from typing import NoReturn, Optional
 
 from pyotp import TOTP
 from pyramid.security import (
@@ -84,7 +84,7 @@ class User(DatabaseModel):
     )
     two_factor_enabled: bool = Column(Boolean, nullable=False, server_default="false")
     two_factor_secret: Optional[str] = deferred(Column(Text))
-    two_factor_backup_codes: List[str] = deferred(Column(ARRAY(Text)))
+    two_factor_backup_codes: list[str] = deferred(Column(ARRAY(Text)))
     created_time: datetime = Column(
         TIMESTAMP(timezone=True),
         nullable=False,
@@ -130,7 +130,7 @@ class User(DatabaseModel):
     ban_expiry_time: Optional[datetime] = Column(TIMESTAMP(timezone=True))
     home_default_order: Optional[TopicSortOption] = Column(ENUM(TopicSortOption))
     home_default_period: Optional[str] = Column(Text)
-    filtered_topic_tags: List[str] = Column(
+    filtered_topic_tags: list[str] = Column(
         TagList, nullable=False, server_default="{}"
     )
     comment_label_weight: Optional[float] = Column(REAL)
@@ -322,7 +322,7 @@ class User(DatabaseModel):
         return self.num_unread_messages + self.num_unread_notifications
 
     @property
-    def auth_principals(self) -> List[str]:
+    def auth_principals(self) -> list[str]:
         """Return the user's authorization principals (used for permissions)."""
         principals = [permission.auth_principal for permission in self.permissions]
 

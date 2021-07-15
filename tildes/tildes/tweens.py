@@ -3,8 +3,8 @@
 
 """Contains Pyramid "tweens", used to insert additional logic into request-handling."""
 
+from collections.abc import Callable
 from time import time
-from typing import Callable
 
 from prometheus_client import Histogram
 from pyramid.config import Configurator

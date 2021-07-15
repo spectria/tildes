@@ -4,8 +4,8 @@
 """Consumer that fetches data from YouTube's data API for relevant link topics."""
 
 import os
+from collections.abc import Sequence
 from datetime import timedelta
-from typing import Sequence
 
 from pyramid.paster import get_appsettings
 from requests.exceptions import HTTPError, Timeout

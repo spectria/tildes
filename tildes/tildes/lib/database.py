@@ -4,7 +4,8 @@
 """Constants/classes/functions related to the database."""
 
 import enum
-from typing import Any, Callable, List, Optional
+from collections.abc import Callable
+from typing import Any, Optional
 
 from dateutil.rrule import rrule, rrulestr
 from pyramid.paster import bootstrap
@@ -106,7 +107,7 @@ class ArrayOfLtree(ARRAY):
         """Return a conversion function for processing result row values."""
         super_rp = super().result_processor(dialect, coltype)
 
-        def handle_raw_string(value: str) -> List[str]:
+        def handle_raw_string(value: str) -> list[str]:
             if not (value.startswith("{") and value.endswith("}")):
                 raise ValueError("%s is not an array value" % value)
 
@@ -119,7 +120,7 @@ class ArrayOfLtree(ARRAY):
 
             return value.split(",")
 
-        def process(value: Optional[str]) -> Optional[List[str]]:
+        def process(value: Optional[str]) -> Optional[list[str]]:
             if value is None:
                 return None
 
@@ -183,10 +184,10 @@ class TagList(TypeDecorator):
 
     impl = ArrayOfLtree
 
-    def process_bind_param(self, value: str, dialect: Dialect) -> List[Ltree]:
+    def process_bind_param(self, value: str, dialect: Dialect) -> list[Ltree]:
         """Convert the value to ltree[] for storing."""
         return [Ltree(tag.replace(" ", "_")) for tag in value]
 
-    def process_result_value(self, value: List[Ltree], dialect: Dialect) -> List[str]:
+    def process_result_value(self, value: list[Ltree], dialect: Dialect) -> list[str]:
         """Convert the stored value to a list of strings."""
         return [str(tag).replace("_", " ") for tag in value]

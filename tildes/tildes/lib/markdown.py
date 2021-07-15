@@ -4,19 +4,9 @@
 """Functions/constants related to markdown handling."""
 
 import re
+from collections.abc import Callable, Iterator
 from functools import partial
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Iterator,
-    List,
-    Match,
-    Optional,
-    Pattern,
-    Tuple,
-    Union,
-)
+from typing import Any, Optional, Union
 
 import bleach
 from bs4 import BeautifulSoup
@@ -105,7 +95,7 @@ ALLOWED_HTML_TAGS = (
 )
 ALLOWED_LINK_PROTOCOLS = ("gemini", "http", "https", "mailto")
 
-ALLOWED_HTML_ATTRIBUTES_DEFAULT: Dict[str, Union[List[str], Callable]] = {
+ALLOWED_HTML_ATTRIBUTES_DEFAULT: dict[str, Union[list[str], Callable]] = {
     "a": ["href", "title"],
     "details": ["open"],
     "ol": ["start"],
@@ -234,7 +224,7 @@ class CodeHtmlFormatter(HtmlFormatter):
     <code class="highlight">...</code> instead (assumes a <pre> is already present).
     """
 
-    def wrap(self, source: Any, outfile: Any) -> Iterator[Tuple[int, str]]:
+    def wrap(self, source: Any, outfile: Any) -> Iterator[tuple[int, str]]:
         """Wrap the highlighted tokens with the <code> tag."""
         # pylint: disable=unused-argument
         yield (0, '<code class="highlight">')
@@ -311,7 +301,7 @@ class LinkifyFilter(Filter):
     SUBREDDIT_REFERENCE_REGEX = re.compile(r"(?<!\w)/?r/(\w+)\b")
 
     def __init__(
-        self, source: NonRecursiveTreeWalker, skip_tags: Optional[List[str]] = None
+        self, source: NonRecursiveTreeWalker, skip_tags: Optional[list[str]] = None
     ):
         """Initialize a linkification filter to apply to HTML.
 
@@ -385,8 +375,8 @@ class LinkifyFilter(Filter):
 
     @staticmethod
     def _linkify_tokens(
-        tokens: List[dict], filter_regex: Pattern, linkify_function: Callable
-    ) -> List[dict]:
+        tokens: list[dict], filter_regex: re.Pattern, linkify_function: Callable
+    ) -> list[dict]:
         """Check tokens for text that matches a regex and linkify it.
 
         The `filter_regex` argument should be a compiled pattern that will be applied to
@@ -434,7 +424,7 @@ class LinkifyFilter(Filter):
         return new_tokens
 
     @staticmethod
-    def _tokenize_group_match(match: Match) -> List[dict]:
+    def _tokenize_group_match(match: re.Match) -> list[dict]:
         """Convert a potential group reference into HTML tokens."""
         # convert the potential group path to lowercase to allow people to use incorrect
         # casing but still have it link properly
@@ -465,7 +455,7 @@ class LinkifyFilter(Filter):
         return [{"type": "Characters", "data": match[0]}]
 
     @staticmethod
-    def _tokenize_username_match(match: Match) -> List[dict]:
+    def _tokenize_username_match(match: re.Match) -> list[dict]:
         """Convert a potential username reference into HTML tokens."""
         # if it's a valid username, convert to <a>
         if is_valid_username(match[1]):
@@ -486,7 +476,7 @@ class LinkifyFilter(Filter):
         return [{"type": "Characters", "data": match[0]}]
 
     @staticmethod
-    def _tokenize_subreddit_match(match: Match) -> List[dict]:
+    def _tokenize_subreddit_match(match: re.Match) -> list[dict]:
         """Convert a subreddit reference into HTML tokens."""
         return [
             {

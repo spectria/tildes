@@ -4,9 +4,10 @@
 """Classes and constants related to rate-limited actions."""
 
 from __future__ import annotations
+from collections.abc import Sequence
 from datetime import timedelta
 from ipaddress import ip_address
-from typing import Any, List, Optional, Sequence
+from typing import Any, Optional
 
 from pyramid.response import Response
 from redis import Redis
@@ -69,7 +70,7 @@ class RateLimitResult:
         )
 
     @classmethod
-    def from_redis_cell_result(cls, result: List[int]) -> RateLimitResult:
+    def from_redis_cell_result(cls, result: list[int]) -> RateLimitResult:
         """Convert the response from CL.THROTTLE command to a RateLimitResult.
 
         CL.THROTTLE responds with an array of 5 integers:
@@ -228,7 +229,7 @@ class RateLimitedAction:
 
         return ":".join(parts)
 
-    def _call_redis_command(self, key: str) -> List[int]:
+    def _call_redis_command(self, key: str) -> list[int]:
         """Call the redis-cell CL.THROTTLE command for this action."""
         return self.redis.execute_command(
             "CL.THROTTLE",

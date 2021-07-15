@@ -3,7 +3,7 @@
 
 """Define and attach request methods to the Pyramid request object."""
 
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 from pyramid.config import Configurator
 from pyramid.httpexceptions import HTTPTooManyRequests
@@ -114,7 +114,7 @@ def apply_rate_limit(request: Request, action_name: str) -> None:
 
 
 def current_listing_base_url(
-    request: Request, query: Optional[Dict[str, Any]] = None
+    request: Request, query: Optional[dict[str, Any]] = None
 ) -> str:
     """Return the "base" url for the current listing route.
 
@@ -123,7 +123,7 @@ def current_listing_base_url(
 
     The `query` argument allows adding query variables to the generated url.
     """
-    base_vars_by_route: Dict[str, Tuple[str, ...]] = {
+    base_vars_by_route: dict[str, tuple[str, ...]] = {
         "bookmarks": ("per_page", "type"),
         "group": ("order", "period", "per_page", "tag", "unfiltered"),
         "group_search": ("order", "period", "per_page", "q"),
@@ -149,7 +149,7 @@ def current_listing_base_url(
 
 
 def current_listing_normal_url(
-    request: Request, query: Optional[Dict[str, Any]] = None
+    request: Request, query: Optional[dict[str, Any]] = None
 ) -> str:
     """Return the "normal" url for the current listing route.
 
@@ -158,7 +158,7 @@ def current_listing_normal_url(
 
     The `query` argument allows adding query variables to the generated url.
     """
-    normal_vars_by_route: Dict[str, Tuple[str, ...]] = {
+    normal_vars_by_route: dict[str, tuple[str, ...]] = {
         "bookmarks": ("order", "period", "per_page"),
         "votes": ("order", "period", "per_page"),
         "group": ("order", "period", "per_page"),

@@ -4,7 +4,7 @@
 """Contains the Group class."""
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from pyramid.security import Allow, Authenticated, Deny, DENY_ALL, Everyone
 from sqlalchemy import (
@@ -67,8 +67,8 @@ class Group(DatabaseModel):
     is_user_treated_as_topic_source: bool = Column(
         Boolean, nullable=False, server_default="false"
     )
-    common_topic_tags: List[str] = Column(TagList, nullable=False, server_default="{}")
-    important_topic_tags: List[str] = Column(
+    common_topic_tags: list[str] = Column(TagList, nullable=False, server_default="{}")
+    important_topic_tags: list[str] = Column(
         TagList, nullable=False, server_default="{}"
     )
 
@@ -96,7 +96,7 @@ class Group(DatabaseModel):
             self.sidebar_rendered_html = None
 
     @property
-    def autocomplete_topic_tags(self) -> List[str]:
+    def autocomplete_topic_tags(self) -> list[str]:
         """Return the topic tags that should be offered as autocomplete options."""
         global_options = ["nsfw", "spoiler", "coronaviruses.covid19"]
 

@@ -3,7 +3,7 @@
 
 """Consumer that runs processing scripts on posts."""
 
-from typing import Type, Union
+from typing import Union
 
 from sqlalchemy import desc
 from sqlalchemy.sql.expression import or_
@@ -23,7 +23,7 @@ class PostProcessingScriptRunner(EventStreamConsumer):
 
     def process_message(self, message: Message) -> None:
         """Process a message from the stream."""
-        wrapper_class: Union[Type[TopicScriptingWrapper], Type[CommentScriptingWrapper]]
+        wrapper_class: Union[type[TopicScriptingWrapper], type[CommentScriptingWrapper]]
 
         if "topic_id" in message.fields:
             post = (

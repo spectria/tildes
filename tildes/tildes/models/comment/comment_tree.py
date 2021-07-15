@@ -4,8 +4,9 @@
 """Contains the CommentTree and CommentInTree classes."""
 
 from collections import Counter
+from collections.abc import Iterator, Sequence
 from datetime import datetime
-from typing import Iterator, List, Optional, Sequence, Tuple
+from typing import Optional
 
 from prometheus_client import Histogram
 from wrapt import ObjectProxy
@@ -27,7 +28,7 @@ class CommentTree:
         viewer: Optional[User] = None,
     ):
         """Create a sorted CommentTree from a flat list of Comments."""
-        self.tree: List[CommentInTree] = []
+        self.tree: list[CommentInTree] = []
         self.sort = sort
         self.viewer = viewer
 
@@ -92,7 +93,7 @@ class CommentTree:
                 self.tree.append(comment)
 
     @staticmethod
-    def _sort_tree(tree: List[Comment], sort: CommentTreeSortOption) -> List[Comment]:
+    def _sort_tree(tree: list[Comment], sort: CommentTreeSortOption) -> list[Comment]:
         """Sort the tree by the desired ordering (recursively).
 
         Because Python's sorted() function is stable, the ordering of any comments that
@@ -118,7 +119,7 @@ class CommentTree:
         return tree
 
     @staticmethod
-    def _prune_empty_branches(tree: Sequence[Comment]) -> List[Comment]:
+    def _prune_empty_branches(tree: Sequence[Comment]) -> list[Comment]:
         """Remove branches from the tree with no visible comments."""
         pruned_tree = []
 
@@ -269,7 +270,7 @@ class CommentInTree(ObjectProxy):
         super().__init__(comment)
 
         self.collapsed_state: Optional[str] = None
-        self.replies: List[CommentInTree] = []
+        self.replies: list[CommentInTree] = []
         self.has_visible_descendant = False
         self.num_children = 0
         self.depth = 0
@@ -308,7 +309,7 @@ class CommentInTree(ObjectProxy):
             reply.recursively_collapse()
 
     @property
-    def relevance_sorting_value(self) -> Tuple[int, ...]:
+    def relevance_sorting_value(self) -> tuple[int, ...]:
         """Value to use for the comment with the "relevance" comment sorting method.
 
         Returns a tuple, which allows sorting the comments into "tiers" and then still
