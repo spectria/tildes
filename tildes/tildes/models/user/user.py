@@ -269,6 +269,9 @@ class User(DatabaseModel):
 
     def is_correct_two_factor_code(self, code: str) -> bool:
         """Verify that a TOTP/backup code is correct."""
+        if not self.two_factor_secret:
+            raise ValueError("User does not have 2FA enabled")
+
         totp = TOTP(self.two_factor_secret)
 
         code = code.strip().replace(" ", "").lower()

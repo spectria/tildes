@@ -12,11 +12,13 @@ from marshmallow.schema import Schema
 from pyramid.httpexceptions import HTTPFound
 from pyramid.request import Request
 from pyramid.view import view_config
-from webargs import dict2schema, pyramidparser
+from webargs import pyramidparser
 
 
 def use_kwargs(
-    argmap: Union[Schema, dict[str, Field]], location: str = "query", **kwargs: Any
+    argmap: Union[Schema, dict[str, Union[Field, type]]],
+    location: str = "query",
+    **kwargs: Any
 ) -> Callable:
     """Wrap the webargs @use_kwargs decorator with preferred default modifications.
 
@@ -30,7 +32,7 @@ def use_kwargs(
     """
     # convert a dict argmap to a Schema (the same way webargs would on its own)
     if isinstance(argmap, dict):
-        argmap = dict2schema(argmap)()
+        argmap = Schema.from_dict(argmap)()
 
     assert isinstance(argmap, Schema)  # tell mypy the type is more restricted now
 

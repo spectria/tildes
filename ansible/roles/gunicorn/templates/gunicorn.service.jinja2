@@ -13,7 +13,7 @@ ExecStart={{ bin_dir }}/gunicorn --paste {{ ini_file }} --config {{ app_dir }}/g
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
 PrivateTmp=true
-Environment=prometheus_multiproc_dir=/tmp
+Environment=PROMETHEUS_MULTIPROC_DIR=/tmp
 Restart=always
 RestartSec=30
 
